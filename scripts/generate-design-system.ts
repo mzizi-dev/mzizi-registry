@@ -227,6 +227,7 @@ export function buildTokens(css: string) {
     radius: {
       note: radii.system,
       tokens: [
+        { name: "radius-xs", value: radii.xs, usage: "Unit − 3. The smallest marks: legend swatches, kbd keys, inline tags." },
         { name: "radius-sm", value: radii.sm, usage: "1× unit. Checkboxes, small chips, inline code." },
         { name: "radius-md", value: radii.md, usage: "Unit + 5. Inner corners of card headers/footers, images inside cards." },
         { name: "radius-lg", value: radii.lg, usage: "2× unit — THE card radius; also the base --radius." },

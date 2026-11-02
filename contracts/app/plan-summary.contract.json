@@ -1,0 +1,385 @@
+{
+  "$schema": "../schema/component-contract.schema.json",
+  "name": "app/plan-summary",
+  "title": "PlanSummary",
+  "version": "1.0.0",
+  "node": 6,
+  "kind": "pattern",
+  "summary": "The plan an account is on: its name, its price per interval, its status in words and a status pill, the date it renews or ends, what it includes, and its actions. Provider-neutral: no provider, no payment method, no default currency or locale.",
+  "implementations": {
+    "astro": {
+      "registry": "app-plan-summary",
+      "package": "@bundu/ui",
+      "export": "@bundu/ui/app/PlanSummary.astro",
+      "since": "0.6.0"
+    },
+    "tsx": {
+      "registry": "app-plan-summary",
+      "identity": "contract"
+    },
+    "rs": null,
+    "related": ["subscription-card", "pricing-card", "subscription-gate"]
+  },
+  "props": [
+    {
+      "name": "name",
+      "type": "string",
+      "required": true,
+      "description": "The plan's name."
+    },
+    {
+      "name": "status",
+      "type": "\"active\" | \"past_due\" | \"cancelled\" | \"expired\" | \"none\"",
+      "required": true,
+      "description": "Where the plan stands.",
+      "values": ["active", "past_due", "cancelled", "expired", "none"]
+    },
+    {
+      "name": "locale",
+      "type": "string",
+      "required": true,
+      "description": "A BCP 47 locale for the price and the date. Required: there is no default."
+    },
+    {
+      "name": "price",
+      "type": "{ amountMinor: number; currency: string } | null",
+      "required": false,
+      "description": "The price as Money: integer minor units and an ISO 4217 code. No default currency; without it no price is shown."
+    },
+    {
+      "name": "interval",
+      "type": "\"day\" | \"week\" | \"month\" | \"year\"",
+      "required": false,
+      "description": "How often it is charged (\"per month\"); without it the price stands alone.",
+      "values": ["day", "week", "month", "year"]
+    },
+    {
+      "name": "periodEnd",
+      "type": "string",
+      "required": false,
+      "description": "The date it renews or ends, as an ISO date (\"2026-11-24\"), shown in `locale` in a <time datetime>."
+    },
+    {
+      "name": "features",
+      "type": "string[]",
+      "required": false,
+      "description": "What the plan includes.",
+      "default": []
+    },
+    {
+      "name": "action",
+      "type": "{ label: string; href: string }",
+      "required": false,
+      "description": "The main action, a primary link (\"Change plan\", \"Choose a plan\", \"Update payment\")."
+    },
+    {
+      "name": "secondaryAction",
+      "type": "{ label: string; href: string }",
+      "required": false,
+      "description": "A second action, an outline link (\"Cancel plan\"; pair it with ConfirmAction)."
+    },
+    {
+      "name": "copy",
+      "type": "{ status?: Partial<Record<PlanStatus, string>>; per?: Partial<Record<PlanInterval, string>>; date?: Partial<Record<PlanStatus, string>>; features?: string; none?: string }",
+      "required": false,
+      "description": "Words, for another language: the status pill, \"per month\", the words before the date, the features list's name, and the no-plan sentence.",
+      "default": {}
+    },
+    {
+      "name": "id",
+      "type": "string",
+      "required": false,
+      "description": "The id the heading (`<id>-title`) is built from.",
+      "default": "plan-summary"
+    },
+    {
+      "name": "headingLevel",
+      "type": "2 | 3",
+      "required": false,
+      "description": "The heading's level.",
+      "default": 2,
+      "values": [2, 3]
+    },
+    {
+      "name": "class",
+      "type": "string",
+      "required": false,
+      "description": "Extra classes on the root, merged last."
+    }
+  ],
+  "slots": [],
+  "behaviour": [
+    "A <section> labelled by its heading, the plan's name.",
+    "The price is Money (`app/money`) formatted for `locale`, followed by the interval in words (\"per month\"). With no `price`, no price is shown; there is no default currency.",
+    "The status is written in a status pill: Active (success), Payment due (warning), Cancelled, Expired and No plan (neutral). The word, not the colour, carries it.",
+    "With `periodEnd`, a line says \"Renews on\", \"Payment was due on\", \"Ends on\" or \"Ended on\" by status, then the date in `locale` in a <time datetime>.",
+    "`status: \"none\"` shows the pill and a sentence that there is no plan, with no price, date or features, and keeps the actions (\"Choose a plan\").",
+    "It names no payment provider and no payment method, takes data and computes nothing about billing.",
+    "Every word can be replaced (`copy`)."
+  ],
+  "states": {
+    "default": {
+      "description": "An active monthly plan in US dollars.",
+      "props": {
+        "name": "Business",
+        "status": "active",
+        "locale": "en-ZW",
+        "price": {
+          "amountMinor": 1500,
+          "currency": "USD"
+        },
+        "interval": "month",
+        "periodEnd": "2026-11-24",
+        "features": ["Up to 5 team members", "Verified badge on every listing"],
+        "action": {
+          "label": "Change plan",
+          "href": "/billing/plans"
+        },
+        "secondaryAction": {
+          "label": "Cancel plan",
+          "href": "/billing/cancel"
+        }
+      }
+    },
+    "past-due": {
+      "description": "Payment due, priced in rand.",
+      "props": {
+        "name": "Business",
+        "status": "past_due",
+        "locale": "en-ZA",
+        "price": {
+          "amountMinor": 27500,
+          "currency": "ZAR"
+        },
+        "interval": "month",
+        "periodEnd": "2026-10-20",
+        "action": {
+          "label": "Update payment",
+          "href": "/billing/payment"
+        }
+      }
+    },
+    "none": {
+      "description": "No plan on the account.",
+      "props": {
+        "name": "Free",
+        "status": "none",
+        "locale": "en-ZW",
+        "action": {
+          "label": "Choose a plan",
+          "href": "/billing/plans"
+        }
+      }
+    },
+    "cancelled": {
+      "description": "Cancelled, yearly, in Zimbabwe Gold, h3.",
+      "props": {
+        "name": "Business",
+        "status": "cancelled",
+        "locale": "en-ZW",
+        "price": {
+          "amountMinor": 4200000,
+          "currency": "ZWG"
+        },
+        "interval": "year",
+        "periodEnd": "2027-01-31",
+        "headingLevel": 3
+      }
+    },
+    "localised": {
+      "description": "Every word replaced, in French for Senegal.",
+      "props": {
+        "name": "Entreprise",
+        "status": "active",
+        "locale": "fr-SN",
+        "price": {
+          "amountMinor": 9000,
+          "currency": "XOF"
+        },
+        "interval": "month",
+        "periodEnd": "2026-11-24",
+        "copy": {
+          "status": {
+            "active": "Actif"
+          },
+          "per": {
+            "month": "par mois"
+          },
+          "date": {
+            "active": "Renouvellement le"
+          },
+          "features": "Inclus"
+        },
+        "features": ["5 membres"]
+      }
+    }
+  },
+  "accessibility": {
+    "roles": ["region (section labelled by its heading)", "list (features)"],
+    "keyboard": ["The action links."],
+    "focus": ["`--ring` focus ring on the links."],
+    "aria": [
+      "aria-labelledby to the heading.",
+      "The features list is named (\"Included\").",
+      "The status is a word in the pill, never colour alone; the check glyphs are aria-hidden."
+    ],
+    "wcag": ["1.3.1", "1.4.1", "2.4.6", "4.1.2"]
+  },
+  "density": [
+    {
+      "part": "action link",
+      "select": "[data-slot=\"plan-actions\"] a",
+      "fine": 36,
+      "coarse": 48
+    }
+  ],
+  "theming": {
+    "tokens": [
+      "--card",
+      "--card-foreground",
+      "--foreground",
+      "--muted",
+      "--muted-foreground",
+      "--border",
+      "--primary",
+      "--primary-foreground",
+      "--app-accent",
+      "--ring"
+    ],
+    "brandOverlay": "The main action is the shell's primary (`--app-accent`, else `--primary`). Status pills are fixed status colours, the same in every brand.",
+    "statusColours": ["malachite", "gold"]
+  },
+  "noJs": {
+    "script": "none",
+    "without": "Everything: server-rendered; actions are links."
+  },
+  "responsive": [
+    "The status pill wraps under the name and price on a narrow column; actions wrap."
+  ],
+  "contract": "contract\n  slot is \"plan-summary\"\n  uses money\n  uses status\n  when default shows h2 \"Business\"\n  when default shows span \"Active\"\n  when default shows a \"Change plan\"\n  when none shows a \"Choose a plan\"\n  when cancelled shows h3 \"Business\"\nend",
+  "checks": [
+    {
+      "say": "A section labelled by the plan's name.",
+      "select": "section[data-slot=\"plan-summary\"]",
+      "count": 1,
+      "attr": {
+        "aria-labelledby": "plan-summary-title",
+        "data-status": "active"
+      }
+    },
+    {
+      "say": "The price is Money, exact, in the caller's currency.",
+      "select": "[data-slot=\"plan-price\"] data[data-slot=\"money\"]",
+      "count": 1,
+      "attr": {
+        "value": "15.00",
+        "data-currency": "USD"
+      }
+    },
+    {
+      "say": "The interval is in words.",
+      "select": "[data-slot=\"plan-price\"] span",
+      "count": 1,
+      "text": "per month"
+    },
+    {
+      "say": "Active is a success pill with the word.",
+      "select": "[data-slot=\"status\"][data-tone=\"success\"]",
+      "count": 1,
+      "text": "Active"
+    },
+    {
+      "say": "The renewal date is a <time> in the locale.",
+      "select": "[data-slot=\"plan-date\"] time[datetime=\"2026-11-24\"]",
+      "count": 1,
+      "text": "2026"
+    },
+    {
+      "say": "An active plan says it renews.",
+      "select": "[data-slot=\"plan-date\"]",
+      "count": 1,
+      "text": "Renews on"
+    },
+    {
+      "say": "Features are a named list.",
+      "select": "ul[data-slot=\"plan-features\"][aria-label=\"Included\"] > li",
+      "count": 2
+    },
+    {
+      "say": "The actions are a primary link and an outline link.",
+      "select": "[data-slot=\"plan-actions\"] a",
+      "count": 2
+    },
+    {
+      "say": "Payment due is a warning pill with the word.",
+      "state": "past-due",
+      "select": "[data-slot=\"status\"][data-tone=\"warning\"]",
+      "count": 1,
+      "text": "Payment due"
+    },
+    {
+      "say": "A past-due date says payment was due.",
+      "state": "past-due",
+      "select": "[data-slot=\"plan-date\"]",
+      "count": 1,
+      "text": "Payment was due on"
+    },
+    {
+      "say": "Rand is the caller's currency.",
+      "state": "past-due",
+      "select": "data[data-currency=\"ZAR\"][value=\"275.00\"]",
+      "count": 1
+    },
+    {
+      "say": "No plan: no price, no date, no features.",
+      "state": "none",
+      "select": "[data-slot=\"plan-price\"], [data-slot=\"plan-date\"], [data-slot=\"plan-features\"]",
+      "absent": true
+    },
+    {
+      "say": "No plan says so in words.",
+      "state": "none",
+      "select": "[data-slot=\"plan-none\"]",
+      "count": 1
+    },
+    {
+      "say": "Cancelled says when it ends.",
+      "state": "cancelled",
+      "select": "[data-slot=\"plan-date\"]",
+      "count": 1,
+      "text": "Ends on"
+    },
+    {
+      "say": "Zimbabwe Gold yearly.",
+      "state": "cancelled",
+      "select": "data[data-currency=\"ZWG\"][value=\"42000.00\"]",
+      "count": 1
+    },
+    {
+      "say": "Every word can be replaced.",
+      "state": "localised",
+      "select": "[data-slot=\"status\"]",
+      "count": 1,
+      "text": "Actif"
+    },
+    {
+      "say": "A currency with no minor unit (CFA franc) is exact.",
+      "state": "localised",
+      "select": "data[data-currency=\"XOF\"][value=\"9000\"]",
+      "count": 1
+    },
+    {
+      "say": "The date words can be replaced.",
+      "state": "localised",
+      "select": "[data-slot=\"plan-date\"]",
+      "count": 1,
+      "text": "Renouvellement le"
+    },
+    {
+      "say": "No script.",
+      "state": "*",
+      "select": "script",
+      "absent": true
+    }
+  ]
+}

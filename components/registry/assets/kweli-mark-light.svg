@@ -1,0 +1,6 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32" width="128" height="128" fill="none" stroke="#004D40" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" role="img" aria-label="kweli">
+  <title>kweli</title>
+  <!-- The kweli mark: a shield with a tick, for verified presence, in malachite (kweli's mineral, light-surface value #004D40). Artwork from mukoko-dev/kweli (workers/kweli-profiles/src/components/Mark.astro), never redrawn. -->
+  <path d="M16 3 5 7v8c0 7 4.7 12 11 14 6.3-2 11-7 11-14V7z"/>
+  <path d="m11 16 4 4 7-8"/>
+</svg>

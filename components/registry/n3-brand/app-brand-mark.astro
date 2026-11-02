@@ -15,21 +15,31 @@
  * ("console"). The mark alone carries the brand's name as its alt text
  * unless `decorative` (when a neighbouring text already names it).
  *
- * Today the set is Nyuchi (the bee: nyuchi is "bee") and Mukoko (the
- * honeycomb: mukoko is "beehive"). Mukoko's pair is
+ * Today the set is Nyuchi (the bee: nyuchi is "bee"), Mukoko (the
+ * honeycomb: mukoko is "beehive") and Kweli (the shield with a tick: kweli is
+ * "truth"). Kweli has no bundu-ecosystem-icons pair; its mark is Kweli's own
+ * shipped artwork (mukoko-dev/kweli, workers/kweli-profiles Mark.astro),
+ * mono in malachite, Kweli's mineral, rendered to 128px from
+ * assets/kweli-mark-{light,dark}.svg. Mukoko's pair is
  * assets/mukoko-icon-{light,dark}.png, because assets/mukoko-mark-*.png is
  * the design system's 500px tile on an opaque ground, not the transparent
  * icon. Add a brand by adding its scaled pair to assets/ and one entry to
  * MARKS (and the contract's `brand` values).
+ *
+ * `tagline` sets a muted line under the wordmark, for a mini-app's lockup:
+ * Kweli's is "mukoko · Africa". It shows only with the wordmark.
  */
 import mukokoDark from "./assets/mukoko-icon-dark.png";
 import mukokoLight from "./assets/mukoko-icon-light.png";
+import kweliDark from "./assets/kweli-mark-dark.png";
+import kweliLight from "./assets/kweli-mark-light.png";
 import nyuchiDark from "./assets/nyuchi-mark-dark.png";
 import nyuchiLight from "./assets/nyuchi-mark-light.png";
 
 const MARKS = {
   nyuchi: { name: "nyuchi", light: nyuchiLight, dark: nyuchiDark },
   mukoko: { name: "mukoko", light: mukokoLight, dark: mukokoDark },
+  kweli: { name: "kweli", light: kweliLight, dark: kweliDark },
 } as const;
 
 export type BrandName = keyof typeof MARKS;
@@ -40,10 +50,19 @@ interface Props {
   size?: number;
   wordmark?: boolean;
   suffix?: string;
+  /** A muted line under the wordmark (a mini-app lockup: "mukoko · Africa"). Needs `wordmark`. */
+  tagline?: string;
   decorative?: boolean;
+  /**
+   * How the mark loads: "lazy" (the default since #543) or "eager". Lazy keeps a footer or
+   * below-the-fold mark off the critical path (Lighthouse flagged an eager footer mark), and
+   * the theme's hidden image is never fetched. A small mark in a header still loads at once,
+   * since it is in the viewport; pass "eager" only where the mark is the page's LCP image.
+   */
+  loading?: "lazy" | "eager";
   class?: string;
 }
-const { brand = "nyuchi", size = 28, wordmark = false, suffix, decorative = false, class: extra } = Astro.props;
+const { brand = "nyuchi", size = 28, wordmark = false, suffix, tagline, decorative = false, loading = "lazy", class: extra } = Astro.props;
 // An unknown brand (from untyped data, or one whose icon pair has not shipped) is an error
 // that names it, never another brand's mark in its place.
 if (!Object.prototype.hasOwnProperty.call(MARKS, brand))
@@ -54,13 +73,26 @@ const alt = decorative || wordmark ? "" : mark.name;
 ---
 
 <span class={["inline-flex min-w-0 items-center gap-2", extra].filter(Boolean).join(" ")} data-slot="brand-mark" data-brand={brand}>
-  <img src={src(mark.light)} alt={alt} width={size} height={size} decoding="async" class="brand-mark-light block shrink-0" />
-  <img src={src(mark.dark)} alt={alt} width={size} height={size} decoding="async" class="brand-mark-dark hidden shrink-0" />
+  <img src={src(mark.light)} alt={alt} width={size} height={size} loading={loading} decoding="async" class="brand-mark-light block shrink-0" />
+  <img src={src(mark.dark)} alt={alt} width={size} height={size} loading={loading} decoding="async" class="brand-mark-dark hidden shrink-0" />
   {
-    wordmark && (
+    wordmark && !tagline && (
       <span data-slot="brand-wordmark" class="truncate font-serif text-body font-semibold tracking-tight lowercase">
         {mark.name}
         {suffix && <span class="font-normal text-muted-foreground"> {suffix}</span>}
+      </span>
+    )
+  }
+  {
+    wordmark && tagline && (
+      <span data-slot="brand-lockup" class="flex min-w-0 flex-col gap-0.5 leading-none">
+        <span data-slot="brand-wordmark" class="truncate font-serif text-body font-semibold tracking-tight lowercase">
+          {mark.name}
+          {suffix && <span class="font-normal text-muted-foreground"> {suffix}</span>}
+        </span>
+        <span data-slot="brand-tagline" class="truncate text-caption tracking-wide text-muted-foreground">
+          {tagline}
+        </span>
       </span>
     )
   }
