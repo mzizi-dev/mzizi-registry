@@ -10,6 +10,10 @@ From 2026-10-04 releases follow the org versioning policy ([nyuchi/.github#80](h
 
 ## [Unreleased]
 
+## [4.22.0] - 2026-11-02
+
+Releases `staging` to `main` as the next minor above v4.21.x ([nyuchi/.github#80](https://github.com/nyuchi/.github/issues/80)). `package.json`, `README.md` and `content/changelog/releases.json` (and `lib/changelog.generated.ts`, generated from it) carry 4.22.0. The headline is `@nyuchi/mzizi-skills` 0.16.0 in the Claude Code plugin (1.6.0), which brings six skill descriptions inside claude.ai's 1024-character limit.
+
 ### Changed — the registry takes `@nyuchi/mzizi-skills` 0.16.0 (2026-11-02)
 
 - **The Claude Code plugin moves to 1.6.0** (was 1.5.0), as 1.4.0 and 1.5.0 did with their skills bumps (#596, #601): `plugin/.claude-plugin/plugin.json` `version`, so a client that updates by version picks up skills 0.16.0.
@@ -22,6 +26,10 @@ From 2026-10-04 releases follow the org versioning policy ([nyuchi/.github#80](h
 
 `domutils` 4 no longer exports `isTag`, so `contracts/runner.ts` imports it from `domhandler`, where it lives. `css-select` 6 keeps its own `domutils` 3.2.2, so selector evaluation is unchanged. Dev-only; no component, contract or published package changes.
 
+## [4.21.0] - 2026-11-02
+
+Releases `staging` to `main` as the next minor above v4.20.x ([nyuchi/.github#80](https://github.com/nyuchi/.github/issues/80)). `package.json`, `README.md` and `content/changelog/releases.json` carry 4.21.0. The headline is the Apple-aligned sizes and the desktop density layer (#597); the entry below was filed under 4.19.0 by mistake and is moved here.
+
 ### Changed — `@bundu/ui` takes a minor bump for the Apple-aligned sizes (2026-11-02, [#597](https://github.com/mzizi-dev/mzizi-registry/issues/597))
 
 Owner, 2026-11-02: `@bundu/ui` gets a minor bump, not a major. `docs/sizes-and-density.md` and the entry under 4.18.0 no longer recommend a major. Because a minor can reach apps on a caret range, an app that is not ready sets `data-mzizi-sizes="legacy"` before it takes the version. Documentation only; nothing is published here.
@@ -29,6 +37,17 @@ Owner, 2026-11-02: `@bundu/ui` gets a minor bump, not a major. `docs/sizes-and-d
 ### Fixed — the public plugin manifest drops the unrecognised `$schema` key (2026-11-02)
 
 The Claude plugin sync warned that `plugin/.claude-plugin/plugin.json` has an unrecognised top-level key `$schema` and stripped it. The key is removed so the manifest is exactly what the sync keeps. Nothing else in the plugin changes.
+
+### Changed — **Breaking for pinned consumers**: touch sizes follow Apple's HIG and sizes step down on desktop (2026-11-01, [#597](https://github.com/mzizi-dev/mzizi-registry/issues/597))
+
+- **Touch (coarse pointer):** the touch floor is **44px** (was 48px) and the default control, field and touch target is **44px** (was 56px; small 48 to 44, large 56 to 48, icon 48 to 44). Source: Apple HIG Buttons ("a hit region of at least 44x44 pt") and Accessibility (iOS default control 44x44 pt). Body text on a phone is **17px** (was 16px, Apple's iOS default), small 15px, h1 34px (was 48px). The 10px badge text is 11px (Apple's iOS minimum).
+- **Density layer, defined once in the token layer:** tablet (`min-width: 48rem`) steps type down (body 16px); desktop (`min-width: 64rem`, `pointer: fine`, `hover: hover`, and no coarse pointer anywhere, so a touchscreen laptop keeps 44px) steps targets to 28 to 40px (default 36px) and body to 15px. Floors that never move: targets 24px (WCAG 2.2 SC 2.5.8), desktop body 14px. Density is about size only; it is not a network-quality signal.
+- **New token `--target-floor`** (44px; 24px under desktop density). `--spacing-touch-min` now resolves to it instead of the literal `3rem`, and every floored size role is `max(var(--size-*), var(--target-floor))`. A brand pack that moves a `--size-*` variable still cannot lower it; `--target-floor` is set only in the token layer's `:root` and density blocks.
+- **Compatibility alias:** `<html data-mzizi-sizes="legacy">` restores every pre-2026-11-01 size, including the 48px floor. Migration table: `docs/sizes-and-density.md`.
+- **Components:** `button`, `input` and `ui-variants` (`buttonVariants`, `inputClasses`) take their heights from the size roles (`h-control`, `h-control-sm`, `h-control-lg`, `h-field`) in `.tsx`, `.astro` and `.rs`, instead of `h-12`/`h-14`. The contract runner and `mzizi-rs/contract-eval` read the roles; `min_height` is judged on a coarse pointer (44). Contracts `ui/button`, `ui/input` and eight Discover and site contracts carry the new density rows.
+- **Platform files** (Swift, Kotlin, ArkTS, React Native, Python, Rust, TypeScript) and `/v1/tokens` carry the new values. **Not changed here:** `.mz` files, the app-density components (already 44 to 48px on touch), and the 130-odd marketing components that hard-code `h-12`/`h-14`.
+- **Semver:** the registry release is a minor under the org policy. Owner decision 2026-11-02: `@bundu/ui` takes a **minor** bump, not a major; apps that are not ready use `data-mzizi-sizes="legacy"`. (The first draft of this entry recommended a major.) Publishing is not part of this change.
+- **Site/docs/skills impact:** mzizi.dev token and doctrine pages, docs.mzizi.dev brand-guidelines and touch-target pages, and the `mzizi-design`, `mzizi-architecture`, `mzizi-roots` and `mzizi-language` skills that say 48px/56px.
 
 ## [4.20.0] - 2026-11-01
 
@@ -88,17 +107,6 @@ Releases `staging` to `main` as the next minor above v4.18.x ([nyuchi/.github#80
 - **`app/tier-status` 1.2.0** (Astro and React): the chip adds a second line (`data-slot="tier-attested-provenance"`) read with its name, the date as a `<time datetime>`. New props `locale`, `sourceNames`; `copy` takes `via` and `checked`.
 - **Contrast**: the line uses the chip's own APCA-gated on-container pair. Measured |Lc|: community 82.9 / 88.4, business 90.3 / 94.8, domain 84.0 / 82.8 (light / dark), all over the body bar (75) the caption needs only 60 of.
 - **No provenance, no change**: snapshots taken from the builds before this change hold the markup byte for byte. `ui/mzizi-trust-meter` renders no attestation chips and is unchanged (2.2.0). No Rust build exists for these components.
-
-### Changed — **Breaking for pinned consumers**: touch sizes follow Apple's HIG and sizes step down on desktop (2026-11-01, [#597](https://github.com/mzizi-dev/mzizi-registry/issues/597))
-
-- **Touch (coarse pointer):** the touch floor is **44px** (was 48px) and the default control, field and touch target is **44px** (was 56px; small 48 to 44, large 56 to 48, icon 48 to 44). Source: Apple HIG Buttons ("a hit region of at least 44x44 pt") and Accessibility (iOS default control 44x44 pt). Body text on a phone is **17px** (was 16px, Apple's iOS default), small 15px, h1 34px (was 48px). The 10px badge text is 11px (Apple's iOS minimum).
-- **Density layer, defined once in the token layer:** tablet (`min-width: 48rem`) steps type down (body 16px); desktop (`min-width: 64rem`, `pointer: fine`, `hover: hover`, and no coarse pointer anywhere, so a touchscreen laptop keeps 44px) steps targets to 28 to 40px (default 36px) and body to 15px. Floors that never move: targets 24px (WCAG 2.2 SC 2.5.8), desktop body 14px. Density is about size only; it is not a network-quality signal.
-- **New token `--target-floor`** (44px; 24px under desktop density). `--spacing-touch-min` now resolves to it instead of the literal `3rem`, and every floored size role is `max(var(--size-*), var(--target-floor))`. A brand pack that moves a `--size-*` variable still cannot lower it; `--target-floor` is set only in the token layer's `:root` and density blocks.
-- **Compatibility alias:** `<html data-mzizi-sizes="legacy">` restores every pre-2026-11-01 size, including the 48px floor. Migration table: `docs/sizes-and-density.md`.
-- **Components:** `button`, `input` and `ui-variants` (`buttonVariants`, `inputClasses`) take their heights from the size roles (`h-control`, `h-control-sm`, `h-control-lg`, `h-field`) in `.tsx`, `.astro` and `.rs`, instead of `h-12`/`h-14`. The contract runner and `mzizi-rs/contract-eval` read the roles; `min_height` is judged on a coarse pointer (44). Contracts `ui/button`, `ui/input` and eight Discover and site contracts carry the new density rows.
-- **Platform files** (Swift, Kotlin, ArkTS, React Native, Python, Rust, TypeScript) and `/v1/tokens` carry the new values. **Not changed here:** `.mz` files, the app-density components (already 44 to 48px on touch), and the 130-odd marketing components that hard-code `h-12`/`h-14`.
-- **Semver:** the registry release is a minor under the org policy. Owner decision 2026-11-02: `@bundu/ui` takes a **minor** bump, not a major; apps that are not ready use `data-mzizi-sizes="legacy"`. (The first draft of this entry recommended a major.) Publishing is not part of this change.
-- **Site/docs/skills impact:** mzizi.dev token and doctrine pages, docs.mzizi.dev brand-guidelines and touch-target pages, and the `mzizi-design`, `mzizi-architecture`, `mzizi-roots` and `mzizi-language` skills that say 48px/56px.
 
 ## [4.18.0] - 2026-11-01
 
