@@ -10,6 +10,13 @@ From 2026-10-04 releases follow the org versioning policy ([nyuchi/.github#80](h
 
 ## [Unreleased]
 
+### Changed — the registry takes `@nyuchi/mzizi-skills` 0.16.0 (2026-11-02)
+
+- **Skills 0.16.0 is on npm** (agent-tools #320). `package.json` now asks for `>=0.16.0` (a floor, as before; was `>=0.15.0`) and the lockfile resolves 0.16.0. `lib/skills.generated.ts`, which `/v1/skills` and `mzizi_get_skills` serve, and `plugin/skills/`, the public Claude Code plugin's copy, are regenerated (`pnpm skills:generate`, `pnpm plugin:skills`; both `:check` variants pass: 9 skills, 33 plugin files). The two plugin descriptions that named 0.15.0 now name 0.16.0.
+- **What changed in the skills:** they teach Apple-aligned sizes (44px touch, 36px at desktop density) and the size roles (owner, 2026-11-01); six skill descriptions fit claude.ai's 1024-character limit; `mzizi-language` says four pilots have run, not two.
+- **Order matters:** the skills teach the new sizes before this registry's tokens carry them. The tokens change is #598 (not merged here), so until it lands an agent that follows the skills asks for 44px while `--size-touch` still reads 56px. The owner's ruling that Apple's guidance wins is in agent-tools #316.
+- **Site/docs/skills impact:** mzizi.dev `/skills` and `/v1/skills` serve 0.16.0 once the gateway pin moves to this commit; `mzizi-site`'s rendered gate stops refusing "Two pilots have run" on the `mzizi-language` page. docs.mzizi.dev brand-guidelines and touch-target pages still say 48px/56px until #598.
+
 ### Changed — `domutils` 3.2.2 to 4.0.2 for the contract runner (2026-11-02, [#494](https://github.com/mzizi-dev/mzizi-registry/pull/494))
 
 `domutils` 4 no longer exports `isTag`, so `contracts/runner.ts` imports it from `domhandler`, where it lives. `css-select` 6 keeps its own `domutils` 3.2.2, so selector evaluation is unchanged. Dev-only; no component, contract or published package changes.
