@@ -54,6 +54,9 @@ import {
   colorKey,
   contrastFloor,
   contrastMin,
+  wcagFloor,
+  wcagMin,
+  WCAG_BODY,
   FONT_ALIASES,
   FONTS,
   isColorKind,
@@ -477,6 +480,9 @@ export function a11yTier(
   return out
 }
 
+const SURFACE_LIGHT = LADDER.find(([n]) => n === "surface")![1]
+const SURFACE_DARK = LADDER.find(([n]) => n === "surface")![2]
+
 /** APCA Lc 75, the body-text bar (`BODY` in the role manifest). `textRamp()` walks `--text-secondary` to the same bar. */
 const BODY_TEXT = BODY
 
@@ -512,9 +518,18 @@ export function textOnBaseTier(
 ): Map<string, { light: TextVariant; dark: TextVariant }> {
   const out = new Map<string, { light: TextVariant; dark: TextVariant }>()
   for (const f of families) {
-    const light = walk(f.lightHex, "#000000", (c) => Math.abs(apca(c, BASE_LIGHT)) >= BODY_TEXT)
+    // Lc 75 on `base` and WCAG 7:1 (`WCAG_BODY`, #399) on `base` and `surface`: the page surfaces body text sits on.
+    const light = walk(
+      f.lightHex,
+      "#000000",
+      (c) => Math.abs(apca(c, BASE_LIGHT)) >= BODY_TEXT && [BASE_LIGHT, SURFACE_LIGHT].every((b) => wcag(c, b) >= WCAG_BODY)
+    )
     const darkStart = tier.get(f.name)?.dark?.hex ?? f.darkHex
-    const dark = walk(darkStart, WHITE, (c) => Math.abs(apca(c, BASE_DARK)) >= BODY_TEXT)
+    const dark = walk(
+      darkStart,
+      WHITE,
+      (c) => Math.abs(apca(c, BASE_DARK)) >= BODY_TEXT && [BASE_DARK, SURFACE_DARK].every((b) => wcag(c, b) >= WCAG_BODY)
+    )
     out.set(f.name, {
       light: {
         hex: light.toUpperCase(),
@@ -582,18 +597,20 @@ export function onContainerMeasure(m: Mineral) {
  */
 export function textRamp() {
   const surface = (mode: "light" | "dark") => LADDER.find(([n]) => n === "surface")![mode === "light" ? 1 : 2]
-  // text-tertiary's rule also carries a WCAG ratio ("Add 4.5:1 too", #484); read it from the manifest.
-  const tertiaryRule = ROLES.find((r) => r.name === "text-tertiary")?.contrast
-  const tertiaryRatio = tertiaryRule && "against" in tertiaryRule ? tertiaryRule.wcag : undefined
+  // The WCAG minimums (owner decision 2026-11-02, #399) come from the manifest: body text 7:1, tertiary 4.5:1.
+  const ratioOf = (name: string) => {
+    const r = ROLES.find((x) => x.name === name)!
+    return r.contrast && "against" in r.contrast ? wcagMin(r.kind, r.contrast) : 0
+  }
   const ramp = (bg: string, toward: string, bar: number, also: string[] = [], ratio?: number) =>
     walk(mix(bg, toward, 0.01), toward, (c) =>
-      [bg, ...also].every((b) => Math.abs(apca(c, b)) >= bar && (ratio === undefined || wcag(c, b) >= ratio))
+      [bg, ...also].every((b) => Math.abs(apca(c, b)) >= bar && (!ratio || wcag(c, b) >= ratio))
     )
   const build = (bg: string, toward: string, surf: string) => {
     const t = {
-      primary: ramp(bg, toward, 90),
-      secondary: ramp(bg, toward, BODY, [surf]),
-      tertiary: ramp(bg, toward, NON_BODY, [surf], tertiaryRatio),
+      primary: ramp(bg, toward, 90, [], ratioOf("text-primary")),
+      secondary: ramp(bg, toward, BODY, [surf], ratioOf("text-secondary")),
+      tertiary: ramp(bg, toward, NON_BODY, [surf], ratioOf("text-tertiary")),
     }
     return {
       ...t,
@@ -798,7 +815,7 @@ export function resolveRoles(
     x: Role & { contrast: MeasuredRule },
     mode: Mode,
     bgValue: (bg: string) => string = (bg) => resolve(bg).value[mode]
-  ) => x.contrast.against.every((bg) => clears(hex, bgValue(bg), contrastMin(x.kind, x.contrast), x.contrast.wcag))
+  ) => x.contrast.against.every((bg) => clears(hex, bgValue(bg), contrastMin(x.kind, x.contrast), wcagMin(x.kind, x.contrast) || undefined))
 
   const measured = (x: Role): x is Role & { contrast: MeasuredRule } => !!x.contrast && "against" in x.contrast
 
@@ -833,14 +850,14 @@ export function resolveRoles(
         const worst = Math.min(...rule.against.map((bg) => Math.abs(apca(base.value, resolve(bg).value[mode]))))
         const got = derive(base.value, mode === "light" ? BLACK : WHITE, (c) => passes(c, r, mode))
         if (got) {
-          const bars = `Lc ${min}${rule.wcag ? ` and ${rule.wcag}:1` : ""}`
+          const bars = `Lc ${min}${wcagMin(r.kind, rule) ? ` and ${wcagMin(r.kind, rule)}:1` : ""}`
           derived[mode] = `derived: ${base.value} measures Lc ${worst.toFixed(1)} against ${rule.against.join(" / ")}; walked toward ${got.toward} to ${bars}`
           css[mode] = lo(got.hex)
           value[mode] = got.hex
         } else {
           unmet[mode] =
             `${r.name} (${mode}): derive "text" found no value between #000000 and #FFFFFF from ${base.value} ` +
-            `that clears Lc ${min}${rule.wcag ? ` and ${rule.wcag}:1` : ""} against ${rule.against.join(" / ")} (Lc ${worst.toFixed(1)} now)`
+            `that clears Lc ${min}${wcagMin(r.kind, rule) ? ` and ${wcagMin(r.kind, rule)}:1` : ""} against ${rule.against.join(" / ")} (Lc ${worst.toFixed(1)} now)`
         }
       }
       if (r.derive === "fill") {
@@ -856,7 +873,7 @@ export function resolveRoles(
             role: x,
             name: x.name,
             min: contrastMin(x.kind, x.contrast),
-            ratio: x.contrast.wcag,
+            ratio: wcagMin(x.kind, x.contrast) || undefined,
             hex: x.derive === "text" || resolving.has(x.name) ? underived(x.name, mode) : resolve(x.name).value[mode],
           }))
         const reaches = (f: (typeof fgs)[number], fill: string) => {
@@ -938,6 +955,8 @@ export interface GateResult {
   min: number
   pass: boolean
   pending?: string
+  /** Set where the rule has a named exception to the WCAG text minimum (`wcagException`). */
+  wcagException?: string
   /** Set where the rule also carries a WCAG ratio: the measured ratio and its minimum. */
   wcag?: { measure: number; min: number }
 }
@@ -972,8 +991,10 @@ export function roleGate(resolved: Map<string, ResolvedRole>): {
   violations: string[]
   pending: GateResult[]
   decorative: { role: string; reason: string }[]
+  wcagExceptions: { role: string; min: number; floor: number; reason: string }[]
 } {
   const results: GateResult[] = []
+  const wcagExceptions: { role: string; min: number; floor: number; reason: string }[] = []
   const violations: string[] = []
   const decorative: { role: string; reason: string }[] = []
   for (const { role: r, value, unmet } of resolved.values()) {
@@ -993,21 +1014,30 @@ export function roleGate(resolved: Map<string, ResolvedRole>): {
     const declared = contrastMin(r.kind, rule)
     if (declared < floor && !rule.pending) violations.push(`${r.name}: declares Lc ${declared}, under the ${r.kind} bar of ${floor}`)
     const min = Math.max(declared, floor)
+    // The WCAG minimum: the kind's floor (7 body, 4.5 nonBody, 3 ui), or the rule's own higher ratio.
+    const wcagBar = wcagMin(r.kind, rule)
+    if ((rule.wcag ?? Infinity) < wcagFloor(r.kind, rule) && !rule.pending && !rule.wcagException)
+      violations.push(`${r.name}: declares WCAG ${rule.wcag}:1, under the ${r.kind} minimum of ${wcagFloor(r.kind, rule)}:1`)
+    if (rule.wcagException) {
+      if (r.kind !== "text") violations.push(`${r.name}: only a text role can carry a wcagException, not a ${r.kind} role`)
+      else wcagExceptions.push({ role: r.name, min: rule.wcagException.min, floor: wcagFloor(r.kind, rule), reason: rule.wcagException.reason })
+    }
     for (const mode of MODES) {
       for (const bg of rule.against) {
         const on = resolved.get(bg)!.value[mode]
         const raw = Math.abs(apca(value[mode], on))
         const measure = +raw.toFixed(1)
-        const ratio = rule.wcag === undefined ? undefined : wcag(value[mode], on)
-        const wcagOk = ratio === undefined || ratio >= rule.wcag!
+        const ratio = wcagBar === 0 ? undefined : wcag(value[mode], on)
+        const wcagOk = ratio === undefined || ratio >= wcagBar
         const res: GateResult = { role: r.name, mode, against: bg, measure, min, pass: raw >= min && wcagOk }
-        if (ratio !== undefined) res.wcag = { measure: +ratio.toFixed(2), min: rule.wcag! }
+        if (ratio !== undefined) res.wcag = { measure: +ratio.toFixed(2), min: wcagBar }
+        if (rule.wcagException) res.wcagException = rule.wcagException.reason
         if (!res.pass && rule.pending) res.pending = rule.pending
         results.push(res)
         if (!res.pass && !res.pending) {
           violations.push(
             `${r.name} (${mode}): Lc ${measure} on ${bg}, needs ${min}` +
-              (ratio === undefined ? "" : `; WCAG ${ratio.toFixed(2)}:1, needs ${rule.wcag}:1`)
+              (ratio === undefined ? "" : `; WCAG ${ratio.toFixed(2)}:1, needs ${wcagBar}:1`)
           )
         }
       }
@@ -1022,7 +1052,7 @@ export function roleGate(resolved: Map<string, ResolvedRole>): {
     results.push({ role: r.name, mode: "both", against: "spacing-touch-min", measure, min: touchMin, pass: measure >= touchMin })
     if (measure < touchMin) violations.push(`${r.name}: ${measure}px, under the ${touchMin}px touch floor`)
   }
-  return { results, violations, pending: results.filter((x) => x.pending), decorative }
+  return { results, violations, pending: results.filter((x) => x.pending), decorative, wcagExceptions }
 }
 
 /**

@@ -72,7 +72,7 @@ mod tests {
     #[test]
     fn destructive_is_red_and_distinct_from_danger() {
         let roles = Roles::mzizi();
-        assert_eq!(roles.light.destructive, "#B3261E");
+        assert_eq!(roles.light.destructive, "#AA241D");
         assert_ne!(roles.light.destructive, roles.light.status_danger);
     }
 
