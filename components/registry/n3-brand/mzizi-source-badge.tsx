@@ -86,7 +86,7 @@ function MziziSourceBadge({
       <span className="font-medium text-foreground">{sourceName}</span>
       <Icon className="size-3" style={{ color: config.color }} />
       {showLabel && (
-        <span className="text-[10px]" style={{ color: config.color }}>
+        <span className="text-sm" style={{ color: config.color }}>
           {config.label}
         </span>
       )}

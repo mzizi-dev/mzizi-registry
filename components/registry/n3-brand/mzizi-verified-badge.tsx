@@ -65,7 +65,7 @@ import { cn } from "@/lib/ui-utils"
 const PORTAL = "https://mzizi.dev/components/mzizi-verified-badge"
 const BOX = { sm: "size-3.5", md: "size-[18px]", lg: "size-6", xl: "size-8" } as const
 /** The glyph is 1em, so the box's font size sizes it: 10, 12, 16 and 20px. */
-const GLYPH = { sm: "text-[10px]", md: "text-[12px]", lg: "text-[16px]", xl: "text-[20px]" } as const
+const GLYPH = { sm: "text-sm", md: "text-sm", lg: "text-[16px]", xl: "text-[20px]" } as const
 
 interface MziziVerifiedBadgeProps {
   /** Legacy: the verification tier code (bundu.verificationTier). Ignored when `assurance` is set. */

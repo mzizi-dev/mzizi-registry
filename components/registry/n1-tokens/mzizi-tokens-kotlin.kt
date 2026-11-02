@@ -430,15 +430,15 @@ object MziziRoles {
         val sidebarRing = Color(0xFF86DCFF)
     }
 
-    val spacingTouch = 44.dp
-    val spacingTouchMin = 44.dp
-    val spacingControl = 44.dp
-    val spacingControlSm = 44.dp
-    val spacingControlLg = 48.dp
-    val spacingControlIcon = 44.dp
+    val spacingTouch = 49.dp
+    val spacingTouchMin = 49.dp
+    val spacingControl = 49.dp
+    val spacingControlSm = 49.dp
+    val spacingControlLg = 56.dp
+    val spacingControlIcon = 49.dp
     val spacingControlDense = 32.dp
-    val spacingField = 44.dp
-    val spacingFieldSm = 44.dp
+    val spacingField = 49.dp
+    val spacingFieldSm = 49.dp
     val radiusControl = 9999.dp
     val radiusField = 9999.dp
     val radiusBadge = 9999.dp

@@ -5,7 +5,7 @@
   "version": "1.0.0",
   "node": 6,
   "kind": "pattern",
-  "summary": "The one search box of a Discover page: a GET form, so every search is a URL that works with no JavaScript. 44px on touch and 36px at desktop density (the size roles; this supersedes the earlier same-size-on-every-pointer rule, an owner call flagged in #597).",
+  "summary": "The one search box of a Discover page: a GET form, so every search is a URL that works with no JavaScript. 49px on touch and at desktop density (the field roles: a native input cannot carry a pseudo-element;  this supersedes the earlier same-size-on-every-pointer rule, an owner call flagged in #597).",
   "implementations": {
     "astro": {
       "registry": "discover-search",
@@ -119,14 +119,14 @@
     {
       "part": "field",
       "select": "input[type=\"search\"]",
-      "fine": 36,
-      "coarse": 44
+      "fine": 49,
+      "coarse": 49
     },
     {
       "part": "submit",
       "select": "button[type=\"submit\"]",
       "fine": 36,
-      "coarse": 44
+      "coarse": 49
     }
   ],
   "theming": {

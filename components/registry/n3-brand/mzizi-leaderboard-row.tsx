@@ -127,7 +127,7 @@ function MziziLeaderboardRow({
         {trend && (
           <span
             className={cn(
-              "flex items-center gap-0.5 text-[10px]",
+              "flex items-center gap-0.5 text-sm",
               trend === "up"
                 ? "text-[var(--status-success,#4ADE80)]"
                 : trend === "down"

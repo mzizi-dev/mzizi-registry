@@ -43,12 +43,14 @@ import type { ExperimentalToken, HeritageToken, MineralToken } from "../lib/toke
 import { backgroundColors as BACKGROUNDS, ecosystem, ecosystemAliases, semanticColors as SEMANTIC } from "../lib/tokens/brand.source"
 import {
   BODY,
-  BODY_FLOOR_FINE_PX,
+  BODY_FLOOR_PX,
+  BUNDU_FLOOR,
+  CAPTION_FLOOR_PX,
+  FLOOR_VISIBLE_FINE_PX,
   DENSITY_DESKTOP_QUERY,
   DENSITY_TABLET_QUERY,
   DESKTOP_SIZES,
   FLOOR_COARSE_PX,
-  FLOOR_FINE_PX,
   LEGACY_FLOOR_PX,
   LEGACY_SIZES,
   colorKey,
@@ -258,26 +260,25 @@ export const TYPE = [
   ["h3", "1.375rem", 22, "1.25", 600, "serif"], // Title 2 (leading comes from --lh-*)
   ["h4", "1.25rem", 20, "1.3", 600, "sans"], // Title 3 (leading comes from --lh-*)
   ["h5", "1.0625rem", 17, "1.4", 600, "sans"], // Headline (leading comes from --lh-*)
-  ["h6", "1rem", 16, "1.4", 600, "sans"], // Callout (leading comes from --lh-*)
+  ["h6", "1.0625rem", 17, "1.4", 600, "sans"], // Callout 16 raised to the Bundu body floor, 17 (leading comes from --lh-*)
   ["body-lg", "1.125rem", 18, "1.6", 400, "sans"], // no Apple style between Body 17 and Title 3 20; unchanged
   ["body", "1.0625rem", 17, "1.6", 400, "sans"], // Body (leading comes from --lh-*)
-  ["small", "0.9375rem", 15, "1.5", 400, "sans"], // Subhead (leading comes from --lh-*)
-  ["caption", "0.75rem", 12, "1.5", 400, "sans"], // Caption 1 (leading comes from --lh-*) (Apple minimum is 11)
+  ["small", "0.875rem", 14, "1.5", 400, "sans"], // secondary label: the Bundu caption floor, 14 (Apple Subhead is 15)
+  ["caption", "0.875rem", 14, "1.5", 400, "sans"], // caption, metadata: the Bundu caption floor, 14 (Apple Caption 1 is 12, its minimum 11)
   ["code", "0.875rem", 14, "1.6", 400, "mono"],
 ] as const
 
 /**
- * Type under density: only the sizes that move are listed, `[rem, px]`.
- * Tablet (min-width 48rem, any pointer) steps body down to the web default;
- * desktop (fine pointer + hover + min-width 64rem) steps down again, never under
- * 14px for body text or 12px for captions (Apple macOS minimum is 10 pt; our floor is higher).
+ * Type under density: only the sizes that move are listed, `[rem, px]`. Display and heading sizes step down as
+ * screens grow. BODY AND SECONDARY TEXT DO NOT: the Bundu floor (owner ruling 2026-11-02, `BUNDU_FLOOR` in
+ * `lib/tokens/roles.source.ts`) holds body text at 17px on every device, desktop included, and captions,
+ * metadata and secondary labels at 14px. Every step listed here stays at or above the body floor;
+ * `__tests__/bundu-floor.test.ts` fails when one does not.
  */
 export const TYPE_STEPS = {
   tablet: {
     display: ["3rem", 48],
     "display-sm": ["2.5rem", 40],
-    body: ["1rem", 16],
-    small: ["0.875rem", 14],
   },
   desktop: {
     display: ["3rem", 48],
@@ -286,11 +287,6 @@ export const TYPE_STEPS = {
     h2: ["1.5rem", 24],
     h3: ["1.25rem", 20],
     h4: ["1.125rem", 18],
-    h5: ["1rem", 16],
-    h6: ["0.9375rem", 15],
-    "body-lg": ["1.0625rem", 17],
-    body: ["0.9375rem", 15],
-    small: ["0.875rem", 14],
   },
 } as const satisfies Record<string, Record<string, readonly [string, number]>>
 
@@ -1332,13 +1328,17 @@ export function renderGlobalsCss(
  * component never branches on screen size. Density is about visual size only:
  * it is not a network-quality signal, because laptops and iPads are usually on wifi.
  *
- *   phone / coarse pointer   the :root values: Apple HIG (44pt targets, 17pt body)
- *   tablet (>= 48rem)        type steps down; targets stay 44px (an iPad is still touched)
- *   desktop                  fine pointer + hover + >= 64rem: targets 28-40px, floor 24px
+ *   phone / coarse pointer   the :root values: 49px targets (the Bundu hit area), 17px body
+ *   tablet (>= 48rem)        display type steps down; targets stay 49px (an iPad is still touched)
+ *   desktop                  fine pointer + hover + >= 64rem: controls are DRAWN 28-40px
  *
- * Floors that hold in every layer: targets >= 24px (WCAG 2.2 SC 2.5.8), desktop
- * body text >= 14px, zoom and prefers-reduced-motion untouched. Gaps between
- * targets are spacing tokens, which density does not change.
+ * THE BUNDU FLOOR holds in every layer (owner ruling 2026-11-02, `BUNDU_FLOOR`): body text 17px and
+ * captions 14px (so no type step lives in these media queries below them), and a 49px HIT REGION on
+ * every interactive control, desktop included. A control may be drawn smaller (28px and up) but keeps
+ * its hit region through the `hit-area` rule below; `--target-floor` is never lowered here. Native
+ * form fields cannot carry a pseudo-element, so they are drawn at the hit area. Zoom and
+ * prefers-reduced-motion are untouched. Gaps between targets are spacing tokens, which density does
+ * not change.
  *
  * \`:root[data-mzizi-sizes="legacy"]\` restores the pre-2026-11-01 values for a consumer
  * that has not migrated; it outranks every media block above it.
@@ -1356,6 +1356,26 @@ function densityLayer(): string {
   return `/* ════════════════════════════════════════════════════════════════════════════
  * DENSITY — sizes step down as screens grow (2026-11-01). See densityLayer().
  * ════════════════════════════════════════════════════════════════════════════ */
+/* The ${FLOOR_COARSE_PX}px hit region (BUNDU_FLOOR.hitAreaPx): a transparent pseudo-element grows the click and
+   touch region of every button-like control to the floor, so a control drawn at ${FLOOR_VISIBLE_FINE_PX}px on a
+   desktop is still ${FLOOR_COARSE_PX}px to hit. It is in the base layer, so a utility on the element (absolute,
+   after:*) wins, and it is a no-op where the control is already drawn at the floor or larger. Inline links in
+   running text are exempt, as in WCAG 2.5.8; add \`hit-area\` to any other target. */
+@layer base {
+  :where(button, [role="button"], [role="tab"], [role="switch"], [role="menuitem"], [role="menuitemcheckbox"], [role="menuitemradio"], [role="option"], summary, .hit-area) {
+    position: relative;
+  }
+  :where(button, [role="button"], [role="tab"], [role="switch"], [role="menuitem"], [role="menuitemcheckbox"], [role="menuitemradio"], [role="option"], summary, .hit-area)::after {
+    content: "";
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: max(100%, var(--target-floor));
+    height: max(100%, var(--target-floor));
+    transform: translate(-50%, -50%);
+  }
+}
+
 @media ${DENSITY_TABLET_QUERY} {
   :root {
 ${typeLines(TYPE_STEPS.tablet).join("\n")}
@@ -1364,8 +1384,7 @@ ${typeLines(TYPE_STEPS.tablet).join("\n")}
 
 @media ${DENSITY_DESKTOP_QUERY} {
   :root {
-    --target-floor: ${FLOOR_FINE_PX / 16}rem; /* ${FLOOR_FINE_PX}px — WCAG 2.2 SC 2.5.8 */
-    --size-touch-min: ${FLOOR_FINE_PX / 16}rem; /* ${FLOOR_FINE_PX}px, the same floor */
+    --control-floor: ${FLOOR_VISIBLE_FINE_PX / 16}rem; /* ${FLOOR_VISIBLE_FINE_PX}px: the smallest a control is DRAWN. --target-floor (the ${FLOOR_COARSE_PX}px hit region) is not lowered. */
     --touch-target-lg: ${DESKTOP_SIZES["spacing-touch"]}px;
     --touch-target: ${DESKTOP_SIZES["spacing-control-sm"]}px;
     --h-button-default: ${DESKTOP_SIZES["spacing-control"] / 16}rem; /* ${DESKTOP_SIZES["spacing-control"]}px */
@@ -1376,10 +1395,11 @@ ${typeLines(TYPE_STEPS.desktop).join("\n")}
   }
 }
 
-/* Opt out until you have migrated: the sizes consumers pinned before 2026-11-01. */
+/* Opt out until you have migrated: the sizes consumers pinned before 2026-11-01. It restores the old sizes (and so
+   steps OUT of the Bundu floor: 16px body, 12px captions, 48px targets); remove it to take the floor. */
 :root[data-mzizi-sizes="legacy"] {
   --target-floor: ${LEGACY_FLOOR_PX / 16}rem; /* ${LEGACY_FLOOR_PX}px */
-  --size-touch-min: ${LEGACY_FLOOR_PX / 16}rem; /* ${LEGACY_FLOOR_PX}px */
+  --control-floor: ${LEGACY_FLOOR_PX / 16}rem; /* ${LEGACY_FLOOR_PX}px */
   --touch-target-lg: 56px;
   --touch-target: 48px;
   --h-button-default: 3.5rem; /* 56px */
@@ -1507,6 +1527,14 @@ function themeBlock(minerals: Mineral[], heritage: Heritage[], experimental: Exp
   for (const [n] of RADIUS) out.push(`  --radius-${n}: var(--r-${n});`)
   for (const [n] of TYPE) out.push(`  --text-${n}: var(--fs-${n});`)
   for (const [alias, size] of TYPE_ALIASES) out.push(`  --text-${alias}: var(--fs-${size});`)
+  // Tailwind's own default steps, raised to the Bundu floor: `text-xs` (12px) and `text-base` (16px) are
+  // below it, so a component that names them still paints 14px and 17px.
+  out.push(`  --text-xs: var(--fs-caption); /* Tailwind default 12px, raised to the ${CAPTION_FLOOR_PX}px caption floor */`)
+  out.push(`  --text-xs--line-height: var(--lh-small);`)
+  out.push(`  --text-sm: var(--fs-small); /* ${CAPTION_FLOOR_PX}px */`)
+  out.push(`  --text-sm--line-height: var(--lh-small);`)
+  out.push(`  --text-base: var(--fs-body); /* Tailwind default 16px, raised to the ${BODY_FLOOR_PX}px body floor */`)
+  out.push(`  --text-base--line-height: var(--lh-body);`)
   for (const [n] of SHADOW) out.push(`  --shadow-${n}: var(--elevation-${n});`)
   for (const [n] of EASING) out.push(`  --ease-${n}: var(--easing-${n});`)
   out.push("}")
@@ -1520,27 +1548,31 @@ function themeBlock(minerals: Mineral[], heritage: Heritage[], experimental: Exp
  *   - `fixed`: the role's OWN value, as a literal no brand can override;
  *   - `floor`: `max(var(--size-<name>), <floor>)`, where the floor is
  *     `--target-floor`, so a brand that lowers the bare var still
- *     paints at least the floor (44px coarse, 24px desktop density);
+ *     paints at least the control floor (49px, or 28px drawn at desktop density);
  *   - otherwise: `var(--size-<name>)`, which a brand moves freely
  *     (`spacing-control-dense`, fine pointer only).
  */
 export function sizeRoleTheme(roles: readonly Role[], resolved: Map<string, ResolvedRole>): string[] {
   const touchMin = resolved.get("spacing-touch-min")
   if (!touchMin?.role.fixed) throw new Error(`"spacing-touch-min" must be a fixed size role: it is the touch floor`)
-  // The floor is a variable, not a literal: `--target-floor` is 44px on a coarse pointer and
-  // 24px under desktop density (see `densityLayer()`). It is declared in :root's invariants,
+  // The floors are variables, not literals: `--target-floor` is 49px everywhere and `--control-floor` is 49px, or
+  // 28px under desktop density (see `densityLayer()`). They are declared in :root's invariants,
   // not in a brand block, so a brand pack that moves a size role cannot lower it.
-  const floor = "var(--target-floor)"
+  // `--target-floor` is the hit region: 49px on every device, never lowered. A floored size role is clamped to
+  // `--control-floor` instead: 49px, or the 28px a desktop control may be DRAWN at (its hit region is kept
+  // by the `hit-area` rule in `densityLayer()`).
+  const floor = "var(--control-floor)"
+  const hit = "var(--target-floor)"
   return roles
     .filter((r) => r.kind === "size")
     .map((r) => {
       const own = resolved.get(r.name)
       if (!own) throw new Error(`size role "${r.name}" was not resolved`)
       if (r.fixed) {
-        if (r.name === touchMin.role.name) return `  --${r.name}: ${floor}; /* the touch floor: 44px coarse pointer, 24px desktop density; no brand can lower it */`
+        if (r.name === touchMin.role.name) return `  --${r.name}: ${hit}; /* the hit-area floor: ${FLOOR_COARSE_PX}px on every device; no brand can lower it */`
         return `  --${r.name}: ${own.css.light}; /* a literal: fixed, no brand can move it */`
       }
-      if (r.floor) return `  --${r.name}: max(var(${roleVar(r)}), ${floor}); /* never under the touch floor */`
+      if (r.floor) return `  --${r.name}: max(var(${roleVar(r)}), ${floor}); /* never under the control floor: ${FLOOR_COARSE_PX}px, or ${FLOOR_VISIBLE_FINE_PX}px drawn at desktop density */`
       return `  --${r.name}: var(${roleVar(r)});`
     })
 }
@@ -1656,7 +1688,8 @@ function invariants(resolved: Map<string, ResolvedRole>): string {
   out.push("")
   out.push(box("TOUCH TARGETS AND CONTROL HEIGHTS"))
   for (const [n, v, why] of SIZING) out.push(`  --${n}: ${v}; /* ${why} */`)
-  out.push(`  --target-floor: ${FLOOR_COARSE_PX / 16}rem; /* ${FLOOR_COARSE_PX}px — Apple HIG Buttons: a hit region of at least 44x44 pt. Density lowers it to ${FLOOR_FINE_PX}px on a fine pointer. */`)
+  out.push(`  --target-floor: ${FLOOR_COARSE_PX / 16}rem; /* ${FLOOR_COARSE_PX}px — the Bundu hit region (7 x 7), on every device. Density never lowers it. */`)
+  out.push(`  --control-floor: ${FLOOR_COARSE_PX / 16}rem; /* ${FLOOR_COARSE_PX}px: the smallest a floored control is drawn; desktop density lowers it to ${FLOOR_VISIBLE_FINE_PX}px. */`)
   out.push(`  /* Size roles (#484) — \`h-touch\`, \`min-h-touch-min\`, \`h-control\`… The touch floor is`)
   out.push(`     --target-floor, set here and by the density layer only; moving --size-touch-min does not`)
   out.push(`     lower min-h-touch-min, and every floored role (touch, control, field) is clamped in`)
@@ -1959,12 +1992,13 @@ export function renderGlobalsJson(
           "Sizes step down as screens grow (owner decision 2026-11-01). Visual size only: never a network-quality signal. " +
           "Phone / coarse pointer is the role defaults (Apple HIG); tablet steps type down; desktop is a fine pointer with hover.",
         queries: { tablet: DENSITY_TABLET_QUERY, desktop: DENSITY_DESKTOP_QUERY },
-        floorPx: { coarse: FLOOR_COARSE_PX, fine: FLOOR_FINE_PX, bodyFine: BODY_FLOOR_FINE_PX },
+        bunduFloor: BUNDU_FLOOR,
+        floorPx: { hitArea: FLOOR_COARSE_PX, visibleFine: FLOOR_VISIBLE_FINE_PX, body: BODY_FLOOR_PX, caption: CAPTION_FLOOR_PX },
         desktopPx: { ...DESKTOP_SIZES },
         legacyPx: { ...LEGACY_SIZES, floor: LEGACY_FLOOR_PX },
         typeSteps: TYPE_STEPS,
         apple: {
-          buttons: "https://developer.apple.com/design/human-interface-guidelines/buttons: a hit region of at least 44x44 pt",
+          buttons: "https://developer.apple.com/design/human-interface-guidelines/buttons: a hit region of at least 44x44 pt (Bundu keeps 49)",
           accessibility: "https://developer.apple.com/design/human-interface-guidelines/accessibility: iOS and iPadOS control size, default 44x44 pt, minimum 28x28 pt",
           typography: "https://developer.apple.com/design/human-interface-guidelines/typography: iOS and iPadOS default 17 pt, minimum 11 pt; Large (default) text styles",
           readOn: "2026-11-01",

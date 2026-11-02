@@ -5,7 +5,7 @@ currentVersion: 2
 description: "The primary interface is a mobile device with constrained resources."
 dnaRole: "documentation"
 doctrineVersion: "4.1.0"
-implementation: "Astro + Capacitor as a thin native shell. 44px touch targets on a coarse pointer (Apple HIG), stepping down to 36px on a desktop with a fine pointer. Progressive loading. Lazy sections with memory pressure monitoring."
+implementation: "Astro + Capacitor as a thin native shell. 49px hit region on every device (the Bundu floor, above Apple HIG's 44px), controls drawn down to 36px on a desktop with a fine pointer. Progressive loading. Lazy sections with memory pressure monitoring."
 kind: "architecture"
 model: "mzizi-dna-helix"
 name: "mobile-first"
@@ -20,12 +20,12 @@ Architecture is designed for small screens, limited battery, constrained data pl
 
 ## Sizes follow Apple on touch and step down as screens grow
 
-Owner decision, 2026-11-01: mobile stays the design centre, but a laptop or an iPad is not a phone. Touch sizes follow Apple's Human Interface Guidelines (a 44x44 pt hit region; 17 pt body), and a density layer in the token layer lowers them for a fine pointer on a wide screen. It is defined once as media queries on the size variables; a component never branches on screen size. Density is visual only: a wide screen is not evidence of a fast network, so loading strategy, lazy sections and memory-pressure behaviour above do not change with it.
+Owner decision, 2026-11-01: mobile stays the design centre, but a laptop or an iPad is not a phone. Touch sizes follow Apple's Human Interface Guidelines, raised to the Bundu floor (a 49px hit region; 17px body), and a density layer in the token layer draws controls smaller for a fine pointer on a wide screen, and keeps the hit region and the text floor (owner ruling 2026-11-02: the Bundu floor). It is defined once as media queries on the size variables; a component never branches on screen size. Density is visual only: a wide screen is not evidence of a fast network, so loading strategy, lazy sections and memory-pressure behaviour above do not change with it.
 
-| Layer        | Query                                               | Control                   | Body |
-| ------------ | --------------------------------------------------- | ------------------------- | ---- |
-| Phone, touch | the defaults                                        | 44px (large 48px)         | 17px |
-| Tablet       | `min-width: 48rem`                                  | 44px (touched)            | 16px |
-| Desktop      | `min-width: 64rem`, `pointer: fine`, `hover: hover` | 36px (32 small, 40 large) | 15px |
+| Layer        | Query                                               | Control drawn at                       | Hit region | Body | Caption |
+| ------------ | --------------------------------------------------- | -------------------------------------- | ---------- | ---- | ------- |
+| Phone, touch | the defaults                                        | 49px (large 56px)                      | 49px       | 17px | 14px    |
+| Tablet       | `min-width: 48rem`                                  | 49px (touched)                         | 49px       | 17px | 14px    |
+| Desktop      | `min-width: 64rem`, `pointer: fine`, `hover: hover` | 36px (32 small, 40 large; fields 49px) | 49px       | 17px | 14px    |
 
-Floors in every layer: targets 24px (WCAG 2.2 SC 2.5.8), desktop body text 14px, zoom and `prefers-reduced-motion` respected.
+The Bundu floor in every layer: a 49px hit region on every interactive control (a smaller drawn control keeps it through a transparent pseudo-element), body text 17px, captions and secondary labels 14px, zoom and `prefers-reduced-motion` respected.

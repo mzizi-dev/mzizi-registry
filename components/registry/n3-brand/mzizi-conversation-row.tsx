@@ -107,7 +107,7 @@ function MziziConversationRow({
           {lastMessageTime && (
             <span
               className={cn(
-                "shrink-0 text-[10px]",
+                "shrink-0 text-sm",
                 hasUnread ? "font-semibold text-[var(--color-malachite)]" : "text-muted-foreground"
               )}
             >
@@ -126,7 +126,7 @@ function MziziConversationRow({
               {lastMessage}
             </span>
             {hasUnread && (
-              <span className="flex size-5 shrink-0 items-center justify-center rounded-full bg-[var(--color-malachite)] text-[10px] font-bold text-background">
+              <span className="flex size-5 shrink-0 items-center justify-center rounded-full bg-[var(--color-malachite)] text-sm font-bold text-background">
                 {unreadCount > 99 ? "99+" : unreadCount}
               </span>
             )}

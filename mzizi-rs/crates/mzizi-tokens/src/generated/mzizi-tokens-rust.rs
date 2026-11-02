@@ -961,24 +961,24 @@ impl Roles {
         }
     }
 
-    /// 44px. The default touch target (`h-touch`, `min-h-touch`). brandMeta.accessibility.defaultTouchTarget.
-    pub const SPACING_TOUCH: u32 = 44;
-    /// 44px. The touch floor (`min-h-touch-min`): 44px on a coarse pointer (Apple HIG Buttons: 44x44 pt), registered as `--target-floor`, which the density layer lowers to 24px on a fine pointer (WCAG 2.2 SC 2.5.8). No brand pack can move it (owner decision 2026-11-01 supersedes the 48px floor of 2026-10-07).
-    pub const SPACING_TOUCH_MIN: u32 = 44;
-    /// 44px. Default control height. componentSpecs.button.heights.default.
-    pub const SPACING_CONTROL: u32 = 44;
-    /// 44px. Small control height. componentSpecs.button.heights.sm.
-    pub const SPACING_CONTROL_SM: u32 = 44;
-    /// 48px. Large control height. componentSpecs.button.heights.lg.
-    pub const SPACING_CONTROL_LG: u32 = 48;
-    /// 44px. Icon-button size. componentSpecs.button.heights.icon.
-    pub const SPACING_CONTROL_ICON: u32 = 44;
-    /// 32px. Dense control height for a fine pointer only (`pointer-fine:h-control-dense`); below the touch floor on purpose (#484 §2a); 28px under desktop density.
+    /// 49px. The default touch target (`h-touch`, `min-h-touch`). brandMeta.accessibility.defaultTouchTarget.
+    pub const SPACING_TOUCH: u32 = 49;
+    /// 49px. The hit-area floor (`min-h-touch-min`): 49px (`BUNDU_FLOOR.hitAreaPx`, 7 x 7, above Apple HIG Buttons' 44x44 pt) on every device, desktop included, registered as `--target-floor`. Density never lowers it: a desktop control may be drawn smaller but keeps this hit region (owner ruling 2026-11-02, replacing the 24px desktop floor of 2026-11-01 and the 44px of 2026-11-01). No brand pack can move it.
+    pub const SPACING_TOUCH_MIN: u32 = 49;
+    /// 49px. Default control height. componentSpecs.button.heights.default.
+    pub const SPACING_CONTROL: u32 = 49;
+    /// 49px. Small control height. componentSpecs.button.heights.sm.
+    pub const SPACING_CONTROL_SM: u32 = 49;
+    /// 56px. Large control height. componentSpecs.button.heights.lg.
+    pub const SPACING_CONTROL_LG: u32 = 56;
+    /// 49px. Icon-button size. componentSpecs.button.heights.icon.
+    pub const SPACING_CONTROL_ICON: u32 = 49;
+    /// 32px. Dense control height for a fine pointer only (`pointer-fine:h-control-dense`); drawn below the hit-area floor on purpose (#484 §2a), its 49px hit region kept by the `hit-area` pseudo-element; 28px under desktop density.
     pub const SPACING_CONTROL_DENSE: u32 = 32;
-    /// 44px. Input height. componentSpecs.input.heights.default.
-    pub const SPACING_FIELD: u32 = 44;
-    /// 44px. Small input height. componentSpecs.input.heights.sm.
-    pub const SPACING_FIELD_SM: u32 = 44;
+    /// 49px. Input height. componentSpecs.input.heights.default.
+    pub const SPACING_FIELD: u32 = 49;
+    /// 49px. Small input height. componentSpecs.input.heights.sm.
+    pub const SPACING_FIELD_SM: u32 = 49;
     /// 9999px. Buttons and controls. Mzizi keeps pill (owner decision 2026-10-07); a pack may switch it.
     pub const RADIUS_CONTROL: u32 = 9999;
     /// 9999px. Inputs. componentSpecs.input.borderRadius.

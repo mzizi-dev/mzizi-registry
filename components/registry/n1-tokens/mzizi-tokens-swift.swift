@@ -427,15 +427,15 @@ public struct MziziRoles {
         public static let sidebarRing = Color(hex: "#86DCFF")
     }
 
-    public static let spacingTouch: CGFloat = 44
-    public static let spacingTouchMin: CGFloat = 44
-    public static let spacingControl: CGFloat = 44
-    public static let spacingControlSm: CGFloat = 44
-    public static let spacingControlLg: CGFloat = 48
-    public static let spacingControlIcon: CGFloat = 44
+    public static let spacingTouch: CGFloat = 49
+    public static let spacingTouchMin: CGFloat = 49
+    public static let spacingControl: CGFloat = 49
+    public static let spacingControlSm: CGFloat = 49
+    public static let spacingControlLg: CGFloat = 56
+    public static let spacingControlIcon: CGFloat = 49
     public static let spacingControlDense: CGFloat = 32
-    public static let spacingField: CGFloat = 44
-    public static let spacingFieldSm: CGFloat = 44
+    public static let spacingField: CGFloat = 49
+    public static let spacingFieldSm: CGFloat = 49
     public static let radiusControl: CGFloat = 9999
     public static let radiusField: CGFloat = 9999
     public static let radiusBadge: CGFloat = 9999

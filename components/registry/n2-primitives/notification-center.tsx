@@ -162,7 +162,7 @@ function NotificationList({ items }: { items: Notification[] }) {
                     <p className="text-xs text-muted-foreground">{notif.description}</p>
                   </div>
                   <div className="flex shrink-0 items-center gap-2">
-                    <span className="text-[10px] text-muted-foreground">{notif.time}</span>
+                    <span className="text-sm text-muted-foreground">{notif.time}</span>
                     {!notif.read && <span className="size-2 rounded-full bg-cobalt" />}
                   </div>
                 </div>

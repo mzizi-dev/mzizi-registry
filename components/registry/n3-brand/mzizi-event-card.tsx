@@ -70,7 +70,7 @@ function EventCard({
       {...props}
     >
       {category && (
-        <span className="text-[10px] font-medium tracking-wider text-muted-foreground uppercase">
+        <span className="text-sm font-medium tracking-wider text-muted-foreground uppercase">
           {category}
         </span>
       )}

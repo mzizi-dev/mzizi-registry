@@ -63,7 +63,7 @@ function NftCard({
           {type && (
             <span
               className={cn(
-                "shrink-0 rounded-full px-1.5 py-0.5 text-[9px] font-bold uppercase",
+                "shrink-0 rounded-full px-1.5 py-0.5 text-sm font-bold uppercase",
                 typeColors[type]
               )}
             >
@@ -75,7 +75,7 @@ function NftCard({
           <div className="mt-0.5 truncate text-xs text-muted-foreground">{collection}</div>
         )}
         {tokenId && (
-          <div className="mt-1 font-mono text-[10px] text-muted-foreground">#{tokenId}</div>
+          <div className="mt-1 font-mono text-sm text-muted-foreground">#{tokenId}</div>
         )}
       </div>
     </div>

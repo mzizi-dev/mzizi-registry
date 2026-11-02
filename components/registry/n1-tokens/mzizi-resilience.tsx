@@ -471,7 +471,7 @@ export function MziziHealthPanel({ className }: MziziHealthPanelProps) {
       <div className="mb-3 flex items-center justify-between">
         <span className="text-sm font-medium text-foreground">System Health</span>
         <span
-          className="flex items-center gap-1.5 rounded-full px-2 py-0.5 text-[10px] font-semibold uppercase"
+          className="flex items-center gap-1.5 rounded-full px-2 py-0.5 text-sm font-semibold uppercase"
           style={{
             backgroundColor: `color-mix(in srgb, ${healthColors[systemHealth]} 15%, transparent)`,
             color: healthColors[systemHealth],
@@ -504,12 +504,12 @@ export function MziziHealthPanel({ className }: MziziHealthPanelProps) {
               {report.avgRenderMs > 0 ? `${report.avgRenderMs}ms` : "—"}
             </span>
             {report.errorCount > 0 && (
-              <span className="rounded bg-[var(--color-error,#F87171)]/10 px-1.5 py-0.5 text-[10px] font-medium text-[var(--color-error,#F87171)]">
+              <span className="rounded bg-[var(--color-error,#F87171)]/10 px-1.5 py-0.5 text-sm font-medium text-[var(--color-error,#F87171)]">
                 {report.errorCount} errors
               </span>
             )}
             {report.dataSource && report.dataSource !== "cloud" && (
-              <span className="rounded bg-[var(--color-warning,#FBBF24)]/10 px-1.5 py-0.5 text-[10px] font-medium text-[var(--color-warning,#FBBF24)]">
+              <span className="rounded bg-[var(--color-warning,#FBBF24)]/10 px-1.5 py-0.5 text-sm font-medium text-[var(--color-warning,#FBBF24)]">
                 {report.dataSource}
               </span>
             )}

@@ -95,7 +95,7 @@ function ChatListItem({
           {conversation.unreadCount != null && conversation.unreadCount > 0 && (
             <Badge
               variant="default"
-              className="size-5 shrink-0 justify-center rounded-full p-0 text-[10px]"
+              className="size-5 shrink-0 justify-center rounded-full p-0 text-sm"
             >
               {conversation.unreadCount > 99 ? "99+" : conversation.unreadCount}
             </Badge>

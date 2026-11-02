@@ -97,7 +97,7 @@ export function MziziBottomNav({ items, activeId, className }: MziziBottomNavPro
             href={item.href}
             className={cn(
               "relative flex min-w-[56px] flex-col items-center gap-[3px] py-1",
-              "text-[10px] font-medium transition-colors",
+              "text-sm font-medium transition-colors",
               active
                 ? "text-[var(--brand-accent,var(--color-primary,#00B0FF))]"
                 : "text-muted-foreground"

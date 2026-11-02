@@ -32,7 +32,8 @@
  *     sit on (owner decision 2026-10-20, #484). `input`, the edge controls draw today, is
  *     pending until slice 4 moves them
  * The bars are `BODY`, `NON_BODY` and `UI` below; the gate reads them from here.
- *   - every size marked `floor` >= `spacing-touch-min` (48px, a floor no pack can lower)
+ *   - every size marked `floor` >= `spacing-touch-min` (the 49px Bundu hit area, a floor no pack can lower), and the
+ *     smallest size a desktop density layer draws >= `BUNDU_FLOOR.visibleControlMinPx` (28px)
  *   - a `derive` that no walk can satisfy is a violation naming the roles, never #000/#FFF
  * A rule may carry `pending` instead of passing only where the shortfall is a
  * design decision the owner has not made; the gate prints those, and
@@ -199,23 +200,51 @@ export interface Role {
   block: RoleBlock
 }
 
+/**
+ * THE BUNDU FLOOR (owner rulings, 2026-11-02): the hard minimums Bundu stands behind, as high as possible, because
+ * Bundu sets the standard for outdoor reading and for people who find technology hard (older users, African and
+ * emerging markets). ONE definition: the token generators, the contract runner, the Rust evaluator and every
+ * test read these numbers, and `__tests__/bundu-floor.test.ts` fails when any default breaks one.
+ *
+ * Where each number comes from (The Bundu Order draws on biblical mathematical patterns and prime numbers;
+ * owner, 2026-11-02):
+ *   - `unitPx` 7: the radius unit (`brand.source.ts`, `--radius-unit`); the radii are 4/7/12/14/17 and a pill.
+ *   - `bodyPx` 17: body text on every device, desktop included. It is Apple's iOS default body size, and a prime.
+ *   - `captionPx` 14: captions, metadata and secondary labels; 2 x 7. Nothing readable is smaller.
+ *   - `hitAreaPx` 49: every interactive control keeps a hit region this size on every device, desktop included;
+ *     7 x 7, above Apple's 44 pt. A desktop control may DRAW smaller (`visibleControlMinPx` and up) but keeps the
+ *     hit region through padding or the `hit-area` pseudo-element (see `densityLayer()`).
+ *   - `visibleControlMinPx` 28: the smallest a control is DRAWN, at desktop density; 4 x 7 (Apple macOS default 28 pt).
+ *   - `contrast`: WCAG 2 ratios (#610, owner 2026-11-02): body text 7:1, non-body text 4.5:1, UI parts 3:1.
+ *   - `apca`: the APCA Lc bars that stand beside them.
+ */
+export const BUNDU_FLOOR = {
+  unitPx: 7,
+  bodyPx: 17,
+  captionPx: 14,
+  hitAreaPx: 49,
+  visibleControlMinPx: 28,
+  contrast: { body: 7, nonBody: 4.5, ui: 3 },
+  apca: { body: 75, nonBody: 60, ui: 30 },
+} as const
+
 /** APCA Lc 75: body text, and a foreground on its fill. The gate's text floor. */
-export const BODY = 75
+export const BODY = BUNDU_FLOOR.apca.body
 /** APCA's minimum for non-body text: captions, timestamps, metadata (owner decision 2026-10-20, #484). */
-export const NON_BODY = 60
+export const NON_BODY = BUNDU_FLOOR.apca.nonBody
 /** APCA Lc 30: the parts of a control or focus indicator a user has to see. The gate's ui floor. */
-export const UI = 30
+export const UI = BUNDU_FLOOR.apca.ui
 /**
  * WCAG 2 contrast MINIMUMS, enforced next to the APCA bars (owner decision 2026-11-02, #399: "adopt a WCAG 7:1
  * floor for body text. We should have minimums set"). One definition; the gate, `textRamp()`, the derive walks
  * and the tests all read these.
  */
 /** WCAG 2 ratio 7:1 (the AAA level of 1.4.6): body text, and a foreground on its fill. */
-export const WCAG_BODY = 7
+export const WCAG_BODY = BUNDU_FLOOR.contrast.body
 /** WCAG 2 ratio 4.5:1 (1.4.3): non-body text, the `nonBody` rule: captions, timestamps, metadata. */
-export const WCAG_NON_BODY = 4.5
+export const WCAG_NON_BODY = BUNDU_FLOOR.contrast.nonBody
 /** WCAG 2 ratio 3:1 (1.4.11, non-text contrast): the `UI` rule, focus rings and control edges. */
-export const WCAG_UI = 3
+export const WCAG_UI = BUNDU_FLOOR.contrast.ui
 const ON_PAGE = ["base", "surface"] as const
 
 /**
@@ -281,6 +310,10 @@ function spec(name: string): { heights: Record<string, number>; borderRadius: nu
 function access(key: "minTouchTarget" | "defaultTouchTarget"): number {
   const v = brandMeta.accessibility[key]
   if (typeof v !== "number") throw new Error(`brand.source.ts accessibility.${key} is not a number`)
+  // canon (`/v1/brand`) carries the number too; the Bundu floor is the one source and canon must agree.
+  if (v !== BUNDU_FLOOR.hitAreaPx) {
+    throw new Error(`brand.source.ts accessibility.${key} is ${v}px, but BUNDU_FLOOR.hitAreaPx is ${BUNDU_FLOOR.hitAreaPx}px`)
+  }
   return v
 }
 
@@ -1086,7 +1119,7 @@ export const ROLES: readonly Role[] = [
     group: "size",
     kind: "size",
     required: true,
-    description: "The touch floor (`min-h-touch-min`): 44px on a coarse pointer (Apple HIG Buttons: 44x44 pt), registered as `--target-floor`, which the density layer lowers to 24px on a fine pointer (WCAG 2.2 SC 2.5.8). No brand pack can move it (owner decision 2026-11-01 supersedes the 48px floor of 2026-10-07).",
+    description: "The hit-area floor (`min-h-touch-min`): 49px (`BUNDU_FLOOR.hitAreaPx`, 7 x 7, above Apple HIG Buttons' 44x44 pt) on every device, desktop included, registered as `--target-floor`. Density never lowers it: a desktop control may be drawn smaller but keeps this hit region (owner ruling 2026-11-02, replacing the 24px desktop floor of 2026-11-01 and the 44px of 2026-11-01). No brand pack can move it.",
     default: { px: access("minTouchTarget") },
     fixed: true,
     block: "invariant",
@@ -1100,7 +1133,7 @@ export const ROLES: readonly Role[] = [
     group: "size",
     kind: "size",
     required: true,
-    description: "Dense control height for a fine pointer only (`pointer-fine:h-control-dense`); below the touch floor on purpose (#484 §2a); 28px under desktop density.",
+    description: "Dense control height for a fine pointer only (`pointer-fine:h-control-dense`); drawn below the hit-area floor on purpose (#484 §2a), its 49px hit region kept by the `hit-area` pseudo-element; 28px under desktop density.",
     default: { px: 32 },
     block: "invariant",
   },
@@ -1177,12 +1210,12 @@ const rem = (px: number) => `${px / 16}rem`
 /**
  * Touch targets and control heights, under the names the stylesheet has always
  * declared, from `brandMeta`. `touch-target-sm` (40px) is the one value canon
- * does not hold: a dense secondary action below the floor, never a primary control.
+ * does not hold: a dense secondary action drawn below the floor, never a primary control.
  */
 export const SIZING: ReadonlyArray<readonly [string, string, string]> = [
   ["touch-target-lg", `${access("defaultTouchTarget")}px`, "Default touch target — /v1/brand defaultTouchTarget"],
   ["touch-target", `${access("minTouchTarget")}px`, "Minimum touch target — /v1/brand minTouchTarget"],
-  ["touch-target-sm", "40px", "Dense secondary actions; below the 44px coarse-pointer floor, so not for primary controls"],
+  ["touch-target-sm", "40px", "Dense secondary actions: drawn at 40px, the 49px hit region kept by the hit-area pseudo-element; not for primary controls"],
   ["h-button-default", rem(spec("button").heights.default), `${spec("button").heights.default}px — componentSpecs.button.heights.default`],
   ["h-button-sm", rem(spec("button").heights.sm), `${spec("button").heights.sm}px — componentSpecs.button.heights.sm`],
   ["h-input", rem(spec("input").heights.default), `${spec("input").heights.default}px — inputs match the default button`],
@@ -1201,19 +1234,31 @@ export const FONTS = { sans: fontFamily("sans"), serif: fontFamily("serif"), mon
 // Density is about VISUAL SIZE only. It is never read as a network-quality
 // guess: laptops and iPads are usually on wifi.
 
-/** Apple HIG, Buttons: "a hit region of at least 44x44 pt". Floor on a coarse pointer, in px. */
-export const FLOOR_COARSE_PX = 44
-/** WCAG 2.2 SC 2.5.8 Target Size (Minimum): 24x24 CSS px. Floor on a fine pointer, in px. */
-export const FLOOR_FINE_PX = 24
-/** Body text never below this on a fine pointer, in px. */
-export const BODY_FLOOR_FINE_PX = 14
+/**
+ * The hit region every interactive control keeps, on every device including desktop (the Bundu floor, owner ruling
+ * 2026-11-02): `BUNDU_FLOOR.hitAreaPx`, 49px. It replaces Apple HIG Buttons' 44 pt on a coarse pointer AND the
+ * 24px WCAG 2.2 SC 2.5.8 floor registry 4.21.0 set for a fine pointer. Kept under the old name for importers.
+ */
+export const FLOOR_COARSE_PX = BUNDU_FLOOR.hitAreaPx
+/** The smallest a control is DRAWN under desktop density, px. Its hit region is still FLOOR_COARSE_PX. */
+export const FLOOR_VISIBLE_FINE_PX = BUNDU_FLOOR.visibleControlMinPx
+/** The type steps that are secondary text (floor `captionPx`, 14px); every other step is body or a heading (floor `bodyPx`, 17px). */
+export const CAPTION_STEPS: readonly string[] = ["small", "caption", "code"]
+/** Body text never below this on any device, px (17: Apple's iOS default body size). */
+export const BODY_FLOOR_PX = BUNDU_FLOOR.bodyPx
+/** Captions, metadata and secondary labels never below this, px. */
+export const CAPTION_FLOOR_PX = BUNDU_FLOOR.captionPx
 
 /** The fine-pointer, hover-capable, wide-viewport media query. Tablets (coarse pointer) never match, nor does a touchscreen laptop, which also has a coarse pointer (`any-pointer: coarse`). */
 export const DENSITY_DESKTOP_QUERY = "(min-width: 64rem) and (pointer: fine) and (hover: hover) and (not (any-pointer: coarse))"
 /** Type steps down at tablet width on any pointer. */
 export const DENSITY_TABLET_QUERY = "(min-width: 48rem)"
 
-/** Size roles under desktop density, in px. Every one must be >= FLOOR_FINE_PX. */
+/**
+ * Size roles under desktop density, in px: what a control is DRAWN at. Every one must be >= FLOOR_VISIBLE_FINE_PX,
+ * and every control keeps a FLOOR_COARSE_PX hit region through the `hit-area` rule (`densityLayer()`). The field
+ * roles do not step down: a native input or select cannot carry a pseudo-element, so its box IS its hit region.
+ */
 export const DESKTOP_SIZES: Readonly<Record<string, number>> = {
   "spacing-touch": 36,
   "spacing-control": 36,
@@ -1221,8 +1266,8 @@ export const DESKTOP_SIZES: Readonly<Record<string, number>> = {
   "spacing-control-lg": 40,
   "spacing-control-icon": 36,
   "spacing-control-dense": 28,
-  "spacing-field": 36,
-  "spacing-field-sm": 32,
+  "spacing-field": 49,
+  "spacing-field-sm": 49,
 }
 
 /**
@@ -1239,5 +1284,7 @@ export const LEGACY_SIZES: Readonly<Record<string, number>> = {
   "spacing-field": 56,
   "spacing-field-sm": 48,
 }
+/** Size roles whose box is their hit region (native form fields: no pseudo-element): they keep the hit area drawn. */
+export const NATIVE_HIT_ROLES: readonly string[] = ["spacing-field", "spacing-field-sm"]
 /** The legacy touch floor, px. */
 export const LEGACY_FLOOR_PX = 48

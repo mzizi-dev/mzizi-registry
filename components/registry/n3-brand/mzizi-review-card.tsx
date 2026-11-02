@@ -127,7 +127,7 @@ export function MziziReviewCard({
               <p className="text-sm font-medium text-foreground">{reviewer}</p>
               {verificationTier > 0 && <MziziVerifiedBadge tier={TIER_BY_LEVEL[verificationTier]} size="sm" />}
             </div>
-            {date && <p className="text-[10px] text-muted-foreground">{date}</p>}
+            {date && <p className="text-sm text-muted-foreground">{date}</p>}
           </div>
         </div>
         {/* Stars: one role="img" named "4 out of 5 stars" */}
@@ -151,7 +151,7 @@ export function MziziReviewCard({
           <button
             onClick={onHelpful}
             className={cn(
-              "flex items-center gap-1.5 rounded-full px-3 py-1.5 text-[11px] font-medium transition-colors",
+              "flex items-center gap-1.5 rounded-full px-3 py-1.5 text-sm font-medium transition-colors",
               markedHelpful
                 ? "bg-[var(--brand-accent,var(--color-malachite,#64FFDA))]/10 text-[var(--brand-accent,var(--color-malachite,#64FFDA))]"
                 : "min-h-[48px] text-muted-foreground hover:bg-muted focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--color-primary,#00B0FF)]"
@@ -163,7 +163,7 @@ export function MziziReviewCard({
         {onReport && (
           <button
             onClick={onReport}
-            className="text-[10px] text-muted-foreground transition-colors hover:text-foreground"
+            className="text-sm text-muted-foreground transition-colors hover:text-foreground"
           >
             Report
           </button>

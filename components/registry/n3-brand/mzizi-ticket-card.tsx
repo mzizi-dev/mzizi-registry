@@ -120,7 +120,7 @@ function MziziTicketCard({
           </div>
           {/* Status badge */}
           <span
-            className="flex items-center gap-1 rounded-full px-2 py-0.5 text-[10px] font-semibold"
+            className="flex items-center gap-1 rounded-full px-2 py-0.5 text-sm font-semibold"
             style={{
               backgroundColor: `color-mix(in srgb, ${sc.color} 15%, transparent)`,
               color: sc.color,
@@ -159,7 +159,7 @@ function MziziTicketCard({
             </div>
           )}
           {ticketCode && (
-            <div className="mt-1 font-mono text-[10px] tracking-wider text-muted-foreground/60">
+            <div className="mt-1 font-mono text-sm tracking-wider text-muted-foreground/60">
               {ticketCode}
             </div>
           )}

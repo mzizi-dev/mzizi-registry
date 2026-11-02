@@ -25,8 +25,9 @@ use serde_json::Value;
 #[path = "../../../contract-eval/contract_eval.rs"]
 mod contract_eval;
 use contract_eval::{
-    Case, Rendered, declared_height, declared_height_at, holds, inline_styles, render, select,
-    tokens,
+    Case, HIT_AREA_GAPS, HIT_AREA_PX, Rendered, VISIBLE_FINE_MIN_PX, carries_hit_area,
+    declared_height, declared_height_at, hit_region, holds, inline_styles, is_interactive, render,
+    select, tokens,
 };
 
 fn repo() -> PathBuf {
@@ -519,6 +520,25 @@ fn run_density(name: &str, case: &Case, row: &Value) {
         row["coarse"].as_u64(),
         "{name}: density `{part}` (coarse)"
     );
+    // The Bundu floor: every interactive control keeps a HIT_AREA_PX hit region on every device.
+    if is_interactive(hit) && !HIT_AREA_GAPS.contains(&format!("{name}:{part}").as_str()) {
+        let drawn_fine = fine.unwrap_or(0);
+        let drawn_coarse = coarse_height(classes, fine).unwrap_or(drawn_fine);
+        assert!(
+            hit_region(hit, drawn_fine) >= HIT_AREA_PX,
+            "{name}: density `{part}` has a {}px hit region on a fine pointer, below the {HIT_AREA_PX}px Bundu floor",
+            hit_region(hit, drawn_fine)
+        );
+        assert!(
+            hit_region(hit, drawn_coarse) >= HIT_AREA_PX,
+            "{name}: density `{part}` has a {}px hit region on a coarse pointer, below the {HIT_AREA_PX}px Bundu floor",
+            hit_region(hit, drawn_coarse)
+        );
+        assert!(
+            !carries_hit_area(hit) || drawn_fine >= VISIBLE_FINE_MIN_PX,
+            "{name}: density `{part}` is drawn at {drawn_fine}px, below the {VISIBLE_FINE_MIN_PX}px smallest a control is drawn"
+        );
+    }
 }
 
 // ─── The suite ──────────────────────────────────────────────────────────────────────────────
