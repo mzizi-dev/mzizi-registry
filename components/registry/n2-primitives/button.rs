@@ -38,19 +38,20 @@ pub enum ButtonVariant {
     Link,
 }
 
-/// Control size. `Default` and `Lg` are 56px; `Sm` is the 48px floor.
+/// Control size, from the size roles (`h-control`…): the token layer sets them, 44px on a coarse
+/// pointer (Apple HIG: 44x44 pt) and 36px at desktop density. `Sm` is the 44px touch floor.
 #[derive(Debug, Clone, Copy, PartialEq, Eq, Default)]
 pub enum ButtonSize {
-    /// 56px tall — the brand standard.
+    /// `--size-control`: 44px touch, 36px desktop.
     #[default]
     Default,
-    /// 48px tall — the minimum allowed for a touch target.
+    /// `--size-control-sm`: 44px touch (the floor), 32px desktop.
     Sm,
-    /// 56px tall with wider padding.
+    /// `--size-control-lg`: 48px touch, 40px desktop, wider padding.
     Lg,
-    /// 56px square, for an icon alone.
+    /// `--size-control-icon`: 44px touch, 36px desktop square, for an icon alone.
     Icon,
-    /// 48px square, for an icon alone.
+    /// `--size-control-sm` square: 44px touch, 32px desktop, for an icon alone.
     IconSm,
 }
 
@@ -101,16 +102,16 @@ impl ButtonSize {
     pub const fn classes(self) -> &'static str {
         match self {
             Self::Default => {
-                "h-14 gap-2 px-5 has-data-[icon=inline-end]:pr-4 has-data-[icon=inline-start]:pl-4"
+                "h-control gap-2 px-5 has-data-[icon=inline-end]:pr-4 has-data-[icon=inline-start]:pl-4"
             }
             Self::Sm => {
-                "h-12 gap-1.5 px-4 has-data-[icon=inline-end]:pr-3 has-data-[icon=inline-start]:pl-3"
+                "h-control-sm gap-1.5 px-4 has-data-[icon=inline-end]:pr-3 has-data-[icon=inline-start]:pl-3"
             }
             Self::Lg => {
-                "h-14 gap-2 px-6 has-data-[icon=inline-end]:pr-5 has-data-[icon=inline-start]:pl-5"
+                "h-control-lg gap-2 px-6 has-data-[icon=inline-end]:pr-5 has-data-[icon=inline-start]:pl-5"
             }
-            Self::Icon => "size-14",
-            Self::IconSm => "size-12",
+            Self::Icon => "size-control-icon",
+            Self::IconSm => "size-control-sm",
         }
     }
 
@@ -188,7 +189,7 @@ pub const CONTRACT: &str = r#"contract
   slot is "button"
   portal is "https://mzizi.dev/components/button"
   class contains "rounded-full"
-  button "Save" min_height 48
+  button "Save" min_height 44
   when outline class contains "border-border"
-  when sm class contains "h-12"
+  when sm class contains "h-control-sm"
 end"#;

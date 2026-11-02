@@ -1037,7 +1037,7 @@ export const ROLES: readonly Role[] = [
     group: "size",
     kind: "size",
     required: true,
-    description: "The touch floor (`min-h-touch-min`): 48px, fixed — no pack can lower it (owner decision 2026-10-07).",
+    description: "The touch floor (`min-h-touch-min`): 44px on a coarse pointer (Apple HIG Buttons: 44x44 pt), registered as `--target-floor`, which the density layer lowers to 24px on a fine pointer (WCAG 2.2 SC 2.5.8). No brand pack can move it (owner decision 2026-11-01 supersedes the 48px floor of 2026-10-07).",
     default: { px: access("minTouchTarget") },
     fixed: true,
     block: "invariant",
@@ -1051,7 +1051,7 @@ export const ROLES: readonly Role[] = [
     group: "size",
     kind: "size",
     required: true,
-    description: "Dense control height for a fine pointer only (`pointer-fine:h-control-dense`); below the touch floor on purpose (#484 §2a).",
+    description: "Dense control height for a fine pointer only (`pointer-fine:h-control-dense`); below the touch floor on purpose (#484 §2a); 28px under desktop density.",
     default: { px: 32 },
     block: "invariant",
   },
@@ -1133,7 +1133,7 @@ const rem = (px: number) => `${px / 16}rem`
 export const SIZING: ReadonlyArray<readonly [string, string, string]> = [
   ["touch-target-lg", `${access("defaultTouchTarget")}px`, "Default touch target — /v1/brand defaultTouchTarget"],
   ["touch-target", `${access("minTouchTarget")}px`, "Minimum touch target — /v1/brand minTouchTarget"],
-  ["touch-target-sm", "40px", "Dense secondary actions; below the 48px floor, so not for primary controls"],
+  ["touch-target-sm", "40px", "Dense secondary actions; below the 44px coarse-pointer floor, so not for primary controls"],
   ["h-button-default", rem(spec("button").heights.default), `${spec("button").heights.default}px — componentSpecs.button.heights.default`],
   ["h-button-sm", rem(spec("button").heights.sm), `${spec("button").heights.sm}px — componentSpecs.button.heights.sm`],
   ["h-input", rem(spec("input").heights.default), `${spec("input").heights.default}px — inputs match the default button`],
@@ -1141,3 +1141,54 @@ export const SIZING: ReadonlyArray<readonly [string, string, string]> = [
 
 /** The font stacks, by Tailwind alias, for the platform files. */
 export const FONTS = { sans: fontFamily("sans"), serif: fontFamily("serif"), mono: fontFamily("mono") } as const
+
+
+// ─── Density (owner decision 2026-11-01) ─────────────────────────────────────
+//
+// ONE place for "sizes step down as screens grow". Components never branch on
+// screen size; `scripts/render-globals-css.ts` emits these as media queries on
+// the size variables, and `__tests__/density.test.ts` holds them to the floors.
+//
+// Density is about VISUAL SIZE only. It is never read as a network-quality
+// guess: laptops and iPads are usually on wifi.
+
+/** Apple HIG, Buttons: "a hit region of at least 44x44 pt". Floor on a coarse pointer, in px. */
+export const FLOOR_COARSE_PX = 44
+/** WCAG 2.2 SC 2.5.8 Target Size (Minimum): 24x24 CSS px. Floor on a fine pointer, in px. */
+export const FLOOR_FINE_PX = 24
+/** Body text never below this on a fine pointer, in px. */
+export const BODY_FLOOR_FINE_PX = 14
+
+/** The fine-pointer, hover-capable, wide-viewport media query. Tablets (coarse pointer) never match, nor does a touchscreen laptop, which also has a coarse pointer (`any-pointer: coarse`). */
+export const DENSITY_DESKTOP_QUERY = "(min-width: 64rem) and (pointer: fine) and (hover: hover) and (not (any-pointer: coarse))"
+/** Type steps down at tablet width on any pointer. */
+export const DENSITY_TABLET_QUERY = "(min-width: 48rem)"
+
+/** Size roles under desktop density, in px. Every one must be >= FLOOR_FINE_PX. */
+export const DESKTOP_SIZES: Readonly<Record<string, number>> = {
+  "spacing-touch": 36,
+  "spacing-control": 36,
+  "spacing-control-sm": 32,
+  "spacing-control-lg": 40,
+  "spacing-control-icon": 36,
+  "spacing-control-dense": 28,
+  "spacing-field": 36,
+  "spacing-field-sm": 32,
+}
+
+/**
+ * The sizes consumers pinned before 2026-11-01, restored by
+ * `:root[data-mzizi-sizes="legacy"]`. The migration table in the docs is generated from this.
+ */
+export const LEGACY_SIZES: Readonly<Record<string, number>> = {
+  "spacing-touch": 56,
+  "spacing-control": 56,
+  "spacing-control-sm": 48,
+  "spacing-control-lg": 56,
+  "spacing-control-icon": 48,
+  "spacing-control-dense": 32,
+  "spacing-field": 56,
+  "spacing-field-sm": 48,
+}
+/** The legacy touch floor, px. */
+export const LEGACY_FLOOR_PX = 48

@@ -11,7 +11,7 @@
 //!
 //! The Rust sibling of `input.tsx`. No variants, no sub-components — one element, one
 //! static class string, and the native `type` attribute. The class list is the whole
-//! contract: pill radius (`rounded-full`) and a 48px touch target (`h-12`) per brand,
+//! contract: pill radius (`rounded-full`) and a size-role height (`h-field`: 44px touch, 36px desktop) per brand,
 //! the `--ring` focus ring, and `aria-invalid` styling that keys off the browser's own
 //! validation state rather than a prop.
 //!
@@ -23,7 +23,7 @@
 use dioxus::prelude::*;
 
 /// The classes every input carries.
-const BASE: &str = "h-12 w-full min-w-0 rounded-full border border-input bg-input/30 px-4 py-1 text-base transition-colors outline-none file:inline-flex file:h-7 file:border-0 file:bg-transparent file:text-sm file:font-medium file:text-foreground placeholder:text-muted-foreground focus-visible:border-ring focus-visible:ring-[3px] focus-visible:ring-ring/50 disabled:pointer-events-none disabled:cursor-not-allowed disabled:opacity-50 aria-invalid:border-destructive aria-invalid:ring-[3px] aria-invalid:ring-destructive/20 md:text-sm dark:aria-invalid:border-destructive/50 dark:aria-invalid:ring-destructive/40";
+const BASE: &str = "h-field w-full min-w-0 rounded-full border border-input bg-input/30 px-4 py-1 text-base transition-colors outline-none file:inline-flex file:h-7 file:border-0 file:bg-transparent file:text-sm file:font-medium file:text-foreground placeholder:text-muted-foreground focus-visible:border-ring focus-visible:ring-[3px] focus-visible:ring-ring/50 disabled:pointer-events-none disabled:cursor-not-allowed disabled:opacity-50 aria-invalid:border-destructive aria-invalid:ring-[3px] aria-invalid:ring-destructive/20 md:text-sm dark:aria-invalid:border-destructive/50 dark:aria-invalid:ring-destructive/40";
 
 /// Compose the full class string for an input.
 pub fn input_variants(extra: &str) -> String {
