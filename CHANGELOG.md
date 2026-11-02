@@ -10,6 +10,14 @@ From 2026-10-04 releases follow the org versioning policy ([nyuchi/.github#80](h
 
 ## [Unreleased]
 
+### Added — `mzizi-ui` render path with no Dioxus for `alert`, `card` and `markdown-renderer`, byte-identical to `dioxus-ssr` (2026-10-20, #511)
+
+- `alert` (with its title, description and action parts), `card` (with its seven slots and the loading skeleton) and `markdown-renderer` gain `RenderProps` and `render(&RenderProps) -> String`, beside their Dioxus components, which are unchanged. The second batch of `docs/roots/RFC-roots-renderer.md` §5; button, input, label and avatar wait for PR 2 and the RFC's `attach` path.
+- Their children are HTML the caller has already rendered, written as they are. A caller passes escaped text; `render` does not escape children.
+- Checked by `mzizi-ui/tests/render_parity.rs`, which now has 71 cases, each compared byte-for-byte with `dioxus-ssr`. The alert, card and markdown contract states are read from `contracts/ui/`; the rest are undeclared cases. 31 goldens are committed under `mzizi-ui/tests/goldens/`, captured from `dioxus-ssr`.
+- Follows `markdown-renderer` 1.2.x from staging: `render` writes each link's `title` (the address shown on hover) in the same attribute order as the Dioxus component, and an item's children may be lines after a nested list (`ListChild`), both byte-identical to `dioxus-ssr`; the contract's new `titles` state is a parity case.
+- Public API: the new `RenderProps` and `render` items, plus the part and slot functions, in `alert` and `card`. Additive, unreleased; nothing is published or version-bumped.
+
 ## [4.20.0] - 2026-11-01
 
 Releases `staging` to `main` as the next minor above v4.19.x ([nyuchi/.github#80](https://github.com/nyuchi/.github/issues/80)). `package.json`, `README.md` and `content/changelog/releases.json` (and `lib/changelog.generated.ts`, generated from it) move to 4.20.0. It carries the Claude Code plugin at **1.5.0** with `@nyuchi/mzizi-skills` 0.15.0, which brings back `mukoko-design` (nine skills, #601). The Mzizi Roots crates are unchanged at 0.7.0. Nothing breaks.
