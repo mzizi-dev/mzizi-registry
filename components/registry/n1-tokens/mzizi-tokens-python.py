@@ -439,15 +439,15 @@ class MziziRolesDark:
 @dataclass(frozen=True)
 class MziziRoleMetrics:
     """Size and radius roles in pixels, and the font roles' families."""
-    SPACING_TOUCH: int = 56
-    SPACING_TOUCH_MIN: int = 48
-    SPACING_CONTROL: int = 56
-    SPACING_CONTROL_SM: int = 48
-    SPACING_CONTROL_LG: int = 56
-    SPACING_CONTROL_ICON: int = 48
+    SPACING_TOUCH: int = 44
+    SPACING_TOUCH_MIN: int = 44
+    SPACING_CONTROL: int = 44
+    SPACING_CONTROL_SM: int = 44
+    SPACING_CONTROL_LG: int = 48
+    SPACING_CONTROL_ICON: int = 44
     SPACING_CONTROL_DENSE: int = 32
-    SPACING_FIELD: int = 56
-    SPACING_FIELD_SM: int = 48
+    SPACING_FIELD: int = 44
+    SPACING_FIELD_SM: int = 44
     RADIUS_CONTROL: int = 9999
     RADIUS_FIELD: int = 9999
     RADIUS_BADGE: int = 9999

@@ -63,7 +63,7 @@ export function DiscoverSearch({
         maxLength={maxlength}
         autoComplete="off"
         enterKeyHint="search"
-        className="h-12 min-w-0 flex-1 basis-56 rounded-full border border-border bg-input px-4 text-body text-foreground placeholder:text-muted-foreground transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background"
+        className="h-field min-w-0 flex-1 basis-56 rounded-full border border-border bg-input px-4 text-body text-foreground placeholder:text-muted-foreground transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background"
       />
       <button type="submit" className={buttonVariants({ variant: "secondary", size: "md" })}>
         {submitLabel}

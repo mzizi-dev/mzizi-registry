@@ -13,7 +13,10 @@
       "export": "@bundu/ui/discover/LoadMore.astro",
       "since": "0.3.0"
     },
-    "tsx": { "registry": "discover-load-more", "identity": "contract" },
+    "tsx": {
+      "registry": "discover-load-more",
+      "identity": "contract"
+    },
     "rs": null,
     "related": ["app/pagination"]
   },
@@ -88,8 +91,8 @@
     {
       "part": "link",
       "select": "a",
-      "fine": 48,
-      "coarse": 48
+      "fine": 36,
+      "coarse": 44
     }
   ],
   "theming": {
@@ -102,7 +105,7 @@
     "without": "Everything: the component is server-rendered HTML with no script."
   },
   "responsive": ["Left-aligned under the results."],
-  "contract": "contract\n  slot is \"load-more\"\n  label is \"More results\"\n  a \"More circles\" min_height 48\n  when end shows p \"That's every circle.\"\n  when template slot is \"load-more\"\nend",
+  "contract": "contract\n  slot is \"load-more\"\n  label is \"More results\"\n  a \"More circles\" min_height 44\n  when end shows p \"That's every circle.\"\n  when template slot is \"load-more\"\nend",
   "checks": [
     {
       "say": "A next link.",

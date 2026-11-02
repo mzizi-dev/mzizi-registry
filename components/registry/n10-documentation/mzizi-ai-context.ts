@@ -90,7 +90,7 @@ const ECOSYSTEM_RULES = `
 5. N6 pages: pure composition, semantic CSS vars only, accept children/slots.
 6. All interactive components: data-slot + data-portal attributes required.
 7. Status colors use semantic tokens: --status-success, --status-error, --status-warning.
-8. Touch targets: 48px minimum. Focus rings: focus-visible:outline-2.
+8. Touch targets: 44px on touch, 36px at desktop density (size roles, never h-12 or h-14). Focus rings: focus-visible:outline-2.
 9. No hardcoded numbers in code or copy. Query the live counts.
 10. Shona terms come from the Ubuntu doctrine. Never translate or invent them.
 `.trim()
