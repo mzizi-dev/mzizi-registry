@@ -1,6 +1,6 @@
 ---
 name: mzizi-roots
-description: Use this skill for anything involving Mzizi's components — using them, starting an app on them, or contributing one. Mzizi Roots is Mzizi's own components in Rust (UI components written with Dioxus today and moving to Mzizi's own render(props); host-agnostic server components) from mzizi-dev/mzizi-registry. Covers `cargo add mzizi-roots` / `mzizi-roots-server`, what `mzizi_get_component` returns (Rust first), the node-to-crate map, `pub const CONTRACT` checked against `dioxus-ssr` markup, the component contracts in the registry's `contracts/` for the Mzizi Dashboard Standard (`app/`, 35 components) and the Mzizi Discover Standard (`discover/`, 16 components with the detail pattern and the canonical Open in Mukoko link; public discover pages, no script, the same size on every pointer, server-filled shells): read one before building or changing a `@bundu/ui` component; no-JS fallback, density and brand-overlay rules, the frontend paths (pure `.astro` from the registry via `mzizi add --target astro`, Astro with Roots, or pure Rust; Next.js adopts through the registry's `.tsx`) and app setup, reuse before build, adding a component to the registry (the node, the `.rs` and `.tsx`, `registry.json`, the per-node checklists, the 48px floor, `pnpm check` and the cargo gates), and the React/TSX build as the deprioritised secondary. Files are the data layer: there is no database.
+description: Use this skill for anything involving Mzizi's components: using them, starting an app on them, or contributing one. Mzizi Roots is Mzizi's own components in Rust (UI components on Dioxus today, moving to Mzizi's own render(props); server components) from mzizi-dev/mzizi-registry. Covers `cargo add mzizi-roots` / `mzizi-roots-server`, what mzizi_get_component returns (Rust first), the node-to-crate map, `pub const CONTRACT`, the contracts in the registry's contracts/ for the Dashboard Standard (app/, 35 components) and the Discover Standard (discover/, 16 components; no script, server-filled shells): read one before building or changing a @bundu/ui component. Also no-JS fallback, density (size roles: 44px touch, 36px desktop) and brand-overlay rules, the frontend paths (pure .astro via `mzizi add --target astro`, Astro with Roots, pure Rust; Next.js adopts the .tsx), reuse before build, and adding a component (node, .rs, .tsx, registry.json, checklists, the gates). Files are the data layer: no database.
 user-invocable: true
 ---
 
@@ -252,7 +252,7 @@ in `@nyuchi/mzizi-skills` (all 21 families, light and dark, generated from
 `palette.canonical.json` at the package root). Import it from your global stylesheet (in Astro,
 `src/styles/global.css`) and register the properties in the Tailwind 4 `@theme` block so
 utilities generate. In Rust the same palette is the `mzizi-tokens` crate, always on in
-`mzizi-roots`. How the 21 families are meant to be used, the radius scale and the 48px floor
+`mzizi-roots`. How the 21 families are meant to be used, the radius scale and the 44px touch floor (24px on a fine pointer at desktop density)
 are in the `mzizi-design` skill.
 
 Pick the app's accent through `--brand-accent` rather than hardcoding a mineral hex: nyuchi =
@@ -368,7 +368,7 @@ Every Roots component carries a contract, in two parts:
    by both builds, and the same `data-slot`, `data-portal` and tokens. Each crate's
    `tests/contract.rs` reads the `.tsx` sibling and asserts that the slot, the portal and every
    variant value the Rust emits appear there too. A deliberate divergence, such as a touch
-   target raised to the 48px floor, is asserted from both sides, so the test fails when the
+   target raised to the 44px touch floor, is asserted from both sides, so the test fails when the
    React build is fixed.
 2. **Checkable clauses** in the Mzizi language's `contract … end` grammar (RFC-0006; the
    `mzizi-language` skill), exported as `pub const CONTRACT: &str`. From
@@ -457,8 +457,9 @@ Standard's; the Discover Standard's differ (below):
   (touch), read from the rendered classes (`h-N`, `min-h-N`, `size-N` = N×4;
   `pointer-coarse:` for touch). Dashboards are dense on a mouse and 44–48px on touch: the app
   Button is 36px fine (32 `sm`, 40 `lg`) and 48px coarse (44 `sm`), with the small radius,
-  and nav rows are 32 / 44. That is the contracts' rule for `@bundu/ui/app`, not the registry
-  primitives' 48px floor. A control under 44px on touch is listed in `gaps`, not hidden.
+  and nav rows are 32 / 44. The registry primitives now read the same density from the size roles
+  (`h-control`: 44px coarse, 36px at desktop density), which the runner and `mzizi-rs/contract-eval`
+  understand (`ROLE_HEIGHTS`); `min_height` is judged on a coarse pointer, against 44. A control under 44px on touch is listed in `gaps`, not hidden.
 - **Theming.** A brand overlay changes colour only: `--primary`, `--ring`, AppShell's
   `--app-accent` and the brand mark. Layout never varies by brand. A mineral may be named only
   as one of the component's declared `statusColours`; any other mineral class, or any colour
@@ -524,10 +525,11 @@ contracts state differently:
   `enhancement` like AppShell's or CommandPalette's. Views are URLs, not client state: search
   is a GET form (`?q=`, with no `cursor`, so a new search starts at the first page), a category
   is a link, and paging is LoadMore's `rel="next"` link to `?cursor=`.
-- **The same size on every pointer.** In every Discover density row `fine` equals `coarse`:
-  48px for the search field and its button, "See all", LoadMore, OpenInApp and DiscoverCard's
-  app link; 44px for chips, the navigation links and the home link. Discover pages are not
-  dense on a mouse, unlike the Dashboard Standard (most controls 32–40px on a fine pointer).
+- **Sizes come from the size roles.** Discover density rows now read 44px coarse and 36px (32 for
+  the small links) fine for the search button, "See all", LoadMore, OpenInApp and DiscoverCard's
+  app link, as `buttonVariants` takes `h-control` (mzizi-registry#597); chips, the navigation
+  links and the home link are unchanged at 44px. Until then Discover was the same size on every
+  pointer; the owner ruled on 2026-11-02 that Apple's guidance wins, so this stays.
 - **Theming.** The brand-overlay rule is the same (colour only, no colour values, a mineral
   only as a declared status colour), but there is no AppShell `--app-accent`. A brand shows in
   DiscoverShell's `brand` slot (its mark) and in whatever primary action its `action` slot
@@ -798,10 +800,14 @@ Follow the criteria for the chosen node.
 - `cn()` for className composition in the `.tsx`
 - No raw Tailwind colours: use semantic tokens (`bg-primary`, `text-foreground`, …)
 - Icons from `@/lib/icons` in the `.tsx`, never `lucide-react` directly
-- **Touch targets never go below 48px.** Buttons and inputs are `h-14` (56px) default and
-  `h-12` (48px) small, as `button.tsx`, `button.rs` and `primitives/button.mz` all state, and
-  `/v1/brand` `.componentSpecs` serves (`minTouchTarget: 48`). A smaller visual box, such as a
-  badge, is not a touch target; if it becomes one, give it `min-h-[48px]`.
+- **Touch targets never go below 44px on a coarse pointer** (Apple HIG Buttons: "a hit region of
+  at least 44x44 pt"; 24px on a fine pointer at desktop density, WCAG 2.2 SC 2.5.8). Buttons and
+  inputs take their height from the size roles, never `h-12` or `h-14`: `h-control` (44px touch,
+  36px desktop), `h-control-sm`, `h-control-lg` (48px touch), `size-control-icon`, `h-field`, as
+  `button.tsx`, `button.astro` and `button.rs` state, and `/v1/brand` `.componentSpecs` serves
+  (`minTouchTarget: 44`). `primitives/button.mz` still says 56 until it is updated in its own
+  repository. A smaller visual box, such as a badge, is not a touch target; if it becomes one,
+  give it `min-h-touch-min`. `data-mzizi-sizes="legacy"` on the root restores the old sizes.
 - Pill-shaped categories (button, input, avatar, badge, toggle) use `rounded-full`
 
 #### N3 brand checklist
@@ -813,7 +819,7 @@ Follow the criteria for the chosen node.
 - An ARIA role or `aria-label`, and a region that is named in every state, the loading
   skeleton included
 - `data-slot` and `data-portal` attributes, in every state
-- `focus-visible` ring on interactive elements, and interactive elements at the 48px floor
+- `focus-visible` ring on interactive elements, and interactive elements at the 44px touch floor
 - I18N via `Intl` formatters for dates, numbers and currency
 - Semantic tokens for status-bearing colours
 
