@@ -1159,8 +1159,8 @@ export const FLOOR_FINE_PX = 24
 /** Body text never below this on a fine pointer, in px. */
 export const BODY_FLOOR_FINE_PX = 14
 
-/** The fine-pointer, hover-capable, wide-viewport media query. Tablets (coarse pointer) never match. */
-export const DENSITY_DESKTOP_QUERY = "(min-width: 64rem) and (pointer: fine) and (hover: hover)"
+/** The fine-pointer, hover-capable, wide-viewport media query. Tablets (coarse pointer) never match, nor does a touchscreen laptop, which also has a coarse pointer (`any-pointer: coarse`). */
+export const DENSITY_DESKTOP_QUERY = "(min-width: 64rem) and (pointer: fine) and (hover: hover) and (not (any-pointer: coarse))"
 /** Type steps down at tablet width on any pointer. */
 export const DENSITY_TABLET_QUERY = "(min-width: 48rem)"
 

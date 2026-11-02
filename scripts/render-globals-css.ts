@@ -248,18 +248,18 @@ export const SPACING = [
 export const TYPE = [
   // Phone / coarse pointer: Apple HIG Typography, iOS/iPadOS "Large (default)" text styles
   // (developer.apple.com/design/human-interface-guidelines/typography, read 2026-11-01).
-  ["display", "2.5rem", 40, "1.15", 700, "serif"],
-  ["display-sm", "2.125rem", 34, "1.15", 700, "serif"],
-  ["h1", "2.125rem", 34, "1.2", 700, "serif"], // Large Title 34/41
-  ["h2", "1.75rem", 28, "1.2", 600, "serif"], // Title 1 28/34
-  ["h3", "1.375rem", 22, "1.25", 600, "serif"], // Title 2 22/28
-  ["h4", "1.25rem", 20, "1.25", 600, "sans"], // Title 3 20/25
-  ["h5", "1.0625rem", 17, "1.3", 600, "sans"], // Headline 17/22
-  ["h6", "1rem", 16, "1.3", 600, "sans"], // Callout 16/21
+  ["display", "2.5rem", 40, "1.1", 700, "serif"],
+  ["display-sm", "2.125rem", 34, "1.1", 700, "serif"],
+  ["h1", "2.125rem", 34, "1.15", 700, "serif"], // Large Title (leading comes from --lh-*)
+  ["h2", "1.75rem", 28, "1.2", 600, "serif"], // Title 1 (leading comes from --lh-*)
+  ["h3", "1.375rem", 22, "1.25", 600, "serif"], // Title 2 (leading comes from --lh-*)
+  ["h4", "1.25rem", 20, "1.3", 600, "sans"], // Title 3 (leading comes from --lh-*)
+  ["h5", "1.0625rem", 17, "1.4", 600, "sans"], // Headline (leading comes from --lh-*)
+  ["h6", "1rem", 16, "1.4", 600, "sans"], // Callout (leading comes from --lh-*)
   ["body-lg", "1.125rem", 18, "1.6", 400, "sans"], // no Apple style between Body 17 and Title 3 20; unchanged
-  ["body", "1.0625rem", 17, "1.5", 400, "sans"], // Body 17/22
-  ["small", "0.9375rem", 15, "1.4", 400, "sans"], // Subhead 15/20
-  ["caption", "0.75rem", 12, "1.4", 400, "sans"], // Caption 1 12/16 (Apple minimum is 11)
+  ["body", "1.0625rem", 17, "1.6", 400, "sans"], // Body (leading comes from --lh-*)
+  ["small", "0.9375rem", 15, "1.5", 400, "sans"], // Subhead (leading comes from --lh-*)
+  ["caption", "0.75rem", 12, "1.5", 400, "sans"], // Caption 1 (leading comes from --lh-*) (Apple minimum is 11)
   ["code", "0.875rem", 14, "1.6", 400, "mono"],
 ] as const
 
@@ -1335,6 +1335,12 @@ ${typeLines(TYPE_STEPS.tablet).join("\n")}
 @media ${DENSITY_DESKTOP_QUERY} {
   :root {
     --target-floor: ${FLOOR_FINE_PX / 16}rem; /* ${FLOOR_FINE_PX}px — WCAG 2.2 SC 2.5.8 */
+    --size-touch-min: ${FLOOR_FINE_PX / 16}rem; /* ${FLOOR_FINE_PX}px, the same floor */
+    --touch-target-lg: ${DESKTOP_SIZES["spacing-touch"]}px;
+    --touch-target: ${DESKTOP_SIZES["spacing-control-sm"]}px;
+    --h-button-default: ${DESKTOP_SIZES["spacing-control"] / 16}rem; /* ${DESKTOP_SIZES["spacing-control"]}px */
+    --h-button-sm: ${DESKTOP_SIZES["spacing-control-sm"] / 16}rem; /* ${DESKTOP_SIZES["spacing-control-sm"]}px */
+    --h-input: ${DESKTOP_SIZES["spacing-field"] / 16}rem; /* ${DESKTOP_SIZES["spacing-field"]}px */
 ${sizeLines(DESKTOP_SIZES).join("\n")}
 ${typeLines(TYPE_STEPS.desktop).join("\n")}
   }
@@ -1343,6 +1349,12 @@ ${typeLines(TYPE_STEPS.desktop).join("\n")}
 /* Opt out until you have migrated: the sizes consumers pinned before 2026-11-01. */
 :root[data-mzizi-sizes="legacy"] {
   --target-floor: ${LEGACY_FLOOR_PX / 16}rem; /* ${LEGACY_FLOOR_PX}px */
+  --size-touch-min: ${LEGACY_FLOOR_PX / 16}rem; /* ${LEGACY_FLOOR_PX}px */
+  --touch-target-lg: 56px;
+  --touch-target: 48px;
+  --h-button-default: 3.5rem; /* 56px */
+  --h-button-sm: 3rem; /* 48px */
+  --h-input: 3.5rem; /* 56px */
 ${sizeLines(LEGACY_SIZES).join("\n")}
 ${Object.entries(legacyTypeBase).map(([n, [rem, px]]) => `  --fs-${n}: ${rem}; /* ${px}px */`).join("\n")}
 }`

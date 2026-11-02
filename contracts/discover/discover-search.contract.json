@@ -119,8 +119,8 @@
     {
       "part": "field",
       "select": "input[type=\"search\"]",
-      "fine": 48,
-      "coarse": 48
+      "fine": 36,
+      "coarse": 44
     },
     {
       "part": "submit",

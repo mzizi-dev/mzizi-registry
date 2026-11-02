@@ -23,6 +23,8 @@ Defined once, in the token layer (`scripts/render-globals-css.ts`, `lib/tokens/r
 | Tablet       | `min-width: 48rem`                                        | 44px: an iPad is touched; only type steps down | 16px      |
 | Desktop      | `min-width: 64rem` and `pointer: fine` and `hover: hover` | 28 to 40px, floor 24px                         | 15px      |
 
+A touchscreen laptop also reports a coarse pointer (`any-pointer: coarse`), so the desktop layer does not apply to it and it keeps 44px targets. Tablet type steps down on any pointer by design: an iPad in portrait is 768px wide and gets 16px body, a deliberate step below Apple's 17 pt because the owner asked for sizes to lower as screens grow (its targets stay 44px).
+
 Density is about visual size only. Screen size is never used to guess network quality: a laptop or an iPad is usually on wifi, so loading behaviour does not depend on it. The gaps between targets are spacing tokens, which density does not change.
 
 ## Migration: old to new
