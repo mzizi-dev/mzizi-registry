@@ -109,10 +109,11 @@ export const primitives = {
   },
 
   // ─── BORDER RADIUS (canonical) ──────────────
-  // Base unit: 7px (--radius-unit). Ecosystem numbers: 7, 12, 14, 17.
+  // Base unit: 7px (--radius-unit). Ecosystem numbers: 4, 7, 12, 14, 17.
   // Buttons are ALWAYS pill (rounded-full, 9999px).
   radius: {
     none: { value: "0px" },
+    xs: { value: "4px", description: "Unit less 3. The smallest marks: legend swatches, kbd keys, inline tags" },
     sm: { value: "7px", description: "Subtle rounding, checkboxes, small elements" },
     md: { value: "12px", description: "Cards, inputs, containers" },
     lg: { value: "14px", description: "Default radius, medium containers" },
@@ -142,15 +143,15 @@ export const primitives = {
   // Type scale (canonical)
   fontSize: {
     caption: { value: "12px", description: "0.75rem — Labels, metadata, timestamps" },
-    bodySmall: { value: "14px", description: "0.875rem — Secondary text, descriptions" },
-    body: { value: "16px", description: "1rem — Default body text" },
+    bodySmall: { value: "15px", description: "0.9375rem — Secondary text (Apple Subhead 15 pt, touch); steps to 14px on desktop" },
+    body: { value: "17px", description: "1.0625rem — Default body text (Apple Body 17 pt, touch); 16px tablet, 15px desktop" },
     bodyLarge: { value: "18px", description: "1.125rem — Lead paragraphs" },
-    h5: { value: "20px", description: "1.25rem — Noto Sans 600 — Small headings" },
-    h4: { value: "24px", description: "1.5rem — Noto Sans 600 — Card titles" },
-    h3: { value: "30px", description: "1.875rem — Noto Serif 600 — Sub-sections" },
-    h2: { value: "36px", description: "2.25rem — Noto Serif 600 — Section headings" },
-    h1: { value: "48px", description: "3rem — Noto Serif 700 — Page titles" },
-    display: { value: "72px", description: "4.5rem — Noto Serif 700 — Hero headlines" },
+    h5: { value: "17px", description: "1.0625rem — Noto Sans 600 — Small headings (Apple Headline 17 pt)" },
+    h4: { value: "20px", description: "1.25rem — Noto Sans 600 — Card titles (Apple Title 3 20 pt)" },
+    h3: { value: "22px", description: "1.375rem — Noto Serif 600 — Sub-sections (Apple Title 2 22 pt)" },
+    h2: { value: "28px", description: "1.75rem — Noto Serif 600 — Section headings (Apple Title 1 28 pt)" },
+    h1: { value: "34px", description: "2.125rem — Noto Serif 700 — Page titles (Apple Large Title 34 pt)" },
+    display: { value: "40px", description: "2.5rem — Noto Serif 700 — Hero headlines; 48px tablet and desktop" },
   },
 
   fontWeight: {
@@ -164,8 +165,8 @@ export const primitives = {
   // ─── TOUCH TARGETS (canonical) ──────────────
   // APCA 3.0 AAA accessibility standard
   touchTarget: {
-    default: { value: "56px", description: "Default interactive element height" },
-    sm: { value: "48px", description: "Minimum — NEVER below this" },
+    default: { value: "44px", description: "Default interactive element height (Apple: 44x44 pt hit region)" },
+    sm: { value: "44px", description: "Minimum on a coarse pointer — NEVER below this (desktop density may go to 24px, WCAG 2.2 SC 2.5.8)" },
   },
 
   // ─── MOTION (canonical) ─────────────────────
@@ -770,9 +771,9 @@ export const componentTokens = {
   bottomNav: { height: "80px", fabSize: "52px", fabRise: "24px" },
   sidebar: { width: "256px", collapsedWidth: "64px" },
   avatar: { sm: "32px", md: "40px", lg: "64px", xl: "80px", xxl: "120px" },
-  badge: { height: "20px", padding: "0 8px", fontSize: "10px" },
-  input: { height: "48px" },
-  button: { height: "56px", heightSm: "48px", heightLg: "56px" },
+  badge: { height: "20px", padding: "0 8px", fontSize: "11px" },
+  input: { height: "44px" },
+  button: { height: "44px", heightSm: "44px", heightLg: "48px" },
   card: { padding: "16px", gap: "14px" },
   page: { maxWidth: "1280px", margin: "20px" },
   focusRing: { width: "2px", offset: "2px", color: "var(--ring)" },
@@ -1072,37 +1073,116 @@ export const connectionTokens = {
  * Verification tier tokens — these DO use minerals because they are BRAND identity.
  * Verification tiers are a Mukoko-specific concept, not a universal status.
  * The minerals communicate prestige and progression within the ecosystem.
+ *
+ * The ladder (owner decision 2026-10-24, #543): unverified → the neutral grey
+ * (`--status-neutral`), community → terracotta, otp ("Contact Verified") → cobalt,
+ * government → gold, licensed → tanzanite. The `--tier-*` roles themselves are defined once,
+ * in `lib/tokens/roles.source.ts`, and emitted by `pnpm tokens:sync`.
+ *
+ * LEGACY: this is the `bundu.verificationTier` projection (`legacy_tier()` in assurance.py).
+ * Each `--tier-*` role now aliases an assurance level or an attestation (`assuranceTokens`,
+ * `attestationTokens` below); read those in new code. Community is not a rung there.
  */
 export const verificationTokens = {
   unverified: {
-    value: "var(--tier-unverified, #6B7280)",
+    value: "var(--tier-unverified, var(--status-neutral))",
     css: "--tier-unverified",
-    hex: "#6B7280",
+    role: "status-neutral",
     label: "Unverified",
   },
   community: {
-    value: "var(--tier-community, var(--color-malachite, #64FFDA))",
+    value: "var(--tier-community, var(--color-terracotta, #E1B07E))",
     css: "--tier-community",
-    mineral: "malachite",
-    label: "Community",
+    mineral: "terracotta",
+    label: "Community Verified",
   },
   otp: {
     value: "var(--tier-otp, var(--color-cobalt, #00B0FF))",
     css: "--tier-otp",
     mineral: "cobalt",
-    label: "OTP Verified",
+    label: "Contact Verified",
   },
   government: {
     value: "var(--tier-government, var(--color-gold, #FFD740))",
     css: "--tier-government",
     mineral: "gold",
-    label: "Government ID",
+    label: "Government Verified",
   },
   licensed: {
     value: "var(--tier-licensed, var(--color-tanzanite, #B388FF))",
     css: "--tier-licensed",
     mineral: "tanzanite",
-    label: "Licensed",
+    label: "Licensed Professional",
+  },
+} as const
+
+/**
+ * Assurance levels — the Bundu trust model (nyuchi/nyuchi-api `gateway/lib/assurance.py`).
+ * Ordered 0–4, so `>=` is meaningful: how strongly an identity is proven. Each level reads its
+ * `--assurance-*` role (`lib/tokens/roles.source.ts`). `documented` → sodalite is new; the
+ * other minerals are the owner's ladder of 2026-10-24 (#543).
+ */
+export const assuranceTokens = {
+  none: {
+    value: "var(--assurance-none, var(--status-neutral))",
+    css: "--assurance-none",
+    level: 0,
+    role: "status-neutral",
+    label: "Unverified",
+  },
+  otp: {
+    value: "var(--assurance-otp, var(--color-cobalt, #00B0FF))",
+    css: "--assurance-otp",
+    level: 1,
+    mineral: "cobalt",
+    label: "Contact Verified",
+  },
+  documented: {
+    value: "var(--assurance-documented, var(--color-sodalite, #3D5AFE))",
+    css: "--assurance-documented",
+    level: 2,
+    mineral: "sodalite",
+    label: "Documents Checked",
+  },
+  government: {
+    value: "var(--assurance-government, var(--color-gold, #FFD740))",
+    css: "--assurance-government",
+    level: 3,
+    mineral: "gold",
+    label: "Government Verified",
+  },
+  licensed: {
+    value: "var(--assurance-licensed, var(--color-tanzanite, #B388FF))",
+    css: "--assurance-licensed",
+    level: 4,
+    mineral: "tanzanite",
+    label: "Licensed Professional",
+  },
+} as const
+
+/**
+ * Attestations — unordered, held alongside the assurance level: who vouches for the subject.
+ * Community is an attestation, never a rung below otp (assurance.py). Each reads its
+ * `--attestation-*` role; `business` → malachite and `domain` → copper are new.
+ */
+export const attestationTokens = {
+  community: {
+    value: "var(--attestation-community, var(--color-terracotta, #E1B07E))",
+    css: "--attestation-community",
+    mineral: "terracotta",
+    label: "Community Vouched",
+  },
+  business: {
+    value: "var(--attestation-business, var(--color-malachite, #64FFDA))",
+    css: "--attestation-business",
+    mineral: "malachite",
+    label: "Registered Business",
+  },
+  domain: {
+    value: "var(--attestation-domain, var(--color-copper, #FF8A65))",
+    css: "--attestation-domain",
+    mineral: "copper",
+    label: "Domain Verified",
   },
 } as const
 
@@ -1217,12 +1297,21 @@ export function generateStatusCSS(): string {
       if ("css" in token && "hex" in token) lines.push(`  ${token.css}: ${token.hex};`)
     }
   }
-  lines.push("  /* Verification tiers — these use minerals (brand identity) */")
-  lines.push("  --tier-unverified: #6B7280;")
-  lines.push("  --tier-community: var(--color-malachite, #64FFDA);")
-  lines.push("  --tier-otp: var(--color-cobalt, #00B0FF);")
-  lines.push("  --tier-government: var(--color-gold, #FFD740);")
-  lines.push("  --tier-licensed: var(--color-tanzanite, #B388FF);")
+  lines.push("  /* Assurance levels and attestations — the --assurance-* / --attestation-* roles (assurance.py) */")
+  lines.push("  --assurance-none: var(--status-neutral);")
+  lines.push("  --assurance-otp: var(--color-cobalt, #00B0FF);")
+  lines.push("  --assurance-documented: var(--color-sodalite, #3D5AFE);")
+  lines.push("  --assurance-government: var(--color-gold, #FFD740);")
+  lines.push("  --assurance-licensed: var(--color-tanzanite, #B388FF);")
+  lines.push("  --attestation-community: var(--color-terracotta, #E1B07E);")
+  lines.push("  --attestation-business: var(--color-malachite, #64FFDA);")
+  lines.push("  --attestation-domain: var(--color-copper, #FF8A65);")
+  lines.push("  /* Verification tiers — legacy aliases of the roles above (bundu.verificationTier) */")
+  lines.push("  --tier-unverified: var(--assurance-none);")
+  lines.push("  --tier-community: var(--attestation-community);")
+  lines.push("  --tier-otp: var(--assurance-otp);")
+  lines.push("  --tier-government: var(--assurance-government);")
+  lines.push("  --tier-licensed: var(--assurance-licensed);")
   lines.push("}")
   return lines.join("\n")
 }
@@ -1393,6 +1482,8 @@ export function generateTokensJSON(): string {
       notifications: notificationTokens,
       connection: connectionTokens,
       verification: verificationTokens,
+      assurance: assuranceTokens,
+      attestation: attestationTokens,
       crypto: cryptoTokens,
       moderation: moderationTokens,
       serviceHealth: serviceHealthTokens,

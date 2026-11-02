@@ -49,7 +49,9 @@ function rule(css: string, cls: string): string {
   // Tailwind escapes `\`, `/` and `.` in a class name with a backslash; match that escaped form literally.
   const esc = escapeRegExp(cls.replace(/[\\/.]/g, "\\$&"))
   const m = css.match(new RegExp(`\\n\\s*\\.${esc} \\{([^}]*)\\}`))
-  return m?.[1] ?? ""
+  // Prettier wraps a long `var(--…)` over three lines in the stylesheet, and Tailwind carries the
+  // break into the utility; fold it back so `var(\n  --a\n)` reads as `var(--a)`.
+  return (m?.[1] ?? "").replace(/\(\s+/g, "(").replace(/\s+\)/g, ")")
 }
 
 /** `--name: value` for every declaration in one top-level block of the stylesheet. */
@@ -147,13 +149,14 @@ describe("the role manifest", () => {
     expect(RESOLVED.get("destructive")!.value.light).toBe("#B3261E")
   })
 
-  it("keeps Mzizi pill and the touch floor at 48px (owner decisions 2026-10-07)", () => {
+  it("keeps Mzizi pill, and the touch floor at Apple's 44px (owner decisions 2026-10-07 and 2026-11-01)", () => {
     expect(RESOLVED.get("radius-control")!.value.light).toBe("9999px")
-    expect(RESOLVED.get("spacing-touch")!.value.light).toBe("56px")
-    expect(RESOLVED.get("spacing-touch-min")!.value.light).toBe("48px")
+    expect(RESOLVED.get("spacing-touch")!.value.light).toBe("44px")
+    expect(RESOLVED.get("spacing-touch-min")!.value.light).toBe("44px")
     const flat = CSS.replace(/\s+/g, " ")
-    expect(flat).toContain("--spacing-touch-min: 3rem;")
-    expect(flat).toContain("--spacing-touch: max( var(--size-touch), 3rem );")
+    expect(flat).toContain("--spacing-touch-min: var( --target-floor );")
+    expect(flat).toContain("--target-floor: 2.75rem;")
+    expect(flat).toContain("--spacing-touch: max( var(--size-touch), var(--target-floor) );")
   })
 })
 
@@ -228,6 +231,15 @@ describe("the contrast gate on the Mzizi pack", () => {
       .flatMap((r) => Object.keys(r.derived).map((m) => `${r.role.name}:${m}`))
       .sort()
     expect(derived).toEqual([
+      // Licensed and community take the same families as premium (tanzanite) and danger
+      // (terracotta), so they need the same two walks (#543). Sodalite's dark base and its
+      // on-container ink, and copper's light text, are walked for the new assurance and
+      // attestation roles; the legacy `--tier-*` names alias these and derive nothing.
+      "assurance-documented-on-container:dark",
+      "assurance-documented:dark",
+      "assurance-licensed-on-container:dark",
+      "attestation-community-text:light",
+      "attestation-domain-text:light",
       "border-control:dark",
       "border-control:light",
       "destructive-text:dark",
@@ -236,6 +248,58 @@ describe("the contrast gate on the Mzizi pack", () => {
       "status-danger-text:light",
       "status-premium-on-container:dark",
     ])
+  })
+
+  it("maps the assurance levels and attestations to their minerals (assurance.py)", () => {
+    expect(RESOLVED.get("assurance-none")!.css.light).toBe("var(--status-neutral)")
+    expect(RESOLVED.get("assurance-otp")!.css.light).toBe("var(--mineral-cobalt)")
+    // Sodalite's dark base is derived, so the role is a literal in both themes: its light base.
+    expect(RESOLVED.get("assurance-documented")!.value.light).toBe("#283593")
+    expect(RESOLVED.get("assurance-documented-container")!.css.light).toBe("var(--mineral-sodalite-container)")
+    expect(RESOLVED.get("assurance-government")!.css.light).toBe("var(--mineral-gold)")
+    expect(RESOLVED.get("assurance-licensed")!.css.light).toBe("var(--mineral-tanzanite)")
+    expect(RESOLVED.get("attestation-community")!.css.light).toBe("var(--mineral-terracotta)")
+    expect(RESOLVED.get("attestation-business")!.css.light).toBe("var(--mineral-malachite)")
+    expect(RESOLVED.get("attestation-domain")!.css.light).toBe("var(--mineral-copper)")
+    for (const name of [
+      ...["none", "otp", "documented", "government", "licensed"].map((l) => `assurance-${l}`),
+      ...["community", "business", "domain"].map((a) => `attestation-${a}`),
+    ]) {
+      for (const suffix of ["", "-container", "-on-container", "-text"]) {
+        const r = RESOLVED.get(`${name}${suffix}`)
+        expect(r, `${name}${suffix}`).toBeDefined()
+        expect(r!.role.required, `${name}${suffix}`).toBe(true)
+      }
+    }
+  })
+
+  it("passes every assurance and attestation role through the contrast gate in both themes", () => {
+    const rows = roleGate(RESOLVED).results.filter((r) => /^(assurance|attestation)-/.test(r.role))
+    // Fill on base and surface, on-container on its container, text on base and surface: 5 per part, 2 themes.
+    expect(rows.length).toBe(8 * 5 * 2)
+    expect(rows.filter((r) => !r.pass)).toEqual([])
+  })
+
+  it("keeps the legacy --tier-* names as aliases of the new roles (bundu.verificationTier)", () => {
+    const alias = {
+      unverified: "assurance-none",
+      community: "attestation-community",
+      otp: "assurance-otp",
+      government: "assurance-government",
+      licensed: "assurance-licensed",
+    }
+    for (const [tier, target] of Object.entries(alias)) {
+      for (const suffix of ["", "-container", "-on-container", "-text"]) {
+        const r = RESOLVED.get(`tier-${tier}${suffix}`)!
+        expect(r.css.light, `tier-${tier}${suffix}`).toBe(`var(--${target}${suffix})`)
+        expect(r.css.dark, `tier-${tier}${suffix}`).toBe(`var(--${target}${suffix})`)
+        // The alias paints exactly what its target paints, in both themes.
+        expect(r.value, `tier-${tier}${suffix}`).toEqual(RESOLVED.get(`${target}${suffix}`)!.value)
+      }
+    }
+    // The owner's ladder (#543, 2026-10-24) still reaches the same minerals through the alias.
+    expect(RESOLVED.get("assurance-otp")!.css.dark).toBe("var(--mineral-cobalt)")
+    expect(RESOLVED.get("attestation-community")!.css.dark).toBe("var(--mineral-terracotta)")
   })
 
   it("holds every text role to Lc 75 unless it is non-body (Lc 60), pending or exempt", () => {
@@ -318,7 +382,7 @@ describe("Tailwind keys (#456)", () => {
     const fonts = ROLES.filter((r) => r.kind === "font").map((r) => r.name.replace(/^font-/, ""))
     const out = await build([...sizes.map((s) => `h-${s}`), ...radii.map((r) => `rounded-${r}`), ...fonts.map((f) => `font-${f}`), "font-sans"])
     for (const s of sizes) expect(rule(out, `h-${s}`), `h-${s}`).toMatch(/^\s*height: /)
-    expect(rule(out, "h-touch-min")).toMatch(/height: 3rem;/)
+    expect(rule(out, "h-touch-min")).toMatch(/height: var\(--target-floor\);/)
     for (const r of radii) expect(rule(out, `rounded-${r}`), `rounded-${r}`).toContain(`border-radius: var(--r-${r});`)
     for (const f of fonts) expect(rule(out, `font-${f}`), `font-${f}`).toContain(`font-family: var(--font-${f});`)
     // Non-inline: the font roles reach :root, where a brand overrides them at runtime.
@@ -333,7 +397,7 @@ describe("the platform files carry the roles", () => {
     const rust = readFileSync(join(N1, "mzizi-tokens-rust.rs"), "utf8")
     expect(rust).toMatch(/pub struct Roles \{\s+\/\/\/ The light theme\.\s+pub light: RoleColors,\s+\/\/\/ The dark theme\.\s+pub dark: RoleColors,/)
     expect(rust).toMatch(/pub const fn mzizi\(\) -> Self/)
-    expect(rust).toMatch(/pub const SPACING_TOUCH_MIN: u32 = 48;/)
+    expect(rust).toMatch(/pub const SPACING_TOUCH_MIN: u32 = 44;/)
   })
 
   it("names every colour role in every platform file", () => {
@@ -373,17 +437,17 @@ describe("the touch floor holds for every floored size role", () => {
     )
   })
 
-  it("clamps each one with max(var(--size-x), 3rem) in @theme inline", () => {
-    for (const r of floored) expect(INLINE.get(`--${r.name}`), r.name).toBe(`max( var(${roleVar(r)}), 3rem )`)
+  it("clamps each one with max(var(--size-x), var(--target-floor)) in @theme inline", () => {
+    for (const r of floored) expect(INLINE.get(`--${r.name}`), r.name).toBe(`max( var(${roleVar(r)}), var(--target-floor) )`)
     // Not floored: the dense control is below the floor on purpose, and moves freely.
     expect(INLINE.get("--spacing-control-dense")).toBe("var(--size-control-dense)")
   })
 
-  it("still computes >= 48px when a brand lowers the bare var to 32px", () => {
+  it("still computes >= 44px when a brand lowers the bare var to 32px", () => {
     for (const r of floored) {
       for (const mode of ["light", "dark"] as const) {
         const lowered = lengthPx(computed(`--${r.name}`, mode, { [roleVar(r)]: "2rem" }))
-        expect(lowered, `${r.name} (${mode})`).toBeGreaterThanOrEqual(48)
+        expect(lowered, `${r.name} (${mode})`).toBeGreaterThanOrEqual(44)
         const raised = lengthPx(computed(`--${r.name}`, mode, { [roleVar(r)]: "4rem" }))
         expect(raised, `${r.name} (${mode}) raised`).toBe(64)
       }
@@ -393,7 +457,7 @@ describe("the touch floor holds for every floored size role", () => {
   it("keys the clamp on the flag: a floored role under any name is clamped", () => {
     const extra: Role = { name: "spacing-tap", group: "size", kind: "size", required: true, description: "test", default: { px: 50 }, floor: true, block: "invariant" }
     const roles = manifest({}, [extra])
-    expect(sizeRoleTheme(roles, resolveWith(roles))).toContain("  --spacing-tap: max(var(--size-tap), 3rem); /* never under the touch floor */")
+    expect(sizeRoleTheme(roles, resolveWith(roles))).toContain("  --spacing-tap: max(var(--size-tap), var(--target-floor)); /* never under the touch floor */")
   })
 })
 
@@ -402,7 +466,7 @@ describe("fixed size roles", () => {
     const second: Role = { name: "spacing-hit-min", group: "size", kind: "size", required: true, description: "test", default: { px: 60 }, fixed: true, block: "invariant" }
     const roles = manifest({}, [second])
     const lines = sizeRoleTheme(roles, resolveWith(roles))
-    expect(lines).toContain("  --spacing-touch-min: 3rem; /* a literal: the touch floor no brand can lower */")
+    expect(lines).toContain("  --spacing-touch-min: var(--target-floor); /* the touch floor: 44px coarse pointer, 24px desktop density; no brand can lower it */")
     expect(lines).toContain("  --spacing-hit-min: 3.75rem; /* a literal: fixed, no brand can move it */")
   })
 })

@@ -801,7 +801,7 @@ export const ecosystem: BrandEcosystemEntry[] = [
     language: "Shona",
     sortOrder: 0,
     description:
-      "The complete ecosystem built by Nyuchi Africa. Three pillars — mukoko (consumer super app), nyuchi (enterprise layer), and sister brands (specialist verticals) — all connected through one identity, one design system, and one open data commons.",
+      "The complete ecosystem built by Nyuchi Africa. Three pillars — mukoko (consumer super app, tanzanite), nyuchi (infrastructure and enterprise, gold), and shamwari (sovereign AI, the intelligence pillar, sodalite) — with the sister brands as specialist verticals, all connected through one identity, one design system, and one open data commons.",
     adopterType: "ecosystem_brand",
   },
   {
@@ -1121,6 +1121,7 @@ export const brandMeta: BrandMeta = {
   lastUpdated: "2026-07-13",
   homepage: "https://mzizi.dev/brand",
   radii: {
+    xs: "4px",
     lg: "14px",
     md: "12px",
     sm: "7px",
@@ -1128,7 +1129,7 @@ export const brandMeta: BrandMeta = {
     "2xl": "17px",
     base: "14px",
     full: "9999px",
-    system: "Ecosystem numbers: 7, 12, 14, 17. Buttons are always pill (rounded-full).",
+    system: "Ecosystem numbers: 4, 7, 12, 14, 17, each from the 7px unit (xs is unit - 3). Buttons are always pill (rounded-full).",
   },
   philosophy: {
     name: "Ubuntu",
@@ -1268,8 +1269,8 @@ export const brandMeta: BrandMeta = {
     standard: "APCA 3.0 AAA",
     screenReaders: "Semantic HTML with ARIA attributes where needed",
     focusIndicator: "2px ring with ring-offset-2, using --ring token",
-    minTouchTarget: 48,
-    defaultTouchTarget: 56,
+    minTouchTarget: 44,
+    defaultTouchTarget: 44,
     keyboardNavigation: "Full keyboard support via Radix UI primitives",
     contrastDescription:
       "Advanced Perceptual Contrast Algorithm for superior readability across all mineral colors",
@@ -1279,27 +1280,27 @@ export const brandMeta: BrandMeta = {
       name: "button",
       note: "Buttons are ALWAYS pill-shaped (rounded-full). Brand identity decision.",
       heights: {
-        lg: 56,
-        sm: 48,
-        icon: 48,
-        default: 56,
+        lg: 48,
+        sm: 44,
+        icon: 44,
+        default: 44,
       },
       padding: "px-4 (sm), px-5 (default), px-6 (lg)",
       variants: ["default", "destructive", "outline", "secondary", "ghost", "link"],
       borderRadius: 9999,
-      minTouchTarget: 48,
+      minTouchTarget: 44,
     },
     {
       name: "input",
       note: "Inputs are pill-shaped to match buttons.",
       heights: {
-        sm: 48,
-        default: 56,
+        sm: 44,
+        default: 44,
       },
       padding: "px-4",
       variants: ["default", "error"],
       borderRadius: 9999,
-      minTouchTarget: 48,
+      minTouchTarget: 44,
     },
     {
       name: "avatar",
@@ -1313,7 +1314,7 @@ export const brandMeta: BrandMeta = {
       padding: "none",
       variants: ["image", "fallback"],
       borderRadius: 9999,
-      minTouchTarget: 48,
+      minTouchTarget: 44,
     },
     {
       name: "badge",
@@ -1323,7 +1324,7 @@ export const brandMeta: BrandMeta = {
       padding: "px-2.5 py-0.5",
       variants: ["default", "secondary", "destructive", "outline"],
       borderRadius: 9999,
-      minTouchTarget: 48,
+      minTouchTarget: 44,
     },
     {
       name: "card",
@@ -1334,7 +1335,7 @@ export const brandMeta: BrandMeta = {
       padding: "p-3.5",
       variants: ["default", "accented", "clickable"],
       borderRadius: 14,
-      minTouchTarget: 48,
+      minTouchTarget: 44,
     },
     {
       name: "dialog",
@@ -1345,7 +1346,7 @@ export const brandMeta: BrandMeta = {
       padding: "p-5",
       variants: ["default"],
       borderRadius: 17,
-      minTouchTarget: 48,
+      minTouchTarget: 44,
     },
     {
       name: "toggle",
@@ -1355,7 +1356,7 @@ export const brandMeta: BrandMeta = {
       padding: "none",
       variants: ["on", "off"],
       borderRadius: 9999,
-      minTouchTarget: 48,
+      minTouchTarget: 44,
     },
     {
       name: "checkbox",
@@ -1366,18 +1367,18 @@ export const brandMeta: BrandMeta = {
       padding: "none",
       variants: ["checked", "unchecked", "indeterminate"],
       borderRadius: 7,
-      minTouchTarget: 48,
+      minTouchTarget: 44,
     },
     {
       name: "tabs",
       note: "Tab triggers use --radius-xl (17px).",
       heights: {
-        default: 48,
+        default: 44,
       },
       padding: "px-4",
       variants: ["default", "underline"],
       borderRadius: 17,
-      minTouchTarget: 48,
+      minTouchTarget: 44,
     },
   ],
 }

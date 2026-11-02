@@ -16,6 +16,19 @@ import {
 
 type PlaceVerification = VerificationTier
 
+/**
+ * What a `linkComponent` receives: the `href`, `className` and `children` of the card's link,
+ * plus the anchor attributes the card sets (`target`, `rel`, `onClick`, `style` and its
+ * `data-slot` / `data-portal` / `data-variant`). Next's `Link` and React Router's `Link` both
+ * take these as they are, and render the `<a>` themselves.
+ */
+type MziziPlaceCardLinkProps = Omit<React.AnchorHTMLAttributes<HTMLAnchorElement>, "href"> & {
+  href: string
+  className?: string
+  children?: React.ReactNode
+  [dataAttribute: `data-${string}`]: string | undefined
+}
+
 interface MziziPlaceCardProps {
   /** Renders the skeleton branch this component already implements. */
   loading?: boolean
@@ -31,6 +44,18 @@ interface MziziPlaceCardProps {
   verificationTier?: PlaceVerification
   /** Print the tier's name beside the badge. Tier 0 reads "Unverified", where the badge itself draws nothing. */
   showTierLabel?: boolean
+  /**
+   * The tier's wording, in place of the built-in name ("Contact Verified"): passed to the
+   * badge as its `label` (its title and accessible name) and printed by `showTierLabel`. Use it
+   * to localise the tier or name it in the app's own words ("Identity verified").
+   */
+  tierLabel?: string
+  /**
+   * The accessible name of the card's link (with `href`) or button (with `onClick` alone). Without
+   * it the link is named by its content and the button by `name`. Set it when the content reads
+   * poorly as a link name, e.g. "Open Mbare Musika, 2 km away".
+   */
+  linkLabel?: string
   mineral?: "malachite" | "cobalt" | "gold" | "tanzanite" | "terracotta"
   variant?: "row" | "compact"
   /**
@@ -44,6 +69,19 @@ interface MziziPlaceCardProps {
    * `_self`, `_top` and `_parent`, so `_blank` or a named window) also sets `rel="noopener noreferrer"`.
    */
   target?: React.HTMLAttributeAnchorTarget
+  /**
+   * The component that renders the link, with `href`: Next's `Link`, a React Router `Link`, or
+   * any component that renders an `<a>` from `href`, `className` and `children`, so the app keeps
+   * client-side navigation and prefetch. It receives the same attributes the plain `<a>` would
+   * have (`target`, `rel`, `onClick`, `style`, the data attributes). Unset, the card renders a
+   * plain `<a>`.
+   */
+  linkComponent?: React.ComponentType<MziziPlaceCardLinkProps>
+  /**
+   * The cover image is above the fold (the first card of a list, say): load it eagerly with
+   * `fetchpriority="high"`. Without it the image loads lazily and decodes asynchronously.
+   */
+  priority?: boolean
   /**
    * Called on activation, with or without `href`. Without `href` the card is `role="button"`, focusable,
    * and answers Enter and Space. Clicks and keys that start on an interactive element inside the card
@@ -83,16 +121,16 @@ const mineralColors: Record<string, string> = {
   cobalt: "var(--color-cobalt,#00B0FF)",
   gold: "var(--color-gold,#FFD740)",
   tanzanite: "var(--color-tanzanite,#B388FF)",
-  terracotta: "var(--color-terracotta,#D4A574)",
+  terracotta: "var(--color-terracotta)",
 }
 
-function TierMark({ tier, showLabel }: { tier: PlaceVerification; showLabel: boolean }) {
+function TierMark({ tier, showLabel, label }: { tier: PlaceVerification; showLabel: boolean; label?: string }) {
   return (
     <>
-      <MziziVerifiedBadge tier={tier} size="sm" />
+      <MziziVerifiedBadge tier={tier} size="sm" label={label} />
       {showLabel && (
         <span data-slot="mzizi-place-card-tier" className="shrink-0 text-xs text-muted-foreground">
-          {TIER_CONFIG[tier].label}
+          {label ?? TIER_CONFIG[tier].label}
         </span>
       )}
     </>
@@ -111,10 +149,14 @@ function MziziPlaceCard({
   openNow,
   verificationTier = "unverified",
   showTierLabel = false,
+  tierLabel,
+  linkLabel,
   mineral = "malachite",
   variant = "row",
   href,
   target,
+  linkComponent: LinkComponent,
+  priority = false,
   onClick,
   footer,
   className,
@@ -159,24 +201,25 @@ function MziziPlaceCard({
     "data-portal": PORTAL,
     "data-variant": variant,
   }
-  const render = (cls: string, style: React.CSSProperties | undefined, body: React.ReactNode) =>
-    href ? (
-      <a
-        {...rootProps}
-        href={href}
-        target={target}
-        rel={target && !SAME_CONTEXT_TARGETS.has(target) ? "noopener noreferrer" : undefined}
-        onClick={onClick}
-        style={style}
-        className={cn(cls, "no-underline", className)}
-      >
-        {body}
-      </a>
-    ) : (
+  const render = (cls: string, style: React.CSSProperties | undefined, body: React.ReactNode) => {
+    if (href) {
+      const linkProps: MziziPlaceCardLinkProps = {
+        ...rootProps,
+        href,
+        target,
+        rel: target && !SAME_CONTEXT_TARGETS.has(target) ? "noopener noreferrer" : undefined,
+        onClick,
+        style,
+        "aria-label": linkLabel,
+        className: cn(cls, "no-underline", className),
+      }
+      return LinkComponent ? <LinkComponent {...linkProps}>{body}</LinkComponent> : <a {...linkProps}>{body}</a>
+    }
+    return (
       <div
         {...rootProps}
         role={onClick ? "button" : "article"}
-        aria-label={name}
+        aria-label={onClick ? (linkLabel ?? name) : name}
         tabIndex={onClick ? 0 : undefined}
         onClick={
           onClick
@@ -202,6 +245,7 @@ function MziziPlaceCard({
         {body}
       </div>
     )
+  }
 
   const focusRing =
     "focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--color-primary,#00B0FF)]"
@@ -215,6 +259,11 @@ function MziziPlaceCard({
         {openNow ? "Open" : "Closed"}
       </span>
     ) : null
+  /* Lazy and async by default, so a long list costs neither LCP nor bandwidth; `priority`
+     for the one card above the fold. */
+  const imageLoading = priority
+    ? ({ loading: "eager", fetchPriority: "high" } as const)
+    : ({ loading: "lazy", decoding: "async" } as const)
   const footerNode = footer != null && (
     <div data-slot="mzizi-place-card-footer" className="mt-2">
       {footer}
@@ -233,7 +282,7 @@ function MziziPlaceCard({
         {image && (
           <div className="relative aspect-[var(--aspect-media,1/1)] overflow-hidden bg-muted">
             {/* The name is the card's text, so the image is decorative. */}
-            <img src={image} alt="" className="size-full object-cover" />
+            <img src={image} alt="" {...imageLoading} className="size-full object-cover" />
             {distance && (
               <span className="absolute bottom-2 left-2 flex items-center gap-1 rounded-full bg-black/50 px-2 py-0.5 text-[10px] font-medium text-white backdrop-blur-sm">
                 <Navigation className="size-2.5" aria-hidden="true" />
@@ -245,7 +294,7 @@ function MziziPlaceCard({
         <div className="p-3">
           <div className="flex items-center gap-1.5">
             <h4 className="line-clamp-1 text-sm font-medium text-foreground">{name}</h4>
-            <TierMark tier={verificationTier} showLabel={showTierLabel} />
+            <TierMark tier={verificationTier} showLabel={showTierLabel} label={tierLabel} />
           </div>
           {category && <span className="text-xs text-muted-foreground">{category}</span>}
           <div className="mt-1.5 flex items-center gap-3 text-xs text-muted-foreground">
@@ -278,7 +327,7 @@ function MziziPlaceCard({
       <div className="flex items-center gap-3">
         {image ? (
           <div className="size-12 shrink-0 overflow-hidden rounded-[var(--radius-inner,7px)] bg-muted">
-            <img src={image} alt="" className="size-full object-cover" />
+            <img src={image} alt="" {...imageLoading} className="size-full object-cover" />
           </div>
         ) : (
           <div
@@ -291,7 +340,7 @@ function MziziPlaceCard({
         <div className="min-w-0 flex-1">
           <div className="flex items-center gap-1.5">
             <span className="line-clamp-1 text-sm font-medium text-foreground">{name}</span>
-            <TierMark tier={verificationTier} showLabel={showTierLabel} />
+            <TierMark tier={verificationTier} showLabel={showTierLabel} label={tierLabel} />
           </div>
           {category && (
             <span data-slot="mzizi-place-card-category" className="text-xs text-muted-foreground">
@@ -332,4 +381,4 @@ function MziziPlaceCard({
 }
 
 export { MziziPlaceCard }
-export type { MziziPlaceCardProps }
+export type { MziziPlaceCardProps, MziziPlaceCardLinkProps }

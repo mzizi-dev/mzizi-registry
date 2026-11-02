@@ -65,36 +65,43 @@
   --color-cobalt-on-container: var(--mineral-cobalt-on-container);
   --color-cobalt-aa: var(--mineral-cobalt-aa);
   --color-cobalt-text: var(--mineral-cobalt-text);
+  --color-cobalt-light: var(--mineral-cobalt-light);
   --color-tanzanite: var(--mineral-tanzanite);
   --color-tanzanite-container: var(--mineral-tanzanite-container);
   --color-tanzanite-on-container: var(--mineral-tanzanite-on-container);
   --color-tanzanite-aa: var(--mineral-tanzanite-aa);
   --color-tanzanite-text: var(--mineral-tanzanite-text);
+  --color-tanzanite-light: var(--mineral-tanzanite-light);
   --color-malachite: var(--mineral-malachite);
   --color-malachite-container: var(--mineral-malachite-container);
   --color-malachite-on-container: var(--mineral-malachite-on-container);
   --color-malachite-aa: var(--mineral-malachite-aa);
   --color-malachite-text: var(--mineral-malachite-text);
+  --color-malachite-light: var(--mineral-malachite-light);
   --color-gold: var(--mineral-gold);
   --color-gold-container: var(--mineral-gold-container);
   --color-gold-on-container: var(--mineral-gold-on-container);
   --color-gold-aa: var(--mineral-gold-aa);
   --color-gold-text: var(--mineral-gold-text);
+  --color-gold-light: var(--mineral-gold-light);
   --color-terracotta: var(--mineral-terracotta);
   --color-terracotta-container: var(--mineral-terracotta-container);
   --color-terracotta-on-container: var(--mineral-terracotta-on-container);
   --color-terracotta-aa: var(--mineral-terracotta-aa);
   --color-terracotta-text: var(--mineral-terracotta-text);
+  --color-terracotta-light: var(--mineral-terracotta-light);
   --color-sodalite: var(--mineral-sodalite);
   --color-sodalite-container: var(--mineral-sodalite-container);
   --color-sodalite-on-container: var(--mineral-sodalite-on-container);
   --color-sodalite-aa: var(--mineral-sodalite-aa);
   --color-sodalite-text: var(--mineral-sodalite-text);
+  --color-sodalite-light: var(--mineral-sodalite-light);
   --color-copper: var(--mineral-copper);
   --color-copper-container: var(--mineral-copper-container);
   --color-copper-on-container: var(--mineral-copper-on-container);
   --color-copper-aa: var(--mineral-copper-aa);
   --color-copper-text: var(--mineral-copper-text);
+  --color-copper-light: var(--mineral-copper-light);
   --color-indigo: var(--heritage-indigo);
   --color-indigo-aa: var(--heritage-indigo-aa);
   --color-indigo-text: var(--heritage-indigo-text);
@@ -177,6 +184,8 @@
   --color-scrim: var(--scrim);
   --color-wash: var(--wash);
   --color-muted: var(--muted);
+  --color-surface-qr: var(--surface-qr);
+  --color-on-surface-qr: var(--on-surface-qr);
   --color-text-primary: var(--text-primary);
   --color-text-secondary: var(--text-secondary);
   --color-text-tertiary: var(--text-tertiary);
@@ -230,6 +239,72 @@
   --color-status-deprecated-container: var(--status-deprecated-container);
   --color-status-deprecated-on-container: var(--status-deprecated-on-container);
   --color-status-deprecated-text: var(--status-deprecated-text);
+  --color-assurance-none: var(--assurance-none);
+  --color-assurance-none-container: var(--assurance-none-container);
+  --color-assurance-none-on-container: var(--assurance-none-on-container);
+  --color-assurance-none-text: var(--assurance-none-text);
+  --color-assurance-otp: var(--assurance-otp);
+  --color-assurance-otp-container: var(--assurance-otp-container);
+  --color-assurance-otp-on-container: var(--assurance-otp-on-container);
+  --color-assurance-otp-text: var(--assurance-otp-text);
+  --color-assurance-documented: var(--assurance-documented);
+  --color-assurance-documented-container: var(--assurance-documented-container);
+  --color-assurance-documented-on-container: var(
+    --assurance-documented-on-container
+  );
+  --color-assurance-documented-text: var(--assurance-documented-text);
+  --color-assurance-government: var(--assurance-government);
+  --color-assurance-government-container: var(--assurance-government-container);
+  --color-assurance-government-on-container: var(
+    --assurance-government-on-container
+  );
+  --color-assurance-government-text: var(--assurance-government-text);
+  --color-assurance-licensed: var(--assurance-licensed);
+  --color-assurance-licensed-container: var(--assurance-licensed-container);
+  --color-assurance-licensed-on-container: var(
+    --assurance-licensed-on-container
+  );
+  --color-assurance-licensed-text: var(--assurance-licensed-text);
+  --color-attestation-community: var(--attestation-community);
+  --color-attestation-community-container: var(
+    --attestation-community-container
+  );
+  --color-attestation-community-on-container: var(
+    --attestation-community-on-container
+  );
+  --color-attestation-community-text: var(--attestation-community-text);
+  --color-attestation-business: var(--attestation-business);
+  --color-attestation-business-container: var(--attestation-business-container);
+  --color-attestation-business-on-container: var(
+    --attestation-business-on-container
+  );
+  --color-attestation-business-text: var(--attestation-business-text);
+  --color-attestation-domain: var(--attestation-domain);
+  --color-attestation-domain-container: var(--attestation-domain-container);
+  --color-attestation-domain-on-container: var(
+    --attestation-domain-on-container
+  );
+  --color-attestation-domain-text: var(--attestation-domain-text);
+  --color-tier-unverified: var(--tier-unverified);
+  --color-tier-unverified-container: var(--tier-unverified-container);
+  --color-tier-unverified-on-container: var(--tier-unverified-on-container);
+  --color-tier-unverified-text: var(--tier-unverified-text);
+  --color-tier-community: var(--tier-community);
+  --color-tier-community-container: var(--tier-community-container);
+  --color-tier-community-on-container: var(--tier-community-on-container);
+  --color-tier-community-text: var(--tier-community-text);
+  --color-tier-otp: var(--tier-otp);
+  --color-tier-otp-container: var(--tier-otp-container);
+  --color-tier-otp-on-container: var(--tier-otp-on-container);
+  --color-tier-otp-text: var(--tier-otp-text);
+  --color-tier-government: var(--tier-government);
+  --color-tier-government-container: var(--tier-government-container);
+  --color-tier-government-on-container: var(--tier-government-on-container);
+  --color-tier-government-text: var(--tier-government-text);
+  --color-tier-licensed: var(--tier-licensed);
+  --color-tier-licensed-container: var(--tier-licensed-container);
+  --color-tier-licensed-on-container: var(--tier-licensed-on-container);
+  --color-tier-licensed-text: var(--tier-licensed-text);
   --color-chart-1: var(--chart-1);
   --color-chart-2: var(--chart-2);
   --color-chart-3: var(--chart-3);
@@ -258,6 +333,7 @@
   --color-destructive: var(--destructive);
   --color-destructive-foreground: var(--destructive-foreground);
   --color-destructive-text: var(--destructive-text);
+  --color-status-error: var(--status-error);
   --color-overlay-foreground: var(--overlay-foreground);
   --color-accent: var(--accent);
   --color-accent-foreground: var(--accent-foreground);
@@ -276,33 +352,35 @@
   /* ── ROLES — size and radius ─────────────────────────────────────────────── */
   --spacing-touch: max(
     var(--size-touch),
-    3rem
+    var(--target-floor)
   ); /* never under the touch floor */
-  --spacing-touch-min: 3rem; /* a literal: the touch floor no brand can lower */
+  --spacing-touch-min: var(
+    --target-floor
+  ); /* the touch floor: 44px coarse pointer, 24px desktop density; no brand can lower it */
   --spacing-control: max(
     var(--size-control),
-    3rem
+    var(--target-floor)
   ); /* never under the touch floor */
   --spacing-control-sm: max(
     var(--size-control-sm),
-    3rem
+    var(--target-floor)
   ); /* never under the touch floor */
   --spacing-control-lg: max(
     var(--size-control-lg),
-    3rem
+    var(--target-floor)
   ); /* never under the touch floor */
   --spacing-control-icon: max(
     var(--size-control-icon),
-    3rem
+    var(--target-floor)
   ); /* never under the touch floor */
   --spacing-control-dense: var(--size-control-dense);
   --spacing-field: max(
     var(--size-field),
-    3rem
+    var(--target-floor)
   ); /* never under the touch floor */
   --spacing-field-sm: max(
     var(--size-field-sm),
-    3rem
+    var(--target-floor)
   ); /* never under the touch floor */
   --radius-control: var(--r-control);
   --radius-field: var(--r-field);
@@ -328,6 +406,7 @@
   --spacing-4xl: var(--space-4xl);
   --spacing-5xl: var(--space-5xl);
   --spacing-6xl: var(--space-6xl);
+  --radius-xs: var(--r-xs);
   --radius-sm: var(--r-sm);
   --radius-md: var(--r-md);
   --radius-base: var(--r-base);
@@ -389,42 +468,49 @@
   --mineral-cobalt-on-container: #002966; /* APCA Lc 90.9 on the container */
   --mineral-cobalt-aa: #0047ab; /* canonical value already clears the bar */
   --mineral-cobalt-text: #0047ab; /* APCA Lc 80.9 on --base — canonical value already clears the bar */
+  --mineral-cobalt-light: #0047ab; /* cobalt's light-mode value, fixed across themes */
   /* tanzanite — Identity. Premium, creativity, connection */
   --mineral-tanzanite: #4b0082;
   --mineral-tanzanite-container: #f3e5f5;
   --mineral-tanzanite-on-container: #2e004d; /* APCA Lc 90.1 on the container */
   --mineral-tanzanite-aa: #4b0082; /* canonical value already clears the bar */
   --mineral-tanzanite-text: #4b0082; /* APCA Lc 90 on --base — canonical value already clears the bar */
+  --mineral-tanzanite-light: #4b0082; /* tanzanite's light-mode value, fixed across themes */
   /* malachite — Growth. Growth, nature, success */
   --mineral-malachite: #004d40;
   --mineral-malachite-container: #e0f2f1;
   --mineral-malachite-on-container: #00332b; /* APCA Lc 90.3 on the container */
   --mineral-malachite-aa: #004d40; /* canonical value already clears the bar */
   --mineral-malachite-text: #004d40; /* APCA Lc 85.1 on --base — canonical value already clears the bar */
+  --mineral-malachite-light: #004d40; /* malachite's light-mode value, fixed across themes */
   /* gold — Value. Honey, rewards, warmth */
   --mineral-gold: #5d4037;
   --mineral-gold-container: #fff8e1;
   --mineral-gold-on-container: #3e2723; /* APCA Lc 96.1 on the container */
   --mineral-gold-aa: #5d4037; /* canonical value already clears the bar */
   --mineral-gold-text: #5d4037; /* APCA Lc 84.2 on --base — canonical value already clears the bar */
+  --mineral-gold-light: #5d4037; /* gold's light-mode value, fixed across themes */
   /* terracotta — Community. Earth, community, grounding */
   --mineral-terracotta: #a0522d;
   --mineral-terracotta-container: #f5e6d3;
   --mineral-terracotta-on-container: #5d2906; /* APCA Lc 82.9 on the container */
   --mineral-terracotta-aa: #a0522d; /* canonical value already clears the bar */
   --mineral-terracotta-text: #8e4928; /* APCA Lc 75.4 on --base. #A0522D measures 70.4 as text on #F3F3F1; derived — canon lightHex toward #000000 */
+  --mineral-terracotta-light: #a0522d; /* terracotta's light-mode value, fixed across themes */
   /* sodalite — Intelligence. Intelligence, depth, reasoning */
   --mineral-sodalite: #283593;
   --mineral-sodalite-container: #e8eaf6;
   --mineral-sodalite-on-container: #141a5c; /* APCA Lc 90.1 on the container */
   --mineral-sodalite-aa: #283593; /* canonical value already clears the bar */
   --mineral-sodalite-text: #283593; /* APCA Lc 86.3 on --base — canonical value already clears the bar */
+  --mineral-sodalite-light: #283593; /* sodalite's light-mode value, fixed across themes */
   /* copper — Stewardship. Connection, foundation, stewardship */
   --mineral-copper: #bf5a36;
   --mineral-copper-container: #fbe4da;
   --mineral-copper-on-container: #5c2410; /* APCA Lc 84 on the container */
   --mineral-copper-aa: #b4532f; /* #BF5A36 measures 4.44 — WCAG 2.2 AA on #FFFFFF. bundu-labs/marketing/apps/bundu/src/styles/global.css:11 */
   --mineral-copper-text: #93452a; /* APCA Lc 75.4 on --base. #BF5A36 measures 63 as text on #F3F3F1; derived — canon lightHex toward #000000 */
+  --mineral-copper-light: #bf5a36; /* copper's light-mode value, fixed across themes */
 
   /* ── SEVEN HERITAGE TONES ────────────────────────────────────────────────── */
   --heritage-indigo: #4527a0; /* Dusk, depth, the dyer's craft */
@@ -581,6 +667,8 @@
   /* ── ROLES — identity, status tones, lifecycle, destructive, categories (#484) ── */
   --app-accent: var(--brand-accent);
   --app-accent-foreground: var(--brand-accent-foreground);
+  --surface-qr: #ffffff;
+  --on-surface-qr: #0e0d0c;
   --status-success: var(--mineral-malachite);
   --status-success-container: var(--mineral-malachite-container);
   --status-success-on-container: var(--mineral-malachite-on-container);
@@ -621,6 +709,58 @@
   --status-deprecated-container: var(--status-danger-container);
   --status-deprecated-on-container: var(--status-danger-on-container);
   --status-deprecated-text: var(--status-danger-text);
+  --assurance-none: var(--status-neutral);
+  --assurance-none-container: var(--status-neutral-container);
+  --assurance-none-on-container: var(--status-neutral-on-container);
+  --assurance-none-text: var(--status-neutral-text);
+  --assurance-otp: var(--mineral-cobalt);
+  --assurance-otp-container: var(--mineral-cobalt-container);
+  --assurance-otp-on-container: var(--mineral-cobalt-on-container);
+  --assurance-otp-text: var(--mineral-cobalt-text);
+  --assurance-documented: #283593; /* var(--mineral-sodalite), measured; a literal because the dark theme is derived (see ALIAS CHAINS in the header) */
+  --assurance-documented-container: var(--mineral-sodalite-container);
+  --assurance-documented-on-container: #141a5c; /* var(--mineral-sodalite-on-container), measured; a literal because the dark theme is derived (see ALIAS CHAINS in the header) */
+  --assurance-documented-text: var(--mineral-sodalite-text);
+  --assurance-government: var(--mineral-gold);
+  --assurance-government-container: var(--mineral-gold-container);
+  --assurance-government-on-container: var(--mineral-gold-on-container);
+  --assurance-government-text: var(--mineral-gold-text);
+  --assurance-licensed: var(--mineral-tanzanite);
+  --assurance-licensed-container: var(--mineral-tanzanite-container);
+  --assurance-licensed-on-container: #2e004d; /* var(--mineral-tanzanite-on-container), measured; a literal because the dark theme is derived (see ALIAS CHAINS in the header) */
+  --assurance-licensed-text: var(--mineral-tanzanite-text);
+  --attestation-community: var(--mineral-terracotta);
+  --attestation-community-container: var(--mineral-terracotta-container);
+  --attestation-community-on-container: var(--mineral-terracotta-on-container);
+  --attestation-community-text: #844425; /* derived: #8E4928 measures Lc 72.5 against base / surface; walked toward #000000 to Lc 75 */
+  --attestation-business: var(--mineral-malachite);
+  --attestation-business-container: var(--mineral-malachite-container);
+  --attestation-business-on-container: var(--mineral-malachite-on-container);
+  --attestation-business-text: var(--mineral-malachite-text);
+  --attestation-domain: var(--mineral-copper);
+  --attestation-domain-container: var(--mineral-copper-container);
+  --attestation-domain-on-container: var(--mineral-copper-on-container);
+  --attestation-domain-text: #894027; /* derived: #93452A measures Lc 72.5 against base / surface; walked toward #000000 to Lc 75 */
+  --tier-unverified: var(--assurance-none);
+  --tier-unverified-container: var(--assurance-none-container);
+  --tier-unverified-on-container: var(--assurance-none-on-container);
+  --tier-unverified-text: var(--assurance-none-text);
+  --tier-community: var(--attestation-community);
+  --tier-community-container: var(--attestation-community-container);
+  --tier-community-on-container: var(--attestation-community-on-container);
+  --tier-community-text: var(--attestation-community-text);
+  --tier-otp: var(--assurance-otp);
+  --tier-otp-container: var(--assurance-otp-container);
+  --tier-otp-on-container: var(--assurance-otp-on-container);
+  --tier-otp-text: var(--assurance-otp-text);
+  --tier-government: var(--assurance-government);
+  --tier-government-container: var(--assurance-government-container);
+  --tier-government-on-container: var(--assurance-government-on-container);
+  --tier-government-text: var(--assurance-government-text);
+  --tier-licensed: var(--assurance-licensed);
+  --tier-licensed-container: var(--assurance-licensed-container);
+  --tier-licensed-on-container: var(--assurance-licensed-on-container);
+  --tier-licensed-text: var(--assurance-licensed-text);
   --category-1: var(--mineral-cobalt);
   --category-2: var(--mineral-tanzanite);
   --category-3: var(--mineral-malachite);
@@ -629,6 +769,7 @@
   --category-6: var(--mineral-sodalite);
   --category-7: var(--mineral-copper);
   --destructive-text: #9f221b; /* derived: #B3261E measures Lc 70.6 against base / surface; walked toward #000000 to Lc 75 */
+  --status-error: var(--destructive);
   --border-control: #787774; /* derived: #E7E5E0 measures Lc 0.0 against pitch / void / base / surface / container / overlay / raised / muted / wash / background / card / popover / sidebar; walked toward #000000 to Lc 30 and 3:1 */
 
   /* ── UNRESOLVED — the registry and /v1/brand disagree; this is NOT a ruling ── */
@@ -716,17 +857,17 @@
   --font-family-sans: "Noto Sans", ui-sans-serif, system-ui, sans-serif;
   --font-family-serif: "Noto Serif", ui-serif, Georgia, serif;
   --font-family-mono: "JetBrains Mono", ui-monospace, Menlo, monospace;
-  --fs-display: 4.5rem; /* 72 — serif 700, line-height 1.1 */
-  --fs-display-sm: 3.75rem; /* 60 — serif 700, line-height 1.1 */
-  --fs-h1: 3rem; /* 48 — serif 700, line-height 1.15 */
-  --fs-h2: 2.25rem; /* 36 — serif 600, line-height 1.2 */
-  --fs-h3: 1.875rem; /* 30 — serif 600, line-height 1.25 */
-  --fs-h4: 1.5rem; /* 24 — sans 600, line-height 1.3 */
-  --fs-h5: 1.25rem; /* 20 — sans 600, line-height 1.4 */
+  --fs-display: 2.5rem; /* 40 — serif 700, line-height 1.1 */
+  --fs-display-sm: 2.125rem; /* 34 — serif 700, line-height 1.1 */
+  --fs-h1: 2.125rem; /* 34 — serif 700, line-height 1.15 */
+  --fs-h2: 1.75rem; /* 28 — serif 600, line-height 1.2 */
+  --fs-h3: 1.375rem; /* 22 — serif 600, line-height 1.25 */
+  --fs-h4: 1.25rem; /* 20 — sans 600, line-height 1.3 */
+  --fs-h5: 1.0625rem; /* 17 — sans 600, line-height 1.4 */
   --fs-h6: 1rem; /* 16 — sans 600, line-height 1.4 */
   --fs-body-lg: 1.125rem; /* 18 — sans 400, line-height 1.6 */
-  --fs-body: 1rem; /* 16 — sans 400, line-height 1.6 */
-  --fs-small: 0.875rem; /* 14 — sans 400, line-height 1.5 */
+  --fs-body: 1.0625rem; /* 17 — sans 400, line-height 1.6 */
+  --fs-small: 0.9375rem; /* 15 — sans 400, line-height 1.5 */
   --fs-caption: 0.75rem; /* 12 — sans 400, line-height 1.5 */
   --fs-code: 0.875rem; /* 14 — mono 400, line-height 1.6 */
   --lh-display: 1.1;
@@ -754,6 +895,7 @@
 
   /* ── RADIUS — every rung derives from a 7px unit ─────────────────────────── */
   --radius-unit: 7px; /* CLAUDE.md §7.5. Apps running a 10px or 12px unit have the whole calc() scale wrong. */
+  --r-xs: 4px;
   --r-sm: 7px;
   --r-md: 12px;
   --r-base: 14px;
@@ -788,24 +930,26 @@
   --elevation-focus-ring: 0 0 0 2px var(--background), 0 0 0 4px var(--ring);
 
   /* ── TOUCH TARGETS AND CONTROL HEIGHTS ───────────────────────────────────── */
-  --touch-target-lg: 56px; /* Default touch target — /v1/brand defaultTouchTarget */
-  --touch-target: 48px; /* Minimum touch target — /v1/brand minTouchTarget */
-  --touch-target-sm: 40px; /* Dense secondary actions; below the 48px floor, so not for primary controls */
-  --h-button-default: 3.5rem; /* 56px — componentSpecs.button.heights.default */
-  --h-button-sm: 3rem; /* 48px — componentSpecs.button.heights.sm */
-  --h-input: 3.5rem; /* 56px — inputs match the default button */
+  --touch-target-lg: 44px; /* Default touch target — /v1/brand defaultTouchTarget */
+  --touch-target: 44px; /* Minimum touch target — /v1/brand minTouchTarget */
+  --touch-target-sm: 40px; /* Dense secondary actions; below the 44px coarse-pointer floor, so not for primary controls */
+  --h-button-default: 2.75rem; /* 44px — componentSpecs.button.heights.default */
+  --h-button-sm: 2.75rem; /* 44px — componentSpecs.button.heights.sm */
+  --h-input: 2.75rem; /* 44px — inputs match the default button */
+  --target-floor: 2.75rem; /* 44px — Apple HIG Buttons: a hit region of at least 44x44 pt. Density lowers it to 24px on a fine pointer. */
   /* Size roles (#484) — `h-touch`, `min-h-touch-min`, `h-control`… The touch floor is
-     fixed in @theme; moving --size-touch-min does not lower min-h-touch-min, and every
-     floored role (touch, control, field) is clamped there to max(var(--size-*), 3rem). */
-  --size-touch: 3.5rem; /* 56px — The default touch target (`h-touch`, `min-h-touch`). brandMeta.accessibility.defaultTouchTarget. */
-  --size-touch-min: 3rem; /* 48px — The touch floor (`min-h-touch-min`): 48px, fixed — no pack can lower it (owner decision 2026-10-07). */
-  --size-control: 3.5rem; /* 56px — Default control height. componentSpecs.button.heights.default. */
-  --size-control-sm: 3rem; /* 48px — Small control height. componentSpecs.button.heights.sm. */
-  --size-control-lg: 3.5rem; /* 56px — Large control height. componentSpecs.button.heights.lg. */
-  --size-control-icon: 3rem; /* 48px — Icon-button size. componentSpecs.button.heights.icon. */
-  --size-control-dense: 2rem; /* 32px — Dense control height for a fine pointer only (`pointer-fine:h-control-dense`); below the touch floor on purpose (#484 §2a). */
-  --size-field: 3.5rem; /* 56px — Input height. componentSpecs.input.heights.default. */
-  --size-field-sm: 3rem; /* 48px — Small input height. componentSpecs.input.heights.sm. */
+     --target-floor, set here and by the density layer only; moving --size-touch-min does not
+     lower min-h-touch-min, and every floored role (touch, control, field) is clamped in
+     @theme to max(var(--size-*), var(--target-floor)). */
+  --size-touch: 2.75rem; /* 44px — The default touch target (`h-touch`, `min-h-touch`). brandMeta.accessibility.defaultTouchTarget. */
+  --size-touch-min: 2.75rem; /* 44px — The touch floor (`min-h-touch-min`): 44px on a coarse pointer (Apple HIG Buttons: 44x44 pt), registered as `--target-floor`, which the density layer lowers to 24px on a fine pointer (WCAG 2.2 SC 2.5.8). No brand pack can move it (owner decision 2026-11-01 supersedes the 48px floor of 2026-10-07). */
+  --size-control: 2.75rem; /* 44px — Default control height. componentSpecs.button.heights.default. */
+  --size-control-sm: 2.75rem; /* 44px — Small control height. componentSpecs.button.heights.sm. */
+  --size-control-lg: 3rem; /* 48px — Large control height. componentSpecs.button.heights.lg. */
+  --size-control-icon: 2.75rem; /* 44px — Icon-button size. componentSpecs.button.heights.icon. */
+  --size-control-dense: 2rem; /* 32px — Dense control height for a fine pointer only (`pointer-fine:h-control-dense`); below the touch floor on purpose (#484 §2a); 28px under desktop density. */
+  --size-field: 2.75rem; /* 44px — Input height. componentSpecs.input.heights.default. */
+  --size-field-sm: 2.75rem; /* 44px — Small input height. componentSpecs.input.heights.sm. */
 
   /* ── Z-INDEX ─────────────────────────────────────────────────────────────── */
   --z-base: 0;
@@ -831,42 +975,49 @@
   --mineral-cobalt-on-container: #b3e5fc; /* APCA Lc -84.2 on the container */
   --mineral-cobalt-aa: #86dcff; /* #00B0FF measures -54.7 — APCA Silver on #0E0D0C. nyuchi/bushtrade/src/app/globals.css:171 (nudged from #80DAFF, Lc -77.0 — its comment claims 78) */
   --mineral-cobalt-text: #86dcff; /* APCA Lc -78.3 on --base. #00B0FF measures -54.7 as text on #0E0D0C; the dark -aa value, already text on base-dark */
+  --mineral-cobalt-light: #0047ab; /* cobalt's light-mode value, fixed across themes */
   /* tanzanite — Identity. Premium, creativity, connection */
   --mineral-tanzanite: #b388ff;
   --mineral-tanzanite-container: #1a0033;
   --mineral-tanzanite-on-container: #e1bee7; /* APCA Lc -73.3 on the container */
   --mineral-tanzanite-aa: #dcc8ff; /* #B388FF measures -50 — APCA Silver on #0E0D0C. derived — canon darkHex toward #FFFFFF */
   --mineral-tanzanite-text: #dcc8ff; /* APCA Lc -78.4 on --base. #B388FF measures -50 as text on #0E0D0C; the dark -aa value, already text on base-dark */
+  --mineral-tanzanite-light: #4b0082; /* tanzanite's light-mode value, fixed across themes */
   /* malachite — Growth. Growth, nature, success */
   --mineral-malachite: #64ffda;
   --mineral-malachite-container: #00251a;
   --mineral-malachite-on-container: #a7ffeb; /* APCA Lc -94.8 on the container */
   --mineral-malachite-aa: #64ffda; /* canonical value already clears the bar */
   --mineral-malachite-text: #64ffda; /* APCA Lc -91.9 on --base — canonical value already clears the bar */
+  --mineral-malachite-light: #004d40; /* malachite's light-mode value, fixed across themes */
   /* gold — Value. Honey, rewards, warmth */
   --mineral-gold: #ffd740;
   --mineral-gold-container: #332200;
   --mineral-gold-on-container: #ffecb3; /* APCA Lc -93 on the container */
   --mineral-gold-aa: #ffd740; /* canonical value already clears the bar */
   --mineral-gold-text: #ffd740; /* APCA Lc -84.2 on --base — canonical value already clears the bar */
+  --mineral-gold-light: #5d4037; /* gold's light-mode value, fixed across themes */
   /* terracotta — Community. Earth, community, grounding */
   --mineral-terracotta: #e1b07e;
   --mineral-terracotta-container: #3e2817;
   --mineral-terracotta-on-container: #f5e6d3; /* APCA Lc -88.4 on the container */
   --mineral-terracotta-aa: #ebcca3; /* #E1B07E measures -64.5 — APCA Silver on #0E0D0C. nyuchi/bushtrade/src/app/globals.css:166 (nudged from #EAC99E, Lc -76.7 — its comment claims 78) */
   --mineral-terracotta-text: #ebcca3; /* APCA Lc -78.2 on --base. #E1B07E measures -64.5 as text on #0E0D0C; the dark -aa value, already text on base-dark */
+  --mineral-terracotta-light: #a0522d; /* terracotta's light-mode value, fixed across themes */
   /* sodalite — Intelligence. Intelligence, depth, reasoning */
   --mineral-sodalite: #3d5afe;
   --mineral-sodalite-container: #0d1442;
   --mineral-sodalite-on-container: #c5cae9; /* APCA Lc -73.9 on the container */
   --mineral-sodalite-aa: #c6cfff; /* #3D5AFE measures -26.9 — APCA Silver on #0E0D0C. shamwari-ai/docs/style.css:32 */
   --mineral-sodalite-text: #c6cfff; /* APCA Lc -78.5 on --base. #3D5AFE measures -26.9 as text on #0E0D0C; the dark -aa value, already text on base-dark */
+  --mineral-sodalite-light: #283593; /* sodalite's light-mode value, fixed across themes */
   /* copper — Stewardship. Connection, foundation, stewardship */
   --mineral-copper: #ff8a65;
   --mineral-copper-container: #3a1a0e;
   --mineral-copper-on-container: #ffd3c2; /* APCA Lc -82.8 on the container */
   --mineral-copper-aa: #ffc3b0; /* #FF8A65 measures -56.6 — APCA Silver on #0E0D0C. derived — canon darkHex toward #FFFFFF */
   --mineral-copper-text: #ffc3b0; /* APCA Lc -78.2 on --base. #FF8A65 measures -56.6 as text on #0E0D0C; the dark -aa value, already text on base-dark */
+  --mineral-copper-light: #bf5a36; /* copper's light-mode value, fixed across themes */
 
   /* ── SEVEN HERITAGE TONES ────────────────────────────────────────────────── */
   --heritage-indigo: #7986cb; /* Dusk, depth, the dyer's craft */
@@ -1063,6 +1214,58 @@
   --status-deprecated-container: var(--status-danger-container);
   --status-deprecated-on-container: var(--status-danger-on-container);
   --status-deprecated-text: var(--status-danger-text);
+  --assurance-none: var(--status-neutral);
+  --assurance-none-container: var(--status-neutral-container);
+  --assurance-none-on-container: var(--status-neutral-on-container);
+  --assurance-none-text: var(--status-neutral-text);
+  --assurance-otp: var(--mineral-cobalt);
+  --assurance-otp-container: var(--mineral-cobalt-container);
+  --assurance-otp-on-container: var(--mineral-cobalt-on-container);
+  --assurance-otp-text: var(--mineral-cobalt-text);
+  --assurance-documented: #4b66fe; /* derived: #3D5AFE measures Lc 26.6 against base / surface; walked toward #FFFFFF to Lc 30 */
+  --assurance-documented-container: var(--mineral-sodalite-container);
+  --assurance-documented-on-container: #c7ccea; /* derived: #C5CAE9 measures Lc 73.9 against assurance-documented-container; walked toward #FFFFFF to Lc 75 */
+  --assurance-documented-text: var(--mineral-sodalite-text);
+  --assurance-government: var(--mineral-gold);
+  --assurance-government-container: var(--mineral-gold-container);
+  --assurance-government-on-container: var(--mineral-gold-on-container);
+  --assurance-government-text: var(--mineral-gold-text);
+  --assurance-licensed: var(--mineral-tanzanite);
+  --assurance-licensed-container: var(--mineral-tanzanite-container);
+  --assurance-licensed-on-container: #e3c2e8; /* derived: #E1BEE7 measures Lc 73.3 against assurance-licensed-container; walked toward #FFFFFF to Lc 75 */
+  --assurance-licensed-text: var(--mineral-tanzanite-text);
+  --attestation-community: var(--mineral-terracotta);
+  --attestation-community-container: var(--mineral-terracotta-container);
+  --attestation-community-on-container: var(--mineral-terracotta-on-container);
+  --attestation-community-text: #ebcca3; /* var(--mineral-terracotta-text), measured; a literal because the light theme is derived (see ALIAS CHAINS in the header) */
+  --attestation-business: var(--mineral-malachite);
+  --attestation-business-container: var(--mineral-malachite-container);
+  --attestation-business-on-container: var(--mineral-malachite-on-container);
+  --attestation-business-text: var(--mineral-malachite-text);
+  --attestation-domain: var(--mineral-copper);
+  --attestation-domain-container: var(--mineral-copper-container);
+  --attestation-domain-on-container: var(--mineral-copper-on-container);
+  --attestation-domain-text: #ffc3b0; /* var(--mineral-copper-text), measured; a literal because the light theme is derived (see ALIAS CHAINS in the header) */
+  --tier-unverified: var(--assurance-none);
+  --tier-unverified-container: var(--assurance-none-container);
+  --tier-unverified-on-container: var(--assurance-none-on-container);
+  --tier-unverified-text: var(--assurance-none-text);
+  --tier-community: var(--attestation-community);
+  --tier-community-container: var(--attestation-community-container);
+  --tier-community-on-container: var(--attestation-community-on-container);
+  --tier-community-text: var(--attestation-community-text);
+  --tier-otp: var(--assurance-otp);
+  --tier-otp-container: var(--assurance-otp-container);
+  --tier-otp-on-container: var(--assurance-otp-on-container);
+  --tier-otp-text: var(--assurance-otp-text);
+  --tier-government: var(--assurance-government);
+  --tier-government-container: var(--assurance-government-container);
+  --tier-government-on-container: var(--assurance-government-on-container);
+  --tier-government-text: var(--assurance-government-text);
+  --tier-licensed: var(--assurance-licensed);
+  --tier-licensed-container: var(--assurance-licensed-container);
+  --tier-licensed-on-container: var(--assurance-licensed-on-container);
+  --tier-licensed-text: var(--assurance-licensed-text);
   --category-1: var(--mineral-cobalt);
   --category-2: var(--mineral-tanzanite);
   --category-3: var(--mineral-malachite);
@@ -1071,6 +1274,7 @@
   --category-6: var(--mineral-sodalite);
   --category-7: var(--mineral-copper);
   --destructive-text: #f3c0bd; /* derived: #F2B8B5 measures Lc 71.6 against base / surface; walked toward #FFFFFF to Lc 75 */
+  --status-error: var(--destructive);
   --border-control: #818180; /* derived: #2A2927 measures Lc 0.0 against pitch / void / base / surface / container / overlay / raised / muted / wash / background / card / popover / sidebar; walked toward #FFFFFF to Lc 30 and 3:1 */
 
   /* ── UNRESOLVED — the registry and /v1/brand disagree; this is NOT a ruling ── */
@@ -1122,6 +1326,80 @@
   @variant sm {
     padding-inline: var(--space-xl);
   }
+}
+
+/* ════════════════════════════════════════════════════════════════════════════
+ * DENSITY — sizes step down as screens grow (2026-11-01). See densityLayer().
+ * ════════════════════════════════════════════════════════════════════════════ */
+@media (min-width: 48rem) {
+  :root {
+    --fs-display: 3rem; /* 48px */
+    --fs-display-sm: 2.5rem; /* 40px */
+    --fs-body: 1rem; /* 16px */
+    --fs-small: 0.875rem; /* 14px */
+  }
+}
+
+@media (min-width: 64rem) and (pointer: fine) and (hover: hover) and (not (any-pointer: coarse)) {
+  :root {
+    --target-floor: 1.5rem; /* 24px — WCAG 2.2 SC 2.5.8 */
+    --size-touch-min: 1.5rem; /* 24px, the same floor */
+    --touch-target-lg: 36px;
+    --touch-target: 32px;
+    --h-button-default: 2.25rem; /* 36px */
+    --h-button-sm: 2rem; /* 32px */
+    --h-input: 2.25rem; /* 36px */
+    --size-touch: 2.25rem; /* 36px */
+    --size-control: 2.25rem; /* 36px */
+    --size-control-sm: 2rem; /* 32px */
+    --size-control-lg: 2.5rem; /* 40px */
+    --size-control-icon: 2.25rem; /* 36px */
+    --size-control-dense: 1.75rem; /* 28px */
+    --size-field: 2.25rem; /* 36px */
+    --size-field-sm: 2rem; /* 32px */
+    --fs-display: 3rem; /* 48px */
+    --fs-display-sm: 2.5rem; /* 40px */
+    --fs-h1: 2rem; /* 32px */
+    --fs-h2: 1.5rem; /* 24px */
+    --fs-h3: 1.25rem; /* 20px */
+    --fs-h4: 1.125rem; /* 18px */
+    --fs-h5: 1rem; /* 16px */
+    --fs-h6: 0.9375rem; /* 15px */
+    --fs-body-lg: 1.0625rem; /* 17px */
+    --fs-body: 0.9375rem; /* 15px */
+    --fs-small: 0.875rem; /* 14px */
+  }
+}
+
+/* Opt out until you have migrated: the sizes consumers pinned before 2026-11-01. */
+:root[data-mzizi-sizes="legacy"] {
+  --target-floor: 3rem; /* 48px */
+  --size-touch-min: 3rem; /* 48px */
+  --touch-target-lg: 56px;
+  --touch-target: 48px;
+  --h-button-default: 3.5rem; /* 56px */
+  --h-button-sm: 3rem; /* 48px */
+  --h-input: 3.5rem; /* 56px */
+  --size-touch: 3.5rem; /* 56px */
+  --size-control: 3.5rem; /* 56px */
+  --size-control-sm: 3rem; /* 48px */
+  --size-control-lg: 3.5rem; /* 56px */
+  --size-control-icon: 3rem; /* 48px */
+  --size-control-dense: 2rem; /* 32px */
+  --size-field: 3.5rem; /* 56px */
+  --size-field-sm: 3rem; /* 48px */
+  --fs-display: 4.5rem; /* 72px */
+  --fs-display-sm: 3.75rem; /* 60px */
+  --fs-h1: 3rem; /* 48px */
+  --fs-h2: 2.25rem; /* 36px */
+  --fs-h3: 1.875rem; /* 30px */
+  --fs-h4: 1.5rem; /* 24px */
+  --fs-h5: 1.25rem; /* 20px */
+  --fs-h6: 1rem; /* 16px */
+  --fs-body-lg: 1.125rem; /* 18px */
+  --fs-body: 1rem; /* 16px */
+  --fs-small: 0.875rem; /* 14px */
+  --fs-caption: 0.75rem; /* 12px */
 }
 
 /* ════════════════════════════════════════════════════════════════════════════

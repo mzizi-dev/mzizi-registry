@@ -3,6 +3,11 @@ import { cva, type VariantProps } from "class-variance-authority"
 
 import { cn } from "@/lib/utils"
 
+/*
+ * The coloured roles read the verification-tier roles (#543), defined once in the N1 tokens:
+ * editor → `--tier-otp` (cobalt), owner → `--tier-government` (gold). Text takes each tier's
+ * `-text` role, which the token gate holds to APCA Lc 75 on the page in both themes.
+ */
 const permissionBadgeVariants = cva(
   "inline-flex h-5 items-center gap-1 rounded-full px-2 py-0.5 text-xs font-medium capitalize",
   {
@@ -10,10 +15,10 @@ const permissionBadgeVariants = cva(
       variant: {
         admin: "bg-destructive/10 text-destructive",
         editor:
-          "bg-[var(--tier-otp,var(--color-cobalt,#00B0FF))]/15 text-[var(--tier-otp,var(--color-cobalt,#00B0FF))]",
+          "bg-tier-otp/15 text-tier-otp-text",
         viewer: "bg-muted text-muted-foreground",
         owner:
-          "bg-[var(--color-gold,#FFD740)]/15 text-[var(--color-gold,#FFD740)]",
+          "bg-tier-government/15 text-tier-government-text",
       },
     },
     defaultVariants: { variant: "viewer" },

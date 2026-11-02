@@ -6,8 +6,8 @@
 //! # The retry control is below the published touch floor
 //!
 //! The `.tsx` ships `min-h-[44px]` on the retry button. N10's own `mzizi-ai-context` states
-//! the rule as "Touch targets: 48px minimum" — 44 is Apple's number, not this system's, and
-//! this is the fourth component in this build-out with the identical shortfall
+//! the rule as "Touch targets: 48px minimum" (it now says 44px on touch, the Apple number, since
+//! 2026-11-01) and this is the fourth component in this build-out with the identical shortfall
 //! (`mzizi-docs-engine`'s sidebar was the first two). Raised to `min-h-[48px]` here; nothing
 //! else about the control changes.
 //!

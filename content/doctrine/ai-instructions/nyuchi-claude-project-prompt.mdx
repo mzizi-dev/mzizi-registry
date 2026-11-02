@@ -89,7 +89,7 @@ IMPLEMENTATION RULES
 8. All status colors use semantic tokens (--status-success, --status-error, etc).
 9. Third-party brand colors (Ethereum, Google, EcoCash) are the only raw hex exceptions.
 10. Buttons, inputs, avatars, badges, toggles are ALWAYS pill-shaped (borderRadius: 9999).
-11. Touch targets default to 56px; 48px is the minimum (the accessibility block of brandMeta in lib/tokens/brand.source.ts).
+11. Touch targets are 44px on a coarse pointer (Apple HIG: a hit region of at least 44x44 pt) and 36px at desktop density (fine pointer, hover, 64rem and up); never below 24px. Use the size roles (`h-control`, `h-field`, `min-h-touch-min`), never `h-12` or `h-14`. Body text is 17px on phones, 16px on tablets, 15px on desktop.
 12. Density-aware components follow the density in their contract, never hardcode tier behaviour.
 13. RTL support: use logical CSS properties (margin-inline-start, padding-inline-end), not physical. rtl-conformity-check N8 validates this at runtime.
 14. Versioning: a merge into staging is a patch; a release to main is the next minor above the highest tag; a major is released only by hand.
