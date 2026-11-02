@@ -28,8 +28,8 @@ const priorities: { value: Priority; label: string; color: string; dot: string }
   {
     value: "high",
     label: "High",
-    color: "text-[var(--color-terracotta,#D4A574)]",
-    dot: "bg-[var(--color-terracotta,#D4A574)]",
+    color: "text-[var(--color-terracotta)]",
+    dot: "bg-[var(--color-terracotta)]",
   },
   { value: "urgent", label: "Urgent", color: "text-destructive", dot: "bg-destructive" },
 ]

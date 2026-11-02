@@ -1,0 +1,90 @@
+{
+  "$schema": "../schema/lib-contract.schema.json",
+  "name": "lib/bulkhead",
+  "title": "Bulkhead",
+  "version": "1.0.0",
+  "node": 5,
+  "kind": "lib",
+  "summary": "A cap on concurrent calls to one dependency, with a bounded wait queue.",
+  "implementations": {
+    "rs": {
+      "crate": "mzizi-resilience",
+      "module": "bulkhead"
+    },
+    "ts": null,
+    "py": null
+  },
+  "config": [
+    {
+      "name": "max_concurrent",
+      "type": "u32",
+      "min": 1,
+      "description": "Calls that may run at once."
+    },
+    {
+      "name": "max_queue",
+      "type": "u32",
+      "min": 0,
+      "description": "Calls that may wait."
+    }
+  ],
+  "operations": [
+    {
+      "signature": "new(max_concurrent, max_queue)",
+      "returns": "Result<Bulkhead, ConfigError>",
+      "description": "The bulkhead, or why invalid."
+    },
+    {
+      "signature": "acquire()",
+      "returns": "Entry",
+      "description": "Admitted, Queued or Rejected."
+    },
+    {
+      "signature": "promote()",
+      "returns": "bool",
+      "description": "A queued call takes a free slot."
+    },
+    {
+      "signature": "abandon()",
+      "returns": "()",
+      "description": "A queued call gave up waiting."
+    },
+    {
+      "signature": "release()",
+      "returns": "()",
+      "description": "A running call ended."
+    }
+  ],
+  "invariants": [
+    {
+      "id": "zero-capacity",
+      "text": "Zero capacity is refused, never divided by.",
+      "test": "zero_capacity_is_refused_not_divided_by"
+    },
+    {
+      "id": "fill-queue-reject",
+      "text": "Slots fill, then the queue, then calls are rejected.",
+      "test": "fills_then_queues_then_rejects"
+    },
+    {
+      "id": "promotion",
+      "text": "A released slot goes to the queue.",
+      "test": "a_released_slot_goes_to_the_queue"
+    },
+    {
+      "id": "abandon",
+      "text": "A queued call giving up is not a rejection.",
+      "test": "giving_up_a_wait_frees_the_queue_without_a_rejection"
+    },
+    {
+      "id": "no-underflow",
+      "text": "A double release does not underflow.",
+      "test": "double_release_does_not_underflow"
+    }
+  ],
+  "fixtures": [],
+  "gaps": [
+    "No TypeScript or Python build yet (mzizi-registry#472, phases 1 and 2): until they exist this contract is held by the Rust crate only.",
+    "No registry entry yet: the TypeScript original of the same name is not held to this contract."
+  ]
+}

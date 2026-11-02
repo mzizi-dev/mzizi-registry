@@ -1,0 +1,22 @@
+[package]
+name = "mzizi-chaos-engine"
+description = "Mzizi N8 chaos engine: a seeded, deterministic fault schedule (errors, latency, timeouts, unreachable) that refuses to run in production."
+readme = "README.md"
+keywords = ["chaos", "fault-injection", "testing", "resilience", "mzizi"]
+categories = ["development-tools::testing", "algorithms", "wasm"]
+version.workspace = true
+edition.workspace = true
+rust-version.workspace = true
+license.workspace = true
+repository.workspace = true
+homepage.workspace = true
+
+# The vector and contract suites read files from the registry root, which can never
+# be in the tarball (the same reason as `mzizi-resilience`). Registry gates.
+exclude = ["tests/"]
+
+[lints]
+workspace = true
+
+[dev-dependencies]
+serde_json = "1"

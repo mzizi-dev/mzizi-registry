@@ -1,0 +1,118 @@
+{
+  "$schema": "../schema/lib-contract.schema.json",
+  "name": "lib/chaos-engine",
+  "title": "Chaos engine",
+  "version": "1.0.0",
+  "node": 8,
+  "kind": "lib",
+  "summary": "A seeded, deterministic fault schedule (errors, latency, timeouts, unreachable) for chaos tests. It decides which fault the next call gets; the host injects it. It refuses to run in production.",
+  "implementations": {
+    "rs": {
+      "crate": "mzizi-chaos-engine",
+      "module": "lib"
+    },
+    "ts": null,
+    "py": null
+  },
+  "config": [
+    {
+      "name": "seed",
+      "type": "u64",
+      "description": "Same seed, same faults, in every build."
+    },
+    {
+      "name": "unreachable_rate",
+      "type": "f64",
+      "min": 0,
+      "description": "Probability of refusing the connection. Each rate is in [0, 1] and the four sum to at most 1."
+    },
+    {
+      "name": "timeout_rate",
+      "type": "f64",
+      "min": 0,
+      "description": "Probability of never answering."
+    },
+    {
+      "name": "error_rate",
+      "type": "f64",
+      "min": 0,
+      "description": "Probability of failing with a 5xx from error_statuses."
+    },
+    {
+      "name": "latency_rate",
+      "type": "f64",
+      "min": 0,
+      "description": "Probability of a delay in [latency_min_ms, latency_max_ms]."
+    },
+    {
+      "name": "error_statuses",
+      "type": "u16[]",
+      "description": "Non-empty; each 500 to 599."
+    }
+  ],
+  "operations": [
+    {
+      "signature": "Engine::new(plan, environment)",
+      "returns": "Result<Engine, ChaosError>",
+      "description": "Refuses production (and any unknown environment) and an invalid plan."
+    },
+    {
+      "signature": "next_fault()",
+      "returns": "Fault",
+      "description": "None, Latency{ms}, Error{status}, Timeout or Unreachable. One unit draw picks the kind; an error or latency draws one more."
+    },
+    {
+      "signature": "schedule(n)",
+      "returns": "Vec<Fault>",
+      "description": "The next n faults."
+    }
+  ],
+  "invariants": [
+    {
+      "id": "deterministic",
+      "text": "The same plan gives the same faults; a different seed gives different ones.",
+      "test": "the_same_seed_gives_the_same_faults"
+    },
+    {
+      "id": "shared-vectors",
+      "text": "The sequence for each seed matches the vectors produced by an independent Python implementation, so every build reproduces it.",
+      "test": "seeded_sequences_match_the_vectors"
+    },
+    {
+      "id": "reference-prng",
+      "text": "The generator is SplitMix64 and matches its published reference outputs.",
+      "test": "splitmix64_matches_its_reference_values"
+    },
+    {
+      "id": "never-in-production",
+      "text": "Production, and any environment not plainly a test one (including empty), is refused. There is no override.",
+      "test": "production_and_unknown_environments_are_refused"
+    },
+    {
+      "id": "validated",
+      "text": "Rates outside [0, 1] or summing past 1, a backwards latency range and a bad status list are refused at construction.",
+      "test": "invalid_plans_are_refused"
+    },
+    {
+      "id": "empty-plan",
+      "text": "A plan with no rates never injects anything.",
+      "test": "the_empty_plan_never_injects_anything"
+    },
+    {
+      "id": "full-rate",
+      "text": "A rate of 1 always injects that fault.",
+      "test": "a_full_rate_always_injects_that_fault"
+    },
+    {
+      "id": "rates-honoured",
+      "text": "Injected latency stays inside its range and the observed rates match the plan.",
+      "test": "injected_latency_stays_inside_the_range_and_rates_are_roughly_honoured"
+    }
+  ],
+  "fixtures": [],
+  "gaps": [
+    "No TypeScript or Python build yet (mzizi-registry#472, phases 1 and 2); __tests__/fixtures/chaos/seeded.json is what they will be held to.",
+    "The CLI command that runs a plan against a service (`mzizi chaos run`) is tracked in mzizi-dev/agent-tools#285.",
+    "Not a registry entry yet; mzizi-assurance's `mzizi-chaos` (blast-radius diagnostics) is a different thing and is not replaced."
+  ]
+}

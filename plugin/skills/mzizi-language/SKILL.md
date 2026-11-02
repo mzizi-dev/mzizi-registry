@@ -1,6 +1,6 @@
 ---
 name: mzizi-language
-description: Use this skill when writing, checking or fixing Mzizi language source (`.mz` files) — LANGUAGE-TRACKER.md as the one list of what Mzizi can and cannot do, the component syntax (enum tables, props, the view tree, `when` / `for each`, records, `use motion`), the backend `service` (routes, handlers with `when` / `header` / `respond`, `example` and `ensure` contracts; RFC-0011), the `mz check --agent` loop and its NDJSON diagnostics, `mz fix` for every `exact` fix, `mz contract` (a component's contract, or a service run in process), `mz build` (a service to a local Rust + axum package), the diagnostic codes you will meet (MZ0101, MZ0106, MZ0312, MZ0313, MZ0406–MZ0409, MZ0602, MZ0603, MZ0605, MZ0606, MZ0611–MZ0613, MZ07xx, MZ08xx), and exactly what is not built yet (expressions, bindings, callable functions, loops, error handling, modules, a standard library, component lowering, a release).
+description: Use this skill when writing, checking or fixing Mzizi language source (`.mz` files) — LANGUAGE-TRACKER.md as the one list of what Mzizi can and cannot do, the component syntax (enum tables, props, the view tree, `when` / `for each`, records, `use motion`), the backend `service` (routes, handlers with `when` / `header` / `respond`, `example` and `ensure` contracts; RFC-0011), the `mz check --agent` loop and its NDJSON diagnostics, `mz fix` for every `exact` fix, `mz contract` (a component's contract, or a service run in process), `mz build` (a service to a local Rust + axum package), the diagnostic codes you will meet (MZ0101, MZ0106, MZ0312, MZ0313, MZ0406–MZ0409, MZ0602, MZ0603, MZ0605, MZ0606, MZ0611–MZ0613, MZ07xx, MZ08xx), programs (RFC-0013: `fn main`, `let` / `var`, functions, `when` / `match`, loops, `int` / `float`, text, `list` / `map` / `set`, records, enums, `result` with `try`) checked by `mz check` and run by `mz run`, the language harness (`mz harness`), and exactly what is not built yet (modules, a standard library, component lowering, Rust interop, I/O, concurrency, generics, `mz test`, a release).
 user-invocable: true
 ---
 
@@ -45,11 +45,11 @@ which thing is which when you describe it:
   `mzizi-roots` skill. Supplying the benchmark's UI tasks is one of their jobs, not what
   they are.
 
-This skill describes `main` at `62a0f32` (2026-09-30): 425 tests in the workspace
-(`cargo test --workspace`, 294 of them in the compiler crate) and 12,644 lines in
+This skill describes `main` at `cf3a44e` (2026-11-01): 765 tests in the workspace
+(`cargo test --workspace`, 634 of them in the compiler crate) and 33,540 lines in
 `compiler/src`. Where this skill and the code disagree, **the code is the fact** (RFC-0003
-§7.1). Every example below is copied from a file in the repository that passes `mz check`
-and `mz contract` there.
+§7.1). Every example below is copied from a file in the repository that passes `mz check`,
+`mz contract` and, for a program, `mz run` there.
 
 ## Check the tracker before you claim anything
 
@@ -60,33 +60,139 @@ skill included. Its status column is what the code on `main` does, never what an
 Read it before you tell anyone Mzizi can do something, and before you write Mzizi that relies
 on a construct this skill does not show.
 
-What exists is the front end of a language whose first domains are UI components and one
-backend slice. What the tracker lists as missing is almost everything a general-purpose
-program needs:
+**In a `program` (RFC-0013, rows C1–C10, all ✅ on `main` since the 2026-10-08 releases):**
+expressions and operators (arithmetic, comparison with `is`, `and` / `or`, text interpolation
+`"{x}"`), bindings (`let`, `var`, assignment), functions with parameters, return types and
+recursion, control flow (`when` / `else when` / `else`, exhaustive `match`, `when` and `match`
+as values, `for each` over `range(a, to = b)` or a list, `while`, `break`, `continue`, early
+`return`), `int` and `float` with the numeric methods, text methods (`s[i]`, `slice`, `find`,
+`split`, `chars`, `parse_int`, `parse_float`), collections (`list(T)`, `map(K, V)`, `set(K)`,
+bracket literals, indexing that returns an option read with `otherwise`, `in`, the named
+folds), records with methods, enums with columns, and errors (`result(T, E)`,
+`return error(e)`, prefix `try`, a `match` on a result, and `main` returning a result).
+`mz run` lowers a program to a dependency-free Rust package, builds it with Cargo and runs it.
 
-- **No expressions or operators** (C1): no arithmetic, no `+`, no `==`. Comparisons exist only
-  inside contracts and handler conditions (`is`, `in`, `at_least`, `at_most`).
-- **No bindings** (C2): no variables, no named values, no assignment.
-- **No callable functions** (C3): `fn` parses, but a body is nothing beyond `emit`; there are no
-  parameters, return values or calls.
-- **No loops** (C4) outside a view's `for each`, and no early return except a handler's
-  `respond`.
-- **No error handling** (C9): no result type and no propagation. Contracts check behaviour;
-  they are not error handling.
-- **No modules or imports** (P1): one component or one service per file.
-- **No standard library** (P2), no text operations (C6), `int` is the only number (C5), and
-  there is no map, set or tuple (C7).
-- **No program entry point that runs** (C10): there is no `mz run`.
+**Still missing (❌ or partial in the tracker):** modules and imports (P1; one top-level
+declaration per file), a standard library (P2), lowering of components (P3 is partial: a
+`service` and a `program` lower, no component does), Rust interop (P6), state and I/O (P8),
+concurrency (P9), generics and interfaces (P12), a formatter, a language server, `mz test`,
+package management and a published release (`mzizi-lang-compiler` 0.0.0, `publish = false`).
+Errors are not yet mapped back to `.mz` lines (P5, designed). Do not write Mzizi that needs
+any of these, and do not tell anyone it exists.
 
-The public benchmark suites (MultiPL-E, EvalPlus) are blocked until functions exist.
+Two pilots have run and neither showed an advantage for Mzizi. The run that tests the
+charter's kill criterion has not happened, so never write that Mzizi is faster or better.
 
 ## What exists, and what does not
 
 **Built and tested, in the toolchain:** the lexer, the recovering parser, the name and type
 resolver, the agent diagnostic protocol (`mz check --agent`), `mz fix`, the content-addressed
-IR, `mz outline`, contract evaluation (`mz contract`), nine primitives written in Mzizi
-(`primitives/*.mz`), two component examples and one service (`examples/*.mz`), and the Phase 0
-benchmark harness and runner. All of it is gated in CI.
+IR, `mz outline`, contract evaluation (`mz contract`), the language harness (`mz harness`,
+RFC-0012: one machine-readable definition of every feature, operator and diagnostic code),
+nine primitives written in Mzizi (`primitives/*.mz`), component, service and program examples
+(`examples/*.mz`, each program with the output `mz run` must print in `examples/<name>.expected`),
+and the Phase 0 benchmark harness and runner. All of it is gated in CI.
+
+**Programs (RFC-0013), built and tested.** A `program` file holds one program with `fn main`.
+`mz check` checks it, and `mz run` lowers it to Rust, builds it and runs it:
+
+```mz
+## Fibonacci numbers by recursion, in RFC-0013's foundation slice (§18.1): functions,
+## calls, `let`, `var`, `when`, integer arithmetic and `print`, and no loops yet.
+## `mz run examples/fib.mz` prints what fib.expected holds; CI compares the two.
+program fib
+
+  fn main
+    print("fib(9) is {fib(9)}")
+    let n = 20
+    let f = fib(n)
+    print("fib({n}) is {f}")
+    var total = 0
+    total = total + fib(10)
+    total = total + fib(11)
+    print("fib(10) + fib(11) is {total}, and that is fib(12): {total is fib(12)}")
+    print(parity(f))
+  end fn main
+
+  fn fib(n: int): int
+    when n < 2
+      return n
+    end
+    return fib(n - 1) + fib(n - 2)
+  end fn fib
+
+  fn parity(n: int): text
+    when n % 2 is 0 and n > 0
+      return "{n} is even"
+    else
+      return "{n} is odd, or not positive"
+    end
+  end fn parity
+
+end program fib
+```
+
+`mz run examples/fib.mz` prints:
+
+```text
+fib(9) is 34
+fib(20) is 6765
+fib(10) + fib(11) is 144, and that is fib(12): true
+6765 is odd, or not positive
+```
+
+Errors are values. A function returns `result(T, E)`, fails with `return error(e)`, and a
+caller handles the result with `match` or propagates it with prefix `try`:
+
+```mz
+## Checks ages: one function fails with an error, its callers handle it with `match` or
+## propagate it with `try`, and `main` itself returns a result (RFC-0013 §12).
+program errors
+
+  enum age_problem
+    negative say "is below zero"
+    too_old  say "is above 150"
+  end
+
+  fn main: result(none, age_problem)
+    print(describe(42))
+    print(describe(-3))
+    print(describe(200))
+    let total = try total_age(20, 22)
+    print("20 and 22 make {total}")
+    match total_age(20, 151)
+      case ok sum
+        print("20 and 151 make {sum}")
+      case error problem
+        print("20 and 151 were rejected: {problem} {problem.say}")
+    end
+  end fn main
+
+  fn check_age(n: int): result(int, age_problem)
+    when n < 0
+      return error(negative)
+    end
+    when n > 150
+      return error(too_old)
+    end
+    return n
+  end fn check_age
+
+  fn describe(n: int): text
+    match check_age(n)
+      case ok age
+        return "age {age} is fine"
+      case error problem
+        return "{n} is rejected: {problem} {problem.say}"
+    end
+  end fn describe
+
+  fn total_age(a: int, b: int): result(int, age_problem)
+    return try check_age(a) + try check_age(b)
+  end fn total_age
+
+end program errors
+```
 
 **The backend slice (RFC-0011), built and tested:** a `service` with HTTP routes and handlers
 (`when`, `header`, `respond`), checked by `mz check`. `mz contract` runs a service in process
@@ -96,8 +202,8 @@ today:** no component lowers, and the package is a local server, with no Workers
 or Containers target and no deployment. The `mzizi-be` benchmark arm, the probe crate
 `mzprobe` and backend task B1 exist; no backend episode has run.
 
-**Not built:** everything in the tracker list above, lowering of components, rendering, a
-release and a published binary. A component `.mz` file today is checked and its contract
+**Not built:** everything in the "still missing" list above, lowering of components,
+rendering, a release and a published binary. A component `.mz` file today is checked and its contract
 evaluated; **nothing runs it.** Do not tell anyone Mzizi "compiles to Rust" or is "production
 ready"; say it is designed to lower to Rust, and that only a service does so today.
 
@@ -152,9 +258,20 @@ Loop over files instead.
 | `mz outline <file>`                 | the interface only (name, enums, props, contract subjects), as valid Mzizi       |
 | `mz hash <file>` / `mz ir <file>`   | the content-addressed root hash / every IR node with its hash and path           |
 | `mz build <service.mz> --out <dir>` | lowers a service to a Rust + axum Cargo package in `<dir>` (only a clean file)   |
+| `mz build <program.mz> --out <dir>` | lowers a program to a dependency-free Rust package in `<dir>`                    |
+| `mz run <program.mz>`               | lowers a program, builds it with Cargo and runs it                               |
+| `mz harness version`                | protocol, language version and the definition's SHA-256                          |
+| `mz harness definition --agent`     | every language-harness entry (features, operators, codes) as one line of JSON    |
+| `mz harness entry <name>`           | one entry, e.g. `mz harness entry let`                                           |
 
 Exit status: **0** no errors (warnings do not fail), **1** errors or a failed contract
 assertion, **2** a usage or I/O problem. Branch on the status; parse the NDJSON for detail.
+
+`mz run` is the exception, because 1 belongs to the program it runs. It exits with the
+program's own status: 0; 1 when `main` returns an error (`MZ0992`); 101 for a trap (`MZ0991`)
+or a panic; 141 when standard output is closed; 128 plus the signal that ended it; **3** when
+the check failed and nothing ran, or the lowered Rust did not compile (`MZ0990`); and 2 for a
+usage, environment or I/O problem (`--agent` is not accepted, a file that is not a `program`).
 
 On a **service**, `mz contract` runs the service in process (no lowering, no socket), and the
 summary adds `contract_tested`, the number of generated requests its `ensure` clauses were
@@ -613,27 +730,34 @@ Two real outputs, from pilot-2 candidates written by the 7B model and re-checked
 
 ## Contributing to the language
 
-- A language change needs an RFC in `design/`. Take the next unused number: RFC-0005 is
-  reserved, and RFC-0011 (handlers) and RFC-0012 (the harness) exist, so the next is
-  RFC-0013.
+- A language change needs an RFC in `design/`. Take the next number not used on `main` or
+  claimed by an open PR: RFC-0005 is reserved, and RFC-0011 (handlers), RFC-0012 (the language
+  harness), RFC-0013 (the core language) and RFC-0014 (Tier 2, draft) exist, so the next is
+  RFC-0015.
+- A PR that adds or changes a language feature adds or updates its language-harness entry in
+  `compiler/src/harness.rs` in the same PR: one entry in `FEATURES`, one `Code` per diagnostic
+  code with a `trigger`, and tested examples. `cargo test --test harness` is the check.
 - A PR that changes what the language can do updates its row in `LANGUAGE-TRACKER.md` in the
   same PR, with evidence, and adds a `CHANGELOG.md` entry.
 - CI runs `cargo fmt -- --check`, `cargo clippy --all-targets -- -D warnings`, `cargo test`,
   and `mz check` and `mz contract` over every file in `examples/` and `primitives/`, one file
   per call. Its `lowering` job runs `mz build` on `examples/registry.mz`, then `cargo test` and
-  one request over a socket against the package, and `mzprobe verify` of task B1. `AGENTS.md`
+  one request over a socket against the package, `mzprobe verify` of task B1, and `mz run` of
+  every example program with its output diffed against `examples/<name>.expected`. `AGENTS.md`
   in the repo has the exact script.
-- Pull requests are rebase-merged. State what you measured in the commit message.
+- Pull requests are squash-merged through the merge queue, and the squash commit keeps every
+  commit message. State what you measured in the commit message.
 - The repo consumes nothing else in the org: no build step, test or script may reach into
   `mzizi-registry` or `agent-tools`.
 
 ## See also
 
 - `LANGUAGE-TRACKER.md` (what Mzizi can and cannot do), `CHARTER.md` (v0.4),
-  `design/RFC-0001` (syntax and the agent protocol), `RFC-0006` (contracts), `RFC-0008`
+  `design/RFC-0001` (syntax and the agent protocol), `RFC-0013` (the core language: programs),
+  `RFC-0014` (Tier 2, draft), `RFC-0006` (contracts), `RFC-0008`
   (types, collections, records), `RFC-0009` (the comparison benchmark and the kill
   criterion), `RFC-0010` (contracts everywhere, draft), `RFC-0011` (handlers, the backend
-  slice), `RFC-0012` (the harness, draft), `benchmarks/prompts/mzizi-be-guide.md` (the
+  slice), `RFC-0012` (the language harness, draft), `benchmarks/prompts/mzizi-be-guide.md` (the
   one-file service guide) and `benchmarks/READINESS.md`.
 - The `mzizi-backend` skill: where a Mzizi service stands against the live TypeScript Workers.
 - The `mzizi-roots` skill: the Rust components built to support the language, its component
