@@ -312,9 +312,30 @@ fn allows(allowed: &str, property: &str) -> bool {
     allowed == property || (allowed == "--*" && property.starts_with("--"))
 }
 
-/// The largest height, in px, an element's classes declare: `h-N`, `min-h-N`, `size-N` on the
-/// 4px Tailwind scale, or their `[Npx]` arbitrary forms.
+/// The size roles' heights in px, `(utility suffix, coarse pointer, desktop density)`:
+/// `h-control` is `--spacing-control`. A copy of `lib/tokens/roles.source.ts`;
+/// `__tests__/density.test.ts` holds it equal to the TypeScript runner's table and the roles.
+pub const ROLE_HEIGHTS: &[(&str, u32, u32)] = &[
+    ("touch", 44, 36),
+    ("touch-min", 44, 24),
+    ("control", 44, 36),
+    ("control-sm", 44, 32),
+    ("control-lg", 48, 40),
+    ("control-icon", 44, 36),
+    ("control-dense", 32, 28),
+    ("field", 44, 36),
+    ("field-sm", 44, 32),
+];
+
+/// The largest height, in px, an element's classes declare on a fine pointer at desktop density:
+/// `h-N`, `min-h-N`, `size-N` on the 4px Tailwind scale, their `[Npx]` arbitrary forms, or a
+/// size role (`h-control`).
 pub fn declared_height(classes: &str) -> Option<u32> {
+    declared_height_at(classes, false)
+}
+
+/// As [`declared_height`], on a coarse pointer when `coarse`: a size role takes its touch value.
+pub fn declared_height_at(classes: &str, coarse: bool) -> Option<u32> {
     classes
         .split_whitespace()
         .filter_map(|c| {
@@ -324,8 +345,13 @@ pub fn declared_height(classes: &str) -> Option<u32> {
                 .or_else(|| c.strip_prefix("size-"))?;
             if let Some(px) = v.strip_prefix('[').and_then(|v| v.strip_suffix("px]")) {
                 px.parse().ok()
+            } else if let Ok(n) = v.parse::<u32>() {
+                Some(n * 4)
             } else {
-                v.parse::<u32>().ok().map(|n| n * 4)
+                ROLE_HEIGHTS
+                    .iter()
+                    .find(|(name, _, _)| *name == v)
+                    .map(|(_, touch, desktop)| if coarse { *touch } else { *desktop })
             }
         })
         .max()
@@ -574,7 +600,15 @@ impl Case {
                     let own = e.tag() == first && e.carries(text);
                     if own {
                         found = true;
-                        let h = declared_height(e.attr("class").unwrap_or(""));
+                        // The touch floor is judged on a coarse pointer (see contracts/runner.ts).
+                        let classes = e.attr("class").unwrap_or("");
+                        let coarse: String = classes
+                            .split_whitespace()
+                            .filter_map(|c| c.strip_prefix("pointer-coarse:"))
+                            .collect::<Vec<_>>()
+                            .join(" ");
+                        let h = declared_height_at(&coarse, true)
+                            .or_else(|| declared_height_at(classes, true));
                         if h.is_none_or(|h| h < n) {
                             return Ok(false);
                         }

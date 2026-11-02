@@ -13,7 +13,10 @@
       "export": "@bundu/ui/discover/DiscoverCard.astro",
       "since": "0.3.0"
     },
-    "tsx": { "registry": "discover-card", "identity": "contract" },
+    "tsx": {
+      "registry": "discover-card",
+      "identity": "contract"
+    },
     "rs": null,
     "related": ["card", "nyuchi-article-card", "nyuchi-timeline"]
   },
@@ -261,8 +264,8 @@
     {
       "part": "app link",
       "select": "[data-slot=\"discover-card-app\"]",
-      "fine": 48,
-      "coarse": 48
+      "fine": 32,
+      "coarse": 44
     }
   ],
   "theming": {
@@ -286,7 +289,7 @@
   "responsive": [
     "Fills its grid cell; images keep 16:9; text wraps and the summary clamps at three lines."
   ],
-  "contract": "contract\n  slot is \"discover-card\"\n  uses discover-card-badge\n  uses discover-card-meta\n  a \"Join in Mukoko\" min_height 48\n  when default shows a \"Harare Runners\"\n  when article shows h3 \"Rains arrive early in Mashonaland\"\n  when event shows time \"Sat 24 Oct, 18:00\"\n  when place shows span \"24°\"\n  when template shows a \"{{name}}\"\n  when media shows a \"7-day forecast\"\nend",
+  "contract": "contract\n  slot is \"discover-card\"\n  uses discover-card-badge\n  uses discover-card-meta\n  a \"Join in Mukoko\" min_height 44\n  when default shows a \"Harare Runners\"\n  when article shows h3 \"Rains arrive early in Mashonaland\"\n  when event shows time \"Sat 24 Oct, 18:00\"\n  when place shows span \"24°\"\n  when template shows a \"{{name}}\"\n  when media shows a \"7-day forecast\"\nend",
   "checks": [
     {
       "say": "One primary link, in a heading.",

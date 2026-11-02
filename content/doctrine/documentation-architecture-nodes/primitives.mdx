@@ -10,7 +10,7 @@ implementation_rules:
 - "One variants map per primitive (CVA in the React build, a typed record in the Astro and Rust builds); no inline conditional classes."
 - "In the React build, expose asChild / Slot where composition matters."
 - "Focus, keyboard and screen-reader behaviour come from native HTML first; the React build uses Radix UI where native HTML falls short, and still matches the Astro markup."
-- "56px default / 48px minimum touch target."
+- "44px touch target on a coarse pointer (Apple HIG), 36px at desktop density, never below 24px."
 kind: "architecture"
 model: "mzizi-dna-helix"
 node: 0
