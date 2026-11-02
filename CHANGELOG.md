@@ -12,6 +12,7 @@ From 2026-10-04 releases follow the org versioning policy ([nyuchi/.github#80](h
 
 ### Changed — the registry takes `@nyuchi/mzizi-skills` 0.16.0 (2026-11-02)
 
+- **The Claude Code plugin moves to 1.6.0** (was 1.5.0), as 1.4.0 and 1.5.0 did with their skills bumps (#596, #601): `plugin/.claude-plugin/plugin.json` `version`, so a client that updates by version picks up skills 0.16.0.
 - **Skills 0.16.0 is on npm** (agent-tools #320). `package.json` now asks for `>=0.16.0` (a floor, as before; was `>=0.15.0`) and the lockfile resolves 0.16.0. `lib/skills.generated.ts`, which `/v1/skills` and `mzizi_get_skills` serve, and `plugin/skills/`, the public Claude Code plugin's copy, are regenerated (`pnpm skills:generate`, `pnpm plugin:skills`; both `:check` variants pass: 9 skills, 33 plugin files). The two plugin descriptions that named 0.15.0 now name 0.16.0.
 - **What changed in the skills:** they teach Apple-aligned sizes (44px touch, 36px at desktop density) and the size roles (owner, 2026-11-01); six skill descriptions fit claude.ai's 1024-character limit; `mzizi-language` says four pilots have run, not two.
 - **Order matters:** the skills teach the new sizes before this registry's tokens carry them. The tokens change is #598 (not merged here), so until it lands an agent that follows the skills asks for 44px while `--size-touch` still reads 56px. The owner's ruling that Apple's guidance wins is in agent-tools #316.
