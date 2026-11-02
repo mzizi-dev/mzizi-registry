@@ -19,6 +19,7 @@ export const ICON_PATHS = {
   menu: "M4 6h16M4 12h16M4 18h16",
   plus: "M12 5v14M5 12h14",
   minus: "M5 12h14",
+  more: "M5 12h.01M12 12h.01M19 12h.01",
   search: "M21 21l-4.35-4.35M11 19a8 8 0 100-16 8 8 0 000 16z",
   code: "M16 18l6-6-6-6M8 6l-6 6 6 6",
   terminal: "M4 17l6-5-6-5M12 19h8",
@@ -46,6 +47,7 @@ export const ICON_PATHS = {
   sliders: "M4 6h9M17 6h3M4 12h3M11 12h9M4 18h11M19 18h1M15 4v4M9 10v4M17 16v4",
   help: "M12 21a9 9 0 100-18 9 9 0 000 18zM9.5 9a2.5 2.5 0 015 .5c0 1.5-2.5 2-2.5 3.5M12 17h.01",
   info: "M12 21a9 9 0 100-18 9 9 0 000 18zM12 11v5M12 8h.01",
+  warning: "M12 3.5l9.5 16.5h-19L12 3.5zM12 10v4M12 17h.01",
   "panel-left": "M4 4h16v16H4zM9 4v16",
   "chevrons-up-down": "M8 9l4-4 4 4M8 15l4 4 4-4",
   "log-out": "M15 4h4v16h-4M10 8l-4 4 4 4M6 12h10",
@@ -81,7 +83,16 @@ export const ICON_PATHS = {
   moon: "M20 14.5A8 8 0 019.5 4 8 8 0 1020 14.5z",
   sparkle: "M12 3l1.8 5.2L19 10l-5.2 1.8L12 17l-1.8-5.2L5 10l5.2-1.8L12 3z",
   shield: "M12 3l8 3v6c0 4.5-3.4 8.3-8 9-4.6-.7-8-4.5-8-9V6l8-3z",
+  star: "M12 3l2.7 5.6 6.1.9-4.4 4.3 1 6.1L12 17l-5.4 2.9 1-6.1-4.4-4.3 6.1-.9L12 3z",
+  "trending-up": "M3 17l6-6 4 4 8-8M15 7h6v6",
   history: "M3 12a9 9 0 103-6.7M3 4v4h4M12 7v5l3 2",
+  // Trust glyphs: the verified badge's tiers and status overlays (mzizi-verified-badge).
+  phone:
+    "M5 4h3.5l1.5 4.5-2.2 1.4a11 11 0 006.3 6.3l1.4-2.2 4.5 1.5V19a2 2 0 01-2 2A16 16 0 013 6a2 2 0 012-2z",
+  award: "M12 15a6 6 0 100-12 6 6 0 000 12zM8.5 13.9L7 21l5-2.5 5 2.5-1.5-7.1",
+  ban: "M12 21a9 9 0 100-18 9 9 0 000 18zM5.6 5.6l12.8 12.8",
+  flower:
+    "M12 14.5a2.5 2.5 0 100-5 2.5 2.5 0 000 5zM12 9.5a3 3 0 113-3c0 1.4-1.3 2.4-3 3zM12 9.5a3 3 0 10-3-3c0 1.4 1.3 2.4 3 3zM12 14.5a3 3 0 103 3c0-1.4-1.3-2.4-3-3zM12 14.5a3 3 0 11-3 3c0-1.4 1.3-2.4 3-3z",
 } as const;
 
 /** Every glyph name. */

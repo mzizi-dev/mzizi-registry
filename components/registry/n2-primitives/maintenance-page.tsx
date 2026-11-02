@@ -29,7 +29,7 @@ function MaintenancePage({
         <div className="h-1 w-8 rounded-full bg-[var(--color-accent,var(--color-tanzanite,#B388FF))]" />
         <div className="h-1 w-8 rounded-full bg-[var(--status-success,var(--color-malachite,#64FFDA))]" />
         <div className="h-1 w-8 rounded-full bg-[var(--status-warning,var(--color-gold,#FFD740))]" />
-        <div className="h-1 w-8 rounded-full bg-[var(--status-error,var(--color-terracotta,#D4A574))]" />
+        <div className="h-1 w-8 rounded-full bg-[var(--status-error,var(--color-terracotta))]" />
       </div>
 
       {/* Nyuchi mark */}

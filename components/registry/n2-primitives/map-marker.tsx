@@ -27,7 +27,7 @@ const mineralValues: Record<MineralColor, string> = {
   tanzanite: "var(--color-tanzanite, #B388FF)",
   malachite: "var(--color-malachite, #64FFDA)",
   gold: "var(--color-gold, #FFD740)",
-  terracotta: "var(--color-terracotta, #D4A574)",
+  terracotta: "var(--color-terracotta)",
 }
 
 const sizes = { sm: "size-6 text-[9px]", md: "size-8 text-xs", lg: "size-10 text-sm" }

@@ -1,0 +1,205 @@
+{
+  "$schema": "../schema/component-contract.schema.json",
+  "name": "ui/address-share-card",
+  "title": "AddressShareCard",
+  "version": "1.1.0",
+  "node": 3,
+  "kind": "pattern",
+  "summary": "An address to hand to someone: a QR code that opens the share link, the code chip, the link written out, and the directions in words. The QR is drawn server-side as one SVG path in currentColor.",
+  "implementations": {
+    "astro": {
+      "registry": "address-share-card",
+      "package": "@bundu/ui",
+      "export": "@bundu/ui/AddressShareCard.astro",
+      "since": "0.6.0"
+    },
+    "tsx": {
+      "registry": "address-share-card",
+      "identity": "contract"
+    },
+    "rs": null,
+    "related": []
+  },
+  "props": [
+    {
+      "name": "code",
+      "type": "string",
+      "required": true,
+      "description": "The address code, e.g. \"NYU-7K2Q\"."
+    },
+    {
+      "name": "url",
+      "type": "string",
+      "required": true,
+      "description": "The share link the QR encodes, exactly."
+    },
+    {
+      "name": "title",
+      "type": "string",
+      "required": false,
+      "description": "Whose or which address: \"Tendai's stall\"."
+    },
+    {
+      "name": "directions",
+      "type": "string",
+      "required": false,
+      "description": "How to find the entrance, in words."
+    },
+    {
+      "name": "codeLabel",
+      "type": "string",
+      "required": false,
+      "description": "What the code is, for assistive technology: passed to the address-code chip as its `label` (\"Address\" by default)."
+    },
+    {
+      "name": "class",
+      "type": "string",
+      "required": false,
+      "description": "Extra classes on the root, merged last."
+    }
+  ],
+  "slots": [],
+  "behaviour": [
+    "The QR code encodes `url` (error correction M, a four-module quiet zone) and is one <svg role=\"img\"> whose aria-label names the link it opens.",
+    "The QR is drawn in currentColor on a `surface-qr` plate in `on-surface-qr` ink: a white plate and dark modules in every theme, so the code is never inverted. It needs no image request, no script and no literal colour.",
+    "The link is also written out (without its scheme) as a real link, because a QR code is not readable by everyone.",
+    "The code is shown with `address-code`, without its link (the card's own link opens the same place); `codeLabel` is its label.",
+    "Title and directions render only when given."
+  ],
+  "states": {
+    "default": {
+      "props": {
+        "code": "NYU-7K2Q",
+        "url": "https://kweli.mukoko.com/a/NYU-7K2Q",
+        "title": "Tendai's stall",
+        "directions": "Green gate with the bee sign, opposite the bus rank."
+      }
+    },
+    "minimal": {
+      "props": {
+        "code": "HRE-2M9X",
+        "url": "https://kweli.mukoko.com/a/HRE-2M9X"
+      }
+    },
+    "labelled": {
+      "description": "The code named in the app's own words.",
+      "props": {
+        "code": "NYU-7K2Q",
+        "url": "https://kweli.mukoko.com/a/NYU-7K2Q",
+        "title": "Tendai's stall",
+        "directions": "Green gate with the bee sign, opposite the bus rank.",
+        "codeLabel": "Delivery code"
+      }
+    }
+  },
+  "accessibility": {
+    "roles": ["img", "link"],
+    "keyboard": ["Tab to the link; Enter follows it."],
+    "focus": ["The --ring focus ring on the link."],
+    "aria": [
+      "The QR image's aria-label is \"QR code that opens <url>\"; the same link is in the text."
+    ],
+    "wcag": ["1.1.1", "1.4.1", "2.4.4", "2.5.8"]
+  },
+  "density": [
+    {
+      "part": "link",
+      "select": "a",
+      "fine": 44,
+      "coarse": 44
+    }
+  ],
+  "theming": {
+    "tokens": [
+      "--card",
+      "--border",
+      "--foreground",
+      "--muted-foreground",
+      "--primary",
+      "--ring",
+      "--muted",
+      "--card-foreground",
+      "--surface-qr",
+      "--on-surface-qr"
+    ],
+    "brandOverlay": "Only --primary (the link) and --ring change with the brand; the QR is on-surface-qr on surface-qr, the same in every theme and brand.",
+    "statusColours": []
+  },
+  "noJs": {
+    "script": "none",
+    "without": "Everything: the QR is computed when the page is rendered."
+  },
+  "responsive": [
+    "The card is at most max-w-sm and fills a narrower container; the link breaks anywhere rather than overflowing."
+  ],
+  "contract": "contract\n  slot is \"address-share-card\"\n  portal is \"https://mzizi.dev/components/address-share-card\"\n  uses address-code\n  a \"kweli.mukoko.com/a/NYU-7K2Q\" min_height 44\n  when default shows h3 \"Tendai's stall\"\n  when default shows p \"Green gate with the bee sign\"\nend",
+  "checks": [
+    {
+      "say": "One QR image, named for its link.",
+      "state": "*",
+      "select": "svg[data-slot=\"address-qr\"][role=\"img\"]",
+      "count": 1
+    },
+    {
+      "say": "The QR names what it opens.",
+      "select": "svg[data-slot=\"address-qr\"]",
+      "count": 1,
+      "attr": {
+        "aria-label": "QR code that opens https://kweli.mukoko.com/a/NYU-7K2Q"
+      }
+    },
+    {
+      "say": "The QR is one path in currentColor.",
+      "state": "*",
+      "select": "svg[data-slot=\"address-qr\"] path[fill=\"currentColor\"]",
+      "count": 1
+    },
+    {
+      "say": "The link is written out and opens the address.",
+      "select": "a[data-slot=\"address-share-card-link\"]",
+      "count": 1,
+      "attr": {
+        "href": "https://kweli.mukoko.com/a/NYU-7K2Q"
+      },
+      "text": "kweli.mukoko.com/a/NYU-7K2Q"
+    },
+    {
+      "say": "The code chip carries the code, with no second link.",
+      "state": "*",
+      "select": "[data-slot=\"address-code-link\"]",
+      "absent": true
+    },
+    {
+      "say": "The code is shown.",
+      "state": "minimal",
+      "select": "[data-slot=\"address-code-value\"]",
+      "count": 1,
+      "text": "HRE-2M9X"
+    },
+    {
+      "say": "No title or directions when none are given.",
+      "state": "minimal",
+      "select": "h3, p",
+      "absent": true
+    },
+    {
+      "say": "The QR sits on the light plate, in its ink, in every theme.",
+      "state": "*",
+      "select": "[data-slot=\"address-qr-plate\"].bg-surface-qr.text-on-surface-qr > svg[data-slot=\"address-qr\"]",
+      "count": 1
+    },
+    {
+      "say": "codeLabel names the code for assistive technology.",
+      "state": "labelled",
+      "select": "[data-slot=\"address-code\"] .sr-only",
+      "count": 1,
+      "text": "Delivery code"
+    },
+    {
+      "say": "The code is named \"Address\" by default.",
+      "select": "[data-slot=\"address-code\"] .sr-only",
+      "count": 1,
+      "text": "Address"
+    }
+  ]
+}
