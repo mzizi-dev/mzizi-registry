@@ -174,13 +174,13 @@
       "part": "secondary action",
       "select": "[data-slot=\"detail-actions-link\"]",
       "fine": 36,
-      "coarse": 44
+      "coarse": 49
     },
     {
       "part": "share link",
       "select": "[data-slot=\"detail-actions-share\"] a",
       "fine": 32,
-      "coarse": 44
+      "coarse": 49
     }
   ],
   "theming": {

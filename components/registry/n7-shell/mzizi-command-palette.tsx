@@ -186,7 +186,7 @@ export function MziziCommandPalette({
                   {item.node ? (
                     <span
                       className={cn(
-                        "shrink-0 rounded-full border border-current px-1.5 py-0.5 font-mono text-[10px] font-semibold",
+                        "shrink-0 rounded-full border border-current px-1.5 py-0.5 font-mono text-sm font-semibold",
                         NODE_MINERAL[item.node] ?? "text-muted-foreground"
                       )}
                     >
@@ -194,7 +194,7 @@ export function MziziCommandPalette({
                     </span>
                   ) : (
                     item.shortcut && (
-                      <kbd className="shrink-0 rounded bg-muted px-1.5 py-0.5 font-mono text-[10px] text-muted-foreground">
+                      <kbd className="shrink-0 rounded bg-muted px-1.5 py-0.5 font-mono text-sm text-muted-foreground">
                         {item.shortcut}
                       </kbd>
                     )
@@ -209,24 +209,24 @@ export function MziziCommandPalette({
         </div>
 
         {/* Keyboard hint bar */}
-        <div className="flex items-center gap-4 border-t border-border px-4 py-2 text-[11px] text-muted-foreground">
+        <div className="flex items-center gap-4 border-t border-border px-4 py-2 text-sm text-muted-foreground">
           <span className="flex items-center gap-1.5">
-            <kbd className="rounded border border-border bg-muted px-1.5 py-0.5 font-mono text-[10px]">
+            <kbd className="rounded border border-border bg-muted px-1.5 py-0.5 font-mono text-sm">
               ↑
             </kbd>
-            <kbd className="rounded border border-border bg-muted px-1.5 py-0.5 font-mono text-[10px]">
+            <kbd className="rounded border border-border bg-muted px-1.5 py-0.5 font-mono text-sm">
               ↓
             </kbd>
             navigate
           </span>
           <span className="flex items-center gap-1.5">
-            <kbd className="rounded border border-border bg-muted px-1.5 py-0.5 font-mono text-[10px]">
+            <kbd className="rounded border border-border bg-muted px-1.5 py-0.5 font-mono text-sm">
               ↵
             </kbd>
             select
           </span>
           <span className="ml-auto flex items-center gap-1.5">
-            <kbd className="rounded border border-border bg-muted px-1.5 py-0.5 font-mono text-[10px]">
+            <kbd className="rounded border border-border bg-muted px-1.5 py-0.5 font-mono text-sm">
               esc
             </kbd>
             close

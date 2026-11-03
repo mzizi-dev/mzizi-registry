@@ -78,7 +78,7 @@ function BookingCalendar({
           </div>
         ))}
       </div>
-      <div className="mt-2 flex items-center gap-4 text-[9px] text-muted-foreground">
+      <div className="mt-2 flex items-center gap-4 text-sm text-muted-foreground">
         <span className="flex items-center gap-1">
           <span className="size-2 rounded-full bg-[var(--color-malachite,#64FFDA)]/40" /> Available
         </span>

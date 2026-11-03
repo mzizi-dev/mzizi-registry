@@ -97,7 +97,7 @@ function TimelineRow({ item, index }: { item: TimelineItem; index: number }) {
   const body = (
     <>
       <div className="min-w-0 flex-1">
-        <div className="flex items-center gap-1.5 text-[13px] text-muted-foreground">
+        <div className="flex items-center gap-1.5 text-sm text-muted-foreground">
           <span
             className="size-1.5 shrink-0 rounded-full"
             style={{ backgroundColor: dot }}
@@ -114,7 +114,7 @@ function TimelineRow({ item, index }: { item: TimelineItem; index: number }) {
         <h3 className="mt-1 truncate text-[16px] leading-[1.25] font-semibold text-foreground">
           {item.title}
         </h3>
-        <div className="mt-1 flex flex-wrap items-center gap-x-3 gap-y-0.5 text-[13px] text-muted-foreground">
+        <div className="mt-1 flex flex-wrap items-center gap-x-3 gap-y-0.5 text-sm text-muted-foreground">
           {item.host && <span className="truncate">{item.host}</span>}
           {item.location && (
             <span className="inline-flex items-center gap-1 truncate">
@@ -210,7 +210,7 @@ function MziziTimeline({ items, loading = false, emptyState, className }: MziziT
           <div key={dayKey(group.date)} className="flex gap-4">
             {/* Date rail */}
             <div className="w-12 shrink-0 pt-2 text-center">
-              <div className="text-[11px] leading-none font-medium tracking-wide text-muted-foreground uppercase">
+              <div className="text-sm leading-none font-medium tracking-wide text-muted-foreground uppercase">
                 {weekday}
               </div>
               <div
@@ -219,7 +219,7 @@ function MziziTimeline({ items, loading = false, emptyState, className }: MziziT
               >
                 {group.date.getDate()}
               </div>
-              <div className="mt-0.5 text-[11px] leading-none tracking-wide text-muted-foreground uppercase">
+              <div className="mt-0.5 text-sm leading-none tracking-wide text-muted-foreground uppercase">
                 {month}
               </div>
             </div>

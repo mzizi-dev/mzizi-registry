@@ -117,7 +117,7 @@ function MentionInput({
                 {user.avatar ? (
                   <img src={user.avatar} alt={user.name} className="size-full object-cover" />
                 ) : (
-                  <div className="flex size-full items-center justify-center text-[10px] font-medium text-muted-foreground">
+                  <div className="flex size-full items-center justify-center text-sm font-medium text-muted-foreground">
                     {user.name[0]?.toUpperCase()}
                   </div>
                 )}

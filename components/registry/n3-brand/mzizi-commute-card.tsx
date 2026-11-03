@@ -91,19 +91,19 @@ export function MziziCommuteCard({
           >
             {label}
           </p>
-          <p className="truncate text-[11px] text-muted-foreground">
+          <p className="truncate text-sm text-muted-foreground">
             {origin} → {destination}
           </p>
         </div>
         {estimatedDuration && (
           <div className="text-right">
             <p className="text-sm font-bold text-foreground">{estimatedDuration}</p>
-            <p className="text-[10px] text-muted-foreground">est.</p>
+            <p className="text-sm text-muted-foreground">est.</p>
           </div>
         )}
       </div>
       <div className="mt-3 flex items-center justify-between">
-        <div className="flex items-center gap-3 text-[11px] text-muted-foreground">
+        <div className="flex items-center gap-3 text-sm text-muted-foreground">
           {nextDeparture && <span>Next: {nextDeparture}</span>}
           {frequency && (
             <>
@@ -118,7 +118,7 @@ export function MziziCommuteCard({
               e.stopPropagation()
               onStart()
             }}
-            className="h-10 rounded-full bg-[var(--color-gold,#FFD740)] px-4 text-[12px] font-medium text-[var(--brand-accent-foreground,#0A0A0A)] transition-opacity hover:opacity-80"
+            className="h-10 rounded-full bg-[var(--color-gold,#FFD740)] px-4 text-sm font-medium text-[var(--brand-accent-foreground,#0A0A0A)] transition-opacity hover:opacity-80"
           >
             Go →
           </button>

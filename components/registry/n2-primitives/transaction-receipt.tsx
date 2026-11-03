@@ -87,7 +87,7 @@ function TransactionReceipt({
         </div>
         <div className="flex justify-between">
           <span className="text-muted-foreground">Transaction ID</span>
-          <span className="ml-2 max-w-[160px] truncate font-mono text-[10px]">{txId}</span>
+          <span className="ml-2 max-w-[160px] truncate font-mono text-sm">{txId}</span>
         </div>
         {memo && (
           <div className="flex justify-between">

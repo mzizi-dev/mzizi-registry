@@ -117,12 +117,12 @@ export function MziziPhraseCard({
           <div className="space-y-1 rounded-[var(--radius-sm,7px)] bg-muted p-3">
             <p className="text-xs text-foreground italic">&quot;{example}&quot;</p>
             {exampleTranslation && (
-              <p className="text-[11px] text-muted-foreground">&quot;{exampleTranslation}&quot;</p>
+              <p className="text-sm text-muted-foreground">&quot;{exampleTranslation}&quot;</p>
             )}
           </div>
         )}
         <div className="flex items-center justify-between">
-          <div className="flex items-center gap-2 text-[10px] text-muted-foreground">
+          <div className="flex items-center gap-2 text-sm text-muted-foreground">
             {category && (
               <span className="rounded-full bg-[var(--color-cobalt,#00B0FF)]/10 px-1.5 py-0.5 text-[var(--color-cobalt,#00B0FF)]">
                 {category}
@@ -140,7 +140,7 @@ export function MziziPhraseCard({
                 e.stopPropagation()
                 onPractice()
               }}
-              className="h-10 rounded-full bg-[var(--color-cobalt,#00B0FF)] px-4 text-[12px] font-medium text-[var(--brand-accent-foreground,#0A0A0A)] hover:opacity-80"
+              className="h-10 rounded-full bg-[var(--color-cobalt,#00B0FF)] px-4 text-sm font-medium text-[var(--brand-accent-foreground,#0A0A0A)] hover:opacity-80"
             >
               Practice
             </button>

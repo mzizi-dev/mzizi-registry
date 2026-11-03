@@ -49,7 +49,7 @@ export function ChartRadarLabelCustom({ loading = false }: { loading?: boolean }
                   x={x}
                   y={y}
                   textAnchor={textAnchor}
-                  className="fill-foreground text-[10px] font-medium"
+                  className="fill-foreground text-sm font-medium"
                 >
                   {payload.value}
                 </text>

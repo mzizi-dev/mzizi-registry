@@ -170,11 +170,11 @@ export function MziziSearchView({
                   {r.verified && <span className="ml-1 text-[var(--color-gold,#FFD740)]">✓</span>}
                 </p>
                 {r.subtitle && (
-                  <p className="truncate text-[11px] text-muted-foreground">{r.subtitle}</p>
+                  <p className="truncate text-sm text-muted-foreground">{r.subtitle}</p>
                 )}
               </div>
               <span
-                className="shrink-0 rounded-full px-2 py-0.5 text-[9px] font-medium capitalize"
+                className="shrink-0 rounded-full px-2 py-0.5 text-sm font-medium capitalize"
                 style={{
                   backgroundColor: `color-mix(in srgb, ${categoryMinerals[r.type]} 15%, transparent)`,
                   color: categoryMinerals[r.type],
@@ -193,7 +193,7 @@ export function MziziSearchView({
         <div className="space-y-4">
           {recentSearches.length > 0 && (
             <div>
-              <p className="mb-2 text-[11px] font-semibold text-muted-foreground">Recent</p>
+              <p className="mb-2 text-sm font-semibold text-muted-foreground">Recent</p>
               <div className="space-y-1">
                 {recentSearches.map((s) => (
                   <button
@@ -212,7 +212,7 @@ export function MziziSearchView({
           )}
           {trending.length > 0 && (
             <div>
-              <p className="mb-2 text-[11px] font-semibold text-muted-foreground">Trending</p>
+              <p className="mb-2 text-sm font-semibold text-muted-foreground">Trending</p>
               <div className="flex flex-wrap gap-1.5">
                 {trending.map((t) => (
                   <button

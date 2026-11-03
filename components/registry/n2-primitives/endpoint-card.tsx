@@ -72,7 +72,7 @@ function EndpointCard({
         <div className="flex items-center gap-2">
           <code className="truncate font-mono text-sm font-medium text-foreground">{path}</code>
           {deprecated && (
-            <span className="shrink-0 rounded-[var(--radius-md,12px)] bg-destructive/10 px-1.5 py-0.5 text-[10px] font-medium text-destructive uppercase">
+            <span className="shrink-0 rounded-[var(--radius-md,12px)] bg-destructive/10 px-1.5 py-0.5 text-sm font-medium text-destructive uppercase">
               Deprecated
             </span>
           )}

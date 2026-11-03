@@ -123,7 +123,7 @@ Is it a Nyuchi-branded composed component using minerals and harness integration
 → Node 3 (Brand)
 Rules: must use mzizi- prefix, import useMziziHarness,
 destructure { log, motion, LiveRegion }, include animStyle with prefersReduced,
-ARIA attributes, data-slot + data-portal, focus-visible ring, min 44px touch target on a coarse pointer (24px on a fine one at desktop density).
+ARIA attributes, data-slot + data-portal, focus-visible ring, 49px hit region on every device, desktop included (the Bundu floor).
 
 Is it a conditional-rendering guard (permission check, geo gate, rate limit)?
 → Node 4 (Safety)
@@ -165,7 +165,7 @@ IMPLEMENTATION RULES
 5. Third-party brand colors (Ethereum, Google, EcoCash) are the only hex exceptions.
 6. Renames: lib/component-renames.json maps each former name to its successor, and the API and MCP resolve former names. Update the registryDependencies of every item that names a renamed component; pnpm registry:validate fails on one that does not resolve.
 7. Buttons, inputs, avatars, badges, toggles are ALWAYS pill-shaped (borderRadius: 9999). This is a brand identity decision encoded in the componentSpecs of brandMeta (lib/tokens/brand.source.ts).
-8. Touch targets are 44px on a coarse pointer (Apple HIG) and 36px at desktop density; never below 24px. Use the size roles (`h-control`, `h-field`), never `h-12` or `h-14`.
+8. Touch targets keep a 49px hit region on every device, desktop included (the Bundu floor; a desktop control may be drawn at 28-40px). Body text is 17px, captions 14px, nothing readable smaller. Use the size roles (`h-control`, `h-field`), never `h-12` or `h-14`.
 9. Density-aware components follow the density in their contract rather than hardcoding compact/comfortable/spacious behaviour.
 10. Color choices on text-on-background should be validated with mzizi_check_accessibility before shipping. High-contrast mode uses hcLightValue/hcDarkValue when present.
 11. RTL support: use logical CSS properties (margin-inline-start, padding-inline-end) not physical (margin-left, padding-right). The rtl-conformity-check N8 component validates this.

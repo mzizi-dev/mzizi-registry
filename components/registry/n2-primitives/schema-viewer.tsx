@@ -33,7 +33,7 @@ function TypeBadge({ type }: { type: string }) {
   return (
     <span
       className={cn(
-        "rounded-[var(--radius-md,12px)] px-1.5 py-0.5 text-[10px] font-medium",
+        "rounded-[var(--radius-md,12px)] px-1.5 py-0.5 text-sm font-medium",
         colorMap[type] ?? "bg-muted text-muted-foreground"
       )}
     >
@@ -87,7 +87,7 @@ function SchemaNode({
           <span className="size-3.5 shrink-0" />
         )}
         {name && <span className="font-mono text-sm font-medium text-foreground">{name}</span>}
-        {required && <span className="text-[10px] text-destructive">*</span>}
+        {required && <span className="text-sm text-destructive">*</span>}
         {schema.type && (
           <TypeBadge
             type={schema.type === "array" ? `${schema.items?.type ?? "any"}[]` : schema.type}

@@ -62,7 +62,7 @@ function RevenueDashboardWidget({
 
       {nextPayoutDate && (
         <div className="mt-3 rounded-[var(--radius-md,12px)] bg-muted/30 p-3">
-          <div className="text-[10px] text-muted-foreground">Next payout</div>
+          <div className="text-sm text-muted-foreground">Next payout</div>
           <div className="flex items-center justify-between">
             <span className="text-sm font-medium">{nextPayoutDate}</span>
             {nextPayoutAmount && (
@@ -76,7 +76,7 @@ function RevenueDashboardWidget({
 
       {recentPayouts && recentPayouts.length > 0 && (
         <div className="mt-3 space-y-1.5">
-          <div className="text-[10px] font-medium text-muted-foreground">Recent payouts</div>
+          <div className="text-sm font-medium text-muted-foreground">Recent payouts</div>
           {recentPayouts.map((p, i) => (
             <div key={i} className="flex items-center justify-between text-xs">
               <span className="text-muted-foreground">{p.date}</span>
@@ -86,7 +86,7 @@ function RevenueDashboardWidget({
                 </span>
                 <span
                   className={cn(
-                    "rounded-full px-1.5 py-0.5 text-[9px]",
+                    "rounded-full px-1.5 py-0.5 text-sm",
                     p.status === "paid"
                       ? "bg-[var(--color-malachite,#64FFDA)]/10 text-[var(--color-malachite,#64FFDA)]"
                       : p.status === "pending"

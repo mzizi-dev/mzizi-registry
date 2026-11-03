@@ -42,8 +42,8 @@ function TranslationIndicator({
       title={`${languageName || language} · ${statusLabels[status]}`}
       {...props}
     >
-      <span className="font-mono text-[10px] uppercase">{language}</span>
-      {status !== "original" && <span className="text-[10px]">· {statusLabels[status]}</span>}
+      <span className="font-mono text-sm uppercase">{language}</span>
+      {status !== "original" && <span className="text-sm">· {statusLabels[status]}</span>}
     </span>
   )
 }

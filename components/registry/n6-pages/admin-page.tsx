@@ -83,7 +83,7 @@ export function AdminPage({
                 <span>{item.label}</span>
               </div>
               {item.badge != null && item.badge > 0 && (
-                <span className="rounded-full bg-primary px-1.5 py-0.5 text-[10px] font-bold text-white">
+                <span className="rounded-full bg-primary px-1.5 py-0.5 text-sm font-bold text-white">
                   {item.badge}
                 </span>
               )}

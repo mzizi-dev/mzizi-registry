@@ -149,14 +149,15 @@ describe("the role manifest", () => {
     expect(RESOLVED.get("destructive")!.value.light).toBe("#B3261E")
   })
 
-  it("keeps Mzizi pill, and the touch floor at Apple's 44px (owner decisions 2026-10-07 and 2026-11-01)", () => {
+  it("keeps Mzizi pill, and the hit-area floor at the Bundu 49px (owner decisions 2026-10-07, 2026-11-01 and 2026-11-02)", () => {
     expect(RESOLVED.get("radius-control")!.value.light).toBe("9999px")
-    expect(RESOLVED.get("spacing-touch")!.value.light).toBe("44px")
-    expect(RESOLVED.get("spacing-touch-min")!.value.light).toBe("44px")
+    expect(RESOLVED.get("spacing-touch")!.value.light).toBe("49px")
+    expect(RESOLVED.get("spacing-touch-min")!.value.light).toBe("49px")
     const flat = CSS.replace(/\s+/g, " ")
     expect(flat).toContain("--spacing-touch-min: var( --target-floor );")
-    expect(flat).toContain("--target-floor: 2.75rem;")
-    expect(flat).toContain("--spacing-touch: max( var(--size-touch), var(--target-floor) );")
+    expect(flat).toContain("--target-floor: 3.0625rem;")
+    expect(flat).toContain("--control-floor: 3.0625rem;")
+    expect(flat).toContain("--spacing-touch: max( var(--size-touch), var(--control-floor) );")
   })
 })
 
@@ -238,14 +239,11 @@ describe("the contrast gate on the Mzizi pack", () => {
       "assurance-documented-on-container:dark",
       "assurance-documented:dark",
       "assurance-licensed-on-container:dark",
-      "attestation-community-text:light",
-      "attestation-domain-text:light",
       "border-control:dark",
       "border-control:light",
       "destructive-text:dark",
       "destructive-text:light",
       "destructive:dark",
-      "status-danger-text:light",
       "status-premium-on-container:dark",
     ])
   })
@@ -397,7 +395,7 @@ describe("the platform files carry the roles", () => {
     const rust = readFileSync(join(N1, "mzizi-tokens-rust.rs"), "utf8")
     expect(rust).toMatch(/pub struct Roles \{\s+\/\/\/ The light theme\.\s+pub light: RoleColors,\s+\/\/\/ The dark theme\.\s+pub dark: RoleColors,/)
     expect(rust).toMatch(/pub const fn mzizi\(\) -> Self/)
-    expect(rust).toMatch(/pub const SPACING_TOUCH_MIN: u32 = 44;/)
+    expect(rust).toMatch(/pub const SPACING_TOUCH_MIN: u32 = 49;/)
   })
 
   it("names every colour role in every platform file", () => {
@@ -437,17 +435,17 @@ describe("the touch floor holds for every floored size role", () => {
     )
   })
 
-  it("clamps each one with max(var(--size-x), var(--target-floor)) in @theme inline", () => {
-    for (const r of floored) expect(INLINE.get(`--${r.name}`), r.name).toBe(`max( var(${roleVar(r)}), var(--target-floor) )`)
+  it("clamps each one with max(var(--size-x), var(--control-floor)) in @theme inline", () => {
+    for (const r of floored) expect(INLINE.get(`--${r.name}`), r.name).toBe(`max( var(${roleVar(r)}), var(--control-floor) )`)
     // Not floored: the dense control is below the floor on purpose, and moves freely.
     expect(INLINE.get("--spacing-control-dense")).toBe("var(--size-control-dense)")
   })
 
-  it("still computes >= 44px when a brand lowers the bare var to 32px", () => {
+  it("still computes >= 49px when a brand lowers the bare var to 32px", () => {
     for (const r of floored) {
       for (const mode of ["light", "dark"] as const) {
         const lowered = lengthPx(computed(`--${r.name}`, mode, { [roleVar(r)]: "2rem" }))
-        expect(lowered, `${r.name} (${mode})`).toBeGreaterThanOrEqual(44)
+        expect(lowered, `${r.name} (${mode})`).toBeGreaterThanOrEqual(49)
         const raised = lengthPx(computed(`--${r.name}`, mode, { [roleVar(r)]: "4rem" }))
         expect(raised, `${r.name} (${mode}) raised`).toBe(64)
       }
@@ -457,7 +455,7 @@ describe("the touch floor holds for every floored size role", () => {
   it("keys the clamp on the flag: a floored role under any name is clamped", () => {
     const extra: Role = { name: "spacing-tap", group: "size", kind: "size", required: true, description: "test", default: { px: 50 }, floor: true, block: "invariant" }
     const roles = manifest({}, [extra])
-    expect(sizeRoleTheme(roles, resolveWith(roles))).toContain("  --spacing-tap: max(var(--size-tap), var(--target-floor)); /* never under the touch floor */")
+    expect(sizeRoleTheme(roles, resolveWith(roles))).toContain("  --spacing-tap: max(var(--size-tap), var(--control-floor)); /* never under the control floor: 49px, or 28px drawn at desktop density */")
   })
 })
 
@@ -466,7 +464,7 @@ describe("fixed size roles", () => {
     const second: Role = { name: "spacing-hit-min", group: "size", kind: "size", required: true, description: "test", default: { px: 60 }, fixed: true, block: "invariant" }
     const roles = manifest({}, [second])
     const lines = sizeRoleTheme(roles, resolveWith(roles))
-    expect(lines).toContain("  --spacing-touch-min: var(--target-floor); /* the touch floor: 44px coarse pointer, 24px desktop density; no brand can lower it */")
+    expect(lines).toContain("  --spacing-touch-min: var(--target-floor); /* the hit-area floor: 49px on every device; no brand can lower it */")
     expect(lines).toContain("  --spacing-hit-min: 3.75rem; /* a literal: fixed, no brand can move it */")
   })
 })
@@ -491,7 +489,7 @@ describe("alias chains: overriding a source moves a role in both themes or in ne
     // --destructive was var(--error) in light and a literal in dark; overriding --error moves it in neither now.
     for (const mode of ["light", "dark"] as const) {
       expect(computed("--destructive", mode, { "--error": "#123456" }), mode).toBe(computed("--destructive", mode))
-      expect(computed("--status-danger-text", mode, { "--mineral-terracotta-text": "#123456" }), mode).toBe(computed("--status-danger-text", mode))
+      expect(computed("--destructive-text", mode, { "--error": "#123456" }), mode).toBe(computed("--destructive-text", mode))
     }
     expect(CSS).toMatch(/ALIAS CHAINS/)
   })
@@ -547,7 +545,7 @@ describe("derivation", () => {
     expect(map.get("test-fill")!.value).toEqual({ light: "#808080", dark: "#808080" })
     const { violations } = roleGate(map)
     for (const mode of ["light", "dark"]) {
-      expect(violations.some((v) => v.startsWith(`test-fill (${mode}): derive "fill" found no fill`) && v.includes("test-white (needs Lc 75)") && v.includes("test-black (needs Lc 75)"))).toBe(true)
+      expect(violations.some((v) => v.startsWith(`test-fill (${mode}): derive "fill" found no fill`) && v.includes("test-white (needs Lc 75 and 7:1)") && v.includes("test-black (needs Lc 75 and 7:1)"))).toBe(true)
     }
   })
 
@@ -558,7 +556,7 @@ describe("derivation", () => {
     ])
     const map = resolveWith(roles)
     expect(map.get("test-text")!.value.light).toBe("#777777")
-    expect(roleGate(map).violations).toContain(`test-text (light): derive "text" found no value between #000000 and #FFFFFF from #777777 that clears Lc 106 against test-bg (Lc ${Math.abs(apca("#777777", "#808080")).toFixed(1)} now)`)
+    expect(roleGate(map).violations).toContain(`test-text (light): derive "text" found no value between #000000 and #FFFFFF from #777777 that clears Lc 106 and 7:1 against test-bg (Lc ${Math.abs(apca("#777777", "#808080")).toFixed(1)} now)`)
   })
 })
 
@@ -640,7 +638,7 @@ describe("the gate's non-body floor and decorative exemption cannot loosen anyth
   it("lets nonBody imply Lc 60, and fails body text declared at 60 without nonBody", () => {
     expect(contrastMin("text", { against: ["base"], nonBody: "test" })).toBe(NON_BODY)
     expect(gateWith({ "text-tertiary": { contrast: { against: ["base", "surface"], min: 60 } } })).toEqual(
-      expect.arrayContaining(["text-tertiary: declares Lc 60, under the text bar of 75", expect.stringMatching(/^text-tertiary \(light\): Lc 6\d\.\d on base, needs 75$/)])
+      expect.arrayContaining(["text-tertiary: declares Lc 60, under the text bar of 75", expect.stringMatching(/^text-tertiary \(light\): Lc 6\d\.\d on base, needs 75/)])
     )
   })
 

@@ -49,9 +49,9 @@ function MapCard({
           {verified && <span className="text-xs text-[var(--color-gold,#FFD740)]">✓</span>}
         </div>
         {subtitle && <div className="truncate text-xs text-muted-foreground">{subtitle}</div>}
-        <div className="mt-1 flex items-center gap-2 text-[10px] text-muted-foreground">
+        <div className="mt-1 flex items-center gap-2 text-sm text-muted-foreground">
           {category && (
-            <span className="rounded-full bg-muted px-1.5 py-0.5 text-[9px]">{category}</span>
+            <span className="rounded-full bg-muted px-1.5 py-0.5 text-sm">{category}</span>
           )}
           {distance && <span>{distance}</span>}
           {rating !== undefined && (

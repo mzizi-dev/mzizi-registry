@@ -104,7 +104,7 @@ pub fn MziziNotificationCenter(props: MziziNotificationCenterProps) -> Element {
                 div { class: "flex items-center gap-2",
                     h2 { class: "text-sm font-semibold", "Notifications" }
                     if unread > 0 {
-                        span { class: "rounded-full bg-primary px-1.5 py-0.5 text-[10px] font-bold text-primary-foreground", "{unread}" }
+                        span { class: "rounded-full bg-primary px-1.5 py-0.5 text-sm font-bold text-primary-foreground", "{unread}" }
                     }
                 }
                 div { class: "flex items-center gap-2",
@@ -138,7 +138,7 @@ pub fn MziziNotificationCenter(props: MziziNotificationCenterProps) -> Element {
                                     p { class: "mt-0.5 line-clamp-2 text-xs text-muted-foreground", "{msg}" }
                                 }
                                 div { class: "mt-1 flex items-center gap-2",
-                                    time { class: "text-[10px] text-muted-foreground/60", "{n.timestamp}" }
+                                    time { class: "text-sm text-muted-foreground/60", "{n.timestamp}" }
                                 }
                             }
                             button {

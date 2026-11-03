@@ -134,9 +134,9 @@ function MziziBadgeDisplay({
                 <Award className="size-5" style={{ color }} />
               )}
             </div>
-            <span className="line-clamp-1 text-[10px] font-medium text-foreground">{b.name}</span>
+            <span className="line-clamp-1 text-sm font-medium text-foreground">{b.name}</span>
             {b.rarity && !b.locked && (
-              <span className="text-[8px] font-semibold tracking-wider uppercase" style={{ color }}>
+              <span className="text-sm font-semibold tracking-wider uppercase" style={{ color }}>
                 {b.rarity}
               </span>
             )}

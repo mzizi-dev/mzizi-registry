@@ -45,12 +45,12 @@ function CodeBlock({
             </div>
           )}
           {!filename && (
-            <Badge variant="secondary" className="font-mono text-[10px] uppercase">
+            <Badge variant="secondary" className="font-mono text-sm uppercase">
               {language}
             </Badge>
           )}
           {filename && (
-            <Badge variant="secondary" className="font-mono text-[10px] uppercase">
+            <Badge variant="secondary" className="font-mono text-sm uppercase">
               {language}
             </Badge>
           )}

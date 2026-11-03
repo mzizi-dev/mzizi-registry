@@ -62,7 +62,7 @@ function EscrowStatus({
                 className={cn("size-2.5 rounded-full", i < config.step ? "" : "bg-muted")}
                 style={i < config.step ? { backgroundColor: config.color } : undefined}
               />
-              <span className="text-[9px] text-muted-foreground">{label}</span>
+              <span className="text-sm text-muted-foreground">{label}</span>
             </div>
             {i < steps.length - 1 && (
               <div
@@ -85,7 +85,7 @@ function EscrowStatus({
           held pending release — how long the hold has been open is material to
           both parties, and the card dropped it. */}
       {createdAt && (
-        <div className="mt-2 text-[10px] text-muted-foreground">
+        <div className="mt-2 text-sm text-muted-foreground">
           Opened {new Date(createdAt).toLocaleDateString()}
         </div>
       )}
