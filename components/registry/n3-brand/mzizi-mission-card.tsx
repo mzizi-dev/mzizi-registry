@@ -126,7 +126,7 @@ function MziziMissionCard({
               {title}
             </h4>
             <span
-              className="rounded-full px-1.5 py-0.5 text-[8px] font-bold tracking-wider uppercase"
+              className="rounded-full px-1.5 py-0.5 text-sm font-bold tracking-wider uppercase"
               style={{
                 backgroundColor: `color-mix(in srgb, ${dc.color} 15%, transparent)`,
                 color: dc.color,
@@ -160,7 +160,7 @@ function MziziMissionCard({
       {/* Progress bar */}
       {status === "in_progress" && progressPercent > 0 && (
         <div className="mt-3">
-          <div className="mb-1 flex items-center justify-between text-[10px] text-muted-foreground">
+          <div className="mb-1 flex items-center justify-between text-sm text-muted-foreground">
             <span>Progress</span>
             <span>
               {completedSteps != null && totalSteps

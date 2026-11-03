@@ -255,7 +255,7 @@ const name = title === "Trust Score" ? "Trust score" : title;
                   <span class="text-xs font-medium text-muted-foreground">{signal.label}</span>
                 </div>
                 <div class="flex items-center gap-2">
-                  {signal.detail && <span class="text-[10px] text-muted-foreground">{signal.detail}</span>}
+                  {signal.detail && <span class="text-sm text-muted-foreground">{signal.detail}</span>}
                   {showScore && (
                     <span data-slot="trust-breakdown-value" class={cn("text-xs font-semibold", signal.text)}>{signal.value.toFixed(3)}</span>
                   )}
@@ -270,7 +270,7 @@ const name = title === "Trust Score" ? "Trust score" : title;
           ))}
 
           {ubuntuPoints != null && (
-            <div data-slot="trust-ubuntu-points" class="mt-1 flex items-center justify-center gap-1.5 text-[11px] text-muted-foreground">
+            <div data-slot="trust-ubuntu-points" class="mt-1 flex items-center justify-center gap-1.5 text-sm text-muted-foreground">
               <Icon name="star" class="size-3 text-status-warning" />
               <span>{ubuntuPoints.toLocaleString()} Ubuntu Points earned through community contribution</span>
             </div>

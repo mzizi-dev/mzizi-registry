@@ -122,7 +122,7 @@ export function MziziProfilePageLayout({
                   <p className="text-base font-bold text-foreground">
                     {typeof s.value === "number" ? s.value.toLocaleString() : s.value}
                   </p>
-                  <p className="text-[11px] text-muted-foreground">{s.label}</p>
+                  <p className="text-sm text-muted-foreground">{s.label}</p>
                 </div>
               ))}
             </div>
@@ -134,7 +134,7 @@ export function MziziProfilePageLayout({
               {primaryAction && (
                 <button
                   onClick={primaryAction.onClick}
-                  className="h-12 flex-1 rounded-full bg-[var(--brand-accent,var(--status-success,var(--color-malachite,#64FFDA)))] text-[13px] font-medium text-[var(--brand-accent-foreground,#0A0A0A)] transition-opacity hover:opacity-80"
+                  className="h-12 flex-1 rounded-full bg-[var(--brand-accent,var(--status-success,var(--color-malachite,#64FFDA)))] text-sm font-medium text-[var(--brand-accent-foreground,#0A0A0A)] transition-opacity hover:opacity-80"
                 >
                   {primaryAction.label}
                 </button>
@@ -142,7 +142,7 @@ export function MziziProfilePageLayout({
               {secondaryAction && (
                 <button
                   onClick={secondaryAction.onClick}
-                  className="h-12 flex-1 rounded-full border border-border bg-muted text-[13px] font-medium text-foreground transition-opacity hover:opacity-80"
+                  className="h-12 flex-1 rounded-full border border-border bg-muted text-sm font-medium text-foreground transition-opacity hover:opacity-80"
                 >
                   {secondaryAction.label}
                 </button>

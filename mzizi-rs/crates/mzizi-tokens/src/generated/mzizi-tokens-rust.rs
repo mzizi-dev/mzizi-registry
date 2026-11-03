@@ -641,10 +641,10 @@ impl Roles {
                 surface_qr: "#FFFFFF",
                 on_surface_qr: "#0E0D0C",
                 text_primary: "#373635",
-                text_secondary: "#575655",
+                text_secondary: "#504F4E",
                 text_tertiary: "#6B6A69",
                 hero_text: "#FFFFFF",
-                muted_foreground: "#575655",
+                muted_foreground: "#504F4E",
                 success: "#004D40",
                 warning: "#7A5C00",
                 error: "#B3261E",
@@ -668,7 +668,7 @@ impl Roles {
                 status_danger: "#A0522D",
                 status_danger_container: "#F5E6D3",
                 status_danger_on_container: "#5D2906",
-                status_danger_text: "#844425",
+                status_danger_text: "#7B3F23",
                 status_premium: "#4B0082",
                 status_premium_container: "#F3E5F5",
                 status_premium_on_container: "#2E004D",
@@ -676,7 +676,7 @@ impl Roles {
                 status_neutral: "#55514B",
                 status_neutral_container: "#E5E4E1",
                 status_neutral_on_container: "#373635",
-                status_neutral_text: "#575655",
+                status_neutral_text: "#504F4E",
                 status_stable: "#004D40",
                 status_stable_container: "#E0F2F1",
                 status_stable_on_container: "#00332B",
@@ -692,11 +692,11 @@ impl Roles {
                 status_deprecated: "#A0522D",
                 status_deprecated_container: "#F5E6D3",
                 status_deprecated_on_container: "#5D2906",
-                status_deprecated_text: "#844425",
+                status_deprecated_text: "#7B3F23",
                 assurance_none: "#55514B",
                 assurance_none_container: "#E5E4E1",
                 assurance_none_on_container: "#373635",
-                assurance_none_text: "#575655",
+                assurance_none_text: "#504F4E",
                 assurance_otp: "#0047AB",
                 assurance_otp_container: "#E3F2FD",
                 assurance_otp_on_container: "#002966",
@@ -716,7 +716,7 @@ impl Roles {
                 attestation_community: "#A0522D",
                 attestation_community_container: "#F5E6D3",
                 attestation_community_on_container: "#5D2906",
-                attestation_community_text: "#844425",
+                attestation_community_text: "#7B3F23",
                 attestation_business: "#004D40",
                 attestation_business_container: "#E0F2F1",
                 attestation_business_on_container: "#00332B",
@@ -724,15 +724,15 @@ impl Roles {
                 attestation_domain: "#BF5A36",
                 attestation_domain_container: "#FBE4DA",
                 attestation_domain_on_container: "#5C2410",
-                attestation_domain_text: "#894027",
+                attestation_domain_text: "#7E3B24",
                 tier_unverified: "#55514B",
                 tier_unverified_container: "#E5E4E1",
                 tier_unverified_on_container: "#373635",
-                tier_unverified_text: "#575655",
+                tier_unverified_text: "#504F4E",
                 tier_community: "#A0522D",
                 tier_community_container: "#F5E6D3",
                 tier_community_on_container: "#5D2906",
-                tier_community_text: "#844425",
+                tier_community_text: "#7B3F23",
                 tier_otp: "#0047AB",
                 tier_otp_container: "#E3F2FD",
                 tier_otp_on_container: "#002966",
@@ -772,7 +772,7 @@ impl Roles {
                 secondary_foreground: "#373635",
                 destructive: "#B3261E",
                 destructive_foreground: "#FFFFFF",
-                destructive_text: "#9F221B",
+                destructive_text: "#98201A",
                 status_error: "#B3261E",
                 overlay_foreground: "#373635",
                 accent: "#DFE2E2",
@@ -961,24 +961,24 @@ impl Roles {
         }
     }
 
-    /// 44px. The default touch target (`h-touch`, `min-h-touch`). brandMeta.accessibility.defaultTouchTarget.
-    pub const SPACING_TOUCH: u32 = 44;
-    /// 44px. The touch floor (`min-h-touch-min`): 44px on a coarse pointer (Apple HIG Buttons: 44x44 pt), registered as `--target-floor`, which the density layer lowers to 24px on a fine pointer (WCAG 2.2 SC 2.5.8). No brand pack can move it (owner decision 2026-11-01 supersedes the 48px floor of 2026-10-07).
-    pub const SPACING_TOUCH_MIN: u32 = 44;
-    /// 44px. Default control height. componentSpecs.button.heights.default.
-    pub const SPACING_CONTROL: u32 = 44;
-    /// 44px. Small control height. componentSpecs.button.heights.sm.
-    pub const SPACING_CONTROL_SM: u32 = 44;
-    /// 48px. Large control height. componentSpecs.button.heights.lg.
-    pub const SPACING_CONTROL_LG: u32 = 48;
-    /// 44px. Icon-button size. componentSpecs.button.heights.icon.
-    pub const SPACING_CONTROL_ICON: u32 = 44;
-    /// 32px. Dense control height for a fine pointer only (`pointer-fine:h-control-dense`); below the touch floor on purpose (#484 §2a); 28px under desktop density.
+    /// 49px. The default touch target (`h-touch`, `min-h-touch`). brandMeta.accessibility.defaultTouchTarget.
+    pub const SPACING_TOUCH: u32 = 49;
+    /// 49px. The hit-area floor (`min-h-touch-min`): 49px (`BUNDU_FLOOR.hitAreaPx`, 7 x 7, above Apple HIG Buttons' 44x44 pt) on every device, desktop included, registered as `--target-floor`. Density never lowers it: a desktop control may be drawn smaller but keeps this hit region (owner ruling 2026-11-02, replacing the 24px desktop floor of 2026-11-01 and the 44px of 2026-11-01). No brand pack can move it.
+    pub const SPACING_TOUCH_MIN: u32 = 49;
+    /// 49px. Default control height. componentSpecs.button.heights.default.
+    pub const SPACING_CONTROL: u32 = 49;
+    /// 49px. Small control height. componentSpecs.button.heights.sm.
+    pub const SPACING_CONTROL_SM: u32 = 49;
+    /// 56px. Large control height. componentSpecs.button.heights.lg.
+    pub const SPACING_CONTROL_LG: u32 = 56;
+    /// 49px. Icon-button size. componentSpecs.button.heights.icon.
+    pub const SPACING_CONTROL_ICON: u32 = 49;
+    /// 32px. Dense control height for a fine pointer only (`pointer-fine:h-control-dense`); drawn below the hit-area floor on purpose (#484 §2a), its 49px hit region kept by the `hit-area` pseudo-element; 28px under desktop density.
     pub const SPACING_CONTROL_DENSE: u32 = 32;
-    /// 44px. Input height. componentSpecs.input.heights.default.
-    pub const SPACING_FIELD: u32 = 44;
-    /// 44px. Small input height. componentSpecs.input.heights.sm.
-    pub const SPACING_FIELD_SM: u32 = 44;
+    /// 49px. Input height. componentSpecs.input.heights.default.
+    pub const SPACING_FIELD: u32 = 49;
+    /// 49px. Small input height. componentSpecs.input.heights.sm.
+    pub const SPACING_FIELD_SM: u32 = 49;
     /// 9999px. Buttons and controls. Mzizi keeps pill (owner decision 2026-10-07); a pack may switch it.
     pub const RADIUS_CONTROL: u32 = 9999;
     /// 9999px. Inputs. componentSpecs.input.borderRadius.

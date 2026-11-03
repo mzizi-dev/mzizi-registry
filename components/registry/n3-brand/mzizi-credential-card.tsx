@@ -106,13 +106,13 @@ function MziziCredentialCard({
             <div>
               <h4 className="text-sm font-semibold text-foreground">{name}</h4>
               {credentialType && (
-                <span className="text-[10px] font-medium tracking-wider text-muted-foreground uppercase">
+                <span className="text-sm font-medium tracking-wider text-muted-foreground uppercase">
                   {credentialType}
                 </span>
               )}
             </div>
             <span
-              className="flex shrink-0 items-center gap-1 rounded-full px-2 py-0.5 text-[10px] font-semibold"
+              className="flex shrink-0 items-center gap-1 rounded-full px-2 py-0.5 text-sm font-semibold"
               style={{
                 backgroundColor: `color-mix(in srgb, ${sc.color} 15%, transparent)`,
                 color: sc.color,
@@ -128,7 +128,7 @@ function MziziCredentialCard({
               {issuingBody}
             </span>
             {licenseNumber && (
-              <span className="font-mono text-[10px]">License: {licenseNumber}</span>
+              <span className="font-mono text-sm">License: {licenseNumber}</span>
             )}
             <div className="flex items-center gap-3">
               {issuedDate && (
@@ -141,7 +141,7 @@ function MziziCredentialCard({
             </div>
           </div>
           {verifiedByPlatform && (
-            <div className="mt-2 flex items-center gap-1 text-[10px] font-medium text-[var(--color-tanzanite)]">
+            <div className="mt-2 flex items-center gap-1 text-sm font-medium text-[var(--color-tanzanite)]">
               <Shield className="size-3" />
               Platform Verified
             </div>

@@ -63,7 +63,7 @@ function VerificationReviewCard({
       <div className="mt-3 flex items-center gap-2">
         <span className="text-xs text-muted-foreground">Tier {currentTier} → </span>
         <span
-          className="rounded-full px-2 py-0.5 text-[10px] font-bold"
+          className="rounded-full px-2 py-0.5 text-sm font-bold"
           style={{
             backgroundColor: `${tierColors[requestedTier]}20`,
             color: tierColors[requestedTier],

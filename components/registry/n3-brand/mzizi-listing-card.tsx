@@ -217,7 +217,7 @@ function MziziListingCard({
         {category && (
           <span
             className={cn(
-              "inline-flex w-fit items-center rounded-full px-2 py-0.5 text-[10px] font-semibold tracking-wider uppercase",
+              "inline-flex w-fit items-center rounded-full px-2 py-0.5 text-sm font-semibold tracking-wider uppercase",
               isHero ? "bg-white/20 text-white" : mineralBadgeBg[mineral]
             )}
           >

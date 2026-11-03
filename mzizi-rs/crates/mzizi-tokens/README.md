@@ -34,7 +34,7 @@ Components name **roles**, not palette families: `status-success-text`, not mala
 `Roles` carries every colour role in both themes for the Mzizi pack, the default brand,
 and the size, radius and font roles as consts. The roles are defined in
 `lib/tokens/roles.source.ts` in the registry repo, where the build holds the Mzizi pack to
-APCA Lc 75 for text and Lc 30 for UI.
+APCA Lc 75 for text and Lc 30 for UI, and to WCAG 2 minimums: 7:1 for body text, 4.5:1 for non-body text and 3:1 for UI.
 
 ```rust
 use mzizi_tokens::Roles;

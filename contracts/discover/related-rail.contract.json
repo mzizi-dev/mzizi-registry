@@ -146,7 +146,7 @@
       "state": "seeall",
       "select": "[data-slot=\"related-rail\"] > div > div > a",
       "fine": 32,
-      "coarse": 44
+      "coarse": 49
     }
   ],
   "theming": {

@@ -102,13 +102,13 @@ export function MziziHealthDashboard({
         >
           Health Overview
         </h3>
-        {lastSync && <span className="text-[10px] text-muted-foreground">Synced {lastSync}</span>}
+        {lastSync && <span className="text-sm text-muted-foreground">Synced {lastSync}</span>}
       </div>
       {vitals.length > 0 && (
         <div className="grid grid-cols-2 gap-px bg-border">
           {vitals.slice(0, 4).map((v, i) => (
             <div key={i} className="space-y-0.5 bg-card p-3">
-              <p className="text-[10px] text-muted-foreground">{v.label}</p>
+              <p className="text-sm text-muted-foreground">{v.label}</p>
               <p className="text-lg font-bold text-foreground">
                 {v.value}
                 <span className="ml-1 text-xs font-normal text-muted-foreground">{v.unit}</span>
@@ -116,7 +116,7 @@ export function MziziHealthDashboard({
               {v.trend && (
                 <span
                   className={cn(
-                    "text-[10px] font-medium",
+                    "text-sm font-medium",
                     v.trend === "up"
                       ? "text-[var(--status-success,#22C55E)]"
                       : v.trend === "down"
@@ -133,7 +133,7 @@ export function MziziHealthDashboard({
       )}
       {appointments.length > 0 && (
         <div className="space-y-2 border-t border-border px-4 py-3">
-          <p className="text-[11px] font-semibold text-muted-foreground">Upcoming</p>
+          <p className="text-sm font-semibold text-muted-foreground">Upcoming</p>
           {appointments.slice(0, 2).map((a, i) => (
             <div key={i} className="flex items-center gap-3">
               <div className="flex size-8 items-center justify-center rounded-full bg-[var(--status-success,#22C55E)]/10 text-sm">
@@ -141,7 +141,7 @@ export function MziziHealthDashboard({
               </div>
               <div className="min-w-0 flex-1">
                 <p className="truncate text-xs font-medium text-foreground">{a.provider}</p>
-                <p className="text-[10px] text-muted-foreground">
+                <p className="text-sm text-muted-foreground">
                   {a.specialty} · {a.date} {a.time}
                 </p>
               </div>
@@ -151,12 +151,12 @@ export function MziziHealthDashboard({
       )}
       {medications.length > 0 && (
         <div className="space-y-2 border-t border-border px-4 py-3">
-          <p className="text-[11px] font-semibold text-muted-foreground">Medications</p>
+          <p className="text-sm font-semibold text-muted-foreground">Medications</p>
           {medications.slice(0, 3).map((m, i) => (
             <div key={i} className="flex items-center gap-3">
               <div
                 className={cn(
-                  "flex size-5 items-center justify-center rounded-full border-2 text-[10px]",
+                  "flex h-6 min-w-6 px-1 items-center justify-center rounded-full border-2 text-sm leading-none",
                   m.taken
                     ? "border-[var(--status-success,#22C55E)] bg-[var(--status-success,#22C55E)]/20 text-[var(--status-success,#22C55E)]"
                     : "border-border text-transparent"
@@ -169,7 +169,7 @@ export function MziziHealthDashboard({
                   {m.name} · {m.dosage}
                 </p>
                 {m.nextDue && !m.taken && (
-                  <p className="text-[10px] text-muted-foreground">Due: {m.nextDue}</p>
+                  <p className="text-sm text-muted-foreground">Due: {m.nextDue}</p>
                 )}
               </div>
             </div>
@@ -180,7 +180,7 @@ export function MziziHealthDashboard({
         <div className="border-t border-border p-3">
           <button
             onClick={onViewAll}
-            className="flex h-12 w-full items-center justify-center rounded-full bg-[var(--status-success,#22C55E)] text-[13px] font-medium text-[var(--brand-accent-foreground,#0A0A0A)] transition-opacity hover:opacity-80 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--color-primary,#00B0FF)]"
+            className="flex h-12 w-full items-center justify-center rounded-full bg-[var(--status-success,#22C55E)] text-sm font-medium text-[var(--brand-accent-foreground,#0A0A0A)] transition-opacity hover:opacity-80 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--color-primary,#00B0FF)]"
           >
             View All Health Data
           </button>

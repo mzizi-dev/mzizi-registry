@@ -87,7 +87,7 @@ function WalletCard({
           </div>
         )}
       </div>
-      {address && <div className="mt-4 truncate font-mono text-[10px] opacity-50">{address}</div>}
+      {address && <div className="mt-4 truncate font-mono text-sm opacity-50">{address}</div>}
     </div>
   )
 }

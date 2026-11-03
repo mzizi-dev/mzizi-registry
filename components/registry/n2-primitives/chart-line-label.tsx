@@ -48,7 +48,7 @@ export function ChartLineLabel({ loading = false }: { loading?: boolean } = {}) 
               dot={{ fill: "var(--color-users)" }}
               activeDot={{ r: 6 }}
             >
-              <LabelList position="top" offset={12} className="fill-foreground" fontSize={12} />
+              <LabelList position="top" offset={12} className="fill-foreground" fontSize={14} />
             </Line>
           </LineChart>
         </ChartContainer>

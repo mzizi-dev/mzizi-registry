@@ -5,14 +5,25 @@
 import { readdirSync, readFileSync } from "node:fs";
 import { join } from "node:path";
 import { describe, expect, it } from "vitest";
-import { ROLE_HEIGHTS } from "../contracts/runner";
+import { parseDocument } from "htmlparser2";
+import { isTag, type Element } from "domhandler";
 import {
-  BODY_FLOOR_FINE_PX,
+  HIT_AREA_GAPS,
+  HIT_AREA_PX,
+  hitRegion,
+  hitViolations,
+  ROLE_HEIGHTS,
+  VISIBLE_FINE_MIN_PX,
+} from "../contracts/runner";
+import {
+  BODY_FLOOR_PX,
+  BUNDU_FLOOR,
+  CAPTION_FLOOR_PX,
   DENSITY_DESKTOP_QUERY,
   DENSITY_TABLET_QUERY,
   DESKTOP_SIZES,
   FLOOR_COARSE_PX,
-  FLOOR_FINE_PX,
+  FLOOR_VISIBLE_FINE_PX,
   LEGACY_SIZES,
   ROLES,
 } from "../lib/tokens/roles.source";
@@ -46,18 +57,18 @@ const decls = (block: string) =>
     (m) => [m[1]!, m[2]!.trim()] as const,
   );
 
-describe("touch (coarse pointer): Apple HIG", () => {
-  it("floors every target at 44px (Buttons: a hit region of at least 44x44 pt)", () => {
-    expect(FLOOR_COARSE_PX).toBe(44);
+describe("touch (coarse pointer): the Bundu hit area", () => {
+  it("floors every target at 49px (above Apple's 44x44 pt hit region)", () => {
+    expect(FLOOR_COARSE_PX).toBe(49);
     for (const r of ROLES.filter((x) => x.kind === "size" && x.floor)) {
       expect((r.default as { px: number }).px, r.name).toBeGreaterThanOrEqual(
         FLOOR_COARSE_PX,
       );
     }
   });
-  it("keeps body at Apple's 17pt and nothing under the 11pt minimum", () => {
+  it("keeps body at 17px and nothing under the 14px caption floor", () => {
     expect(Object.fromEntries(TYPE.map(([n, , p]) => [n, p])).body).toBe(17);
-    for (const [n, , p] of TYPE) expect(p, n).toBeGreaterThanOrEqual(11);
+    for (const [n, , p] of TYPE) expect(p, n).toBeGreaterThanOrEqual(14);
   });
 });
 
@@ -71,20 +82,23 @@ describe("desktop density (fine pointer + hover)", () => {
       /save-data|prefers-reduced-data|effective-?type|downlink|navigator\.connection/i,
     );
   });
-  it("keeps every target at 24px or more (WCAG 2.2 SC 2.5.8) and steps down from touch", () => {
+  it("draws controls at 28px or more, steps them down from touch, and never lowers the 49px hit region", () => {
     for (const [name, v] of Object.entries(DESKTOP_SIZES)) {
-      expect(v, name).toBeGreaterThanOrEqual(FLOOR_FINE_PX);
+      expect(v, name).toBeGreaterThanOrEqual(FLOOR_VISIBLE_FINE_PX);
       const role = ROLES.find((r) => r.name === name)!;
       expect(v, `${name} steps down`).toBeLessThanOrEqual(
         (role.default as { px: number }).px,
       );
     }
     const block = decls(mediaRoot(query));
-    expect(Object.fromEntries(block)["--target-floor"]).toBe("1.5rem");
+    expect(Object.fromEntries(block)["--control-floor"]).toBe("1.75rem");
+    expect(
+      block.some(([k]) => k === "--target-floor" || k === "--size-touch-min"),
+    ).toBe(false);
     for (const [k, v] of block.filter(([k]) => k.startsWith("--size-")))
-      expect(px(v), k).toBeGreaterThanOrEqual(FLOOR_FINE_PX);
+      expect(px(v), k).toBeGreaterThanOrEqual(FLOOR_VISIBLE_FINE_PX);
   });
-  it("keeps body text at 14px or more and captions at 11px or more", () => {
+  it("holds body at 17px and captions at 14px in every layer", () => {
     const type = Object.fromEntries(TYPE.map(([n, , p]) => [n, p])) as Record<
       string,
       number
@@ -94,21 +108,24 @@ describe("desktop density (fine pointer + hover)", () => {
       readonly [string, number]
     >[]) {
       const at = (n: string) => layer[n]?.[1] ?? type[n]!;
-      expect(at("body")).toBeGreaterThanOrEqual(BODY_FLOOR_FINE_PX);
-      expect(at("small")).toBeGreaterThanOrEqual(BODY_FLOOR_FINE_PX);
-      expect(at("caption")).toBeGreaterThanOrEqual(11);
+      expect(at("body")).toBeGreaterThanOrEqual(BODY_FLOOR_PX);
+      expect(at("small")).toBeGreaterThanOrEqual(CAPTION_FLOOR_PX);
+      expect(at("caption")).toBeGreaterThanOrEqual(CAPTION_FLOOR_PX);
     }
     for (const [k, v] of decls(mediaRoot(query)).filter(([k]) =>
       k.startsWith("--fs-"),
     ))
-      expect(px(v), k).toBeGreaterThanOrEqual(11);
+      expect(px(v), k).toBeGreaterThanOrEqual(BODY_FLOOR_PX);
   });
-  it("steps tablet type down on any pointer, and leaves touch targets alone there", () => {
+  it("steps only display type down at tablet width, and leaves touch targets and body alone there", () => {
     const tablet = decls(mediaRoot(DENSITY_TABLET_QUERY));
     expect(
       tablet.some(([k]) => k.startsWith("--size-") || k === "--target-floor"),
     ).toBe(false);
-    expect(Object.fromEntries(tablet)["--fs-body"]).toBe("1rem");
+    expect(tablet.map(([k]) => k).sort()).toEqual([
+      "--fs-display",
+      "--fs-display-sm",
+    ]);
   });
   it("does not turn off zoom or reduced motion", () => {
     expect(CSS).not.toMatch(/user-scalable\s*=\s*no|maximum-scale/i);
@@ -126,7 +143,9 @@ describe("opt-out for consumers who have not migrated", () => {
     );
     expect(legacy["--size-control"]).toBe("3.5rem");
     expect(legacy["--target-floor"]).toBe("3rem");
+    expect(legacy["--control-floor"]).toBe("3rem");
     expect(legacy["--fs-body"]).toBe("1rem");
+    expect(legacy["--fs-caption"]).toBe("0.75rem");
     for (const [name, v] of Object.entries(LEGACY_SIZES))
       expect(px(legacy[`--${name.replace(/^spacing-/, "size-")}`]!), name).toBe(
         v,
@@ -138,7 +157,7 @@ describe("one definition, every copy agrees", () => {
   it("contracts/runner.ts ROLE_HEIGHTS equals the role defaults and DESKTOP_SIZES", () => {
     for (const [suffix, [coarse, fine]] of Object.entries(ROLE_HEIGHTS)) {
       if (suffix === "touch-min") {
-        expect([coarse, fine]).toEqual([FLOOR_COARSE_PX, FLOOR_FINE_PX]);
+        expect([coarse, fine]).toEqual([FLOOR_COARSE_PX, FLOOR_COARSE_PX]);
         continue;
       }
       const role = ROLES.find((r) => r.name === `spacing-${suffix}`)!;
@@ -167,23 +186,100 @@ describe("one definition, every copy agrees", () => {
       renderGlobalsJson(minerals, heritageColors, experimentalColors),
     );
     expect(j.scale.density.floorPx).toEqual({
-      coarse: 44,
-      fine: 24,
-      bodyFine: 14,
+      hitArea: 49,
+      visibleFine: 28,
+      body: 17,
+      caption: 14,
+      // deprecated aliases of the 4.21.0 keys, kept for one release
+      coarse: 49,
+      fine: 49,
+      bodyFine: 17,
     });
+    expect(j.scale.density.bunduFloor).toEqual(BUNDU_FLOOR);
     expect(j.scale.density.desktopPx).toEqual(DESKTOP_SIZES);
   });
   it("lib/tokens/index.ts (the /v1/tokens copy) agrees with the role source", () => {
     const idx = readFileSync(join(ROOT, "lib/tokens/index.ts"), "utf8");
     expect(idx).toMatch(
-      /default: \{ value: "44px", description: "Default interactive element height/,
+      /default: \{ value: "49px", description: "Default interactive element height/,
     );
     expect(idx).toMatch(
-      /button: \{ height: "44px", heightSm: "44px", heightLg: "48px" \}/,
+      /button: \{ height: "49px", heightSm: "49px", heightLg: "56px" \}/,
     );
     const minTouch = ROLES.find((r) => r.name === "spacing-touch-min")!
       .default as { px: number };
     expect(minTouch.px).toBe(FLOOR_COARSE_PX);
+  });
+});
+
+describe("the runner and the Rust evaluator hold the Bundu floor too", () => {
+  const rs = readFileSync(
+    join(ROOT, "mzizi-rs/contract-eval/contract_eval.rs"),
+    "utf8",
+  );
+  it("the runner copies BUNDU_FLOOR", () => {
+    expect(HIT_AREA_PX).toBe(BUNDU_FLOOR.hitAreaPx);
+    expect(VISIBLE_FINE_MIN_PX).toBe(BUNDU_FLOOR.visibleControlMinPx);
+  });
+  it("the Rust evaluator copies BUNDU_FLOOR", () => {
+    expect(rs).toContain(
+      `pub const HIT_AREA_PX: u32 = ${BUNDU_FLOOR.hitAreaPx};`,
+    );
+    expect(rs).toContain(
+      `pub const VISIBLE_FINE_MIN_PX: u32 = ${BUNDU_FLOOR.visibleControlMinPx};`,
+    );
+  });
+  it("both pin the same known gaps, and every gap is still a gap", () => {
+    const block = rs.slice(rs.indexOf("pub const HIT_AREA_GAPS"));
+    const rsGaps = [
+      ...block.slice(0, block.indexOf("];")).matchAll(/"([^"]+)"/g),
+    ].map((m) => m[1]!);
+    expect([...rsGaps].sort()).toEqual([...HIT_AREA_GAPS].sort());
+    expect(new Set(HIT_AREA_GAPS).size).toBe(HIT_AREA_GAPS.length);
+    for (const g of HIT_AREA_GAPS) {
+      const [name, part] = [
+        g.slice(0, g.indexOf(":")),
+        g.slice(g.indexOf(":") + 1),
+      ];
+      const c = JSON.parse(
+        readFileSync(join(ROOT, `contracts/${name}.contract.json`), "utf8"),
+      );
+      expect(
+        c.density.some((r: { part: string }) => r.part === part),
+        g,
+      ).toBe(true);
+    }
+  });
+});
+
+describe("hit-region rules: the runner and the Rust evaluator answer the same cases", () => {
+  const cases = JSON.parse(
+    readFileSync(join(ROOT, "contracts/hit-region-cases.json"), "utf8"),
+  ).cases as {
+    name: string;
+    html: string;
+    fine: number | null;
+    coarse: number | null;
+    violations: number;
+  }[];
+  const first = (html: string) =>
+    parseDocument(html).children.find((n) => isTag(n)) as Element;
+  for (const c of cases)
+    it(c.name, () => {
+      expect(hitViolations(first(c.html), c.fine, c.coarse)).toHaveLength(
+        c.violations,
+      );
+    });
+  it("a covered button is raised to the floor, a link is its drawn box", () => {
+    expect(hitRegion(first('<button class="h-9">x</button>'), 36)).toBe(49);
+    expect(hitRegion(first('<a href="/" class="h-9">x</a>'), 36)).toBe(36);
+  });
+  it("the Rust evaluator's table is this file", () => {
+    const rs = readFileSync(
+      join(ROOT, "mzizi-rs/crates/mzizi-ui/tests/contracts_json.rs"),
+      "utf8",
+    );
+    expect(rs).toContain("hit-region-cases.json");
   });
 });
 
@@ -233,10 +329,12 @@ describe("review findings on #598 stay fixed", () => {
     );
     expect(legacy["--touch-target-lg"]).toBe("56px");
     expect(legacy["--h-input"]).toBe("3.5rem");
-    expect(legacy["--size-touch-min"]).toBe("3rem");
+    expect(legacy["--size-touch-min"]).toBeUndefined();
+    expect(legacy["--target-floor"]).toBe("3rem");
     const desktop = Object.fromEntries(decls(mediaRoot(DENSITY_DESKTOP_QUERY)));
-    expect(desktop["--h-input"]).toBe("2.25rem");
-    expect(desktop["--size-touch-min"]).toBe("1.5rem");
+    expect(desktop["--h-button-default"]).toBe("2.25rem");
+    expect(desktop["--h-input"]).toBe("3.0625rem");
+    expect(desktop["--size-touch-min"]).toBeUndefined();
   });
   it("no doctrine page repeats a heading", () => {
     const dir = join(ROOT, "content/doctrine/documentation");

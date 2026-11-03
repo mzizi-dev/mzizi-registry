@@ -88,7 +88,7 @@ function ContentCalendar({
             >
               <div
                 className={cn(
-                  "mb-1 text-center text-[10px] font-medium",
+                  "mb-1 text-center text-sm font-medium",
                   isToday ? "text-[var(--color-malachite,#64FFDA)]" : "text-muted-foreground"
                 )}
               >
@@ -104,7 +104,7 @@ function ContentCalendar({
                       onItemClick?.(item.id)
                     }}
                     className={cn(
-                      "w-full rounded-[var(--radius-sm,7px)] border px-1.5 py-1 text-left text-[9px]",
+                      "w-full rounded-[var(--radius-sm,7px)] border px-1.5 py-1 text-left text-sm",
                       statusStyles[item.status]
                     )}
                   >

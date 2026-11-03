@@ -41,7 +41,7 @@ function GasEstimator({
       {/* `staticPrice` was destructured and never rendered: the badge announced
           that a static price applies without ever saying what it is. */}
       {isMitHolder && (
-        <span className="rounded-full bg-[var(--color-gold,#FFD740)]/10 px-2 py-0.5 text-[9px] font-medium text-[var(--color-gold,#FFD740)]">
+        <span className="rounded-full bg-[var(--color-gold,#FFD740)]/10 px-2 py-0.5 text-sm font-medium text-[var(--color-gold,#FFD740)]">
           {staticPrice !== undefined ? `Static ${staticPrice.toFixed(4)} NHC` : "Static price"}
         </span>
       )}

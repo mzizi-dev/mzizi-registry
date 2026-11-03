@@ -76,7 +76,7 @@ There are three groups of seven, and each colour works in both themes.
 
 ### States and accessibility
 
-- The target is APCA 3.0 AAA. Body text pairs clear 7:1 in both themes.
+- The target is APCA 3.0 AAA, with WCAG minimums the token gate enforces: body text 7:1, non-body text 4.5:1, UI parts 3:1, in both themes.
 - **Focus:** on focus-visible, the element's border turns `ring` and a 3px `ring` halo at 50% appears. The ring is ink, so it contrasts with every surface.
 - Disabled elements drop to 50% opacity and ignore pointer events. Invalid fields get a `destructive` border with a 20% `destructive` halo.
 - Keyboard navigation comes from Radix primitives. Use semantic HTML, and add ARIA only where needed.

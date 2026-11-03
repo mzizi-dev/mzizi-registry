@@ -58,7 +58,7 @@ function SendMoneyFlow({
           <React.Fragment key={s}>
             <div
               className={cn(
-                "flex size-6 items-center justify-center rounded-full text-[10px] font-bold",
+                "flex size-6 items-center justify-center rounded-full text-sm font-bold",
                 step === s
                   ? "bg-primary text-primary-foreground"
                   : ["recipient", "amount", "confirm", "receipt"].indexOf(step) > i
@@ -85,7 +85,7 @@ function SendMoneyFlow({
             />
             {recentRecipients.length > 0 && (
               <div>
-                <div className="mb-1.5 text-[10px] font-medium text-muted-foreground">Recent</div>
+                <div className="mb-1.5 text-sm font-medium text-muted-foreground">Recent</div>
                 <div className="flex gap-3 overflow-x-auto pb-1">
                   {recentRecipients.map((r) => (
                     <button
@@ -107,7 +107,7 @@ function SendMoneyFlow({
                           r.name.charAt(0)
                         )}
                       </div>
-                      <span className="w-14 truncate text-[10px]">{r.name}</span>
+                      <span className="w-14 truncate text-sm">{r.name}</span>
                     </button>
                   ))}
                 </div>
@@ -206,7 +206,7 @@ function SendMoneyFlow({
             </div>
             <div className="text-sm text-muted-foreground">to {selectedRecipient?.name}</div>
             {transactionId && (
-              <div className="font-mono text-[9px] text-muted-foreground">TX: {transactionId}</div>
+              <div className="font-mono text-sm text-muted-foreground">TX: {transactionId}</div>
             )}
           </div>
         )}

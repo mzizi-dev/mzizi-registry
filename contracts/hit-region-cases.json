@@ -1,0 +1,96 @@
+{
+  "$comment": "The Bundu floor's hit-region rules, as cases both evaluators must answer identically: contracts/runner.ts (hitViolations) and mzizi-rs/contract-eval (hit_violations). `fine` and `coarse` are the drawn heights in px (null: the runner could not read one); `violations` is how many sentences each returns. Pinned by __tests__/density.test.ts and mzizi-ui's tests/contracts_json.rs.",
+  "cases": [
+    {
+      "name": "a button drawn at 36px keeps its hit region through the pseudo-element",
+      "html": "<button class=\"h-9\">Save</button>",
+      "fine": 36,
+      "coarse": 49,
+      "violations": 0
+    },
+    {
+      "name": "a button drawn under 28px is too small to draw",
+      "html": "<button class=\"h-5\">x</button>",
+      "fine": 20,
+      "coarse": 49,
+      "violations": 1
+    },
+    {
+      "name": "a link has only its box",
+      "html": "<a href=\"/\" class=\"h-9\">Home</a>",
+      "fine": 36,
+      "coarse": 49,
+      "violations": 1
+    },
+    {
+      "name": "a native field drawn at 49px is fine",
+      "html": "<input class=\"h-field\">",
+      "fine": 49,
+      "coarse": 49,
+      "violations": 0
+    },
+    {
+      "name": "a native field drawn at 48px fails on both pointers",
+      "html": "<input class=\"h-12\">",
+      "fine": 48,
+      "coarse": 48,
+      "violations": 2
+    },
+    {
+      "name": "a button with its own after: utility keeps only its box",
+      "html": "<button class=\"h-9 relative after:absolute after:-inset-2\">x</button>",
+      "fine": 36,
+      "coarse": 49,
+      "violations": 1
+    },
+    {
+      "name": "a button that clips its overflow keeps only its box",
+      "html": "<button class=\"h-9 overflow-hidden\">x</button>",
+      "fine": 36,
+      "coarse": 49,
+      "violations": 1
+    },
+    {
+      "name": "a menu row takes min-height, so a short row is covered",
+      "html": "<div role=\"menuitem\" class=\"h-8\">Edit</div>",
+      "fine": 32,
+      "coarse": 49,
+      "violations": 0
+    },
+    {
+      "name": "a menu row with its own min-h-* is only its box",
+      "html": "<div role=\"menuitem\" class=\"min-h-8\">Edit</div>",
+      "fine": 32,
+      "coarse": 49,
+      "violations": 1
+    },
+    {
+      "name": "a listbox option is a composite row too",
+      "html": "<div role=\"option\" class=\"h-8\">One</div>",
+      "fine": 32,
+      "coarse": 49,
+      "violations": 0
+    },
+    {
+      "name": "a calendar day is a grid cell, left as drawn",
+      "html": "<button data-day=\"1\" class=\"h-9\">1</button>",
+      "fine": 36,
+      "coarse": 36,
+      "violations": 2
+    },
+    {
+      "name": "a row the runner cannot read is skipped",
+      "html": "<button class=\"flex\">x</button>",
+      "fine": null,
+      "coarse": null,
+      "violations": 0
+    },
+    {
+      "name": "a non-interactive element is skipped",
+      "html": "<span class=\"h-4\">x</span>",
+      "fine": 16,
+      "coarse": 16,
+      "violations": 0
+    }
+  ]
+}

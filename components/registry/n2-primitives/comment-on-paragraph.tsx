@@ -47,7 +47,7 @@ function CommentOnParagraph({
         data-portal="https://mzizi.dev/components/comment-on-paragraph"
         onClick={() => onOpenChange?.(true)}
         className={cn(
-          "inline-flex size-6 items-center justify-center rounded-full bg-[var(--color-cobalt,#00B0FF)]/15 text-[10px] font-bold text-[var(--color-cobalt,#00B0FF)] transition-colors hover:bg-[var(--color-cobalt,#00B0FF)]/25",
+          "inline-flex size-6 items-center justify-center rounded-full bg-[var(--color-cobalt,#00B0FF)]/15 text-sm font-bold text-[var(--color-cobalt,#00B0FF)] transition-colors hover:bg-[var(--color-cobalt,#00B0FF)]/25",
           className
         )}
         aria-label={`${comments.length} comment${comments.length !== 1 ? "s" : ""} on this passage`}
@@ -76,7 +76,7 @@ function CommentOnParagraph({
         <div className="mb-3 max-h-40 space-y-2 overflow-y-auto">
           {comments.map((c) => (
             <div key={c.id} className="flex gap-2">
-              <div className="flex size-6 shrink-0 items-center justify-center rounded-full bg-muted text-[8px] font-medium">
+              <div className="flex size-6 shrink-0 items-center justify-center rounded-full bg-muted text-sm font-medium">
                 {c.authorAvatar ? (
                   <img
                     src={c.authorAvatar}
@@ -88,7 +88,7 @@ function CommentOnParagraph({
                 )}
               </div>
               <div>
-                <div className="text-[10px]">
+                <div className="text-sm">
                   <span className="font-medium">{c.authorName}</span>{" "}
                   <span className="text-muted-foreground">· {c.createdAt}</span>
                 </div>
@@ -112,7 +112,7 @@ function CommentOnParagraph({
         <button
           onClick={handleSubmit}
           disabled={!draft.trim()}
-          className="h-8 shrink-0 rounded-full bg-primary px-3 text-[10px] font-medium text-primary-foreground disabled:opacity-50"
+          className="h-8 shrink-0 rounded-full bg-primary px-3 text-sm font-medium text-primary-foreground disabled:opacity-50"
         >
           Post
         </button>
@@ -121,7 +121,7 @@ function CommentOnParagraph({
       {/* Close */}
       <button
         onClick={() => onOpenChange?.(false)}
-        className="absolute -top-2 -right-2 flex size-5 items-center justify-center rounded-full bg-muted text-[10px] text-muted-foreground shadow hover:text-foreground"
+        className="absolute -top-2 -right-2 flex h-6 min-w-6 px-1 items-center justify-center rounded-full bg-muted text-sm text-muted-foreground shadow hover:text-foreground leading-none"
       >
         ×
       </button>

@@ -121,7 +121,7 @@ fn join(base: &str, extra: &str) -> String {
 
 const DISMISS: &str = "min-h-[48px] text-sm text-muted-foreground hover:text-foreground focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--color-primary,#00B0FF)]";
 const DETAILS: &str =
-    "min-h-[48px] rounded-full px-4 text-[12px] font-medium transition-opacity hover:opacity-80";
+    "min-h-[48px] rounded-full px-4 text-sm font-medium transition-opacity hover:opacity-80";
 
 /// Props for [`MziziAlertBanner`].
 #[derive(Props, Clone, PartialEq)]
@@ -200,10 +200,10 @@ pub fn MziziAlertBanner(props: MziziAlertBannerProps) -> Element {
                 p { class: "text-xs leading-relaxed text-muted-foreground", "{description}" }
             }
             if !props.areas.is_empty() {
-                p { class: "text-[11px] text-muted-foreground", "Areas: {areas}" }
+                p { class: "text-sm text-muted-foreground", "Areas: {areas}" }
             }
             if let Some(validity) = validity {
-                p { class: "text-[10px] text-muted-foreground", "{validity}" }
+                p { class: "text-sm text-muted-foreground", "{validity}" }
             }
             if let Some(instructions) = &props.instructions {
                 div { class: "rounded-[var(--radius-sm,7px)] bg-muted p-2.5",
