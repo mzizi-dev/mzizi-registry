@@ -183,7 +183,7 @@ export function DetailLayout({
           {/* Hero content: category badge + title */}
           <div className="relative z-10 p-5">
             {category && (
-              <span className="mb-2 inline-flex rounded-full bg-white/20 px-2.5 py-0.5 text-[10px] font-semibold tracking-wider text-white uppercase">
+              <span className="mb-2 inline-flex rounded-full bg-white/20 px-2.5 py-0.5 text-sm font-semibold tracking-wider text-white uppercase">
                 {category}
               </span>
             )}

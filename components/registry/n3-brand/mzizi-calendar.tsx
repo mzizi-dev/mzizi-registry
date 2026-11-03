@@ -202,7 +202,7 @@ function MziziCalendar({
         {DAY_LABELS.map((d) => (
           <div
             key={d}
-            className="text-center text-[11px] font-medium text-muted-foreground uppercase"
+            className="text-center text-sm font-medium text-muted-foreground uppercase"
           >
             {d}
           </div>

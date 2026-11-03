@@ -97,7 +97,7 @@ All visual design values live in dedicated database tables under the `brand_*` p
 ### Sizing & accessibility tokens
 
 - `styling-icon-sizes` — canonical icon dimensions from xs (12px) through xl (40px), default 20px
-- `styling-touch-targets` — accessibility tier minimums (44 minimum / 48 accessible / 48-56 comfortable / 56-64 generous) with WCAG, Apple HIG, and Material Design citations per row
+- `styling-touch-targets` — accessibility tier minimums (superseded for the minimum by the Bundu floor below: 49px) with WCAG, Apple HIG, and Material Design citations per row
 - `styling-component-specs` — per-component canonical heights, padding, variants, border-radius, and minimum touch targets for primitives like button, input, avatar, badge, card, dialog, toggle, checkbox, tabs
 
 ### Density tokens
@@ -127,19 +127,42 @@ Three font families, chosen for complete coverage of African scripts including L
 - **Noto Sans** — body text, UI labels. Neutral, highly legible, same coverage as Noto Serif.
 - **JetBrains Mono** — code blocks, terminal output, technical content. Purpose-built for developer readability.
 
-The type scale runs from Display (40px serif on a phone, 48px on tablet and desktop) through Display Small, H1-H6 (34-16px on a phone, 32-15px on desktop, mixing serif and sans), Body Large/Body/Body Small (18px, 17px, 15px on a phone; 17px, 15px, 14px on desktop), Caption (12px sans), and Code (14px mono). Display sizes carry `fluid_min_px`/`fluid_max_px` so they scale responsively rather than breaking to one word per line on phones. Display through H4 carry negative letter-spacing for typographic refinement; Caption carries small positive tracking; Code carries `tabular-nums` so numbers align in tables.
+The type scale runs from Display (40px serif on a phone, 48px on tablet and desktop) through Display Small, H1-H6 (34-17px on a phone, 32-17px on desktop, mixing serif and sans), Body Large/Body/Body Small (18px, 17px, 14px on every device), Caption (14px sans), and Code (14px mono). Body text is 17px and nothing readable is under 14px on any device, desktop included: that is the Bundu floor, below. Display sizes carry `fluid_min_px`/`fluid_max_px` so they scale responsively rather than breaking to one word per line on phones. Display through H4 carry negative letter-spacing for typographic refinement; Caption carries small positive tracking; Code carries `tabular-nums` so numbers align in tables.
 
 Lowercase wordmarks (mukoko, nyuchi, shamwari, bundu) are reserved for special instances — the brand wordmark lockup itself: logos, splash marks, and standalone brand marks. In site names, product names, and running text, Bundu and Nyuchi take capitals: Bundu Docs, Nyuchi Docs, Nyuchi Platform. Mukoko is the exception — it only uses lowercase, in every context. This is a brand decision, not a typography accident.
 
+## Contrast Minimums
+
+The contrast standard is APCA 3.0 AAA with explicit WCAG 2 minimums beside it (owner decision, 2026-11-02, mzizi-registry#399). Both are enforced: `pnpm tokens:sync` and `pnpm tokens:verify` fail when a default role is under its minimum. The three numbers are the named exports `WCAG_BODY`, `WCAG_NON_BODY` and `WCAG_UI` in `lib/tokens/roles.source.ts`, beside the APCA bars `BODY`, `NON_BODY` and `UI`.
+
+| Part                                                                 | APCA  | WCAG 2 minimum |
+| -------------------------------------------------------------------- | ----- | -------------- |
+| Body text, on `base` and `surface`, both themes                      | Lc 75 | 7:1            |
+| Non-body text: captions, timestamps, metadata                        | Lc 60 | 4.5:1          |
+| UI parts that must be seen: focus rings, control edges (WCAG 1.4.11) | Lc 30 | 3:1            |
+
+The label on a brand's solid action fill (`primary-foreground` and the roles that follow `primary`) is held to 4.5:1 rather than 7:1, and so is `destructive-foreground` on the destructive fill (canon error `#B3261E`, 6.54:1; pending owner confirmation, 2026-11-02). It is a button label, not body copy, and the fill is each brand's `-aa` tier; 7:1 would darken every brand's action colour. The gate prints that exception and the role tests pin it.
+
 ## Touch Targets
 
-Mzizi follows Apple's Human Interface Guidelines on touch devices (owner decision, 2026-11-01). The Buttons page says "a button needs a hit region of at least 44x44 pt"; the Accessibility page gives iOS and iPadOS a default control size of 44x44 pt and a minimum of 28x28 pt; the Typography page gives iOS and iPadOS a default text size of 17 pt and a minimum of 11 pt (all read 2026-11-01 at developer.apple.com/design/human-interface-guidelines).
+Owner ruling, 2026-11-02: every interactive control keeps a **49px hit region on every device, desktop included**. It replaces the 44px floor on a coarse pointer (Apple's Buttons page: "a button needs a hit region of at least 44x44 pt", read 2026-11-01 at developer.apple.com/design/human-interface-guidelines) and the 24px floor on a fine pointer (WCAG 2.2 SC 2.5.8) that registry 4.21.0 set. Bundu sets the standard for outdoor reading and for people who find technology hard (older users, African and emerging markets), so the minimum is as high as it can be and one Bundu will stand by.
 
-- **Coarse pointer (phones, tablets):** targets are 44px (the `--target-floor`), the large control is 48px, body text is 17px on a phone and 16px on a tablet. The gaps between targets stay generous: spacing tokens are untouched.
-- **Desktop density (fine pointer, hover, 64rem and up):** targets step down to 28-40px, body text to 15px. Floors that never move: targets 24px (WCAG 2.2 SC 2.5.8), body text 14px.
+- **Coarse pointer (phones, tablets):** controls are drawn at 49px (the large control 56px), body text is 17px. The gaps between targets stay generous: spacing tokens are untouched.
+- **Desktop density (fine pointer, hover, 64rem and up):** a control may be DRAWN smaller, 28-40px (`--control-floor`, 28px), but keeps its 49px hit region: the token layer's `hit-area` rule grows every button-like control with a transparent pseudo-element (`--target-floor`, never lowered). A native field or select cannot carry a pseudo-element, so it is drawn at 49px. Body text stays 17px, captions 14px.
 - Density is about visual size only. It is never a guess about the network: laptops and iPads are usually on wifi, and the performance budgets do not change with it.
 
-The 48px and 56px sizes consumers pinned before 2026-11-01 come back with `data-mzizi-sizes="legacy"` on the root element, until the app has migrated. The older tiers in `styling-touch-targets` (48 accessible, 56 comfortable) are superseded by this section.
+The sizes consumers pinned before 2026-11-01 (48px and 56px targets, 16px body, 12px captions) come back with `data-mzizi-sizes="legacy"` on the root element, until the app has migrated; that attribute steps out of the Bundu floor, so remove it to take it. The older tiers in `styling-touch-targets` (48 accessible, 56 comfortable) are superseded by this section.
+
+## The Bundu Order
+
+The Bundu Order draws on biblical mathematical patterns and prime numbers (owner, 2026-11-02). This section states only what the code holds, in `lib/tokens/roles.source.ts` (`BUNDU_FLOOR`), `lib/tokens/brand.source.ts` and `scripts/render-globals-css.ts`.
+
+- **The unit is 7px** (`--radius-unit`). The radii are 4, 7, 12, 14 and 17px and a pill, and they do not change.
+- **P7 and P17** are prime steps of the surface-elevation ladder (`surface` is P7, `raised` is P17), and the seven experimental families are a heptagon of hues offset 17 degrees.
+- **The floors derive from the same numbers.** Body text is 17px (a prime; Apple's iOS default body size) on every device, including desktop. Captions, metadata and secondary labels are 14px (2 x 7), and nothing readable is smaller. Every interactive control keeps a 49px hit region (7 x 7, above Apple's 44 pt). A control may be drawn down to 28px (4 x 7) at desktop density, never with a smaller hit region.
+- **Contrast** floors stand beside them: body text 7:1, non-body text 4.5:1, UI parts 3:1 (see Contrast Minimums).
+
+`__tests__/bundu-floor.test.ts` fails when a default type step, a size role or a desktop control breaks any of these.
 
 ## Density
 

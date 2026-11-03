@@ -66,7 +66,7 @@ function SymptomChecker({
       {...props}
     >
       <div className="text-sm font-medium">Describe your symptoms</div>
-      <div className="text-[10px] text-muted-foreground">
+      <div className="text-sm text-muted-foreground">
         This is not a diagnostic tool. Your summary will be shared with your healthcare provider.
       </div>
 

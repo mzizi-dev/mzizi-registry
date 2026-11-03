@@ -120,7 +120,7 @@ pub fn MziziMetaTile(props: MziziMetaTileProps) -> Element {
                 style: "border-color: {CHIP_BORDER}; background-color: {chip_background};",
                 "aria-hidden": "true",
                 if let Some(date) = &props.date {
-                    span { class: "text-[10px] leading-none font-semibold tracking-wide text-muted-foreground uppercase",
+                    span { class: "text-sm leading-none font-semibold tracking-wide text-muted-foreground uppercase",
                         {month_abbrev(&date.month)}
                     }
                     span { class: "mt-0.5 text-xl leading-none font-bold", style: "color: {props.tint};",
@@ -132,11 +132,11 @@ pub fn MziziMetaTile(props: MziziMetaTileProps) -> Element {
             }
             div { class: "min-w-0 flex-1",
                 if let Some(caption) = &props.caption {
-                    div { class: "text-[13px] leading-none font-medium text-muted-foreground", "{caption}" }
+                    div { class: "text-sm leading-none font-medium text-muted-foreground", "{caption}" }
                 }
                 div { class: "{primary_class}", "{props.primary}" }
                 if let Some(secondary) = &props.secondary {
-                    div { class: "mt-0.5 truncate text-[13px] text-muted-foreground", "{secondary}" }
+                    div { class: "mt-0.5 truncate text-sm text-muted-foreground", "{secondary}" }
                 }
             }
             if let Some(trailing) = &props.trailing {

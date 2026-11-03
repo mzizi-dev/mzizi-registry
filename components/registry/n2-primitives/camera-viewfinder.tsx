@@ -98,7 +98,7 @@ function CameraViewfinder({
           )}
         </button>
 
-        <div className="flex size-10 items-center justify-center text-[10px] font-medium text-white/60 capitalize">
+        <div className="flex size-10 items-center justify-center text-sm font-medium text-white/60 capitalize">
           {mode}
         </div>
       </div>

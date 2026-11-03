@@ -404,7 +404,7 @@ export function MziziMediaMessage({
           </div>
         </div>
         {duration && (
-          <span className="absolute right-2 bottom-2 rounded bg-black/60 px-1.5 py-0.5 text-[10px] text-white">
+          <span className="absolute right-2 bottom-2 rounded bg-black/60 px-1.5 py-0.5 text-sm text-white">
             {duration}
           </span>
         )}
@@ -511,7 +511,7 @@ export function MziziStoryRing({
           </div>
         </div>
       </div>
-      <span className="max-w-[64px] truncate text-[10px] text-muted-foreground">
+      <span className="max-w-[64px] truncate text-sm text-muted-foreground">
         {name.split(" ")[0]}
       </span>
     </button>

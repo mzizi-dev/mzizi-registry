@@ -98,7 +98,7 @@ function SearchBar({
             <X className="size-3" />
           </Button>
         )}
-        {showShortcut && !value && <Kbd className="text-[10px]">⌘{shortcutKey.toUpperCase()}</Kbd>}
+        {showShortcut && !value && <Kbd className="text-sm">⌘{shortcutKey.toUpperCase()}</Kbd>}
       </div>
     </div>
   )

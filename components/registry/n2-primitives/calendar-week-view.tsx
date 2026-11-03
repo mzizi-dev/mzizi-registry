@@ -90,7 +90,7 @@ function CalendarWeekView({
         <div className="relative">
           {HOURS.map((hour) => (
             <div key={hour} className="h-12 border-b border-border px-2 py-1">
-              <span className="text-[10px] text-muted-foreground">{formatHour(hour)}</span>
+              <span className="text-sm text-muted-foreground">{formatHour(hour)}</span>
             </div>
           ))}
         </div>
@@ -106,7 +106,7 @@ function CalendarWeekView({
                   key={eventIndex}
                   type="button"
                   onClick={() => onEventClick?.(event)}
-                  className="absolute inset-x-1 overflow-hidden rounded-[var(--radius-md,12px)] px-1.5 py-0.5 text-left text-[10px] leading-tight font-medium transition-opacity hover:opacity-80"
+                  className="absolute inset-x-1 overflow-hidden rounded-[var(--radius-md,12px)] px-1.5 py-0.5 text-left text-sm leading-tight font-medium transition-opacity hover:opacity-80"
                   style={{
                     top: pos.top,
                     height: pos.height,

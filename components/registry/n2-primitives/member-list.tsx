@@ -59,13 +59,13 @@ function MemberList({
           className="mb-3 h-10 w-full rounded-full border border-input bg-input/30 px-4 text-sm outline-none placeholder:text-muted-foreground focus:border-ring"
         />
       )}
-      <div className="mb-2 text-[10px] text-muted-foreground">{filtered.length} members</div>
+      <div className="mb-2 text-sm text-muted-foreground">{filtered.length} members</div>
       {(["admin", "moderator", "member"] as MemberRole[]).map(
         (role) =>
           grouped[role].length > 0 && (
             <div key={role} className="mb-3">
               {role !== "member" && (
-                <div className="mb-1 text-[10px] font-medium tracking-wider text-muted-foreground uppercase">
+                <div className="mb-1 text-sm font-medium tracking-wider text-muted-foreground uppercase">
                   {role}s — {grouped[role].length}
                 </div>
               )}
@@ -77,7 +77,7 @@ function MemberList({
                     className="flex w-full items-center gap-2.5 rounded-[var(--radius-md,12px)] px-2 py-2 text-left transition-colors hover:bg-muted"
                   >
                     <div className="relative">
-                      <div className="flex size-8 items-center justify-center rounded-full bg-muted text-[10px] font-medium">
+                      <div className="flex size-8 items-center justify-center rounded-full bg-muted text-sm font-medium">
                         {member.avatar ? (
                           <img
                             src={member.avatar}
@@ -96,7 +96,7 @@ function MemberList({
                     {role !== "member" && (
                       <span
                         className={cn(
-                          "rounded-full px-1.5 py-0.5 text-[9px] font-medium capitalize",
+                          "rounded-full px-1.5 py-0.5 text-sm font-medium capitalize",
                           roleStyles[role]
                         )}
                       >

@@ -57,7 +57,7 @@ function PodStorageMeter({
       {/* Legend */}
       <div className="mt-2 flex flex-wrap gap-x-3 gap-y-1">
         {categories.map((cat, i) => (
-          <div key={i} className="flex items-center gap-1 text-[10px] text-muted-foreground">
+          <div key={i} className="flex items-center gap-1 text-sm text-muted-foreground">
             <div className="size-2 rounded-full" style={{ backgroundColor: cat.color }} />
             <span>
               {cat.label} ({cat.sizeGB.toFixed(1)} GB)
@@ -66,7 +66,7 @@ function PodStorageMeter({
         ))}
       </div>
       {nstAllocation !== undefined && (
-        <div className="mt-2 text-[10px] text-muted-foreground">
+        <div className="mt-2 text-sm text-muted-foreground">
           NST Allocation: {nstAllocation.toLocaleString()} tokens
         </div>
       )}

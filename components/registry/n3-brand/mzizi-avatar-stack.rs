@@ -55,8 +55,8 @@ impl AvatarStackSize {
     #[must_use]
     pub const fn size_classes(self) -> &'static str {
         match self {
-            Self::Sm => "size-6 text-[10px]",
-            Self::Md => "size-8 text-[11px]",
+            Self::Sm => "size-6 text-sm",
+            Self::Md => "size-8 text-sm",
         }
     }
 
@@ -196,7 +196,7 @@ pub fn MziziAvatarStack(props: MziziAvatarStackProps) -> Element {
                 }
             }
             if show_label {
-                span { class: "text-[13px] text-muted-foreground", "aria-hidden": "true", "{layout.summary}" }
+                span { class: "text-sm text-muted-foreground", "aria-hidden": "true", "{layout.summary}" }
             }
         }
     }

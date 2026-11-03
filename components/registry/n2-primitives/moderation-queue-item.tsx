@@ -39,23 +39,23 @@ function ModerationQueueItem({
     >
       <div className="flex items-start justify-between gap-2">
         <div className="flex items-center gap-2">
-          <span className="rounded-full bg-destructive/10 px-2 py-0.5 text-[10px] font-medium text-destructive capitalize">
+          <span className="rounded-full bg-destructive/10 px-2 py-0.5 text-sm font-medium text-destructive capitalize">
             {reason}
           </span>
-          <span className="text-[10px] text-muted-foreground">{contentType}</span>
+          <span className="text-sm text-muted-foreground">{contentType}</span>
           {reportCount > 1 && (
-            <span className="text-[10px] font-medium text-[var(--color-terracotta)]">
+            <span className="text-sm font-medium text-[var(--color-terracotta)]">
               {reportCount} reports
             </span>
           )}
         </div>
-        <span className="text-[10px] text-muted-foreground">{reportedAt}</span>
+        <span className="text-sm text-muted-foreground">{reportedAt}</span>
       </div>
       <div className="mt-2 line-clamp-3 rounded-[var(--radius-md,12px)] bg-muted/30 p-3 text-sm">
         {contentPreview}
       </div>
       {reporterName && (
-        <div className="mt-1.5 text-[10px] text-muted-foreground">Reported by {reporterName}</div>
+        <div className="mt-1.5 text-sm text-muted-foreground">Reported by {reporterName}</div>
       )}
       <div className="mt-3 flex gap-2">
         {onApprove && (

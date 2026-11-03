@@ -265,7 +265,7 @@
       "part": "app link",
       "select": "[data-slot=\"discover-card-app\"]",
       "fine": 32,
-      "coarse": 44
+      "coarse": 49
     }
   ],
   "theming": {

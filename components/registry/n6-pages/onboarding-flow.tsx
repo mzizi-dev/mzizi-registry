@@ -72,7 +72,7 @@ function OnboardingFlow() {
                 >
                   {i < step ? <Check className="size-4" /> : i + 1}
                 </div>
-                <span className="text-[10px] text-muted-foreground">{s}</span>
+                <span className="text-sm text-muted-foreground">{s}</span>
               </div>
             ))}
           </div>

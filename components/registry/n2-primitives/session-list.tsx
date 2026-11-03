@@ -57,7 +57,7 @@ function SessionList({
                   {session.device}
                 </span>
                 {session.current && (
-                  <span className="rounded-full bg-[var(--status-success,var(--color-malachite,#64FFDA))]/15 px-2 py-0.5 text-[10px] font-medium text-[var(--status-success,var(--color-malachite,#64FFDA))]">
+                  <span className="rounded-full bg-[var(--status-success,var(--color-malachite,#64FFDA))]/15 px-2 py-0.5 text-sm font-medium text-[var(--status-success,var(--color-malachite,#64FFDA))]">
                     Current
                   </span>
                 )}
