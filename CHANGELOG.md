@@ -10,7 +10,7 @@ From 2026-10-04 releases follow the org versioning policy ([nyuchi/.github#80](h
 
 ## [Unreleased]
 
-### Changed — AGENTS.md gains a "Merge convention" section for the new `staging` queue rules (2026-11-03, #PRNUM)
+### Changed — AGENTS.md gains a "Merge convention" section for the new `staging` queue rules (2026-11-03, [#616](https://github.com/mzizi-dev/mzizi-registry/pull/616))
 
 Documentation only; no shipped content, API response or package changes. The section records squash through the merge queue (`gh pr merge <n> --squash --auto`, never `--admin`); the `staging` queue's target config (`SQUASH` and no 5-minute wait, applied by the owner in the repository rulesets, and verified live on 2026-11-03 as still `REBASE` with the wait); the linear-branch rule until it lands, because a rebase queue drops a branch with a merge commit (`MERGE_CONFLICT`); enqueue as soon as the merge gate is met; the issue line every PR body needs; forward-porting `main`-only commits (the pin bots') to `staging` before a release, and comparing trees, not counts, after a squash release; and that minors and patches release automatically while only a major needs the owner's go-ahead.
 
