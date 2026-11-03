@@ -136,7 +136,7 @@ function MziziStatsRow({
                 {stat.trend && (
                   <span
                     className={cn(
-                      "text-[11px] font-medium",
+                      "text-sm font-medium",
                       isPositiveTrend && "text-emerald-400",
                       isNegativeTrend && "text-red-400",
                       !isPositiveTrend && !isNegativeTrend && "text-muted-foreground"
@@ -162,13 +162,13 @@ function MziziStatsRow({
               <Icon className="size-4" style={{ color: iconColor }} />
             </div>
             <div className="min-w-0">
-              <div className="text-[10px] text-muted-foreground">{stat.label}</div>
+              <div className="text-sm text-muted-foreground">{stat.label}</div>
               <div className="flex items-baseline gap-1.5">
-                <span className="text-[13px] font-semibold text-foreground">{stat.value}</span>
+                <span className="text-sm font-semibold text-foreground">{stat.value}</span>
                 {stat.trend && (
                   <span
                     className={cn(
-                      "text-[10px] font-medium",
+                      "text-sm font-medium",
                       isPositiveTrend && "text-emerald-400",
                       isNegativeTrend && "text-red-400"
                     )}

@@ -67,7 +67,7 @@ function NovelCover({
         {status && (
           <span
             className={cn(
-              "absolute top-2 left-2 rounded-full px-2 py-0.5 text-[9px] font-bold uppercase",
+              "absolute top-2 left-2 rounded-full px-2 py-0.5 text-sm font-bold uppercase",
               statusColors[status]
             )}
           >
@@ -75,7 +75,7 @@ function NovelCover({
           </span>
         )}
         {rating !== undefined && (
-          <span className="absolute top-2 right-2 rounded-full bg-black/60 px-1.5 py-0.5 text-[10px] font-medium text-white">
+          <span className="absolute top-2 right-2 rounded-full bg-black/60 px-1.5 py-0.5 text-sm font-medium text-white">
             ★ {rating.toFixed(1)}
           </span>
         )}
@@ -89,7 +89,7 @@ function NovelCover({
             medium from another. It leads the meta line because it is the
             coarsest distinction between two covers. */}
         {(type || genre || chapterCount) && (
-          <div className="mt-1 flex items-center gap-1.5 text-[10px] text-muted-foreground">
+          <div className="mt-1 flex items-center gap-1.5 text-sm text-muted-foreground">
             {type && <span className="capitalize">{type}</span>}
             {type && (genre || chapterCount) && <span>·</span>}
             {genre && <span>{genre}</span>}

@@ -93,7 +93,7 @@ function MapView({
             </defs>
             <rect width="100%" height="100%" fill="url(#map-grid)" />
           </svg>
-          <div className="absolute bottom-2 left-2 rounded-full bg-background/80 px-2 py-0.5 font-mono text-[9px] text-muted-foreground backdrop-blur-sm">
+          <div className="absolute bottom-2 left-2 rounded-full bg-background/80 px-2 py-0.5 font-mono text-sm text-muted-foreground backdrop-blur-sm">
             {center.lat.toFixed(4)}, {center.lng.toFixed(4)} · z{zoom}
           </div>
         </div>

@@ -142,9 +142,9 @@ export const primitives = {
 
   // Type scale (canonical)
   fontSize: {
-    caption: { value: "12px", description: "0.75rem — Labels, metadata, timestamps" },
-    bodySmall: { value: "15px", description: "0.9375rem — Secondary text (Apple Subhead 15 pt, touch); steps to 14px on desktop" },
-    body: { value: "17px", description: "1.0625rem — Default body text (Apple Body 17 pt, touch); 16px tablet, 15px desktop" },
+    caption: { value: "14px", description: "0.875rem — Labels, metadata, timestamps: the Bundu caption floor, never smaller" },
+    bodySmall: { value: "14px", description: "0.875rem — Secondary text: the Bundu caption floor on every device" },
+    body: { value: "17px", description: "1.0625rem — Default body text on every device, desktop included: the Bundu body floor (Apple Body 17 pt)" },
     bodyLarge: { value: "18px", description: "1.125rem — Lead paragraphs" },
     h5: { value: "17px", description: "1.0625rem — Noto Sans 600 — Small headings (Apple Headline 17 pt)" },
     h4: { value: "20px", description: "1.25rem — Noto Sans 600 — Card titles (Apple Title 3 20 pt)" },
@@ -165,8 +165,8 @@ export const primitives = {
   // ─── TOUCH TARGETS (canonical) ──────────────
   // APCA 3.0 AAA accessibility standard
   touchTarget: {
-    default: { value: "44px", description: "Default interactive element height (Apple: 44x44 pt hit region)" },
-    sm: { value: "44px", description: "Minimum on a coarse pointer — NEVER below this (desktop density may go to 24px, WCAG 2.2 SC 2.5.8)" },
+    default: { value: "49px", description: "Default interactive element height: the Bundu hit area, 7 x 7 (above Apple's 44x44 pt)" },
+    sm: { value: "49px", description: "Minimum hit region on every device, desktop included — NEVER below this (a desktop control may be drawn smaller, down to 28px, but keeps this hit region)" },
   },
 
   // ─── MOTION (canonical) ─────────────────────
@@ -771,9 +771,9 @@ export const componentTokens = {
   bottomNav: { height: "80px", fabSize: "52px", fabRise: "24px" },
   sidebar: { width: "256px", collapsedWidth: "64px" },
   avatar: { sm: "32px", md: "40px", lg: "64px", xl: "80px", xxl: "120px" },
-  badge: { height: "20px", padding: "0 8px", fontSize: "11px" },
-  input: { height: "44px" },
-  button: { height: "44px", heightSm: "44px", heightLg: "48px" },
+  badge: { height: "24px", padding: "0 8px", fontSize: "14px" },
+  input: { height: "49px" },
+  button: { height: "49px", heightSm: "49px", heightLg: "56px" },
   card: { padding: "16px", gap: "14px" },
   page: { maxWidth: "1280px", margin: "20px" },
   focusRing: { width: "2px", offset: "2px", color: "var(--ring)" },

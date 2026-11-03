@@ -49,7 +49,7 @@ export function StatusBadge({
       data-portal="https://mzizi.dev/components/status-badge"
       data-status={status}
       className={cn(
-        "rounded-full border-transparent font-mono text-[10px] tracking-wide uppercase",
+        "rounded-full border-transparent font-mono text-sm tracking-wide uppercase",
         STATUS_STYLES[status],
         className
       )}

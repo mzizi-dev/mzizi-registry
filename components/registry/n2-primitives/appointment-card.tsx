@@ -76,7 +76,7 @@ function AppointmentCard({
             {specialty && <div className="text-xs text-muted-foreground">{specialty}</div>}
           </div>
           <span
-            className={cn("rounded-full px-2 py-0.5 text-[10px] font-medium", statusStyles[status])}
+            className={cn("rounded-full px-2 py-0.5 text-sm font-medium", statusStyles[status])}
           >
             {status}
           </span>

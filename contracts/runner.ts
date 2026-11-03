@@ -191,16 +191,164 @@ export function heightOf(classes: string, prefix = ""): number | null {
  */
 export const ROLE_HEIGHTS: Readonly<Record<string, readonly [number, number]>> =
   {
-    touch: [44, 36],
-    "touch-min": [44, 24],
-    control: [44, 36],
-    "control-sm": [44, 32],
-    "control-lg": [48, 40],
-    "control-icon": [44, 36],
+    touch: [49, 36],
+    "touch-min": [49, 49],
+    control: [49, 36],
+    "control-sm": [49, 32],
+    "control-lg": [56, 40],
+    "control-icon": [49, 36],
     "control-dense": [32, 28],
-    field: [44, 36],
-    "field-sm": [44, 32],
+    field: [49, 49],
+    "field-sm": [49, 49],
   };
+
+/**
+ * THE BUNDU FLOOR, as the runner holds it (owner ruling 2026-11-02): a copy of `BUNDU_FLOOR` in
+ * `lib/tokens/roles.source.ts`, kept here so this file stays free of imports; `__tests__/density.test.ts`
+ * fails when the two disagree, and mzizi-rs/contract-eval holds the same numbers.
+ * `HIT_AREA_PX` is the hit region every interactive control keeps on every device, desktop included;
+ * `VISIBLE_FINE_MIN_PX` is the smallest a control is DRAWN at desktop density.
+ */
+export const HIT_AREA_PX = 49;
+export const VISIBLE_FINE_MIN_PX = 28;
+
+/**
+ * Roles the token layer's `hit-area` rule grows to HIT_AREA_PX with a pseudo-element (see `densityLayer()` in
+ * render-globals-css.ts). Composite rows (`menuitem*`, `option`) are NOT here: a 49px overlay on a 28 to 36px
+ * row would overlap its neighbours, so the token layer gives them `min-height` instead.
+ */
+const HIT_AREA_ROLES = new Set(["button", "tab", "switch"]);
+const COMPOSITE_ROW_ROLES = new Set([
+  "menuitem",
+  "menuitemcheckbox",
+  "menuitemradio",
+  "option",
+]);
+
+const classOf = (el: Element) => el.attribs.class ?? "";
+/** An element that draws its own `after:` pseudo-element: the hit-area rule steps aside (`:not([class*="after:"])`). */
+const hasOwnAfter = (el: Element) => classOf(el).includes("after:");
+/** An element that clips its overflow also clips a pseudo-element that extends past its box. */
+const clips = (el: Element) =>
+  /(?:^|[\s:])overflow(?:-[xy])?-(?:hidden|clip)(?:\s|$)/.test(classOf(el));
+/** A composite row whose token-layer `min-height` is overridden by its own `min-h-*` utility. */
+const ownMinHeight = (el: Element) => /(?:^|[\s:])min-h-/.test(classOf(el));
+
+/**
+ * An element the token layer's `hit-area` rule covers with a pseudo-element: a button, a `summary`, a button-like
+ * role, or a `.hit-area` element, that carries no `after:` utility of its own and is not a calendar day
+ * (`[data-day]`, a grid cell). Mirrors the selector in `densityLayer()`.
+ */
+export function carriesHitArea(el: Element): boolean {
+  if (hasOwnAfter(el) || el.attribs["data-day"] !== undefined) return false;
+  if (el.name === "button" || el.name === "summary") return true;
+  if (HIT_AREA_ROLES.has(el.attribs.role ?? "")) return true;
+  return classOf(el).split(/\s+/).includes("hit-area");
+}
+
+/** A composite row: the token layer gives it `min-height` at the hit area instead of a pseudo-element. */
+export function isCompositeRow(el: Element): boolean {
+  return COMPOSITE_ROW_ROLES.has(el.attribs.role ?? "");
+}
+
+/** Whether an element is an interactive control the Bundu hit-area floor applies to. */
+export function isInteractive(el: Element): boolean {
+  if (carriesHitArea(el) || isCompositeRow(el)) return true;
+  if (el.name === "button" || el.name === "summary") return true;
+  if (HIT_AREA_ROLES.has(el.attribs.role ?? "")) return true;
+  if (el.name === "a") return el.attribs.href !== undefined;
+  if (el.name === "input") return el.attribs.type !== "hidden";
+  return el.name === "select" || el.name === "textarea";
+}
+
+/**
+ * The hit region, in px, an interactive control has at one pointer. It is the drawn height, raised to
+ * HIT_AREA_PX only where the token layer's rule provably does it: a button-like control with no `after:` utility
+ * of its own and no overflow clipping (the pseudo-element), or a composite row with no `min-h-*` of its own
+ * (`min-height`). The runner cannot see static positioning or a page without the stylesheet, so it assumes the
+ * stylesheet is there; everything else is the drawn box.
+ */
+export function hitRegion(el: Element, drawn: number): number {
+  if (isCompositeRow(el))
+    return ownMinHeight(el) ? drawn : Math.max(drawn, HIT_AREA_PX);
+  if (carriesHitArea(el) && !clips(el)) return Math.max(drawn, HIT_AREA_PX);
+  return drawn;
+}
+
+/**
+ * What a density row's control violates of the Bundu floor, as sentences (none for a row the runner cannot read:
+ * `fine` null). `evaluateDensity` and mzizi-rs/contract-eval's `hit_violations` return the same list for the same
+ * markup; `contracts/hit-region-cases.json` is the shared table both are tested against.
+ */
+export function hitViolations(
+  el: Element,
+  fine: number | null,
+  coarse: number | null,
+): string[] {
+  if (fine === null || !isInteractive(el)) return [];
+  const at = coarse ?? fine;
+  const under: string[] = [];
+  if (hitRegion(el, fine) < HIT_AREA_PX)
+    under.push(
+      `hit region is ${hitRegion(el, fine)}px on a fine pointer, below the ${HIT_AREA_PX}px Bundu floor`,
+    );
+  if (hitRegion(el, at) < HIT_AREA_PX)
+    under.push(
+      `hit region is ${hitRegion(el, at)}px on a coarse pointer, below the ${HIT_AREA_PX}px Bundu floor`,
+    );
+  if (carriesHitArea(el) && !clips(el) && fine < VISIBLE_FINE_MIN_PX)
+    under.push(
+      `drawn at ${fine}px on a fine pointer, below the ${VISIBLE_FINE_MIN_PX}px smallest a control is drawn`,
+    );
+  return under;
+}
+
+/**
+ * Density rows whose control is a known, pinned gap against the Bundu floor: `<contract name>:<row part>`.
+ * Each is a link, or a control drawn on a literal Tailwind height (`h-12`, 48px) or smaller than the desktop
+ * minimum, that predates the floor. The set is pinned by `__tests__/density.test.ts`, which also holds it equal to the Rust copy;
+ * the follow-up moves each onto a size role.
+ */
+export const HIT_AREA_GAPS: readonly string[] = [
+  "app/button:sm",
+  "app/command-palette:result row",
+  "app/command-palette:search box",
+  "app/confirm-action:typed confirm box",
+  "app/data-table:menu item",
+  "app/filter-bar:field",
+  "app/form-field:input",
+  "app/form-field:select",
+  "app/info-tip:button",
+  "app/input:input",
+  "app/page-header:docs pill",
+  "app/pagination:page link",
+  "app/plan-summary:action link",
+  "app/side-nav:nav row",
+  "app/tier-status:evidence link",
+  "app/toolbar-menu:choice",
+  "app/toolbar:search box",
+  "app/top-bar-action:action",
+  "app/workspace-switcher:menu item",
+  "discover/breadcrumb:crumb link",
+  "discover/category-chip:chip",
+  "discover/category-chips:chip",
+  "discover/detail-actions:secondary action",
+  "discover/detail-actions:share link",
+  "discover/discover-card:app link",
+  "discover/discover-section:see all",
+  "discover/discover-shell:home link",
+  "discover/discover-shell:nav link",
+  "discover/load-more:link",
+  "discover/meta-list:linked value",
+  "discover/open-in-app:link",
+  "discover/related-rail:see all",
+  "site/hero:call to action",
+  "site/hero:call to action (centred)",
+  "site/social-icon:link",
+  "ui/address-code:link",
+  "ui/address-private-row:link",
+  "ui/address-share-card:link",
+];
 
 type Outcome = { ok: true } | { ok: false; say: string };
 const pass: Outcome = { ok: true };
@@ -387,8 +535,8 @@ function evaluateClause(clause: string, rendered: Rendered): Outcome {
       for (const el of elements(doc(h))) {
         if (el.name !== tag || !carries(el, want ?? "")) continue;
         seen += 1;
-        // The touch floor (Apple HIG: 44x44 pt) is judged on a coarse pointer; a fine pointer's
-        // 24px floor (WCAG 2.2 SC 2.5.8) is held by the density rows and __tests__/density.test.ts.
+        // The Bundu hit area (49px) is judged on a coarse pointer here; a fine pointer's hit region is
+        // held by the density rows (`evaluateDensity`) and __tests__/density.test.ts.
         const cls = el.attribs.class ?? "";
         const px = heightOf(cls, "pointer-coarse:") ?? heightOf(cls);
         if (px === null)
@@ -537,6 +685,14 @@ export function evaluateDensity(
         failures.push(
           `density ${row.part}: coarse pointer is ${coarse}px, the contract says ${row.coarse}`,
         );
+      // The Bundu floor (owner ruling 2026-11-02): every interactive control keeps a HIT_AREA_PX hit
+      // region on every device, desktop included. A button-like control keeps it through the
+      // `hit-area` pseudo-element and may be drawn down to VISIBLE_FINE_MIN_PX; a native field or a
+      // link has only its box, so it is drawn at the floor.
+      const gap = HIT_AREA_GAPS.includes(`${contract.name}:${row.part}`);
+      if (!gap)
+        for (const u of hitViolations(el, fine, coarse))
+          failures.push(`density ${row.part}: ${u}`);
     }
   }
   return failures;

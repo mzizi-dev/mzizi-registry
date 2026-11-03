@@ -187,14 +187,14 @@
       "part": "call to action",
       "select": "[data-slot=\"button\"]",
       "fine": 36,
-      "coarse": 44
+      "coarse": 49
     },
     {
       "part": "call to action (centred)",
       "state": "centered",
       "select": "[data-slot=\"button\"]",
       "fine": 36,
-      "coarse": 44
+      "coarse": 49
     }
   ],
   "theming": {

@@ -95,7 +95,7 @@ export function MziziApplicationTracker({
         >
           {jobTitle}
         </h3>
-        <p className="text-[11px] text-muted-foreground">{company}</p>
+        <p className="text-sm text-muted-foreground">{company}</p>
       </div>
       <div className="space-y-0">
         {stages.map((s, i) => (
@@ -103,7 +103,7 @@ export function MziziApplicationTracker({
             <div className="flex flex-col items-center">
               <div
                 className={cn(
-                  "flex size-6 items-center justify-center rounded-full text-[11px]",
+                  "flex size-6 items-center justify-center rounded-full text-sm",
                   s.stage === "rejected" || s.stage === "withdrawn"
                     ? "bg-[var(--status-error,#FF5252)]/10 text-red-400"
                     : s.active
@@ -130,9 +130,9 @@ export function MziziApplicationTracker({
               >
                 {s.stage.replace("-", " ")}
               </p>
-              {s.date && <p className="text-[10px] text-muted-foreground">{s.date}</p>}
+              {s.date && <p className="text-sm text-muted-foreground">{s.date}</p>}
               {s.note && (
-                <p className="mt-0.5 text-[10px] text-muted-foreground italic">{s.note}</p>
+                <p className="mt-0.5 text-sm text-muted-foreground italic">{s.note}</p>
               )}
             </div>
           </div>

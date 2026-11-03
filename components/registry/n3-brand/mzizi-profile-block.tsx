@@ -258,7 +258,7 @@ export function MziziProfileBlock({
       </div>
 
       {/* Subtitle */}
-      {subtitle && <p className="mt-1 text-[13px] text-muted-foreground">{subtitle}</p>}
+      {subtitle && <p className="mt-1 text-sm text-muted-foreground">{subtitle}</p>}
 
       {/* ═══ TRUST INDICATORS (profile-only expanded view) ═══ */}
       {showTrustIndicators && (
@@ -267,7 +267,7 @@ export function MziziProfileBlock({
           <div className="flex items-center justify-center gap-3">
             {/* Verification tier pill */}
             <span
-              className="inline-flex items-center gap-1.5 rounded-full px-2.5 py-1 text-[11px] font-semibold"
+              className="inline-flex items-center gap-1.5 rounded-full px-2.5 py-1 text-sm font-semibold"
               style={{ backgroundColor: tierConfig.bg, color: tierConfig.fg }}
             >
               <Shield className="size-3" strokeWidth={2.5} />
@@ -275,7 +275,7 @@ export function MziziProfileBlock({
             </span>
             {/* Status pill */}
             <span
-              className="inline-flex items-center gap-1.5 rounded-full px-2.5 py-1 text-[11px] font-semibold"
+              className="inline-flex items-center gap-1.5 rounded-full px-2.5 py-1 text-sm font-semibold"
               style={{ backgroundColor: statusConfig.bg, color: statusConfig.color }}
             >
               <Activity className="size-3" strokeWidth={2.5} />
@@ -286,7 +286,7 @@ export function MziziProfileBlock({
           {/* Row 2: Trust score meter */}
           {trustScore != null && (
             <div className="flex flex-col items-center gap-1.5">
-              <div className="flex w-full items-center justify-between text-[11px]">
+              <div className="flex w-full items-center justify-between text-sm">
                 <span className="flex items-center gap-1 font-medium text-muted-foreground">
                   <TrendingUp className="size-3" />
                   Trust Score
@@ -307,7 +307,7 @@ export function MziziProfileBlock({
               </div>
               {/* Ubuntu points */}
               {ubuntuPoints != null && (
-                <span className="flex items-center gap-1 text-[10px] text-muted-foreground">
+                <span className="flex items-center gap-1 text-sm text-muted-foreground">
                   <Star
                     className="size-2.5"
                     style={{ color: "var(--color-gold, var(--color-gold,#FFD740))" }}

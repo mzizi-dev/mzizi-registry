@@ -62,7 +62,7 @@ function CalendarMonthView({
           <div
             key={d}
             role="columnheader"
-            className="py-2 text-center text-[10px] font-medium text-muted-foreground"
+            className="py-2 text-center text-sm font-medium text-muted-foreground"
           >
             {d}
           </div>

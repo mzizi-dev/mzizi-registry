@@ -128,7 +128,7 @@ function MziziRSVPButton({
         {label}
       </button>
       {spotsRemaining != null && status === "none" && (
-        <span className="text-center text-[11px] text-muted-foreground">
+        <span className="text-center text-sm text-muted-foreground">
           {spotsRemaining} spots remaining
         </span>
       )}

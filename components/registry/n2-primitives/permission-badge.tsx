@@ -9,7 +9,7 @@ import { cn } from "@/lib/utils"
  * `-text` role, which the token gate holds to APCA Lc 75 on the page in both themes.
  */
 const permissionBadgeVariants = cva(
-  "inline-flex h-5 items-center gap-1 rounded-full px-2 py-0.5 text-xs font-medium capitalize",
+  "inline-flex h-6 items-center gap-1 rounded-full px-2 py-0.5 text-xs font-medium capitalize leading-none",
   {
     variants: {
       variant: {

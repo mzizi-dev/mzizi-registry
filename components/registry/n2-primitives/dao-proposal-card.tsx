@@ -64,7 +64,7 @@ function DaoProposalCard({
         </h3>
         <span
           className={cn(
-            "shrink-0 rounded-full px-2 py-0.5 text-[10px] font-medium capitalize",
+            "shrink-0 rounded-full px-2 py-0.5 text-sm font-medium capitalize",
             statusStyles[status]
           )}
         >
@@ -76,7 +76,7 @@ function DaoProposalCard({
       )}
 
       <div className="mt-1.5 flex items-center gap-2 text-xs text-muted-foreground">
-        <div className="flex size-5 items-center justify-center rounded-full bg-muted text-[8px] font-medium">
+        <div className="flex h-6 min-w-6 px-1 items-center justify-center rounded-full bg-muted text-sm font-medium leading-none">
           {proposerAvatar ? (
             <img src={proposerAvatar} alt="" className="size-full rounded-full object-cover" />
           ) : (
@@ -96,7 +96,7 @@ function DaoProposalCard({
           />
           <div className="h-full bg-destructive" style={{ width: `${againstPct}%` }} />
         </div>
-        <div className="mt-1.5 flex justify-between text-[10px]">
+        <div className="mt-1.5 flex justify-between text-sm">
           <span className="text-[var(--color-malachite,#64FFDA)]">
             For {votesFor.toLocaleString()} ({forPct.toFixed(0)}%)
           </span>
@@ -105,7 +105,7 @@ function DaoProposalCard({
           </span>
         </div>
         {quorumPct !== undefined && currentQuorumPct !== undefined && (
-          <div className="mt-1 text-[10px] text-muted-foreground">
+          <div className="mt-1 text-sm text-muted-foreground">
             Quorum: {currentQuorumPct.toFixed(0)}% / {quorumPct}% required
           </div>
         )}

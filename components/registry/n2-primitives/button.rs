@@ -189,7 +189,7 @@ pub const CONTRACT: &str = r#"contract
   slot is "button"
   portal is "https://mzizi.dev/components/button"
   class contains "rounded-full"
-  button "Save" min_height 44
+  button "Save" min_height 49
   when outline class contains "border-border"
   when sm class contains "h-control-sm"
 end"#;

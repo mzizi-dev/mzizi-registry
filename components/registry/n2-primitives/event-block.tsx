@@ -38,12 +38,12 @@ function EventBlock({
       style={{ borderLeftColor: color, backgroundColor: `${color}15` }}
       {...props}
     >
-      <div className={cn("truncate font-medium", compact ? "text-[10px]" : "text-xs")}>{title}</div>
+      <div className={cn("truncate font-medium", compact ? "text-sm" : "text-xs")}>{title}</div>
       {/* `category` was destructured and never rendered, and the meta line was
           gated on `startTime` alone — so an all-day event carrying only a
           category showed nothing below the title. */}
       {!compact && (startTime || category) && (
-        <div className="text-[10px] text-muted-foreground">
+        <div className="text-sm text-muted-foreground">
           {startTime ? `${startTime}${endTime ? ` – ${endTime}` : ""}` : ""}
           {startTime && category ? " · " : ""}
           {category ?? ""}

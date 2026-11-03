@@ -60,7 +60,7 @@ function LocationPicker({
           {value ? (
             <div className="flex flex-col items-center gap-1">
               <div className="size-4 rounded-full border-3 border-white bg-[var(--color-malachite,#64FFDA)] shadow-md" />
-              <span className="rounded-full bg-background/80 px-2 py-0.5 font-mono text-[9px] text-muted-foreground backdrop-blur-sm">
+              <span className="rounded-full bg-background/80 px-2 py-0.5 font-mono text-sm text-muted-foreground backdrop-blur-sm">
                 {value.lat.toFixed(4)}, {value.lng.toFixed(4)}
               </span>
             </div>

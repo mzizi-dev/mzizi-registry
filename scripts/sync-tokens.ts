@@ -1177,7 +1177,7 @@ const norm = (s: string) => s.replace(/\s+/g, "")
  * \`decorative\` ui role is exempt from the Lc 30 bar; both are printed, never silent.
  */
 function gate(resolved: Map<string, ResolvedRole>) {
-  const { results, violations, pending, decorative } = roleGate(resolved)
+  const { results, violations, pending, decorative, wcagExceptions } = roleGate(resolved)
   if (violations.length) {
     fail(`role contrast gate (lib/tokens/roles.source.ts): ${violations.length} violation(s)\n  ${violations.join("\n  ")}`)
   }
@@ -1194,6 +1194,9 @@ function gate(resolved: Map<string, ResolvedRole>) {
     console.log(
       `  decorative, exempt from the Lc 30 ui bar (never the only cue): ${decorative.map((d) => d.role).join(", ")}`
     )
+  }
+  for (const e of wcagExceptions) {
+    console.log(`  WCAG exception, ${e.role}: ${e.min}:1 instead of ${e.floor}:1 (APCA still applies): ${e.reason}`)
   }
 }
 

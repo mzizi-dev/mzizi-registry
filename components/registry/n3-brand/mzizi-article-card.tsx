@@ -107,7 +107,7 @@ function MziziArticleCard({
         <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/40 to-transparent" />
         <div className="relative z-10">
           {category && (
-            <span className="mb-2 inline-flex rounded-full bg-white/20 px-2 py-0.5 text-[10px] font-semibold tracking-wider text-white uppercase">
+            <span className="mb-2 inline-flex rounded-full bg-white/20 px-2 py-0.5 text-sm font-semibold tracking-wider text-white uppercase">
               {category}
             </span>
           )}
@@ -146,13 +146,13 @@ function MziziArticleCard({
         )}
         <div className="p-4">
           {category && (
-            <span className="text-[10px] font-semibold tracking-wider text-muted-foreground uppercase">
+            <span className="text-sm font-semibold tracking-wider text-muted-foreground uppercase">
               {category}
             </span>
           )}
           <h4 className="mt-1 line-clamp-2 text-sm font-medium text-foreground">{title}</h4>
           {excerpt && <p className="mt-1 line-clamp-2 text-xs text-muted-foreground">{excerpt}</p>}
-          <div className="mt-2 flex items-center justify-between text-[10px] text-muted-foreground">
+          <div className="mt-2 flex items-center justify-between text-sm text-muted-foreground">
             <span>{sourceName || authorName}</span>
             <div className="flex items-center gap-2">
               {readTime && <span>{readTime}</span>}
@@ -180,7 +180,7 @@ function MziziArticleCard({
     >
       <div className="min-w-0 flex-1">
         {category && (
-          <span className="text-[10px] font-semibold tracking-wider text-muted-foreground uppercase">
+          <span className="text-sm font-semibold tracking-wider text-muted-foreground uppercase">
             {category}
           </span>
         )}
@@ -202,7 +202,7 @@ function MziziArticleCard({
         </div>
         {fcConfig && FcIcon && (
           <span
-            className="mt-1 flex items-center gap-1 text-[10px] font-medium"
+            className="mt-1 flex items-center gap-1 text-sm font-medium"
             style={{ color: fcConfig.color }}
           >
             <FcIcon className="size-3" />

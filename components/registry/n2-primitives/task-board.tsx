@@ -64,7 +64,7 @@ function TaskBoard({
           {labels.map((l, i) => (
             <span
               key={i}
-              className="rounded-full px-1.5 py-0.5 text-[9px] font-medium"
+              className="rounded-full px-1.5 py-0.5 text-sm font-medium"
               style={{
                 backgroundColor: `${l.color || "var(--status-success, var(--color-malachite, #64FFDA))"}20`,
                 color: l.color || "var(--status-success, var(--color-malachite, #64FFDA))",
@@ -87,7 +87,7 @@ function TaskBoard({
         </div>
       </div>
       <div className="mt-2 flex items-center justify-between">
-        <div className="flex items-center gap-2 text-[10px] text-muted-foreground">
+        <div className="flex items-center gap-2 text-sm text-muted-foreground">
           {dueDate && (
             <span className={isOverdue ? "font-medium text-destructive" : ""}>
               {new Date(dueDate).toLocaleDateString(undefined, { month: "short", day: "numeric" })}
@@ -101,7 +101,7 @@ function TaskBoard({
         </div>
         {assignee && (
           <div
-            className="flex size-6 items-center justify-center rounded-full bg-muted text-[9px] font-medium"
+            className="flex size-6 items-center justify-center rounded-full bg-muted text-sm font-medium"
             title={assignee.name}
           >
             {assignee.avatar ? (

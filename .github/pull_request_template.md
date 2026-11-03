@@ -33,7 +33,7 @@ Brief description of what this PR does and why.
 - [ ] All packages at latest (run `pnpm outdated` — zero results allowed)
 - [ ] No hardcoded colors — using CSS custom properties from `globals.css`
 - [ ] Brand wordmarks are lowercase: `mukoko`, `nyuchi`, `shamwari`, `bundu`
-- [ ] Accessibility: APCA Lc 90+ body text, Lc 75+ large text, 44px touch targets on a coarse pointer (Apple HIG), 36px at desktop density, never below 24px
+- [ ] Accessibility (the Bundu floor, `BUNDU_FLOOR` in `lib/tokens/roles.source.ts`): body text 17px and captions 14px, a 49px hit region on every control on every device (a desktop control may be drawn smaller but keeps it), contrast 7:1 body, 4.5:1 non-body, 3:1 UI
 - [ ] Ubuntu design checklist: shared devices, 3G performant, localisable strings
 - [ ] AI output runs through `fullSafetyCheck()` + `validateCulturalContext()` (if AI features touched)
 

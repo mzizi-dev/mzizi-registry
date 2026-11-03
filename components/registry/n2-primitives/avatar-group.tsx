@@ -24,7 +24,7 @@ function AvatarGroupStack({
   const remaining = users.length - max
 
   const sizeClasses = {
-    sm: "size-6 text-[10px]",
+    sm: "size-6 text-sm",
     default: "size-8 text-xs",
     lg: "size-10 text-sm",
   }

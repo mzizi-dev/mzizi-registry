@@ -62,7 +62,7 @@ function MediaFilterStrip({
           </div>
           <span
             className={cn(
-              "text-[10px] font-medium",
+              "text-sm font-medium",
               selectedId === filter.id ? "text-[var(--color-malachite,#64FFDA)]" : "text-white/60"
             )}
           >
