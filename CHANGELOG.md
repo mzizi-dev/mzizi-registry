@@ -10,6 +10,10 @@ From 2026-10-04 releases follow the org versioning policy ([nyuchi/.github#80](h
 
 ## [Unreleased]
 
+### Changed — AGENTS.md gains a "Merge convention" section for the new `staging` queue rules (2026-11-03, #PRNUM)
+
+Documentation only; no shipped content, API response or package changes. The section records squash through the merge queue (`gh pr merge <n> --squash --auto`, never `--admin`); the `staging` queue's target config (`SQUASH` and no 5-minute wait, applied by the owner in the repository rulesets, and verified live on 2026-11-03 as still `REBASE` with the wait); the linear-branch rule until it lands, because a rebase queue drops a branch with a merge commit (`MERGE_CONFLICT`); enqueue as soon as the merge gate is met; the issue line every PR body needs; forward-porting `main`-only commits (the pin bots') to `staging` before a release, and comparing trees, not counts, after a squash release; and that minors and patches release automatically while only a major needs the owner's go-ahead.
+
 ### Changed — the Bundu floor: body text 17px, captions 14px, a 49px hit region on every control, on every device (2026-11-02, [#597](https://github.com/mzizi-dev/mzizi-registry/issues/597))
 
 Owner rulings, 2026-11-02: the minimum must be as high as possible, because Bundu sets the standard for outdoor reading and for people who find technology hard (older users, African and emerging markets), and it is a standard Bundu will stand by. Text: "it's either 14px or 17". Hit area: 7 x 7 = 49px, above Apple's 44. The radii stay exactly 4/7/12/14/17 and a pill (the 7px unit). **Breaking for visual size:** an app that takes this version without `data-mzizi-sizes="legacy"` gets larger text and larger controls. The migration note is `docs/sizes-and-density.md`.
