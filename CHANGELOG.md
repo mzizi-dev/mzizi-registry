@@ -10,6 +10,10 @@ From 2026-10-04 releases follow the org versioning policy ([nyuchi/.github#80](h
 
 ## [Unreleased]
 
+## [4.23.0] - 2026-11-03
+
+Releases `staging` to `main` as the next minor above v4.22.x ([nyuchi/.github#80](https://github.com/nyuchi/.github/issues/80); highest tag v4.22.2). `package.json`, `README.md` and `content/changelog/releases.json` (and `lib/changelog.generated.ts`, generated from it) carry 4.23.0. The headline is the Bundu floor (#597, #614): body text 17px, captions 14px and a 49px hit region on every control, on every device, with the WCAG 7:1, 4.5:1 and 3:1 contrast floors (#610, carried by #614). It is **breaking for visual size** (an app that takes it without `data-mzizi-sizes="legacy"` gets larger text and controls) and a minor under the standing policy: only a major version bump needs the owner's approval, and v1 is far away.
+
 ### Changed — the Bundu floor: body text 17px, captions 14px, a 49px hit region on every control, on every device (2026-11-02, [#597](https://github.com/mzizi-dev/mzizi-registry/issues/597))
 
 Owner rulings, 2026-11-02: the minimum must be as high as possible, because Bundu sets the standard for outdoor reading and for people who find technology hard (older users, African and emerging markets), and it is a standard Bundu will stand by. Text: "it's either 14px or 17". Hit area: 7 x 7 = 49px, above Apple's 44. The radii stay exactly 4/7/12/14/17 and a pill (the 7px unit). **Breaking for visual size:** an app that takes this version without `data-mzizi-sizes="legacy"` gets larger text and larger controls. The migration note is `docs/sizes-and-density.md`.
