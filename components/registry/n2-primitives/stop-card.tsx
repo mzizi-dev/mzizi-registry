@@ -44,7 +44,7 @@ function StopCard({
           <div className="text-xs text-muted-foreground">{typeLabels[type]}</div>
         </div>
         {distance && (
-          <span className="rounded-full bg-muted px-2 py-0.5 text-[10px] font-medium text-muted-foreground">
+          <span className="rounded-full bg-muted px-2 py-0.5 text-sm font-medium text-muted-foreground">
             {distance}
           </span>
         )}

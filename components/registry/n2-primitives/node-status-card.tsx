@@ -51,15 +51,15 @@ function NodeStatusCard({
       </div>
       <div className="mt-3 grid grid-cols-2 gap-3">
         <div>
-          <div className="text-[10px] text-muted-foreground">Uptime</div>
+          <div className="text-sm text-muted-foreground">Uptime</div>
           <div className="text-sm font-medium tabular-nums">{uptime.toFixed(1)}%</div>
         </div>
         <div>
-          <div className="text-[10px] text-muted-foreground">Peers</div>
+          <div className="text-sm text-muted-foreground">Peers</div>
           <div className="text-sm font-medium tabular-nums">{peerCount}</div>
         </div>
         <div>
-          <div className="text-[10px] text-muted-foreground">Storage</div>
+          <div className="text-sm text-muted-foreground">Storage</div>
           <div className="text-sm font-medium tabular-nums">
             {storageUsedGB}/{storageTotalGB} GB
           </div>
@@ -71,13 +71,13 @@ function NodeStatusCard({
           </div>
         </div>
         <div>
-          <div className="text-[10px] text-muted-foreground">NHC Earned</div>
+          <div className="text-sm text-muted-foreground">NHC Earned</div>
           <div className="text-sm font-medium text-[var(--color-gold,#FFD740)] tabular-nums">
             {nhcEarned.toLocaleString()}
           </div>
         </div>
       </div>
-      <div className="mt-2 truncate font-mono text-[9px] text-muted-foreground">{nodeId}</div>
+      <div className="mt-2 truncate font-mono text-sm text-muted-foreground">{nodeId}</div>
     </div>
   )
 }

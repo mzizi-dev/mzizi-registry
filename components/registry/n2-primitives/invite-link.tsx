@@ -56,7 +56,7 @@ function InviteLink({
           {copied ? "Copied!" : "Copy"}
         </button>
       </div>
-      <div className="mt-2 flex items-center gap-3 text-[10px] text-muted-foreground">
+      <div className="mt-2 flex items-center gap-3 text-sm text-muted-foreground">
         {expiresAt && <span>Expires {new Date(expiresAt).toLocaleDateString()}</span>}
         {usageCount !== undefined && (
           <span>

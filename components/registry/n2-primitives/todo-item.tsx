@@ -7,7 +7,7 @@ import { Calendar } from "@/lib/icons"
 import { cn } from "@/lib/utils"
 
 const priorityVariants = cva(
-  "inline-flex rounded-full px-2 py-0.5 text-[10px] font-medium uppercase tracking-wider",
+  "inline-flex rounded-full px-2 py-0.5 text-sm font-medium uppercase tracking-wider",
   {
     variants: {
       priority: {

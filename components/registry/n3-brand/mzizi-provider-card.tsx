@@ -108,8 +108,8 @@ export function MziziProviderCard({
               </span>
             )}
           </div>
-          <p className="text-[11px] text-muted-foreground">{specialty}</p>
-          <div className="mt-1 flex items-center gap-2 text-[10px] text-muted-foreground">
+          <p className="text-sm text-muted-foreground">{specialty}</p>
+          <div className="mt-1 flex items-center gap-2 text-sm text-muted-foreground">
             {rating && (
               <span className="font-medium" style={{ color: "var(--color-gold,#FFD740)" }}>
                 ★ {rating}
@@ -128,7 +128,7 @@ export function MziziProviderCard({
       {(nextSlot || onBook) && (
         <div className="mt-3 flex items-center justify-between">
           {nextSlot && (
-            <p className="text-[11px] text-muted-foreground">
+            <p className="text-sm text-muted-foreground">
               Next: <span className="font-medium text-foreground">{nextSlot}</span>
             </p>
           )}
@@ -139,7 +139,7 @@ export function MziziProviderCard({
                 onBook()
               }}
               className={cn(
-                "h-10 rounded-full px-4 text-[12px] font-medium transition-opacity hover:opacity-80",
+                "h-10 rounded-full px-4 text-sm font-medium transition-opacity hover:opacity-80",
                 available
                   ? "bg-[var(--brand-accent,var(--color-malachite,#64FFDA))] text-[var(--brand-accent-foreground,#0A0A0A)]"
                   : "bg-muted text-muted-foreground"

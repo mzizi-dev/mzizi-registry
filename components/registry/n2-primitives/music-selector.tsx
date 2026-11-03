@@ -76,7 +76,7 @@ function MusicSelector({
               <div className="truncate text-sm font-medium">{track.title}</div>
               <div className="truncate text-xs text-muted-foreground">{track.artist}</div>
             </div>
-            <span className="font-mono text-[10px] text-muted-foreground tabular-nums">
+            <span className="font-mono text-sm text-muted-foreground tabular-nums">
               {track.duration}
             </span>
             {selectedId === track.id && <span className="text-primary">✓</span>}

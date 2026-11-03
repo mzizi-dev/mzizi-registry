@@ -193,7 +193,7 @@ function MziziNotificationItem({
         {message && (
           <div className="mt-0.5 line-clamp-2 text-xs text-muted-foreground">{message}</div>
         )}
-        <div className="mt-1 text-[10px] text-muted-foreground/60">{time}</div>
+        <div className="mt-1 text-sm text-muted-foreground/60">{time}</div>
       </div>
       {/* Unread dot */}
       {!read && <div className="mt-2 size-2 shrink-0 rounded-full bg-[var(--color-malachite)]" />}

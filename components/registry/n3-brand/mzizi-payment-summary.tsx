@@ -122,7 +122,7 @@ export function MziziPaymentSummary({
         >
           {title}
         </h3>
-        {subtitle && <p className="mt-0.5 text-[11px] text-muted-foreground">{subtitle}</p>}
+        {subtitle && <p className="mt-0.5 text-sm text-muted-foreground">{subtitle}</p>}
       </div>
 
       {/* Line items */}
@@ -168,7 +168,7 @@ export function MziziPaymentSummary({
 
       {/* Payment method + escrow */}
       {(paymentMethod || escrow) && (
-        <div className="flex items-center justify-between border-t border-border px-4 py-2.5 text-[11px] text-muted-foreground">
+        <div className="flex items-center justify-between border-t border-border px-4 py-2.5 text-sm text-muted-foreground">
           {paymentMethod && <span>💳 {paymentMethod}</span>}
           {escrow && (
             <span className="rounded-full bg-[var(--color-malachite,#64FFDA)]/10 px-2 py-0.5 font-medium text-[var(--color-malachite,#64FFDA)]">

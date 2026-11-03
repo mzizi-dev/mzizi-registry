@@ -104,7 +104,7 @@ function SplitBill({
               p.paid && "opacity-60"
             )}
           >
-            <div className="flex size-8 items-center justify-center rounded-full bg-muted text-[10px] font-medium">
+            <div className="flex size-8 items-center justify-center rounded-full bg-muted text-sm font-medium">
               {p.avatar ? (
                 <img src={p.avatar} alt="" className="size-full rounded-full object-cover" />
               ) : (
@@ -127,7 +127,7 @@ function SplitBill({
               <span className="text-sm font-medium tabular-nums">{equalShare.toFixed(2)}</span>
             )}
             {p.paid && (
-              <span className="text-[10px] text-[var(--color-malachite,#64FFDA)]">Paid</span>
+              <span className="text-sm text-[var(--color-malachite,#64FFDA)]">Paid</span>
             )}
           </div>
         ))}

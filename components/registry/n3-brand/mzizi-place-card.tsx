@@ -284,7 +284,7 @@ function MziziPlaceCard({
             {/* The name is the card's text, so the image is decorative. */}
             <img src={image} alt="" {...imageLoading} className="size-full object-cover" />
             {distance && (
-              <span className="absolute bottom-2 left-2 flex items-center gap-1 rounded-full bg-black/50 px-2 py-0.5 text-[10px] font-medium text-white backdrop-blur-sm">
+              <span className="absolute bottom-2 left-2 flex items-center gap-1 rounded-full bg-black/50 px-2 py-0.5 text-sm font-medium text-white backdrop-blur-sm">
                 <Navigation className="size-2.5" aria-hidden="true" />
                 {distance}
               </span>
@@ -372,7 +372,7 @@ function MziziPlaceCard({
               {rating.toFixed(1)}
             </span>
           )}
-          {openNow != null && <span className="text-[10px] font-medium">{openFlag}</span>}
+          {openNow != null && <span className="text-sm font-medium">{openFlag}</span>}
         </div>
       </div>
       {footerNode}

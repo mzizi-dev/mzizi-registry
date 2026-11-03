@@ -92,7 +92,7 @@ function MziziProgrammeItem({
       <div className={cn("min-w-0 flex-1 pb-6", isLast && "pb-0")}>
         <div className="flex items-baseline justify-between gap-2">
           <span className="text-xs font-medium text-muted-foreground">{time}</span>
-          {duration && <span className="text-[10px] text-muted-foreground/60">{duration}</span>}
+          {duration && <span className="text-sm text-muted-foreground/60">{duration}</span>}
         </div>
         <h4
           className={cn(

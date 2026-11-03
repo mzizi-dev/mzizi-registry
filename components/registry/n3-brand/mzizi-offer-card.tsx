@@ -110,14 +110,14 @@ function MziziOfferCard({
           />
           {hasDiscount && (
             <span
-              className="absolute top-2 left-2 rounded-full px-2 py-0.5 text-[10px] font-bold text-background"
+              className="absolute top-2 left-2 rounded-full px-2 py-0.5 text-sm font-bold text-background"
               style={{ backgroundColor: accent }}
             >
               -{discountPercent}%
             </span>
           )}
           {condition && condition !== "new" && (
-            <span className="absolute top-2 right-2 rounded-full bg-black/50 px-2 py-0.5 text-[10px] font-medium text-white capitalize backdrop-blur-sm">
+            <span className="absolute top-2 right-2 rounded-full bg-black/50 px-2 py-0.5 text-sm font-medium text-white capitalize backdrop-blur-sm">
               {condition}
             </span>
           )}
@@ -125,7 +125,7 @@ function MziziOfferCard({
       )}
       <div className="p-3">
         {category && (
-          <span className="text-[10px] font-semibold tracking-wider text-muted-foreground uppercase">
+          <span className="text-sm font-semibold tracking-wider text-muted-foreground uppercase">
             {category}
           </span>
         )}

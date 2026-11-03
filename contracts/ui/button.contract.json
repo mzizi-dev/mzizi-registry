@@ -5,7 +5,7 @@
   "version": "1.0.0",
   "node": 2,
   "kind": "primitive",
-  "summary": "The registry button: a pill <button> with a 44px default target on touch (Apple HIG; 36px at desktop density, never below 24px) and six variants.",
+  "summary": "The registry button: a pill <button> with a 49px default target on touch (the Bundu hit area; drawn at 36px at desktop density, with the 49px hit region kept) and six variants.",
   "implementations": {
     "astro": {
       "registry": "button",
@@ -45,7 +45,7 @@
       "required": false,
       "default": "default",
       "values": ["default", "sm", "lg", "icon", "icon-sm"],
-      "description": "Heights come from the size roles: default 44 / 44 / 48px (sm, lg) on touch and 36 / 32 / 40px at desktop density; icon sizes are 44px and 32px (sm) squares on touch."
+      "description": "Heights come from the size roles: default 49 / 49 / 56px (sm, lg) on touch and 36 / 32 / 40px drawn at desktop density, each with a 49px hit region; icon sizes are 49px and 32px (sm) squares."
     },
     {
       "name": "type",
@@ -75,7 +75,7 @@
   ],
   "behaviour": [
     "data-variant and data-size carry the variant and size.",
-    "Never below a 44px touch target on a coarse pointer, nor 24px on a fine one."
+    "Never below a 49px hit region on any pointer, desktop included: below 49px drawn, the token layer's `hit-area` pseudo-element keeps it, and a button is never drawn under 28px."
   ],
   "states": {
     "default": {
@@ -123,14 +123,14 @@
       "part": "default",
       "select": "button",
       "fine": 36,
-      "coarse": 44
+      "coarse": 49
     },
     {
       "part": "sm",
       "state": "sm",
       "select": "button",
       "fine": 32,
-      "coarse": 44
+      "coarse": 49
     }
   ],
   "theming": {
@@ -153,7 +153,7 @@
     "without": "Everything: the component is server-rendered HTML with no script."
   },
   "responsive": ["Inline; sized by its label."],
-  "contract": "contract\n  slot is \"button\"\n  portal is \"https://mzizi.dev/components/button\"\n  class contains \"rounded-full\"\n  button \"Save\" min_height 44\n  when outline class contains \"border-border\"\n  when sm class contains \"h-control-sm\"\nend",
+  "contract": "contract\n  slot is \"button\"\n  portal is \"https://mzizi.dev/components/button\"\n  class contains \"rounded-full\"\n  button \"Save\" min_height 49\n  when outline class contains \"border-border\"\n  when sm class contains \"h-control-sm\"\nend",
   "checks": [
     {
       "say": "The default variant and size.",

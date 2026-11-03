@@ -225,7 +225,7 @@ export function MziziSidebar({
         {footer ?? (
           <div className="flex items-center justify-between px-2 py-1">
             <ThemeToggle />
-            <span className="font-mono text-[10px] text-muted-foreground">v4.0.1</span>
+            <span className="font-mono text-sm text-muted-foreground">v4.0.1</span>
           </div>
         )}
       </SidebarFooter>

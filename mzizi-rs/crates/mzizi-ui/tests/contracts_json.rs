@@ -25,8 +25,8 @@ use serde_json::Value;
 #[path = "../../../contract-eval/contract_eval.rs"]
 mod contract_eval;
 use contract_eval::{
-    Case, Rendered, declared_height, declared_height_at, holds, inline_styles, render, select,
-    tokens,
+    Case, HIT_AREA_GAPS, Rendered, declared_height, declared_height_at, hit_region, hit_violations,
+    holds, inline_styles, parse, render, select, tokens,
 };
 
 fn repo() -> PathBuf {
@@ -519,6 +519,16 @@ fn run_density(name: &str, case: &Case, row: &Value) {
         row["coarse"].as_u64(),
         "{name}: density `{part}` (coarse)"
     );
+    // The Bundu floor: every interactive control keeps a HIT_AREA_PX hit region on every device.
+    if !HIT_AREA_GAPS.contains(&format!("{name}:{part}").as_str()) {
+        let coarse = coarse_height(classes, fine);
+        let under = hit_violations(hit, fine, coarse);
+        assert!(
+            under.is_empty(),
+            "{name}: density `{part}`: {}",
+            under.join("; ")
+        );
+    }
 }
 
 // ─── The suite ──────────────────────────────────────────────────────────────────────────────
@@ -789,4 +799,34 @@ fn case_check_fails_a_component_that_renders_an_inline_style() {
         allowed_styles: &[],
     }
     .check();
+}
+
+/// The Bundu floor's hit-region rules, answered identically to `hitViolations` in `contracts/runner.ts`
+/// (`contracts/hit-region-cases.json` is the shared table; `__tests__/density.test.ts` runs the same rows).
+#[test]
+fn hit_region_cases_match_the_typescript_runner() {
+    let cases: Value = serde_json::from_str(
+        &fs::read_to_string(repo().join("contracts/hit-region-cases.json")).unwrap(),
+    )
+    .unwrap();
+    for case in cases["cases"].as_array().unwrap() {
+        let name = case["name"].as_str().unwrap();
+        let nodes = parse(case["html"].as_str().unwrap());
+        let node = nodes
+            .iter()
+            .find(|n| !n.tag().is_empty())
+            .unwrap_or_else(|| panic!("{name}: no element"));
+        let px = |k: &str| case[k].as_u64().map(|v| v as u32);
+        let got = hit_violations(node, px("fine"), px("coarse"));
+        assert_eq!(
+            got.len() as u64,
+            case["violations"].as_u64().unwrap(),
+            "{name}: {got:?}"
+        );
+    }
+    // A `hit_region` of a covered button is raised to the floor; a link is its drawn box.
+    let button = &parse("<button class=\"h-9\">x</button>")[0];
+    assert_eq!(hit_region(button, 36), 49);
+    let link = &parse("<a href=\"/\" class=\"h-9\">x</a>")[0];
+    assert_eq!(hit_region(link, 36), 36);
 }

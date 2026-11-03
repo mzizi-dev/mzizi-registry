@@ -46,12 +46,12 @@ function MedicationReminder({
           <div className="text-xs text-muted-foreground">
             {dosage} · {scheduledTime}
           </div>
-          {frequency && <div className="text-[10px] text-muted-foreground">{frequency}</div>}
+          {frequency && <div className="text-sm text-muted-foreground">{frequency}</div>}
         </div>
         {adherenceRate !== undefined && (
           <div className="text-right">
             <div className="text-xs font-medium tabular-nums">{adherenceRate}%</div>
-            <div className="text-[9px] text-muted-foreground">adherence</div>
+            <div className="text-sm text-muted-foreground">adherence</div>
           </div>
         )}
       </div>

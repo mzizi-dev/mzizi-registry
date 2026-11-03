@@ -75,10 +75,10 @@ function RouteCard({
     >
       {/* Mode badge */}
       <div className="flex flex-col items-center gap-1">
-        <span className={cn("rounded-full px-2 py-0.5 text-[10px] font-bold", modeColors[mode])}>
+        <span className={cn("rounded-full px-2 py-0.5 text-sm font-bold", modeColors[mode])}>
           {modeLabels[mode]}
         </span>
-        <span className="text-[10px] font-medium text-muted-foreground">{routeName}</span>
+        <span className="text-sm font-medium text-muted-foreground">{routeName}</span>
       </div>
 
       {/* Route details */}
@@ -89,10 +89,10 @@ function RouteCard({
             <div className="truncate text-sm font-medium">{from.name}</div>
           </div>
           <div className="flex flex-col items-center px-2">
-            <div className="text-[10px] text-muted-foreground">{durationStr}</div>
+            <div className="text-sm text-muted-foreground">{durationStr}</div>
             <div className="my-0.5 h-px w-12 bg-border" />
             {stopCount && (
-              <div className="text-[10px] text-muted-foreground">{stopCount} stops</div>
+              <div className="text-sm text-muted-foreground">{stopCount} stops</div>
             )}
           </div>
           <div className="flex-1 text-right">

@@ -304,7 +304,7 @@ function MziziTrustMeter({
                   <span className="text-xs font-medium text-muted-foreground">{signal.label}</span>
                 </div>
                 <div className="flex items-center gap-2">
-                  {signal.detail && <span className="text-[10px] text-muted-foreground">{signal.detail}</span>}
+                  {signal.detail && <span className="text-sm text-muted-foreground">{signal.detail}</span>}
                   {showScore && (
                     <span data-slot="trust-breakdown-value" className={cn("text-xs font-semibold", signal.text)}>
                       {signal.value.toFixed(3)}
@@ -329,7 +329,7 @@ function MziziTrustMeter({
           {ubuntuPoints != null && (
             <div
               data-slot="trust-ubuntu-points"
-              className="mt-1 flex items-center justify-center gap-1.5 text-[11px] text-muted-foreground"
+              className="mt-1 flex items-center justify-center gap-1.5 text-sm text-muted-foreground"
             >
               <Icon name="star" className="size-3 text-status-warning" />
               <span>{ubuntuPoints.toLocaleString()} Ubuntu Points earned through community contribution</span>

@@ -75,7 +75,7 @@ function CalendarDayView({
               key={hour}
               className="flex h-14 items-start justify-end border-b border-border pt-1 pr-2"
             >
-              <span className="text-[10px] text-muted-foreground">{formatHour(hour)}</span>
+              <span className="text-sm text-muted-foreground">{formatHour(hour)}</span>
             </div>
           ))}
         </div>
