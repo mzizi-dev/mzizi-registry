@@ -14,7 +14,7 @@ export function StepProgress({ steps, currentStep, className }: StepProgressProp
       data-slot="step-progress"
       data-portal="https://mzizi.dev/components/step-progress"
       aria-label="Progress"
-      className={cn("flex gap-1", className)}
+      className={cn("flex gap-2", className)}
     >
       {steps.map((step, i) => (
         <div

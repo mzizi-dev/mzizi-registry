@@ -41,7 +41,7 @@ function MziziEmailPreview({
     >
       <div
         aria-hidden="true"
-        className="space-y-1 border-b border-border bg-muted px-4 py-3 text-sm text-foreground/80"
+        className="space-y-2 border-b border-border bg-muted px-4 py-3 text-sm text-foreground/80"
       >
         <p>
           <span className="font-medium text-foreground">To:</span> {to}

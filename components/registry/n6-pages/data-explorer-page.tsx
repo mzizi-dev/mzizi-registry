@@ -64,7 +64,7 @@ export function DataExplorerPage({
         <div className="mt-2 flex items-center gap-3 text-xs text-muted-foreground">
           {totalRows != null && <span>{totalRows.toLocaleString()} rows</span>}
           {exportFormats.length > 0 && (
-            <div className="flex gap-1">
+            <div className="flex gap-2">
               {exportFormats.map((f) => (
                 <button
                   key={f}

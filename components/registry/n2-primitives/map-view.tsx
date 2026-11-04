@@ -111,7 +111,7 @@ function MapView({
 
       {/* Controls */}
       {interactive && loaded && (
-        <div className="absolute top-2 right-2 flex flex-col gap-1">
+        <div className="absolute top-2 right-2 flex flex-col gap-2">
           <button
             className="flex size-8 items-center justify-center rounded-[var(--radius-sm,7px)] bg-background/90 text-sm font-bold shadow-sm backdrop-blur-sm hover:bg-background"
             aria-label="Zoom in"

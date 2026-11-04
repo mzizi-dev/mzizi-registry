@@ -16,6 +16,38 @@ import type { ChangelogRow } from "@/lib/db/types";
 
 export const CHANGELOG_RELEASES: readonly ChangelogRow[] = [
   {
+    version: "4.25.0",
+    title:
+      "v4.25.0 — the spacing floor, part 2: every contract held to it, in React, Astro and Rust",
+    description:
+      "Releases staging to main as the next minor above v4.24.x (nyuchi/.github#80). Changed: every contract is held to the spacing floor (14px inset, 7px gap, 1.5 body leading) by evaluateSpacing in contracts/runner.ts and spacing_violations in mzizi-rs/contract-eval, with a shared 23-case table (contracts/spacing-cases.json) and four pinned exceptions with reasons (#617, #622). About 570 gaps under 7px became gap-2 and about 70 inline paddings under 14px in contract components became px-3.5 (a visual change: small controls, chips and table cells grow a few pixels). A per-file ratchet (__tests__/spacing-floor-baseline.json) holds gap-0, p-0 and negative margins in every component source; contracts/spacing-geometry.json specifies the rendered geometry guard. Base layer: no padding on inline role=alert/role=status text. Release notes are built from CHANGELOG.md (#621). CHANGELOG.md section [4.25.0] is the narrative.",
+    line: "public",
+    line_rank: 1,
+    major: 4,
+    minor: 25,
+    patch: 0,
+    release_kind: "minor",
+    breaking: false,
+    released_at: "2026-11-04T13:00:00.000+00:00",
+    created_at: "2026-11-04T13:00:00.000+00:00",
+    nodes_affected: null,
+    components_added: null,
+    components_modified: null,
+    components_deprecated: null,
+    components_removed: null,
+    components_touched: null,
+    tools_added: null,
+    tools_modified: null,
+    tools_deprecated: null,
+    tools_removed: null,
+    linked_issues: null,
+    total_stable: null,
+    total_deprecated: null,
+    total_alpha: null,
+    changed_by: "claude-code",
+    entry_order: 0,
+  },
+  {
     version: "4.24.0",
     title:
       "v4.24.0 — the spacing floor: 14px inset, 7px gaps, 1.5 body leading",

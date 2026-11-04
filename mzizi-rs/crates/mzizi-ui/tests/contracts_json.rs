@@ -25,8 +25,8 @@ use serde_json::Value;
 #[path = "../../../contract-eval/contract_eval.rs"]
 mod contract_eval;
 use contract_eval::{
-    Case, HIT_AREA_GAPS, Rendered, declared_height, declared_height_at, hit_region, hit_violations,
-    holds, inline_styles, parse, render, select, tokens,
+    Case, HIT_AREA_GAPS, Rendered, SPACING_GAPS, declared_height, declared_height_at, hit_region,
+    hit_violations, holds, inline_styles, parse, render, select, spacing_violations, tokens,
 };
 
 fn repo() -> PathBuf {
@@ -569,6 +569,18 @@ fn every_contract_identity_rust_build_keeps_its_contract() {
         for row in c["density"].as_array().unwrap() {
             run_density(&name, &case, row);
         }
+        // The spacing floor (#617): nothing under the 14px inset, the 7px gap or the 1.5 body leading.
+        for (state, rendered) in &case.states {
+            for el in rendered.elements() {
+                for (token, sentence) in spacing_violations(el) {
+                    assert!(
+                        SPACING_GAPS.contains(&format!("{name}:{token}").as_str()),
+                        "{name}: spacing [{state}] <{}>: {sentence}",
+                        el.tag()
+                    );
+                }
+            }
+        }
     }
 }
 
@@ -799,6 +811,30 @@ fn case_check_fails_a_component_that_renders_an_inline_style() {
         allowed_styles: &[],
     }
     .check();
+}
+
+/// The spacing floor's rules, answered identically to `spacingViolations` in `contracts/runner.ts`
+/// (`contracts/spacing-cases.json` is the shared table; `__tests__/spacing-floor.test.ts` runs the same rows).
+#[test]
+fn spacing_cases_match_the_typescript_runner() {
+    let cases: Value = serde_json::from_str(
+        &fs::read_to_string(repo().join("contracts/spacing-cases.json")).unwrap(),
+    )
+    .unwrap();
+    for case in cases["cases"].as_array().unwrap() {
+        let name = case["name"].as_str().unwrap();
+        let nodes = parse(case["html"].as_str().unwrap());
+        let node = nodes
+            .iter()
+            .find(|n| !n.tag().is_empty())
+            .unwrap_or_else(|| panic!("{name}: no element"));
+        let got = spacing_violations(node);
+        assert_eq!(
+            got.len() as u64,
+            case["violations"].as_u64().unwrap(),
+            "{name}: {got:?}"
+        );
+    }
 }
 
 /// The Bundu floor's hit-region rules, answered identically to `hitViolations` in `contracts/runner.ts`

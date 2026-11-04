@@ -116,7 +116,7 @@ function MziziArticleCard({
             {sourceName && <span>{sourceName}</span>}
             {publishedAt && <span>{publishedAt}</span>}
             {readTime && (
-              <span className="flex items-center gap-1">
+              <span className="flex items-center gap-2">
                 <BookOpen className="size-3" />
                 {readTime}
               </span>
@@ -187,14 +187,14 @@ function MziziArticleCard({
         <h4 className="line-clamp-2 text-sm font-medium text-foreground">{title}</h4>
         <div className="mt-1.5 flex items-center gap-2 text-xs text-muted-foreground">
           {sourceName && (
-            <span className="flex items-center gap-1">
+            <span className="flex items-center gap-2">
               {sourceName}
               {sourceVerified && <CheckCircle className="size-2.5 text-[var(--color-malachite)]" />}
             </span>
           )}
           {publishedAt && <span>· {publishedAt}</span>}
           {readTime && (
-            <span className="flex items-center gap-1">
+            <span className="flex items-center gap-2">
               <BookOpen className="size-3" />
               {readTime}
             </span>
@@ -202,7 +202,7 @@ function MziziArticleCard({
         </div>
         {fcConfig && FcIcon && (
           <span
-            className="mt-1 flex items-center gap-1 text-sm font-medium"
+            className="mt-1 flex items-center gap-2 text-sm font-medium"
             style={{ color: fcConfig.color }}
           >
             <FcIcon className="size-3" />

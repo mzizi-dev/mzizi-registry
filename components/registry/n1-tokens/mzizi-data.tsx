@@ -265,7 +265,7 @@ export function MziziListView<T>({
               {skeletonVariant === "row" && (
                 <>
                   <div className="size-12 shrink-0 rounded-[var(--radius-inner,7px)] bg-foreground/[0.06]" />
-                  <div className="flex flex-1 flex-col gap-1.5">
+                  <div className="flex flex-1 flex-col gap-2">
                     <div className="h-4 w-2/3 rounded bg-foreground/[0.06]" />
                     <div className="h-3 w-full rounded bg-foreground/[0.06]" />
                   </div>

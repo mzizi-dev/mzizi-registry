@@ -118,9 +118,9 @@ function NotFound({
       )}
     >
       {/* 404 display with mineral dots */}
-      <div className="mb-6 flex items-baseline gap-1 text-7xl font-bold text-foreground/10">
+      <div className="mb-6 flex items-baseline gap-2 text-7xl font-bold text-foreground/10">
         <span>4</span>
-        <div className="flex gap-1.5 pb-2">
+        <div className="flex gap-2 pb-2">
           {[
             "var(--status-info, #3B82F6)",
             "var(--status-info, #3B82F6)",

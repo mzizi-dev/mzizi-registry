@@ -95,7 +95,7 @@ function ContentCalendar({
                 {showWeekday && day.toLocaleDateString(undefined, { weekday: "short" })}
                 <div className={cn("text-sm", isToday && "font-bold")}>{day.getDate()}</div>
               </div>
-              <div className="space-y-1">
+              <div className="space-y-2">
                 {dayItems.map((item) => (
                   <button
                     key={item.id}

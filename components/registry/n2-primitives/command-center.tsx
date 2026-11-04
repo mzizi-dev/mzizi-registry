@@ -138,15 +138,15 @@ function CommandCenter() {
         {/* Keyboard hints footer */}
         <div className="flex items-center justify-between border-t border-border px-3 py-2 text-sm text-muted-foreground">
           <div className="flex items-center gap-3">
-            <span className="flex items-center gap-1">
+            <span className="flex items-center gap-2">
               <kbd className="rounded border border-border bg-muted px-1 py-0.5">↑↓</kbd>
               Navigate
             </span>
-            <span className="flex items-center gap-1">
+            <span className="flex items-center gap-2">
               <kbd className="rounded border border-border bg-muted px-1 py-0.5">↵</kbd>
               Select
             </span>
-            <span className="flex items-center gap-1">
+            <span className="flex items-center gap-2">
               <kbd className="rounded border border-border bg-muted px-1 py-0.5">Esc</kbd>
               Close
             </span>

@@ -292,7 +292,7 @@ function CreateHeader({ title, onCancel, actions, className }: CreateHeaderProps
     >
       <button
         onClick={onCancel}
-        className="flex items-center gap-1.5 text-[15px] text-muted-foreground"
+        className="flex items-center gap-2 text-[15px] text-muted-foreground"
       >
         <X className="size-5" />
         Cancel

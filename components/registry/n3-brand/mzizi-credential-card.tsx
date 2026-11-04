@@ -70,7 +70,7 @@ function MziziCredentialCard({
       >
         <div className="flex items-center gap-3">
           <div className="size-10 rounded-full bg-muted" />
-          <div className="flex-1 space-y-1.5">
+          <div className="flex-1 space-y-2">
             <div className="h-3.5 w-1/2 rounded bg-muted" />
             <div className="h-2.5 w-1/3 rounded bg-muted" />
           </div>
@@ -112,7 +112,7 @@ function MziziCredentialCard({
               )}
             </div>
             <span
-              className="flex shrink-0 items-center gap-1 rounded-full px-2 py-0.5 text-sm font-semibold"
+              className="flex shrink-0 items-center gap-2 rounded-full px-2 py-0.5 text-sm font-semibold"
               style={{
                 backgroundColor: `color-mix(in srgb, ${sc.color} 15%, transparent)`,
                 color: sc.color,
@@ -122,8 +122,8 @@ function MziziCredentialCard({
               {sc.label}
             </span>
           </div>
-          <div className="mt-2 flex flex-col gap-1 text-xs text-muted-foreground">
-            <span className="flex items-center gap-1.5">
+          <div className="mt-2 flex flex-col gap-2 text-xs text-muted-foreground">
+            <span className="flex items-center gap-2">
               <Building2 className="size-3" />
               {issuingBody}
             </span>
@@ -132,7 +132,7 @@ function MziziCredentialCard({
             )}
             <div className="flex items-center gap-3">
               {issuedDate && (
-                <span className="flex items-center gap-1">
+                <span className="flex items-center gap-2">
                   <Calendar className="size-3" />
                   Issued: {issuedDate}
                 </span>
@@ -141,7 +141,7 @@ function MziziCredentialCard({
             </div>
           </div>
           {verifiedByPlatform && (
-            <div className="mt-2 flex items-center gap-1 text-sm font-medium text-[var(--color-tanzanite)]">
+            <div className="mt-2 flex items-center gap-2 text-sm font-medium text-[var(--color-tanzanite)]">
               <Shield className="size-3" />
               Platform Verified
             </div>

@@ -83,7 +83,7 @@ interface DataTableProps {
 
 const itemClasses = (destructive?: boolean) =>
   cn(
-    "flex min-h-8 w-full items-center rounded-sm px-2 text-start text-body-sm hover:bg-muted focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring pointer-coarse:min-h-11",
+    "flex min-h-8 w-full items-center rounded-sm px-3.5 text-start text-body-sm hover:bg-muted focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring pointer-coarse:min-h-11",
     destructive && "text-destructive",
   );
 
@@ -132,14 +132,14 @@ function RowActions({ list, name }: { list: RowAction[]; name: string }) {
       data-slot="row-actions-menu"
       className="relative inline-block text-start"
     >
-      <summary className="inline-flex h-8 cursor-pointer list-none items-center justify-center gap-1.5 rounded-sm px-2.5 text-body-sm font-medium outline-none hover:bg-muted focus-visible:ring-2 focus-visible:ring-ring pointer-coarse:h-11 [&::-webkit-details-marker]:hidden">
+      <summary className="inline-flex h-8 cursor-pointer list-none items-center justify-center gap-2 rounded-sm px-2.5 text-body-sm font-medium outline-none hover:bg-muted focus-visible:ring-2 focus-visible:ring-ring pointer-coarse:h-11 [&::-webkit-details-marker]:hidden">
         <Icon name="more" className="h-4 w-4 shrink-0" />
         <span className="sr-only">Actions for {name}</span>
       </summary>
       <ul
         role="list"
         aria-label={`Actions for ${name}`}
-        className="absolute end-0 z-40 mt-1 grid min-w-44 gap-0.5 rounded-md border border-border bg-popover p-1 text-popover-foreground shadow-lg"
+        className="absolute end-0 z-40 mt-1 grid min-w-44 gap-2 rounded-md border border-border bg-popover p-1 text-popover-foreground shadow-lg"
       >
         {sorted.map((a) => (
           <li key={a.label}>
@@ -287,7 +287,7 @@ function DataTable({
         <caption
           className={
             showCaption
-              ? "px-3 py-2 text-start text-caption text-muted-foreground"
+              ? "px-3.5 py-2 text-start text-caption text-muted-foreground"
               : "sr-only"
           }
         >
@@ -299,13 +299,13 @@ function DataTable({
               <th
                 key={c.key}
                 scope="col"
-                className={`h-9 px-3 text-caption font-medium text-muted-foreground ${c.align === "end" ? "text-end" : "text-start"}`}
+                className={`h-9 px-3.5 text-caption font-medium text-muted-foreground ${c.align === "end" ? "text-end" : "text-start"}`}
               >
                 {c.label}
               </th>
             ))}
             {hasActions && (
-              <th scope="col" className="h-9 px-3 text-end">
+              <th scope="col" className="h-9 px-3.5 text-end">
                 <span className="sr-only">Actions</span>
               </th>
             )}
@@ -322,7 +322,7 @@ function DataTable({
                 key={id ?? r}
                 data-row={id}
                 aria-current={current ? "true" : undefined}
-                className={`block px-3 py-2.5 hover:bg-surface-muted md:table-row md:p-0 ${current ? "bg-muted" : ""}`}
+                className={`block px-3.5 py-2.5 hover:bg-surface-muted md:table-row md:p-0 ${current ? "bg-muted" : ""}`}
               >
                 {columns.map((c, i) => {
                   const cell = asObject(row[c.key]);
@@ -331,7 +331,7 @@ function DataTable({
                     <Tag
                       key={c.key}
                       scope={i === 0 ? "row" : undefined}
-                      className={`flex items-baseline justify-between gap-4 py-1 font-normal md:table-cell md:h-10 md:px-3 md:py-2 md:align-middle ${c.align === "end" ? "md:text-end" : "text-start"}`}
+                      className={`flex items-baseline justify-between gap-4 py-1 font-normal md:table-cell md:h-10 md:px-3.5 md:py-2 md:align-middle ${c.align === "end" ? "md:text-end" : "text-start"}`}
                     >
                       <span
                         className="text-caption text-muted-foreground md:hidden"
@@ -353,7 +353,7 @@ function DataTable({
                 {hasActions && (
                   <td
                     data-slot="row-actions"
-                    className="flex justify-end py-1 md:table-cell md:h-10 md:px-3 md:py-2 md:text-end md:align-middle"
+                    className="flex justify-end py-1 md:table-cell md:h-10 md:px-3.5 md:py-2 md:text-end md:align-middle"
                   >
                     <RowActions
                       list={actions[id ?? ""] ?? []}

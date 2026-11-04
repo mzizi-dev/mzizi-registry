@@ -38,13 +38,13 @@ function PropertyListItem({ item }: { item: PropertyItem }) {
       className="flex items-start justify-between gap-4 py-3 first:pt-0 last:pb-0"
     >
       <dt className="shrink-0 text-muted-foreground">{item.label}</dt>
-      <dd className="flex items-center gap-1.5 text-right font-medium">
+      <dd className="flex items-center gap-2 text-right font-medium">
         {item.href ? (
           <a
             href={item.href}
             target="_blank"
             rel="noopener noreferrer"
-            className="inline-flex items-center gap-1 text-primary hover:underline"
+            className="inline-flex items-center gap-2 text-primary hover:underline"
           >
             {item.value}
             <ExternalLink className="size-3" />

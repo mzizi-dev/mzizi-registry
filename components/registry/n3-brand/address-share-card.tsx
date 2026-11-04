@@ -59,7 +59,7 @@ export function AddressShareCard({ code, url, title, directions, codeLabel, clas
       <a
         href={url}
         data-slot="address-share-card-link"
-        className="inline-flex min-h-11 max-w-full items-center rounded-full px-3 text-body-sm font-medium break-all text-primary underline-offset-4 outline-none hover:underline focus-visible:ring-[3px] focus-visible:ring-ring/50"
+        className="inline-flex min-h-11 max-w-full items-center rounded-full px-3.5 text-body-sm font-medium break-all text-primary underline-offset-4 outline-none hover:underline focus-visible:ring-[3px] focus-visible:ring-ring/50"
       >
         {shown}
       </a>

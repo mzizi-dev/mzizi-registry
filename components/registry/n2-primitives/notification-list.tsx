@@ -43,7 +43,7 @@ function NotificationList({
         {Array.from({ length: 5 }).map((_, i) => (
           <div key={i} className="flex items-center gap-3 p-3">
             <div className="size-9 shrink-0 rounded-full bg-muted" />
-            <div className="flex-1 space-y-1.5">
+            <div className="flex-1 space-y-2">
               <div className="h-3.5 w-2/3 rounded bg-muted" />
               <div className="h-2.5 w-1/3 rounded bg-muted" />
             </div>
@@ -64,7 +64,7 @@ function NotificationList({
           <h3 className="mb-2 px-1 text-xs font-medium tracking-wider text-muted-foreground uppercase">
             {date}
           </h3>
-          <div className="flex flex-col gap-1">
+          <div className="flex flex-col gap-2">
             {items.map((notification) => (
               <NotificationRow key={notification.id} notification={notification} onRead={onRead} />
             ))}

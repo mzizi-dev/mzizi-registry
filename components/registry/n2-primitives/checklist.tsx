@@ -55,7 +55,7 @@ function Checklist({
           {checkedCount}/{items.length}
         </span>
       </div>
-      <div className="flex flex-col gap-0.5">
+      <div className="flex flex-col gap-2">
         {items.map((item) => (
           <label
             key={item.id}

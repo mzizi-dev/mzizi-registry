@@ -39,7 +39,7 @@ function LocationShare({
       {/* Map preview placeholder */}
       <div className="relative h-32 bg-muted">
         <div className="flex size-full items-center justify-center text-xs text-muted-foreground">
-          <div className="flex flex-col items-center gap-1">
+          <div className="flex flex-col items-center gap-2">
             <div className="size-4 rounded-full bg-[var(--color-malachite,#64FFDA)]" />
             <span className="font-mono text-sm">
               {latitude.toFixed(4)}, {longitude.toFixed(4)}
@@ -47,7 +47,7 @@ function LocationShare({
           </div>
         </div>
         {isLive && (
-          <div className="absolute top-2 left-2 flex items-center gap-1 rounded-full bg-[var(--color-malachite,#64FFDA)]/20 px-2 py-0.5">
+          <div className="absolute top-2 left-2 flex items-center gap-2 rounded-full bg-[var(--color-malachite,#64FFDA)]/20 px-2 py-0.5">
             <div className="size-1.5 animate-pulse rounded-full bg-[var(--color-malachite,#64FFDA)]" />
             <span className="text-sm font-medium text-[var(--color-malachite,#64FFDA)]">
               Live{liveDuration ? ` · ${liveDuration}` : ""}
