@@ -53,10 +53,10 @@ impl NodeAccent {
     #[must_use]
     pub const fn classes(self) -> &'static str {
         match self {
-            Self::Cobalt => "bg-[var(--color-cobalt)]/10 text-[var(--color-cobalt)]",
-            Self::Tanzanite => "bg-[var(--color-tanzanite)]/10 text-[var(--color-tanzanite)]",
-            Self::Malachite => "bg-[var(--color-malachite)]/10 text-[var(--color-malachite)]",
-            Self::Gold => "bg-[var(--color-gold)]/10 text-[var(--color-gold)]",
+            Self::Cobalt => "bg-[var(--color-cobalt)]/10 text-cobalt-text",
+            Self::Tanzanite => "bg-[var(--color-tanzanite)]/10 text-tanzanite-text",
+            Self::Malachite => "bg-[var(--color-malachite)]/10 text-malachite-text",
+            Self::Gold => "bg-[var(--color-gold)]/10 text-gold-text",
         }
     }
 }
@@ -152,7 +152,7 @@ const DESCRIPTION: &str = "mt-1 text-sm text-muted-foreground";
 const NODE_BADGE: &str = "rounded-full px-2 py-0.5 text-xs font-medium";
 const ADDED: &str = "rounded bg-[var(--status-success,#64FFDA)]/10 px-1.5 py-0.5 text-xs text-[var(--status-success,#22C55E)]";
 const MODIFIED: &str =
-    "rounded bg-[var(--color-cobalt)]/10 px-1.5 py-0.5 text-xs text-[var(--color-cobalt)]";
+    "rounded bg-[var(--color-cobalt)]/10 px-1.5 py-0.5 text-xs text-cobalt-text";
 const DEPRECATED: &str = "rounded bg-[var(--status-warning,#F59E0B)]/10 px-1.5 py-0.5 text-xs text-[var(--status-warning,#F59E0B)] line-through";
 
 /// Join a base class string with a consumer's extra classes.

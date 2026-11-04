@@ -108,7 +108,7 @@ function MziziConversationRow({
             <span
               className={cn(
                 "shrink-0 text-sm",
-                hasUnread ? "font-semibold text-[var(--color-malachite)]" : "text-muted-foreground"
+                hasUnread ? "font-semibold text-malachite-text" : "text-muted-foreground"
               )}
             >
               {lastMessageTime}

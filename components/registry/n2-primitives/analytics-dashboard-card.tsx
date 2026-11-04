@@ -58,7 +58,7 @@ function AnalyticsDashboardCard({
               className={cn(
                 "font-medium",
                 trend === "up"
-                  ? "text-[var(--color-malachite,#64FFDA)]"
+                  ? "text-[var(--color-malachite-text,#64FFDA)]"
                   : trend === "down"
                     ? "text-destructive"
                     : "text-muted-foreground"
@@ -72,7 +72,7 @@ function AnalyticsDashboardCard({
               className={cn(
                 "font-medium",
                 changePct > 0
-                  ? "text-[var(--color-malachite,#64FFDA)]"
+                  ? "text-[var(--color-malachite-text,#64FFDA)]"
                   : changePct < 0
                     ? "text-destructive"
                     : "text-muted-foreground"
