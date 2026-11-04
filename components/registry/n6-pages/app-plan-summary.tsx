@@ -136,7 +136,7 @@ function PlanSummary({
           {!none && price && (
             <p
               data-slot="plan-price"
-              className="mt-1 flex flex-wrap items-baseline gap-x-1.5"
+              className="mt-1 flex flex-wrap items-baseline gap-x-2"
             >
               <Money
                 amountMinor={price.amountMinor}
@@ -177,7 +177,7 @@ function PlanSummary({
         <ul
           data-slot="plan-features"
           aria-label={copy.features ?? "Included"}
-          className="mt-4 grid gap-1.5"
+          className="mt-4 grid gap-2"
         >
           {features.map((f) => (
             <li key={f} className="flex items-start gap-2 text-body-sm">

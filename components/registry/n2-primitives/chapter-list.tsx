@@ -31,7 +31,7 @@ function ChapterList({
       data-slot="chapter-list"
       data-portal="https://mzizi.dev/components/chapter-list"
       aria-label="Table of contents"
-      className={cn("space-y-1", className)}
+      className={cn("space-y-2", className)}
       {...props}
     >
       {chapters.map((ch) => (

@@ -75,7 +75,7 @@ export function MziziHealthDashboard({
         </div>
         <div className="grid grid-cols-2 gap-px bg-border">
           {Array.from({ length: 4 }).map((_, i) => (
-            <div key={i} className="space-y-1.5 bg-card p-3">
+            <div key={i} className="space-y-2 bg-card p-3">
               <div className="h-2.5 w-1/2 rounded bg-muted" />
               <div className="h-5 w-2/3 rounded bg-muted" />
             </div>
@@ -107,7 +107,7 @@ export function MziziHealthDashboard({
       {vitals.length > 0 && (
         <div className="grid grid-cols-2 gap-px bg-border">
           {vitals.slice(0, 4).map((v, i) => (
-            <div key={i} className="space-y-0.5 bg-card p-3">
+            <div key={i} className="space-y-2 bg-card p-3">
               <p className="text-sm text-muted-foreground">{v.label}</p>
               <p className="text-lg font-bold text-foreground">
                 {v.value}

@@ -60,10 +60,10 @@ function RoleSelector({
                 <div className="size-2 rounded-full bg-[var(--color-primary,var(--color-cobalt,#00B0FF))]" />
               )}
             </div>
-            <div className="flex min-w-0 flex-1 flex-col gap-1">
+            <div className="flex min-w-0 flex-1 flex-col gap-2">
               <div className="flex items-center gap-2">
                 <span className="text-sm font-medium text-foreground">{role.name}</span>
-                <span className="inline-flex items-center gap-1 text-xs text-muted-foreground">
+                <span className="inline-flex items-center gap-2 text-xs text-muted-foreground">
                   <Shield className="size-3" />
                   {role.permissions.length} permissions
                 </span>

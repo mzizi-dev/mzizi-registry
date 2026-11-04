@@ -24,7 +24,7 @@ function MaintenancePage({
       {...props}
     >
       {/* Mineral accent bar */}
-      <div className="flex gap-1">
+      <div className="flex gap-2">
         <div className="h-1 w-8 rounded-full bg-[var(--color-primary,var(--color-cobalt,#00B0FF))]" />
         <div className="h-1 w-8 rounded-full bg-[var(--color-accent,var(--color-tanzanite,#B388FF))]" />
         <div className="h-1 w-8 rounded-full bg-[var(--status-success,var(--color-malachite,#64FFDA))]" />

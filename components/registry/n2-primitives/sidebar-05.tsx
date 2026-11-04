@@ -45,7 +45,7 @@ function Sidebar05() {
         <span className="font-serif text-lg font-semibold text-foreground">mukoko</span>
       </div>
       <Separator />
-      <nav className="flex-1 space-y-1 p-3">
+      <nav className="flex-1 space-y-2 p-3">
         {navItems.map((item) => (
           <div key={item.label}>
             <Button
@@ -65,7 +65,7 @@ function Sidebar05() {
               )}
             </Button>
             {item.children && expanded === item.label && (
-              <div className="mt-1 ml-4 space-y-0.5 border-l border-border pl-3">
+              <div className="mt-1 ml-4 space-y-2 border-l border-border pl-3">
                 {item.children.map((child) => (
                   <Button
                     key={child.label}

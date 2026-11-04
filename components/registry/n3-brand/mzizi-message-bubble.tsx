@@ -65,7 +65,7 @@ function MziziMessageBubble({
         data-portal="https://mzizi.dev/components/mzizi-message-bubble"
         data-loading
         role="article"
-        className="max-w-[75%] animate-pulse space-y-1.5 rounded-2xl bg-muted p-3"
+        className="max-w-[75%] animate-pulse space-y-2 rounded-2xl bg-muted p-3"
       >
         <div className="h-3 w-full rounded bg-foreground/5" />
         <div className="h-3 w-2/3 rounded bg-foreground/5" />
@@ -122,7 +122,7 @@ function MziziMessageBubble({
         {/* Timestamp + delivery status */}
         <div
           className={cn(
-            "mt-0.5 flex items-center gap-1 px-1",
+            "mt-0.5 flex items-center gap-2 px-1",
             isSent ? "justify-end" : "justify-start"
           )}
         >
@@ -131,11 +131,11 @@ function MziziMessageBubble({
         </div>
         {/* Reactions */}
         {reactions && reactions.length > 0 && (
-          <div className={cn("mt-1 flex gap-1", isSent ? "justify-end" : "justify-start")}>
+          <div className={cn("mt-1 flex gap-2", isSent ? "justify-end" : "justify-start")}>
             {reactions.map((r, i) => (
               <span
                 key={i}
-                className="inline-flex items-center gap-0.5 rounded-full bg-card px-1.5 py-0.5 text-xs ring-1 ring-foreground/10"
+                className="inline-flex items-center gap-2 rounded-full bg-card px-1.5 py-0.5 text-xs ring-1 ring-foreground/10"
               >
                 {r.emoji}
                 {r.count > 1 && (

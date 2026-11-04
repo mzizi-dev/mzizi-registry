@@ -69,7 +69,7 @@ function MemberList({
                   {role}s — {grouped[role].length}
                 </div>
               )}
-              <div className="space-y-0.5">
+              <div className="space-y-2">
                 {grouped[role].map((member) => (
                   <button
                     key={member.id}

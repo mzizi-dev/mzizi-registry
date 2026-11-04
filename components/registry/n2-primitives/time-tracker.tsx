@@ -75,7 +75,7 @@ function TimeTracker({
       <span className={cn("font-mono tabular-nums", compact ? "text-sm" : "text-lg font-bold")}>
         {formatElapsed(elapsed)}
       </span>
-      <div className="flex gap-1">
+      <div className="flex gap-2">
         <button
           onClick={toggle}
           className={cn(

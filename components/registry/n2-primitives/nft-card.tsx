@@ -58,7 +58,7 @@ function NftCard({
         )}
       </div>
       <div className="p-3">
-        <div className="flex items-start justify-between gap-1">
+        <div className="flex items-start justify-between gap-2">
           <div className="line-clamp-1 text-sm font-medium">{name}</div>
           {type && (
             <span

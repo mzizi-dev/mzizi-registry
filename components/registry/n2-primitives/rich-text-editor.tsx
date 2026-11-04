@@ -107,7 +107,7 @@ function RichTextEditor({
     >
       <div
         data-slot="rich-text-editor-toolbar"
-        className="flex flex-wrap gap-0.5 border-b border-border px-2 py-1.5"
+        className="flex flex-wrap gap-2 border-b border-border px-2 py-1.5"
       >
         {TOOLBAR_ACTIONS.map(({ command, icon: Icon, label }) => (
           <Button

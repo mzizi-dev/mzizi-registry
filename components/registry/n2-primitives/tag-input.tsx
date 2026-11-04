@@ -56,14 +56,14 @@ function TagInput({
       onClick={handleContainerClick}
       className={cn(
         "border-input bg-input/30 focus-within:border-ring focus-within:ring-ring/50",
-        "flex min-h-12 w-full flex-wrap items-center gap-1.5 rounded-full border px-3 py-1.5 transition-colors",
+        "flex min-h-12 w-full flex-wrap items-center gap-2 rounded-full border px-3 py-1.5 transition-colors",
         "focus-within:ring-[3px]",
         className
       )}
       {...props}
     >
       {tags.map((tag, index) => (
-        <Badge key={`${tag}-${index}`} variant="secondary" className="gap-1 pr-1">
+        <Badge key={`${tag}-${index}`} variant="secondary" className="gap-2 pr-1">
           {tag}
           <button
             type="button"

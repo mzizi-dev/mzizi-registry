@@ -78,7 +78,7 @@ export function MziziCreatePage({
 
       {/* Step indicator */}
       {currentStep != null && totalSteps != null && totalSteps > 1 && (
-        <div className="flex gap-1 px-4 pt-3">
+        <div className="flex gap-2 px-4 pt-3">
           {Array.from({ length: totalSteps }).map((_, i) => (
             <div
               key={i}

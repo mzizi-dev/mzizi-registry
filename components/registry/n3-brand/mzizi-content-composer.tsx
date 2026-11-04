@@ -107,7 +107,7 @@ export function MziziContentComposer({
 
           <div className="flex items-center justify-between">
             {showToolbar && (
-              <div className="flex items-center gap-1">
+              <div className="flex items-center gap-2">
                 {onAttachMedia && (
                   <button
                     onClick={onAttachMedia}

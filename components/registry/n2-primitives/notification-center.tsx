@@ -148,7 +148,7 @@ function NotificationList({ items }: { items: Notification[] }) {
         return (
           <div key={group}>
             <p className="mb-2 text-xs font-medium text-muted-foreground">{groupLabels[group]}</p>
-            <div className="space-y-1">
+            <div className="space-y-2">
               {groupItems.map((notif) => (
                 <div
                   key={notif.id}
@@ -157,7 +157,7 @@ function NotificationList({ items }: { items: Notification[] }) {
                   <div className="mt-0.5 flex size-8 shrink-0 items-center justify-center rounded-full bg-muted">
                     <notif.icon className={`size-4 ${notif.iconColor}`} />
                   </div>
-                  <div className="flex-1 space-y-0.5">
+                  <div className="flex-1 space-y-2">
                     <p className="text-sm font-medium text-foreground">{notif.title}</p>
                     <p className="text-xs text-muted-foreground">{notif.description}</p>
                   </div>
