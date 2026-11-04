@@ -244,6 +244,35 @@ describe("the contract runner holds the spacing floor", () => {
       expect(spacingViolations(first!).length, c.name).toBe(c.violations);
     }
   });
+  it("holds a label chip or pill on its inline axis, and says so (#625)", () => {
+    const run = (html: string) =>
+      spacingViolations(
+        parseDocument(html).children.find((n): n is Element => isTag(n))!,
+      );
+    // 14px inline with a line-height block axis (py-1) or a fixed height holds.
+    expect(
+      run('<p class="w-fit rounded-full border px-3.5 py-1">Phase 0</p>'),
+    ).toEqual([]);
+    expect(
+      run(
+        '<span class="inline-flex h-6 rounded-md border px-3.5 py-0.5">B</span>',
+      ),
+    ).toEqual([]);
+    // Under 14px inline fails, whatever the block axis.
+    expect(
+      run('<p class="w-fit rounded-full border px-3 py-1">Phase 0</p>'),
+    ).toHaveLength(1);
+    expect(
+      run(
+        '<span class="inline-flex h-6 rounded-md border px-2 py-0.5">B</span>',
+      ),
+    ).toHaveLength(1);
+    // The rule is written where people read the floor.
+    const docs = readFileSync(join(ROOT, "docs/sizes-and-density.md"), "utf8");
+    expect(docs).toMatch(/label chip or pill is held on its inline axis/);
+    const src = readFileSync(join(ROOT, "lib/tokens/roles.source.ts"), "utf8");
+    expect(src).toMatch(/label chip or pill/);
+  });
   it("pins the exceptions equal to the Rust copy, each with a reason", () => {
     const rs = readFileSync(
       join(ROOT, "mzizi-rs/contract-eval/contract_eval.rs"),
