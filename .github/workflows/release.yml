@@ -27,13 +27,17 @@ name: Release
 # The lint, type check, tests and build that used to run inside this job
 # are CI's jobs on the same commit; the tag waits for CI to pass.
 #
-# The logic is nyuchi/.github's reusable-auto-tag.yml. Its release notes are
-# GitHub's merged-PR list, so the `notes` job then rewrites the release body:
-# every CHANGELOG.md entry added since the previous vX.Y.0 tag
-# (.github/scripts/release_notes.py, the same script as mzizi-dev/mzizi-site
-# and mzizi-dev/mzizi-benchmarks), followed by that PR list. It acts only when
-# the version's tag points at this commit, so a doc-only merge leaves the
-# release alone; a manual run on a released commit rewrites its notes.
+# The tagging is nyuchi/.github's reusable-auto-tag.yml, called WITHOUT its
+# `create-release` (its notes would be GitHub's merged-PR list). Release notes
+# (owner, 2026-11-04: "Every release should have release notes too with a
+# changelog") are this repo's own, in three jobs: `notes` builds them first and
+# fails when CHANGELOG.md has no entry since the previous vX.Y.0 tag (nothing is
+# tagged then); `release` tags; `publish` creates the GitHub release as a draft
+# with the notes (.github/scripts/release_notes.py: every CHANGELOG.md entry
+# added since the previous tag, plus a compare link) and publishes it once. A
+# published release is never edited, so there is no later rewrite. `publish`
+# acts only when the version's tag points at this commit, so a doc-only merge
+# leaves the release alone.
 
 on:
   workflow_run:
@@ -54,8 +58,44 @@ permissions:
   contents: read
 
 jobs:
+  notes:
+    name: Release notes from CHANGELOG.md
+    if: >-
+      github.event_name == 'workflow_dispatch' ||
+      (github.event.workflow_run.conclusion == 'success' &&
+       github.event.workflow_run.event == 'push')
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    permissions:
+      contents: read
+    steps:
+      # Trusted main; the released commit is only read as data, by SHA.
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          fetch-depth: 0
+          persist-credentials: false
+
+      - name: Require changelog entries for this release
+        env:
+          GH_REPO: ${{ github.repository }}
+          SHA: ${{ github.event.workflow_run.head_sha || github.sha }}
+        run: |
+          set -euo pipefail
+          head="$(git rev-parse --verify "${SHA}^{commit}")"
+          version="$(git show "${head}:package.json" | python3 -c 'import json, sys; print(json.load(sys.stdin)["version"])')"
+          tag="v${version}"
+          if git rev-parse --verify --quiet "refs/tags/${tag}" >/dev/null; then
+            echo "$tag is already tagged; nothing new to release."
+            exit 0
+          fi
+          prev="$(git tag -l 'v*.*.0' --merged "$head" --sort=-v:refname | head -n 1 || true)"
+          # Exits 1 when no CHANGELOG.md entry was added since the previous
+          # release: the release fails here, before anything is tagged.
+          python3 .github/scripts/release_notes.py "$prev" "$head" >/dev/null
+
   release:
     name: Auto-release on version bump
+    needs: notes
     if: >-
       github.event_name == 'workflow_dispatch' ||
       (github.event.workflow_run.conclusion == 'success' &&
@@ -66,59 +106,51 @@ jobs:
       channel: main
       bump: ${{ inputs.bump || '' }}
       ref: ${{ github.event.workflow_run.head_sha || github.sha }}
-      create-release: true
     secrets:
       token: ${{ secrets.RELEASE_BUMP_TOKEN }}
 
-  notes:
-    name: Release notes from CHANGELOG.md
+  publish:
+    name: GitHub release with the changelog notes
     needs: release
-    # A manual run rewrites a released commit's notes even when the tag job
-    # has nothing to do or refuses the bump; the tag check below still guards.
     if: >-
-      always() &&
+      needs.release.result == 'success' &&
       (github.event_name == 'workflow_dispatch' ||
-       (needs.release.result == 'success' &&
-        github.event.workflow_run.event == 'push' &&
+       (github.event.workflow_run.event == 'push' &&
         github.event.workflow_run.head_branch == 'main'))
     runs-on: ubuntu-latest
     timeout-minutes: 10
     permissions:
-      contents: write
+      contents: read
     steps:
-      # Check out trusted main (the default ref of a workflow_run or a manual
-      # run), never the triggering run's commit. That commit is only read as
-      # data below, by SHA: its package.json and CHANGELOG.md through git show.
-      # fetch-depth 0 makes it and the previous tag present.
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
           fetch-depth: 0
           persist-credentials: false
 
-      - name: Rewrite the release notes
+      - name: Create the release as a draft and publish it once
         env:
-          GH_TOKEN: ${{ github.token }}
+          # The same token that pushed the tag, so the release can start other
+          # workflows (GITHUB_TOKEN's cannot).
+          GH_TOKEN: ${{ secrets.RELEASE_BUMP_TOKEN }}
           GH_REPO: ${{ github.repository }}
           SHA: ${{ github.event.workflow_run.head_sha || github.sha }}
+          # What the tag job pushed: it differs from package.json's version on
+          # a manual run with a bump override.
+          TAG: ${{ needs.release.outputs.tag }}
         run: |
           set -euo pipefail
           head="$(git rev-parse --verify "${SHA}^{commit}")"
-          version="$(git show "${head}:package.json" | python3 -c 'import json, sys; print(json.load(sys.stdin)["version"])')"
-          tag="v${version}"
+          tag="$TAG"
           if ! tagged="$(git rev-parse --verify --quiet "refs/tags/${tag}^{commit}")" || [ "$tagged" != "$head" ]; then
-            echo "$tag is not on $head; nothing to rewrite."
+            echo "$tag is not on $head; no release to make."
             exit 0
           fi
-          if ! gh release view "$tag" >/dev/null 2>&1; then
-            echo "::error::$tag is tagged on $head but has no GitHub release."
-            exit 1
-          fi
           prev="$(git tag -l 'v*.*.0' --merged "$head" --sort=-v:refname | grep -Fvx "$tag" | head -n 1 || true)"
-          CHANGELOG_URL="https://github.com/${GH_REPO}/blob/${tag}/CHANGELOG.md" \
+          if [ -n "$prev" ]; then
+            compare="https://github.com/${GH_REPO}/compare/${prev}...${tag}"
+          else
+            compare="https://github.com/${GH_REPO}/commits/${tag}"
+          fi
+          CHANGELOG_URL="https://github.com/${GH_REPO}/blob/${tag}/CHANGELOG.md" COMPARE_URL="$compare" \
             python3 .github/scripts/release_notes.py "$prev" "$head" > "$RUNNER_TEMP/notes.md"
-          start=()
-          if [ -n "$prev" ]; then start=(-f "previous_tag_name=$prev"); fi
-          gh api "repos/${GH_REPO}/releases/generate-notes" -f "tag_name=$tag" "${start[@]}" \
-            --jq .body >> "$RUNNER_TEMP/notes.md"
-          gh release edit "$tag" --notes-file "$RUNNER_TEMP/notes.md"
-          echo "Wrote the notes of $tag from CHANGELOG.md." | tee -a "$GITHUB_STEP_SUMMARY"
+          bash .github/scripts/publish-release.sh "$tag" "$tag" "$RUNNER_TEMP/notes.md" latest
