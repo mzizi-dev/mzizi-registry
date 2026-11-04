@@ -965,6 +965,10 @@ impl Roles {
     pub const SPACING_TOUCH: u32 = 49;
     /// 49px. The hit-area floor (`min-h-touch-min`): 49px (`BUNDU_FLOOR.hitAreaPx`, 7 x 7, above Apple HIG Buttons' 44x44 pt) on every device, desktop included, registered as `--target-floor`. Density never lowers it: a desktop control may be drawn smaller but keeps this hit region (owner ruling 2026-11-02, replacing the 24px desktop floor of 2026-11-01 and the 44px of 2026-11-01). No brand pack can move it.
     pub const SPACING_TOUCH_MIN: u32 = 49;
+    /// 14px. The inset floor (`p-inset-floor`, `px-inset-floor`): 14px (`BUNDU_FLOOR.spacing.insetPx`, 2 x 7), the least padding between text and the edge of its container, registered as `--inset-floor`. No component, density layer or brand pack can lower it (owner 2026-11-04, #617).
+    pub const SPACING_INSET_FLOOR: u32 = 14;
+    /// 7px. The gap floor (`gap-gap-floor`, `p-gap-floor`): 7px (`BUNDU_FLOOR.spacing.controlGapPx`, the unit), the least gap between adjacent controls, a label and its field, and sibling items, registered as `--gap-floor`. No component, density layer or brand pack can lower it (owner 2026-11-04, #617).
+    pub const SPACING_GAP_FLOOR: u32 = 7;
     /// 49px. Default control height. componentSpecs.button.heights.default.
     pub const SPACING_CONTROL: u32 = 49;
     /// 49px. Small control height. componentSpecs.button.heights.sm.
