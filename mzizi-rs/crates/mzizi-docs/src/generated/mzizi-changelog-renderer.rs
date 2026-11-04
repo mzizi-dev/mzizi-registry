@@ -160,8 +160,7 @@ const TITLE: &str = "mt-1 text-lg font-semibold";
 const DESCRIPTION: &str = "mt-1 text-sm text-muted-foreground";
 const NODE_BADGE: &str = "rounded-full px-2 py-0.5 text-xs font-medium";
 const ADDED: &str = "rounded bg-[var(--status-success,#64FFDA)]/10 px-1.5 py-0.5 text-xs text-[var(--status-success,#22C55E)]";
-const MODIFIED: &str =
-    "rounded bg-[var(--color-cobalt)]/10 px-1.5 py-0.5 text-xs text-cobalt-text";
+const MODIFIED: &str = "rounded bg-[var(--color-cobalt)]/10 px-1.5 py-0.5 text-xs text-cobalt-text";
 const DEPRECATED: &str = "rounded bg-[var(--status-warning,#F59E0B)]/10 px-1.5 py-0.5 text-xs text-[var(--status-warning,#F59E0B)] line-through";
 
 /// Join a base class string with a consumer's extra classes.
