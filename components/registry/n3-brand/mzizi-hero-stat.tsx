@@ -84,7 +84,7 @@ export function MziziHeroStat({
       <div className="flex items-start justify-between gap-2">
         <div className="min-w-0">
           <p className="text-sm font-medium text-muted-foreground">{title}</p>
-          <div className="mt-1 flex items-baseline gap-1">
+          <div className="mt-1 flex items-baseline gap-2">
             <span
               className="font-mono text-6xl font-bold tracking-tighter text-foreground sm:text-7xl"
               aria-label={`${value}${unit || ""}`}
@@ -107,7 +107,7 @@ export function MziziHeroStat({
           )}
           {subtitle && <p className="mt-1 text-sm text-muted-foreground">{subtitle}</p>}
           {secondaryStats && secondaryStats.length > 0 && (
-            <div className="mt-2 flex flex-wrap gap-x-3 gap-y-1 text-sm text-muted-foreground">
+            <div className="mt-2 flex flex-wrap gap-x-3 gap-y-2 text-sm text-muted-foreground">
               {secondaryStats.map((s, i) => (
                 <span key={i}>
                   {s.label} <strong className="text-foreground">{s.value}</strong>

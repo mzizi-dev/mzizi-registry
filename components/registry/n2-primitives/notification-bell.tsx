@@ -91,7 +91,7 @@ function NotificationBell({
                   )}
                 >
                   {notification.icon && <div className="mt-0.5 shrink-0">{notification.icon}</div>}
-                  <div className="flex-1 space-y-1">
+                  <div className="flex-1 space-y-2">
                     <div className="flex items-start justify-between gap-2">
                       <p
                         className={cn("text-sm leading-tight", !notification.read && "font-medium")}

@@ -22,7 +22,7 @@ function CopyableDetail({ detail }: { detail: React.ReactNode }) {
   }
 
   return (
-    <span className="inline-flex items-center gap-1.5">
+    <span className="inline-flex items-center gap-2">
       {detail}
       <button
         type="button"

@@ -63,7 +63,7 @@ function EventCard({
       data-slot="event-card"
       data-mineral={mineral}
       className={cn(
-        "flex flex-col gap-1.5 rounded-lg border-l-4 bg-card py-2.5 pr-4 pl-3 ring-1 ring-foreground/10",
+        "flex flex-col gap-2 rounded-lg border-l-4 bg-card py-2.5 pr-4 pl-3 ring-1 ring-foreground/10",
         mineralColors[mineral] ?? mineralColors.cobalt,
         className
       )}
@@ -76,12 +76,12 @@ function EventCard({
       )}
       <h4 className="text-sm font-medium text-foreground">{title}</h4>
       <div className="flex items-center gap-3 text-xs text-muted-foreground">
-        <span className="inline-flex items-center gap-1">
+        <span className="inline-flex items-center gap-2">
           <Clock className="size-3" aria-hidden="true" />
           {time}
         </span>
         {location && (
-          <span className="inline-flex items-center gap-1">
+          <span className="inline-flex items-center gap-2">
             <MapPin className="size-3" aria-hidden="true" />
             {location}
           </span>

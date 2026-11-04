@@ -61,7 +61,7 @@ export class SectionErrorBoundary extends Component<SectionErrorBoundaryProps, S
               !
             </span>
           </div>
-          <div className="flex flex-col items-center gap-1.5 text-center">
+          <div className="flex flex-col items-center gap-2 text-center">
             <p className="text-sm font-medium text-foreground">
               {this.props.section} failed to load
             </p>

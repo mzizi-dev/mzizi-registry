@@ -139,14 +139,14 @@ function MziziMissionCard({
           {/* Rewards */}
           <div className="mt-2 flex items-center gap-3 text-xs">
             <span
-              className="flex items-center gap-1 font-medium"
+              className="flex items-center gap-2 font-medium"
               style={{ color: "var(--color-gold, var(--color-gold,#FFD740))" }}
             >
               <Star className="size-3" />
               {pointsReward} pts
             </span>
             {badgeName && (
-              <span className="flex items-center gap-1 text-muted-foreground">
+              <span className="flex items-center gap-2 text-muted-foreground">
                 <Award className="size-3 text-[var(--color-tanzanite)]" />
                 {badgeName}
               </span>

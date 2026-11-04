@@ -1443,7 +1443,8 @@
   ):not(
     :has(> svg:only-child, > img:only-child),
     :empty,
-    [class*="size-"],
+    [class^="size-"],
+    [class*=" size-"],
     [data-day]
   ) {
     padding-inline: var(--inset-floor);
@@ -1451,8 +1452,6 @@
   :where(
     dialog,
     [popover],
-    [role="alert"],
-    [role="status"],
     [role="alertdialog"],
     [role="tooltip"],
     [data-slot="card"],
@@ -1467,7 +1466,8 @@
     ),
     svg,
     :empty,
-    [class*="size-"]
+    [class^="size-"],
+    [class*=" size-"]
   ) {
     padding: var(--inset-floor);
   }

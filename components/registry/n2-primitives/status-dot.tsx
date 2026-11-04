@@ -39,7 +39,7 @@ export function StatusDot({
     <span
       data-slot="status-dot"
       data-portal="https://mzizi.dev/components/status-dot"
-      className={cn("inline-flex items-center gap-1.5", className)}
+      className={cn("inline-flex items-center gap-2", className)}
     >
       <span
         className={cn("shrink-0 rounded-full", SIZE_MAP[size], pulse && "animate-pulse")}

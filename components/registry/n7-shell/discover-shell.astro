@@ -48,7 +48,7 @@ const link = "text-foreground underline decoration-border underline-offset-4 tra
       {
         nav.length > 0 && (
           <nav aria-label="Main" class="order-3 w-full sm:order-none sm:w-auto">
-            <ul class="flex flex-wrap items-center gap-x-6 gap-y-1 text-body-sm">
+            <ul class="flex flex-wrap items-center gap-x-6 gap-y-2 text-body-sm">
               {nav.map((l) => (
                 <li>
                   <a href={l.href} aria-current={cur(l.current)} class={`inline-flex min-h-11 items-center ${link} aria-[current=page]:font-semibold aria-[current=page]:decoration-foreground`}>
@@ -78,7 +78,7 @@ const link = "text-foreground underline decoration-border underline-offset-4 tra
       {
         footerLinks.length > 0 && (
           <nav aria-label="Footer" class="text-body-sm">
-            <ul class="space-y-1">
+            <ul class="space-y-2">
               {footerLinks.map((l) => (
                 <li>
                   <a href={l.href} aria-current={cur(l.current)} class={`inline-flex min-h-11 items-center ${link}`}>

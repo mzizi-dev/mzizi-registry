@@ -698,6 +698,198 @@ export function evaluateDensity(
   return failures;
 }
 
+/**
+ * THE SPACING FLOOR, as the runner holds it (owner, 2026-11-04, #617): a copy of `BUNDU_FLOOR.spacing` in
+ * `lib/tokens/roles.source.ts`, kept here so this file stays free of imports; `__tests__/spacing-floor.test.ts`
+ * fails when the two disagree, and mzizi-rs/contract-eval holds the same numbers.
+ */
+export const INSET_FLOOR_PX = 14;
+export const GAP_FLOOR_PX = 7;
+export const LEADING_FLOOR = 1.5;
+
+/** The named spacing steps (`--space-*`, px) a class can name: `p-md`, `gap-sm`. A copy of `SPACING`. */
+const SPACE_NAMES: Readonly<Record<string, number>> = {
+  xxs: 2,
+  xs: 4,
+  "xs-plus": 6,
+  sm: 8,
+  "sm-plus": 10,
+  md: 12,
+  base: 16,
+  "base-plus": 20,
+  lg: 24,
+  xl: 32,
+  "xl-plus": 40,
+  "2xl": 48,
+  "2xl-plus": 56,
+  "3xl": 64,
+  "4xl": 80,
+  "5xl": 96,
+  "6xl": 128,
+};
+
+/** A spacing utility's value in px, or null where the runner cannot read it (a var, a calc, a role). */
+export function spaceOf(v: string): number | null {
+  if (v === "px") return 1;
+  if (/^\d+(?:\.\d+)?$/.test(v)) return Number(v) * 4;
+  let m = /^\[(\d+(?:\.\d+)?)px\]$/.exec(v);
+  if (m) return Number(m[1]);
+  m = /^\[(\d+(?:\.\d+)?)rem\]$/.exec(v);
+  if (m) return Number(m[1]) * 16;
+  return SPACE_NAMES[v] ?? null;
+}
+
+/** A class token without its variants (`sm:`, `group-data-[size=sm]/card:`, `has-[>img:first-child]:`) and `!`. */
+function utilityOf(token: string): string {
+  let depth = 0;
+  let cut = -1;
+  for (let i = 0; i < token.length; i += 1) {
+    const c = token[i];
+    if (c === "[" || c === "(") depth += 1;
+    else if (c === "]" || c === ")") depth -= 1;
+    else if (c === ":" && depth === 0) cut = i;
+  }
+  return token.slice(cut + 1).replace(/^!|!$/g, "");
+}
+
+const SPACING_UTILITY =
+  /^(-?)(gap-x|gap-y|gap|space-x|space-y|px|py|pt|pb|pl|pr|ps|pe|p|mx|my|mt|mb|ml|mr|ms|me|m)-(.+)$/;
+const GAP_KINDS = new Set(["gap", "gap-x", "gap-y", "space-x", "space-y"]);
+const INLINE_PADDING = new Set(["p", "px", "pl", "pr", "ps", "pe"]);
+const BLOCK_PADDING = new Set(["p", "py", "pt", "pb"]);
+/** Body copy: the elements WCAG 1.4.12 line height applies to here. Headings and display type are not. */
+const BODY_COPY = new Set(["p", "li", "dd", "blockquote", "figcaption", "td", "th"]);
+
+/** Whether an element has text of its own, directly in it: a text container, in the sense of the inset floor. */
+function ownText(el: Element): boolean {
+  return el.children.some((c) => c.type === "text" && /\S/.test(textContent(c)));
+}
+
+/** Whether an element draws an edge of its own: a fill, a border, a ring, a shadow or an outline. Padding is the inset from that edge. */
+function drawsEdge(tokens: string[]): boolean {
+  return tokens.some((t) =>
+    /^(?:bg-(?!transparent$|none$|clip|origin|position|repeat|size|blend)|border(?:$|-(?!0$|t-0$|b-0$|l-0$|r-0$|x-0$|y-0$|collapse|separate|spacing))|ring(?:$|-)|shadow|outline(?:$|-))/.test(
+      utilityOf(t),
+    ),
+  );
+}
+
+/** Whether an element's own classes fix its height, which then decides its block axis (a chip, a control, a pill). */
+function fixesHeight(tokens: string[]): boolean {
+  return tokens.some((t) => /^(?:h|min-h|size)-/.test(utilityOf(t)));
+}
+
+/** Inline tags: their box is a run of text, so its line height, not block padding, decides the block axis. */
+const INLINE_TAGS = new Set(["span", "code", "kbd", "mark", "small", "a", "abbr", "b", "i", "em", "strong", "label"]);
+/** Whether an element is inline-level or a pill: a chip, a tag, a badge, an eyebrow. */
+function inlineLevel(el: Element, tokens: string[]): boolean {
+  return (
+    INLINE_TAGS.has(el.name) ||
+    tokens.some((t) =>
+      /^(?:inline|inline-flex|inline-block|inline-grid|w-fit|rounded-full)$/.test(utilityOf(t)),
+    )
+  );
+}
+
+/** Whether an element has two or more children that take space: a gap between them can show. */
+function hasSiblings(el: Element): boolean {
+  const kids = el.children.filter(
+    (c) =>
+      (isTag(c) && !SKIP.has(c.name)) ||
+      (c.type === "text" && /\S/.test(textContent(c))),
+  );
+  return kids.length >= 2;
+}
+
+/**
+ * What an element's own classes violate of the spacing floor, as sentences (each names the class). Three rules,
+ * each on the element that carries the class, never on a guess about its ancestors:
+ * - gap: `gap-*` / `space-*` under GAP_FLOOR_PX on an element with two or more children;
+ * - inset: padding under INSET_FLOOR_PX on an element with text of its own that draws an edge (a fill, border, ring,
+ *   shadow or outline), on the inline axis, and on the block axis too unless the element is an interactive control
+ *   or fixes its own height or is inline-level, a chip or a pill (then its height or its line height decides the
+ *   block axis, as the 28px and 49px floors do for a control); and a
+ *   negative margin on a text container, which pulls its text past its edge;
+ * - leading: a tight `leading-*` on body copy (`p`, `li`, `dd`, `blockquote`, `figcaption`, `td`, `th`).
+ * `evaluateSpacing` and mzizi-rs/contract-eval's `spacing_violations` return the same list for the same markup;
+ * `contracts/spacing-cases.json` is the shared table both are tested against.
+ */
+export function spacingViolations(el: Element): string[] {
+  const out: string[] = [];
+  const tokens = classOf(el).split(/\s+/).filter(Boolean);
+  const text = ownText(el);
+  const edge = drawsEdge(tokens);
+  const control = isInteractive(el) || fixesHeight(tokens) || inlineLevel(el, tokens);
+  const siblings = hasSiblings(el);
+  for (const t of tokens) {
+    const u = utilityOf(t);
+    const m = SPACING_UTILITY.exec(u);
+    if (m) {
+      const [, neg, kind, v] = m as unknown as [string, string, string, string];
+      const px = spaceOf(v);
+      if (GAP_KINDS.has(kind) && !neg && px !== null && px < GAP_FLOOR_PX && siblings)
+        out.push(`\`${t}\` is a ${px}px gap, below the ${GAP_FLOOR_PX}px Bundu spacing floor`);
+      else if (text && neg && /^m/.test(kind) && px !== null && px > 0)
+        out.push(`\`${t}\` is a negative margin on a text container`);
+      else if (text && edge && !neg && px !== null) {
+        const inline = INLINE_PADDING.has(kind);
+        const block = BLOCK_PADDING.has(kind) && !control;
+        if ((inline || block) && px < INSET_FLOOR_PX)
+          out.push(
+            `\`${t}\` is ${px}px of ${inline ? "inline" : "block"} padding on a text container, below the ${INSET_FLOOR_PX}px Bundu inset floor`,
+          );
+      }
+      continue;
+    }
+    if (BODY_COPY.has(el.name) && text) {
+      const l = /^leading-(none|tight|snug|\[(\d*\.?\d+)\])$/.exec(u);
+      if (l) {
+        const n =
+          l[1] === "none" ? 1 : l[1] === "tight" ? 1.25 : l[1] === "snug" ? 1.375 : Number(l[2]);
+        if (n < LEADING_FLOOR)
+          out.push(`\`${t}\` is a ${n} line height on body copy, below the ${LEADING_FLOOR} Bundu floor`);
+      }
+    }
+  }
+  return out;
+}
+
+/**
+ * Spacing exceptions, `<contract name>:<offending class>`, each with its reason. The set is pinned by
+ * `__tests__/spacing-floor.test.ts`, which also holds the keys equal to the Rust copy and fails on an entry no
+ * state renders any more. A new entry needs a reviewer to read its reason; the aim is an empty list.
+ */
+export const SPACING_GAPS: Readonly<Record<string, string>> = {
+  "app/bar-chart:gap-px":
+    "chart bars: a 1px hairline between data columns is the chart's geometry, not spacing between controls or items",
+  "app/toolbar:sm:gap-0":
+    "the search field and its submit button join into one segmented control from the sm breakpoint; their visible edges meet by design",
+  "ui/card:has-[>img:first-child]:pt-0":
+    "a card that opens with an image bleeds the image to the card's top edge; the image carries the inset",
+  "ui/markdown-renderer:px-1.5":
+    "an inline code span in running text: 14px of side padding would break the run of text it sits in; the span's line height is the text's",
+};
+
+/** Evaluate the spacing floor over every element of every rendered state. One line per failure. */
+export function evaluateSpacing(
+  contract: Contract,
+  rendered: Rendered,
+): string[] {
+  const failures: string[] = [];
+  for (const [state, html] of Object.entries(rendered)) {
+    for (const el of elements(doc(html))) {
+      if (SKIP.has(el.name)) continue;
+      for (const v of spacingViolations(el)) {
+        const token = /^`([^`]+)`/.exec(v)?.[1] ?? v;
+        const key = `${contract.name}:${token}`;
+        if (!(key in SPACING_GAPS))
+          failures.push(`spacing [${state}] <${el.name}>: ${v}`);
+      }
+    }
+  }
+  return failures;
+}
+
 const MINERALS = [
   "cobalt",
   "tanzanite",

@@ -101,7 +101,7 @@ export function VerificationPage({
                   </svg>
                 )}
               </div>
-              <div className="mt-1 flex flex-wrap gap-1">
+              <div className="mt-1 flex flex-wrap gap-2">
                 {t.unlocks.map((u, i) => (
                   <span
                     key={i}

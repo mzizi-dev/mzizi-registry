@@ -471,7 +471,7 @@ export function MziziHealthPanel({ className }: MziziHealthPanelProps) {
       <div className="mb-3 flex items-center justify-between">
         <span className="text-sm font-medium text-foreground">System Health</span>
         <span
-          className="flex items-center gap-1.5 rounded-full px-2 py-0.5 text-sm font-semibold uppercase"
+          className="flex items-center gap-2 rounded-full px-2 py-0.5 text-sm font-semibold uppercase"
           style={{
             backgroundColor: `color-mix(in srgb, ${healthColors[systemHealth]} 15%, transparent)`,
             color: healthColors[systemHealth],
@@ -486,7 +486,7 @@ export function MziziHealthPanel({ className }: MziziHealthPanelProps) {
       </div>
 
       {/* Section list */}
-      <div className="flex flex-col gap-1.5">
+      <div className="flex flex-col gap-2">
         {entries.map(([name, report]) => (
           <div
             key={name}

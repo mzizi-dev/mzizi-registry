@@ -66,7 +66,7 @@ export function MziziSyncStatus({
         data-portal="https://mzizi.dev/components/mzizi-sync-status"
         role="status"
         aria-label={config.label}
-        className={cn("flex items-center gap-1.5", className)}
+        className={cn("flex items-center gap-2", className)}
       >
         <div className="size-2 rounded-full" style={{ backgroundColor: config.color }} />
         <span className="text-xs text-muted-foreground">

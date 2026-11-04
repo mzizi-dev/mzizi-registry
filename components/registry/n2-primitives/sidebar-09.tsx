@@ -48,7 +48,7 @@ function Sidebar09() {
             <p className="mb-1 px-3 text-xs font-medium tracking-wider text-muted-foreground uppercase">
               {group.label}
             </p>
-            <div className="space-y-0.5">
+            <div className="space-y-2">
               {group.items.map((item) => (
                 <Button
                   key={item.label}

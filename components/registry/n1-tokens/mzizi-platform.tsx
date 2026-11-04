@@ -133,7 +133,7 @@ export function MziziInstallPrompt({
       </div>
       <button
         onClick={handleInstall}
-        className="flex h-9 items-center gap-1.5 rounded-full bg-[var(--color-primary)] px-4 text-xs font-semibold text-[var(--color-background)]"
+        className="flex h-9 items-center gap-2 rounded-full bg-[var(--color-primary)] px-4 text-xs font-semibold text-[var(--color-background)]"
       >
         <Download className="size-3.5" />
         Install

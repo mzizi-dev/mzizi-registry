@@ -74,7 +74,7 @@ export function MziziGroupCard({
         <div className="space-y-2 p-4">
           <div className="h-4 w-1/2 rounded bg-muted" />
           <div className="h-2.5 w-2/3 rounded bg-muted" />
-          <div className="mt-2 flex gap-1">
+          <div className="mt-2 flex gap-2">
             {Array.from({ length: 4 }).map((_, i) => (
               <div key={i} className="size-6 rounded-full bg-muted" />
             ))}
@@ -118,7 +118,7 @@ export function MziziGroupCard({
           >
             {name}
           </h3>
-          <div className="mt-0.5 flex items-center gap-1.5 text-sm text-muted-foreground">
+          <div className="mt-0.5 flex items-center gap-2 text-sm text-muted-foreground">
             <span className={cn("size-1.5 rounded-full", activityDot[activity])} />
             <span>{activity}</span>
             <span>·</span>
@@ -152,7 +152,7 @@ export function MziziGroupCard({
           </div>
         )}
         {topics.length > 0 && (
-          <div className="flex flex-wrap gap-1">
+          <div className="flex flex-wrap gap-2">
             {topics.slice(0, 3).map((t) => (
               <span
                 key={t}

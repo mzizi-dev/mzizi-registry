@@ -51,7 +51,7 @@ function BookingCalendar({
         {days.map((day) => (
           <div key={day.date} className="w-28 shrink-0">
             <div className="mb-2 text-center text-xs font-medium">{day.label}</div>
-            <div className="space-y-1">
+            <div className="space-y-2">
               {day.slots.map((slot) => {
                 const isSelected =
                   selectedSlot?.date === day.date && selectedSlot?.time === slot.time
@@ -79,13 +79,13 @@ function BookingCalendar({
         ))}
       </div>
       <div className="mt-2 flex items-center gap-4 text-sm text-muted-foreground">
-        <span className="flex items-center gap-1">
+        <span className="flex items-center gap-2">
           <span className="size-2 rounded-full bg-[var(--color-malachite,#64FFDA)]/40" /> Available
         </span>
-        <span className="flex items-center gap-1">
+        <span className="flex items-center gap-2">
           <span className="size-2 rounded-full bg-[var(--color-gold,#FFD740)]/40" /> Limited
         </span>
-        <span className="flex items-center gap-1">
+        <span className="flex items-center gap-2">
           <span className="size-2 rounded-full bg-muted" /> Unavailable
         </span>
       </div>

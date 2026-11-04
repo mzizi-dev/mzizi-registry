@@ -49,7 +49,7 @@ function ApiUsageMeter({
           </span>
         )}
       </div>
-      <div className="mt-2 flex items-baseline gap-1">
+      <div className="mt-2 flex items-baseline gap-2">
         <span className="text-lg font-bold tabular-nums">{current.toLocaleString()}</span>
         <span className="text-xs text-muted-foreground">
           / {limit.toLocaleString()} {unit}

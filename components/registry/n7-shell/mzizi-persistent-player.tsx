@@ -82,7 +82,7 @@ export function MziziPersistentPlayer({
         </button>
 
         {/* Controls */}
-        <div className="flex shrink-0 items-center gap-1">
+        <div className="flex shrink-0 items-center gap-2">
           <button
             onClick={isPlaying ? onPause : onPlay}
             aria-label={isPlaying ? "Pause" : "Play"}

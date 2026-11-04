@@ -42,7 +42,7 @@ function ProductCard({
           </span>
         )}
       </div>
-      <div className="flex flex-col gap-1 p-4">
+      <div className="flex flex-col gap-2 p-4">
         <h3 className="line-clamp-2 text-sm font-medium text-foreground">{title}</h3>
         <div className="flex items-baseline gap-2">
           <span className="text-base font-semibold text-foreground">{formatter.format(price)}</span>

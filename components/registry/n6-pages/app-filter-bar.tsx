@@ -64,7 +64,7 @@ function FilterBar({
         <input key={k} type="hidden" name={k} value={v} />
       ))}
       {search && (
-        <div className="grid min-w-0 grow basis-72 gap-1.5">
+        <div className="grid min-w-0 grow basis-72 gap-2">
           <label htmlFor="filter-q" className={labelClasses}>
             {searchLabel}
           </label>
@@ -79,7 +79,7 @@ function FilterBar({
         </div>
       )}
       {selects.map((s) => (
-        <div key={s.name} className="grid min-w-0 grow basis-48 gap-1.5">
+        <div key={s.name} className="grid min-w-0 grow basis-48 gap-2">
           <label htmlFor={`filter-${s.name}`} className={labelClasses}>
             {s.label}
           </label>

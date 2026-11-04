@@ -77,7 +77,7 @@ export function MziziPaymentMandateCard({
         className
       )}
     >
-      <header className="mb-4 space-y-1">
+      <header className="mb-4 space-y-2">
         <h2 className="text-lg font-semibold tracking-tight">Confirm payment</h2>
         <p className="text-sm text-[var(--muted-foreground)]">{summary}</p>
       </header>

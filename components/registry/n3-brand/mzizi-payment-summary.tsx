@@ -81,7 +81,7 @@ export function MziziPaymentSummary({
         aria-label="Payment summary"
         className="animate-pulse overflow-hidden rounded-[var(--radius-lg,14px)] bg-card ring-1 ring-foreground/10"
       >
-        <div className="space-y-1.5 border-b border-border px-4 py-3">
+        <div className="space-y-2 border-b border-border px-4 py-3">
           <div className="h-3.5 w-1/3 rounded bg-muted" />
           <div className="h-2.5 w-1/4 rounded bg-muted" />
         </div>

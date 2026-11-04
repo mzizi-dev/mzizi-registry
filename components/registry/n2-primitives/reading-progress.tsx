@@ -36,7 +36,7 @@ function ReadingProgress({
       aria-valuemin={0}
       aria-valuemax={100}
       aria-label={`Reading progress: ${Math.round(pct)}%`}
-      className={cn(variant === "compact" ? "flex items-center gap-2" : "space-y-1.5", className)}
+      className={cn(variant === "compact" ? "flex items-center gap-2" : "space-y-2", className)}
       {...props}
     >
       {/* Progress bar */}

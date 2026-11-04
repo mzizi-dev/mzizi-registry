@@ -54,7 +54,7 @@ export function AddressPrivateRow({
         <rect width="18" height="11" x="3" y="11" rx="2" ry="2" />
         <path d="M7 11V7a5 5 0 0 1 10 0v4" />
       </svg>
-      <span className="flex min-w-0 flex-1 flex-col gap-0.5">
+      <span className="flex min-w-0 flex-1 flex-col gap-2">
         <span className="flex items-center gap-2">
           <span className="truncate text-body-sm font-medium">{label}</span>
           <span data-slot="address-private-row-visibility" className="shrink-0 text-caption text-muted-foreground">
@@ -75,7 +75,7 @@ export function AddressPrivateRow({
           href={href}
           data-slot="address-private-row-link"
           aria-label={`${linkLabel} ${label}`}
-          className="inline-flex min-h-11 shrink-0 items-center rounded-full px-3 text-body-sm font-medium text-primary no-underline outline-none hover:bg-muted focus-visible:ring-[3px] focus-visible:ring-ring/50"
+          className="inline-flex min-h-11 shrink-0 items-center rounded-full px-3.5 text-body-sm font-medium text-primary no-underline outline-none hover:bg-muted focus-visible:ring-[3px] focus-visible:ring-ring/50"
         >
           {linkLabel}
         </a>

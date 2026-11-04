@@ -119,14 +119,14 @@ export function MziziHeader({
       </div>
 
       {/* Desktop navigation */}
-      <nav className="ml-6 hidden items-center gap-1 md:flex">
+      <nav className="ml-6 hidden items-center gap-2 md:flex">
         {navItems.map((item) => (
           <a
             key={item.href}
             href={item.href}
             target={item.external ? "_blank" : undefined}
             rel={item.external ? "noopener noreferrer" : undefined}
-            className="inline-flex items-center gap-1 rounded-lg px-3 py-1.5 text-sm text-muted-foreground transition-colors hover:bg-secondary hover:text-foreground focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary"
+            className="inline-flex items-center gap-2 rounded-lg px-3 py-1.5 text-sm text-muted-foreground transition-colors hover:bg-secondary hover:text-foreground focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary"
           >
             {item.label}
             {item.external && <ExternalLink className="size-3 opacity-50" />}
@@ -141,7 +141,7 @@ export function MziziHeader({
       {pillActions && pillActions.length > 0 && (
         <div
           data-slot="pill-actions"
-          className="flex items-center gap-1 rounded-full bg-[var(--brand-accent,var(--color-primary,#00B0FF))] p-1"
+          className="flex items-center gap-2 rounded-full bg-[var(--brand-accent,var(--color-primary,#00B0FF))] p-1"
         >
           {pillActions.map((action, i) => {
             const Icon = action.icon
@@ -166,7 +166,7 @@ export function MziziHeader({
       )}
 
       {/* Desktop actions area */}
-      <div className="flex items-center gap-1">
+      <div className="flex items-center gap-2">
         {actions}
         {!pillActions && <ThemeToggle />}
       </div>
