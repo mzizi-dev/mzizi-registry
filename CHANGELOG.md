@@ -28,6 +28,10 @@ Owner decision (#625, documented in #627): a one-line label chip or pill is held
 
 Owner decision, 2026-10-07 (#267): all three of Registry Snapshot, Rust and Mzizi components gate merges. `Registry Snapshot` and `Rust` already did, through `build.needs`; `Mzizi components` (`mz check` and `mz contract` on every registry `.mz`) did not, so a red run could merge. `.github/workflows/ci.yml` `build.needs` now lists it. Nothing a consumer of the registry sees changes. The ruleset side (listing the three contexts directly in ruleset `repo-ci`, so a failure reads as a failing check and not as `Build` skipped) is owner-only and still open on #267.
 
+### Fixed — the README's counts and API link are current, and a test reads them from the files (2026-11-04, [#583](https://github.com/mzizi-dev/mzizi-registry/issues/583))
+
+From the 2026-10-29 audit (#583). `README.md` said **575 components**, a number no file gives; it now says **675 registry items** and splits them as `registry.json` does (488 `registry:ui`, 105 `registry:block`, 82 libraries, hooks and other items). It said 31 app contracts; `contracts/app/` holds 35. The API section linked `mzizi-dev/mzizi-api-gateway`; it links `mzizi-dev/mzizi-api` (formerly `mzizi-api-gateway`). `__tests__/readme-counts.test.ts` reads the item split and the app-contract count from `registry.json` and `contracts/app/`, so the README cannot drift again without a red test. Nothing a consumer of the API sees changes. The audit's other findings (the `.mz` rule in AGENTS.md, the manifest's `.rs`/`.mz`/`.astro` coverage, the duplicate issues) are not in this change.
+
 ### Changed — the registry takes `@nyuchi/mzizi-skills` 0.18.0: twelve skills, five of them dev skills (2026-11-04, [#617](https://github.com/mzizi-dev/mzizi-registry/issues/617))
 
 - **The Claude Code plugin moves to 1.7.0** (was 1.6.0), as every earlier skills bump did (#596, #601, #611): `plugin/.claude-plugin/plugin.json` `version`, so a client that updates by version picks up skills 0.18.0. The plugin and marketplace descriptions now say twelve skills at 0.18.0 and name the new ones.
