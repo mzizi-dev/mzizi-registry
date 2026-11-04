@@ -29,7 +29,7 @@ source of truth checked from both directions.
 npx shadcn@latest add https://api.mzizi.dev/v1/ui/button
 ```
 
-**575 components** across 8 architectural nodes and 4 rungs, served from disk —
+**675 registry items** (`registry.json`: 488 `registry:ui`, 105 `registry:block` and 82 libraries, hooks and other items) across 8 architectural nodes and 4 rungs, served from disk —
 `registry.json` and the component files in this repo are the source of truth, not a
 database. **21 colour families.** **One MCP server** (served from `mzizi-dev/agent-tools`) any AI
 client can install against.
@@ -81,7 +81,7 @@ designed and waits for the Phase 0 gate (see
 [`docs/roots/RFC-roots.md`](docs/roots/RFC-roots.md) §2.2).
 
 `contracts/` holds a versioned, machine-readable contract for each `@bundu/ui` app
-component of the Mzizi Dashboard Standard: 31 in `contracts/app/`, in the format
+component of the Mzizi Dashboard Standard: 35 in `contracts/app/`, in the format
 `contracts/schema/component-contract.schema.json` defines, listed in `contracts/index.json`.
 [`contracts/README.md`](./contracts/README.md) has the coverage table; see
 [docs.mzizi.dev/registry/contracts](https://docs.mzizi.dev/registry/contracts).
@@ -145,7 +145,7 @@ radius scale value.
 ## API
 
 `api.mzizi.dev` is served by
-[`mzizi-dev/mzizi-api-gateway`](https://github.com/mzizi-dev/mzizi-api-gateway), not by
+[`mzizi-dev/mzizi-api`](https://github.com/mzizi-dev/mzizi-api) (formerly `mzizi-api-gateway`), not by
 this repo. The gateway bundles this repo's files — `registry.json`, the component sources
 and the `lib/` readers (`lib/registry`, `lib/db`, `lib/skills`, `lib/tokens`, …) — at a
 pinned commit. The spec stays here in [`openapi.yaml`](openapi.yaml) (inlined into
