@@ -364,7 +364,7 @@ Read off the repo rulesets on 2026-11-03 (`gh api repos/mzizi-dev/<repo>/ruleset
 
 ## Dev skills, progress reports and the merge gate
 
-Load the Mzizi **dev skills** before starting work: `mzizi_get_skills category=dev` on the Mzizi MCP (`mcp.mzizi.dev`), or `@nyuchi/mzizi-skills` from npm. They are `digital-hygiene` and `progress-report`.
+Load the Mzizi **dev skills** before starting work: `mzizi_get_skills category=dev` on the Mzizi MCP (`mcp.mzizi.dev`), or `@nyuchi/mzizi-skills` from npm. They are `digital-hygiene`, `progress-report`, `ship-release`, `registry-propagation` and `pr-gates`.
 
 - **Digital hygiene.** Check free disk before starting, clone only under `$TMPDIR`, share build caches, and audit, then delete, your clones once the work merges (`digital-hygiene` skill).
 - **Clone isolation.** Clone only into a directory unique to you; never touch another agent's.
