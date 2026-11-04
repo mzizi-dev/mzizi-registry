@@ -190,6 +190,9 @@ describe("one definition, every copy agrees", () => {
       visibleFine: 28,
       body: 17,
       caption: 14,
+      inset: 14,
+      gap: 7,
+      leading: 1.5,
       // deprecated aliases of the 4.21.0 keys, kept for one release
       coarse: 49,
       fine: 49,

@@ -16,6 +16,38 @@ import type { ChangelogRow } from "@/lib/db/types";
 
 export const CHANGELOG_RELEASES: readonly ChangelogRow[] = [
   {
+    version: "4.24.0",
+    title:
+      "v4.24.0 — the spacing floor: 14px inset, 7px gaps, 1.5 body leading",
+    description:
+      'Releases staging to main as the next minor above v4.23.x (nyuchi/.github#80; highest tag v4.23.2). Added: the spacing floor (#617, #618): BUNDU_FLOOR.spacing { insetPx 14, controlGapPx 7, labelGapPx 7, itemGapPx 7, leadingBody 1.5 } in lib/tokens/roles.source.ts; --inset-floor, --gap-floor and --leading-floor in the generated stylesheet, never lowered by a density layer, with the fixed size roles spacing-inset-floor and spacing-gap-floor in every platform token file; base-layer defaults that pad a bare control or text surface, space a bare list or toolbar and floor body leading (data-mzizi-sizes="legacy" steps out); /v1/brand accessibility minInset, minControlGap, minLabelGap, minItemGap, minBodyLeading; /v1/tokens spacingFloor; the Spacing Floor doctrine section. CHANGELOG.md section [4.24.0] is the narrative.',
+    line: "public",
+    line_rank: 1,
+    major: 4,
+    minor: 24,
+    patch: 0,
+    release_kind: "minor",
+    breaking: false,
+    released_at: "2026-11-04T12:00:00.000+00:00",
+    created_at: "2026-11-04T12:00:00.000+00:00",
+    nodes_affected: null,
+    components_added: null,
+    components_modified: null,
+    components_deprecated: null,
+    components_removed: null,
+    components_touched: null,
+    tools_added: null,
+    tools_modified: null,
+    tools_deprecated: null,
+    tools_removed: null,
+    linked_issues: null,
+    total_stable: null,
+    total_deprecated: null,
+    total_alpha: null,
+    changed_by: "claude-code",
+    entry_order: 0,
+  },
+  {
     version: "4.23.0",
     title:
       "v4.23.0 — the Bundu floor: 17px body, 14px captions, a 49px hit region on every control",

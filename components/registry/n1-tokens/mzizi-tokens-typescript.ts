@@ -2807,6 +2807,18 @@ export const roles = {
     light: "49px",
     dark: "49px",
   },
+  "spacing-inset-floor": {
+    kind: "size",
+    cssVar: "--size-inset-floor",
+    light: "14px",
+    dark: "14px",
+  },
+  "spacing-gap-floor": {
+    kind: "size",
+    cssVar: "--size-gap-floor",
+    light: "7px",
+    dark: "7px",
+  },
   "spacing-control": {
     kind: "size",
     cssVar: "--size-control",
