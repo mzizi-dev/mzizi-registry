@@ -125,9 +125,6 @@
   "components/registry/n2-primitives/toolbar.tsx": {
     "negMargin": 1
   },
-  "components/registry/n2-primitives/ui-variants.ts": {
-    "gap": 1
-  },
   "components/registry/n2-primitives/vitals-display.tsx": {
     "gap": 1
   },

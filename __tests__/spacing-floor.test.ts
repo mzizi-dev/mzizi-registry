@@ -257,26 +257,31 @@ describe("the contract runner holds the spacing floor", () => {
     for (const [k, why] of Object.entries(SPACING_GAPS))
       expect(why.length, k).toBeGreaterThan(30);
   });
-  it("an exception names a class its contract's component still carries", () => {
-    const sources = new Map<string, string>();
+  it("an exception names a class that its own contract's components still carry", () => {
+    const all = new Map<string, string[]>();
     (function walk(d: string) {
       for (const f of readdirSync(d)) {
         const p = join(d, f);
         if (statSync(p).isDirectory()) walk(p);
-        else if (/\.(tsx|astro|rs|ts)$/.test(f))
-          sources.set(p, readFileSync(p, "utf8"));
+        else if (/\.(tsx|astro|rs)$/.test(f))
+          all.set(f.replace(/\.[a-z]+$/, ""), [
+            ...(all.get(f.replace(/\.[a-z]+$/, "")) ?? []),
+            readFileSync(p, "utf8"),
+          ]);
       }
     })(join(ROOT, "components/registry"));
-    const all = [...sources.values()].join("\n");
     for (const key of Object.keys(SPACING_GAPS)) {
       const [name, ...rest] = key.split(":");
-      expect(
+      const c = JSON.parse(
         readFileSync(join(ROOT, `contracts/${name}.contract.json`), "utf8"),
-        key,
-      ).toContain('"name"');
-      expect(all, `${key} is stale: no component carries the class`).toContain(
-        rest.join(":"),
-      );
+      ) as { implementations: Record<string, { registry?: string }> };
+      const src = Object.values(c.implementations)
+        .flatMap((i) => all.get(i?.registry ?? "") ?? [])
+        .join("\n");
+      expect(
+        src,
+        `${key} is stale: its components no longer carry the class`,
+      ).toContain(rest.join(":"));
     }
   });
 });

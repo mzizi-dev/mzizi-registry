@@ -529,6 +529,18 @@ const SPACE_NAMES: &[(&str, f32)] = &[
     ("6xl", 128.0),
 ];
 
+/// `\d*\.?\d+`: the arbitrary leading forms `spacingViolations` reads (`1.2`, `.5`, `15`; not `1.`).
+fn is_leading_number(n: &str) -> bool {
+    match n.split_once('.') {
+        Some((int, frac)) => {
+            int.bytes().all(|b| b.is_ascii_digit())
+                && !frac.is_empty()
+                && frac.bytes().all(|b| b.is_ascii_digit())
+        }
+        None => !n.is_empty() && n.bytes().all(|b| b.is_ascii_digit()),
+    }
+}
+
 fn is_decimal(v: &str) -> bool {
     let mut parts = v.splitn(2, '.');
     let int = parts.next().unwrap_or("");
@@ -571,7 +583,8 @@ fn utility_of(token: &str) -> &str {
         }
     }
     let u = &token[cut.unwrap_or(0)..];
-    u.strip_prefix('!').unwrap_or(u)
+    let u = u.strip_prefix('!').unwrap_or(u);
+    u.strip_suffix('!').unwrap_or(u)
 }
 
 const SPACING_KINDS: &[&str] = &[
@@ -729,10 +742,7 @@ pub fn spacing_violations(node: &Node) -> Vec<(String, String)> {
                 Some(r) => r
                     .strip_prefix('[')
                     .and_then(|r| r.strip_suffix(']'))
-                    .filter(|n| {
-                        n.bytes().all(|b| b.is_ascii_digit() || b == b'.')
-                            && n.bytes().any(|b| b.is_ascii_digit())
-                    })
+                    .filter(|n| is_leading_number(n))
                     .and_then(|n| n.parse::<f32>().ok()),
                 None => None,
             };

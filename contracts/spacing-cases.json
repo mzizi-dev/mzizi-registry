@@ -105,6 +105,16 @@
       "name": "a numeric leading under the floor on a list item counts",
       "html": "<li class=\"leading-[1.2]\">a</li>",
       "violations": 1
+    },
+    {
+      "name": "a trailing important marker is read through",
+      "html": "<div class=\"flex gap-1!\"><i>a</i><i>b</i></div>",
+      "violations": 1
+    },
+    {
+      "name": "a malformed arbitrary leading is not read",
+      "html": "<p class=\"leading-[1.]\">a</p>",
+      "violations": 0
     }
   ]
 }

@@ -1416,14 +1416,15 @@ function densityLayer(): string {
       select,
       textarea,
       input:not([type="checkbox"], [type="radio"], [type="range"], [type="hidden"], [type="file"], [type="color"], [type="image"])
-    ):not(:has(> svg:only-child, > img:only-child), :empty, [class*="size-"], [data-day]) {
+    ):not(:has(> svg:only-child, > img:only-child), :empty, [class^="size-"], [class*=" size-"], [data-day]) {
     padding-inline: var(--inset-floor);
   }
-  :where(dialog, [popover], [role="alert"], [role="status"], [role="alertdialog"], [role="tooltip"], [data-slot="card"], [data-slot="alert"]):not(
+  :where(dialog, [popover], [role="alertdialog"], [role="tooltip"], [data-slot="card"], [data-slot="alert"]):not(
       :has(> [data-slot*="header"], > [data-slot*="content"], > [data-slot*="footer"], > [data-slot*="title"], > [data-slot*="description"]),
       svg,
       :empty,
-      [class*="size-"]
+      [class^="size-"],
+      [class*=" size-"]
     ) {
     padding: var(--inset-floor);
   }

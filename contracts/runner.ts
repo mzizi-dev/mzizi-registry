@@ -749,7 +749,7 @@ function utilityOf(token: string): string {
     else if (c === "]" || c === ")") depth -= 1;
     else if (c === ":" && depth === 0) cut = i;
   }
-  return token.slice(cut + 1).replace(/^!/, "");
+  return token.slice(cut + 1).replace(/^!|!$/g, "");
 }
 
 const SPACING_UTILITY =
