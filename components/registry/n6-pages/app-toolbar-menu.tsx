@@ -24,7 +24,7 @@ function ToolbarMenu({ label, choices, icon }: ToolbarMenuProps) {
   const current = choices.find((c) => c.current) ?? choices[0];
   return (
     <details className="relative" data-slot="toolbar-menu">
-      <summary className="inline-flex h-8 cursor-pointer list-none items-center gap-2 rounded-sm px-2.5 text-body-sm font-medium outline-none hover:bg-muted focus-visible:ring-2 focus-visible:ring-ring pointer-coarse:h-11 [&::-webkit-details-marker]:hidden">
+      <summary className="inline-flex h-8 cursor-pointer list-none items-center gap-2 rounded-sm px-3.5 text-body-sm font-medium outline-none hover:bg-muted focus-visible:ring-2 focus-visible:ring-ring pointer-coarse:h-11 [&::-webkit-details-marker]:hidden">
         {icon && (
           <Icon
             name={icon}

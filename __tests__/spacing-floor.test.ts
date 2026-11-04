@@ -244,6 +244,41 @@ describe("the contract runner holds the spacing floor", () => {
       expect(spacingViolations(first!).length, c.name).toBe(c.violations);
     }
   });
+  it("keeps the 14px inline inset on the shell and page controls #625 named", () => {
+    // Source-level and precise: a bare `px-<n>` (no variant) under INSET_FLOOR_PX on the line that carries the control's
+    // classes. The rendered contracts cannot see these (the label sits in a child span), so the source is pinned.
+    // Block-axis padding and the fixed heights (49px hit regions) are exempt, as the rule says.
+    const N6 = "components/registry/n6-pages";
+    const N7 = "components/registry/n7-shell";
+    const controls: [string, string][] = [
+      ["app-toolbar-menu", "<summary"],
+      ["app-data-table", "<summary"],
+      ["app-quick-search", "transition-colors hover:bg-muted"],
+      ["app-top-bar-action", "inline-flex h-8 min-w-8"],
+      ["app-command-palette", "gap-2.5 rounded-sm"],
+      ["app-command-palette", "text-caption font-medium text-muted-foreground"],
+      ["app-side-nav", "nav-group-label"],
+    ];
+    for (const [name, anchor] of controls) {
+      for (const ext of ["astro", "tsx"]) {
+        const dir =
+          name.startsWith("app-toolbar") || name === "app-data-table" ? N6 : N7;
+        const file = `${dir}/${name}.${ext}`;
+        const lines = readFileSync(join(ROOT, file), "utf8")
+          .split("\n")
+          .filter((l) => l.includes(anchor));
+        expect(lines.length, `${file}: ${anchor}`).toBeGreaterThan(0);
+        for (const line of lines) {
+          const under = (
+            line.match(/(?<![\w:[-])px-(?:\d+(?:\.\d+)?|px)(?![\w.-])/g) ?? []
+          ).filter(
+            (t) => (spaceOf(t.slice(3)) ?? INSET_FLOOR_PX) < INSET_FLOOR_PX,
+          );
+          expect(under, `${file}: ${anchor}`).toEqual([]);
+        }
+      }
+    }
+  });
   it("holds a label chip or pill on its inline axis, and says so (#625)", () => {
     const run = (html: string) =>
       spacingViolations(
