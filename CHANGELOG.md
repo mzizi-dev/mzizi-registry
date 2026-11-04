@@ -10,6 +10,15 @@ From 2026-10-04 releases follow the org versioning policy ([nyuchi/.github#80](h
 
 ## [Unreleased]
 
+### Fixed — seven shell and page controls take the 14px inline inset, in React and Astro (2026-11-04, [#625](https://github.com/mzizi-dev/mzizi-registry/issues/625), [#627](https://github.com/mzizi-dev/mzizi-registry/pull/627), [#617](https://github.com/mzizi-dev/mzizi-registry/issues/617))
+
+Owner decision (#625, documented in #627): a one-line label chip or pill is held on its inline axis by the 14px inset, and the block axis is exempt. These controls still had less side padding; each is now `px-3.5`, in both its `.tsx` and its `.astro` (no `.rs` twin exists for any of them). Heights are unchanged (`h-8`, `pointer-coarse:h-11`), so hit regions are unchanged.
+
+- **Changed (from `px-2.5` to `px-3.5`):** the `<summary>` of `app-toolbar-menu` (ToolbarMenu), the row-action `<summary>` of `app-data-table` (DataTable), the `app-quick-search` field (QuickSearch), and the `nav-group-label` of `app-side-nav` (SideNav group labels).
+- **Changed (from `px-2` to `px-3.5`):** `app-top-bar-action` (TopBarAction) and the item links of `app-command-palette` (CommandPalette). The palette's group heading moved with its items (`px-2` to `px-3.5`) so the heading stays aligned with them; it is a label, not a control.
+- **Not changed:** the AppShell search is the QuickSearch in the sidebar's search slot, so it takes the QuickSearch change; the slot wrapper's `px-2` is the sidebar's gutter, shared with its head, body and foot, and was left. SideNav's navigation rows (`px-2.5`) and tooltip, and the `px-2` of AppShell's top bar, were not on the list and are not changed, so a SideNav group label now sits 4px further in than the rows beneath it. Nothing else in the registry was audited or changed here.
+- **Tests.** `__tests__/spacing-floor.test.ts` gains a source-level check that no bare `px-<n>` under 14px sits on those control lines in the `.astro` and `.tsx` files (it fails on the previous sources). The evaluator and `contracts/spacing-cases.json` are unchanged: the rendered contracts cannot see these classes because the label sits in a child element, so the source is pinned instead. `lib/registry-source.generated.json` is regenerated (`pnpm registry:source`).
+
 ### Changed — the registry takes `@nyuchi/mzizi-skills` 0.18.0: twelve skills, five of them dev skills (2026-11-04, [#617](https://github.com/mzizi-dev/mzizi-registry/issues/617))
 
 - **The Claude Code plugin moves to 1.7.0** (was 1.6.0), as every earlier skills bump did (#596, #601, #611): `plugin/.claude-plugin/plugin.json` `version`, so a client that updates by version picks up skills 0.18.0. The plugin and marketplace descriptions now say twelve skills at 0.18.0 and name the new ones.
