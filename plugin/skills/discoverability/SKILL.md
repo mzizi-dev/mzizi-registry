@@ -1,7 +1,6 @@
 ---
 name: discoverability
-description: Use this skill whenever a Mzizi-ecosystem site or app needs to be found and correctly rendered by machines — social/messaging link previews (OpenGraph), search engines, and AI agents. Covers the doctrine ("if the machine can't see it, it doesn't exist"), the brand-agnostic Mzizi "hive" OG-image template (dynamic per page, carrying each page's title + description + site icon), the static-Astro implementation (the standard), the rules for a surface already on Next.js (next >= 16.3.6, no request input in an ImageResponse), APCA-checked text colours, and a pre-ship checklist. Reach for it when a shared link renders no preview, when adding a new route/site, or when wiring SEO/AIO (llms.txt, structured data, agent-readiness). For tokens and brand use mzizi-design; for components use mzizi-roots.
-user-invocable: true
+description: Use this skill whenever a Mzizi-ecosystem site or app needs to be found and correctly rendered by machines — social/messaging link previews (OpenGraph), search engines, and AI agents. Covers the doctrine ("if the machine can't see it, it doesn't exist"), the brand-agnostic Mzizi "hive" OG-image template (dynamic per page, carrying each page's title + description + site icon), the static-Astro implementation (the standard), the rules for a surface already on Next.js (next 16.3.6 or later, no request input in an ImageResponse), APCA-checked text colours, and a pre-ship checklist. Reach for it when a shared link renders no preview, when adding a new route/site, or when wiring SEO/AIO (llms.txt, structured data, agent-readiness). For tokens and brand use mzizi-design; for components use mzizi-roots.
 ---
 
 # Discoverability — SEO + AIO for the Mzizi ecosystem
@@ -54,20 +53,26 @@ One template, every route, every brand. The card is:
   (the bee), mukoko (the swarm), mzizi, shamwari — each with its own mark + domain.
   It picks up the _site's own icon_, never a hardcoded one.
 
-### Colours are APCA-checked
+### Colours are checked twice: WCAG ratio and APCA
 
-OG text is read at thumbnail size, so contrast matters. Verified against the
-`#1B1A17` ground (APCA reverse polarity; design-system floor is **Lc 75 large /
-Lc 90 body**):
+OG text is read at thumbnail size, so contrast matters. The design system's floors are WCAG 2
+**7:1 for body text and 4.5:1 for non-body text** (owner, 2026-11-02; the Bundu floor), and
+the APCA bars beside them (**Lc 75 large / Lc 90 body**). Verified against the `#1B1A17`
+ground (APCA reverse polarity):
 
-| Role                             | Hex       | APCA Lc | Verdict |
-| -------------------------------- | --------- | ------- | ------- |
-| Title                            | `#F5F5F4` | 92      | ✓ body  |
-| Secondary (eyebrow, description) | `#E5E3DE` | 81      | ✓ large |
-| Domain (gold)                    | `#FFD740` | 76      | ✓ large |
+| Role                             | Hex       | WCAG ratio | APCA Lc | Verdict |
+| -------------------------------- | --------- | ---------- | ------- | ------- |
+| Title                            | `#F5F5F4` | 15.95:1    | 92      | ✓ body  |
+| Secondary (eyebrow, description) | `#E5E3DE` | 13.57:1    | 81      | ✓ large |
+| Domain (gold)                    | `#FFD740` | 12.47:1    | 76      | ✓ large |
 
-Do **not** use dim greys like `#B2AFA8` (only Lc 50) for OG text — it looks fine on a
-monitor and vanishes in a messaging thumbnail. Re-run APCA when changing any pair.
+Do **not** use dim greys like `#B2AFA8` (only Lc 50, though it measures 7.95:1 and passes WCAG 7:1, so
+the ratio alone is not enough) for OG text: it looks fine on a monitor and vanishes in a
+messaging thumbnail. Re-run both checks when changing any pair
+(`mzizi_check_accessibility` gives the WCAG ratio; APCA needs its own tool).
+
+The Bundu spacing floor (inset, gaps and leading minimums; the `mzizi-design` skill has the
+numbers) applies to the pages you build around these tags, not to the image.
 
 ## Implementation — Astro, static (the standard)
 
@@ -126,7 +131,7 @@ on Next.js:
 - [ ] Sharing the URL in Slack / WhatsApp / iMessage / X renders a preview **image**.
 - [ ] The OG image is **generated** (dynamic), carries the page's title + description + the site icon, and its URL is **absolute**.
 - [ ] No hardcoded `openGraph.images` / `twitter.images`.
-- [ ] OG text colours pass APCA (Lc ≥ 75 large / ≥ 90 body).
+- [ ] OG text colours pass WCAG (≥ 7:1 body, ≥ 4.5:1 non-body) and APCA (Lc ≥ 75 large / ≥ 90 body).
 - [ ] `metadataBase` / `site` is set; canonical URL is absolute.
 - [ ] Title + meta description are unique per route.
 - [ ] `llms.txt`, `robots.txt`, `sitemap.xml` present; JSON-LD on primary entities.
