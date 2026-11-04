@@ -50,7 +50,7 @@ function UserCard({
         className="flex animate-pulse items-center gap-3 rounded-[var(--radius-lg,14px)] bg-card p-3 ring-1 ring-foreground/10"
       >
         <div className="size-10 shrink-0 rounded-full bg-muted" />
-        <div className="flex-1 space-y-1.5">
+        <div className="flex-1 space-y-2">
           <div className="h-3.5 w-1/3 rounded bg-muted" />
           <div className="h-2.5 w-1/4 rounded bg-muted" />
         </div>
@@ -65,7 +65,7 @@ function UserCard({
         className="flex animate-pulse items-center gap-3 rounded-[var(--radius-lg,14px)] p-3"
       >
         <div className="size-10 shrink-0 rounded-full bg-muted" />
-        <div className="flex-1 space-y-1.5">
+        <div className="flex-1 space-y-2">
           <div className="h-3.5 w-1/3 rounded bg-muted" />
           <div className="h-2.5 w-1/4 rounded bg-muted" />
         </div>
@@ -103,7 +103,7 @@ function UserCard({
         </div>
         {email && <p className="mt-0.5 truncate text-xs text-muted-foreground">{email}</p>}
       </div>
-      {actions && <div className="flex shrink-0 items-center gap-1">{actions}</div>}
+      {actions && <div className="flex shrink-0 items-center gap-2">{actions}</div>}
     </div>
   )
 }

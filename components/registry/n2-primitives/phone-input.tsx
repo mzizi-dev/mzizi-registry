@@ -88,7 +88,7 @@ function PhoneInput({
             aria-label="Select country code"
             className={cn(
               "border-input bg-input/30 focus-visible:border-ring focus-visible:ring-ring/50",
-              "inline-flex h-12 shrink-0 items-center gap-1 rounded-full border px-2.5 text-sm transition-colors",
+              "inline-flex h-12 shrink-0 items-center gap-2 rounded-full border px-2.5 text-sm transition-colors",
               "hover:bg-input/50 focus-visible:ring-[3px] focus-visible:outline-none"
             )}
           >

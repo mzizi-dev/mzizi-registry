@@ -94,7 +94,7 @@ function MziziStatsRow({
         className="flex animate-pulse gap-4"
       >
         {Array.from({ length: 3 }).map((_, i) => (
-          <div key={i} className="flex-1 space-y-1.5 rounded-[var(--radius-md,12px)] bg-muted p-3">
+          <div key={i} className="flex-1 space-y-2 rounded-[var(--radius-md,12px)] bg-muted p-3">
             <div className="h-2.5 w-1/2 rounded bg-foreground/5" />
             <div className="h-5 w-2/3 rounded bg-foreground/5" />
           </div>
@@ -163,7 +163,7 @@ function MziziStatsRow({
             </div>
             <div className="min-w-0">
               <div className="text-sm text-muted-foreground">{stat.label}</div>
-              <div className="flex items-baseline gap-1.5">
+              <div className="flex items-baseline gap-2">
                 <span className="text-sm font-semibold text-foreground">{stat.value}</span>
                 {stat.trend && (
                   <span

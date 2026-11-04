@@ -70,7 +70,7 @@ function LogViewer({ className, entries, maxHeight = "400px", ...props }: LogVie
       {...props}
     >
       {/* Filter bar */}
-      <div className="flex items-center gap-1 border-b border-border px-3 py-2">
+      <div className="flex items-center gap-2 border-b border-border px-3 py-2">
         {levels.map((level) => (
           <button
             key={level}

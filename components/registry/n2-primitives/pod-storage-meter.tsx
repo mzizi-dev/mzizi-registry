@@ -55,9 +55,9 @@ function PodStorageMeter({
         ))}
       </div>
       {/* Legend */}
-      <div className="mt-2 flex flex-wrap gap-x-3 gap-y-1">
+      <div className="mt-2 flex flex-wrap gap-x-3 gap-y-2">
         {categories.map((cat, i) => (
-          <div key={i} className="flex items-center gap-1 text-sm text-muted-foreground">
+          <div key={i} className="flex items-center gap-2 text-sm text-muted-foreground">
             <div className="size-2 rounded-full" style={{ backgroundColor: cat.color }} />
             <span>
               {cat.label} ({cat.sizeGB.toFixed(1)} GB)

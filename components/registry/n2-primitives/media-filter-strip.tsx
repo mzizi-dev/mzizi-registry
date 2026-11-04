@@ -39,7 +39,7 @@ function MediaFilterStrip({
           aria-checked={selectedId === filter.id}
           onClick={() => onSelect?.(filter.id)}
           className={cn(
-            "flex shrink-0 flex-col items-center gap-1 transition-transform",
+            "flex shrink-0 flex-col items-center gap-2 transition-transform",
             selectedId === filter.id && "scale-110"
           )}
         >

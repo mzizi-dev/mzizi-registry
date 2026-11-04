@@ -94,7 +94,7 @@ function ListingSkeleton({
       )}
     >
       <Bone className="size-12 shrink-0" />
-      <div className="flex flex-1 flex-col gap-1.5">
+      <div className="flex flex-1 flex-col gap-2">
         <Bone className="h-4 w-2/3" />
         <Bone className="h-3 w-full" />
       </div>
@@ -122,7 +122,7 @@ function ProfileSkeleton({ className }: { className?: string }) {
       {/* Stats row */}
       <div className="mt-5 flex gap-8">
         {[1, 2, 3].map((i) => (
-          <div key={i} className="flex flex-col items-center gap-1">
+          <div key={i} className="flex flex-col items-center gap-2">
             <Bone className="h-6 w-8" />
             <Bone className="h-3 w-12" />
           </div>
@@ -168,7 +168,7 @@ function StatsSkeleton({
       {Array.from({ length: count }).map((_, i) => (
         <div key={i} className="flex min-w-[120px] items-center gap-2">
           <Bone className="size-8 shrink-0 rounded-[var(--radius-inner,7px)]" />
-          <div className="flex flex-col gap-1">
+          <div className="flex flex-col gap-2">
             <Bone className="h-2.5 w-16" />
             <Bone className="h-3.5 w-10" />
           </div>
@@ -219,7 +219,7 @@ function DetailSkeleton({ className }: { className?: string }) {
           {[1, 2, 3].map((i) => (
             <div key={i} className="flex items-center gap-3">
               <Bone className="size-9 rounded-[var(--radius-inner,7px)]" />
-              <div className="flex flex-1 flex-col gap-1">
+              <div className="flex flex-1 flex-col gap-2">
                 <Bone className="h-4 w-1/2" />
                 <Bone className="h-3 w-1/3" />
               </div>
@@ -248,7 +248,7 @@ function CalendarSkeleton({ className }: { className?: string }) {
         <Bone className="size-5 rounded-full" />
       </div>
       {/* Day headers */}
-      <div className="mb-2 grid grid-cols-7 gap-1">
+      <div className="mb-2 grid grid-cols-7 gap-2">
         {Array.from({ length: 7 }).map((_, i) => (
           <Bone key={i} className="mx-auto h-3 w-6" />
         ))}

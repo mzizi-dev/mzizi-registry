@@ -180,7 +180,7 @@ function MziziTrustMeter({
         <div className="h-2 rounded-full bg-muted" />
         <div className="flex justify-between">
           {[0, 1, 2, 3].map((i) => (
-            <div key={i} className="space-y-1">
+            <div key={i} className="space-y-2">
               <div className="h-2 w-8 rounded bg-muted" />
               <div className="h-1.5 w-6 rounded bg-muted" />
             </div>
@@ -245,7 +245,7 @@ function MziziTrustMeter({
           </span>
         </div>
         {showScore ? (
-          <div className="flex items-baseline gap-1.5">
+          <div className="flex items-baseline gap-2">
             <span data-slot="trust-meter-score" className={cn("text-2xl font-bold", SCORE_TEXT[level])}>
               {trustScore.toFixed(3)}
             </span>
@@ -299,7 +299,7 @@ function MziziTrustMeter({
           {breakdown.map((signal) => (
             <div key={signal.key} data-slot="trust-breakdown-signal" data-signal={signal.key}>
               <div className="mb-1 flex items-center justify-between">
-                <div className="flex items-center gap-1.5">
+                <div className="flex items-center gap-2">
                   <Icon name={signal.icon} className={cn("size-3.5", signal.text)} />
                   <span className="text-xs font-medium text-muted-foreground">{signal.label}</span>
                 </div>
@@ -329,7 +329,7 @@ function MziziTrustMeter({
           {ubuntuPoints != null && (
             <div
               data-slot="trust-ubuntu-points"
-              className="mt-1 flex items-center justify-center gap-1.5 text-sm text-muted-foreground"
+              className="mt-1 flex items-center justify-center gap-2 text-sm text-muted-foreground"
             >
               <Icon name="star" className="size-3 text-status-warning" />
               <span>{ubuntuPoints.toLocaleString()} Ubuntu Points earned through community contribution</span>

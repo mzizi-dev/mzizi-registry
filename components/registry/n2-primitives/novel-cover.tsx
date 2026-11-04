@@ -89,7 +89,7 @@ function NovelCover({
             medium from another. It leads the meta line because it is the
             coarsest distinction between two covers. */}
         {(type || genre || chapterCount) && (
-          <div className="mt-1 flex items-center gap-1.5 text-sm text-muted-foreground">
+          <div className="mt-1 flex items-center gap-2 text-sm text-muted-foreground">
             {type && <span className="capitalize">{type}</span>}
             {type && (genre || chapterCount) && <span>·</span>}
             {genre && <span>{genre}</span>}

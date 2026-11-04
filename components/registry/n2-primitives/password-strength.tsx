@@ -47,8 +47,8 @@ function PasswordStrength({ className, password, ...props }: PasswordStrengthPro
       {...props}
     >
       {/* Strength bar */}
-      <div className="space-y-1.5">
-        <div className="flex gap-1">
+      <div className="space-y-2">
+        <div className="flex gap-2">
           {[1, 2, 3, 4].map((seg) => (
             <div
               key={seg}
@@ -74,7 +74,7 @@ function PasswordStrength({ className, password, ...props }: PasswordStrengthPro
         )}
       </div>
       {/* Checklist */}
-      <ul className="space-y-1">
+      <ul className="space-y-2">
         {CHECKS.map((check) => {
           const passed = password ? check.test(password) : false
           return (

@@ -81,7 +81,7 @@ function AppointmentCard({
             {status}
           </span>
         </div>
-        <div className="mt-2 flex flex-wrap items-center gap-x-3 gap-y-1 text-xs text-muted-foreground">
+        <div className="mt-2 flex flex-wrap items-center gap-x-3 gap-y-2 text-xs text-muted-foreground">
           <span>{dateStr}</span>
           {time && <span>{time}</span>}
           {location && <span>{location}</span>}

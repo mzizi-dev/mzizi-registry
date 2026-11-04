@@ -87,11 +87,11 @@ export function MziziReviewCard({
       >
         <div className="flex items-center gap-2.5">
           <div className="size-9 rounded-full bg-muted" />
-          <div className="flex-1 space-y-1">
+          <div className="flex-1 space-y-2">
             <div className="h-3 w-1/4 rounded bg-muted" />
             <div className="h-2.5 w-16 rounded bg-muted" />
           </div>
-          <div className="flex gap-0.5">
+          <div className="flex gap-2">
             {Array.from({ length: 5 }).map((_, i) => (
               <div key={i} className="size-3 rounded bg-muted" />
             ))}
@@ -123,7 +123,7 @@ export function MziziReviewCard({
             )}
           </div>
           <div>
-            <div className="flex items-center gap-1">
+            <div className="flex items-center gap-2">
               <p className="text-sm font-medium text-foreground">{reviewer}</p>
               {verificationTier > 0 && <MziziVerifiedBadge tier={TIER_BY_LEVEL[verificationTier]} size="sm" />}
             </div>
@@ -151,7 +151,7 @@ export function MziziReviewCard({
           <button
             onClick={onHelpful}
             className={cn(
-              "flex items-center gap-1.5 rounded-full px-3 py-1.5 text-sm font-medium transition-colors",
+              "flex items-center gap-2 rounded-full px-3 py-1.5 text-sm font-medium transition-colors",
               markedHelpful
                 ? "bg-[var(--brand-accent,var(--color-malachite,#64FFDA))]/10 text-[var(--brand-accent,var(--color-malachite,#64FFDA))]"
                 : "min-h-[48px] text-muted-foreground hover:bg-muted focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--color-primary,#00B0FF)]"

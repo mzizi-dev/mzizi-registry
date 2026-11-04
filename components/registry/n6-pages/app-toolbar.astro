@@ -36,7 +36,7 @@ const inputId = `${id}-${name}`;
   </form>
   {
     Astro.slots.has("filters") && (
-      <div class="flex flex-wrap items-center gap-1 sm:border-l sm:border-border sm:pl-1" data-slot="toolbar-filters">
+      <div class="flex flex-wrap items-center gap-2 sm:border-l sm:border-border sm:pl-1" data-slot="toolbar-filters">
         <slot name="filters" />
       </div>
     )

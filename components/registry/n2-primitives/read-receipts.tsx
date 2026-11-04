@@ -36,7 +36,7 @@ function ReadReceipts({
       data-slot="read-receipts"
       data-portal="https://mzizi.dev/components/read-receipts"
       aria-label={`Read by ${readers.length} ${readers.length === 1 ? "person" : "people"}`}
-      className={cn("flex items-center gap-1", className)}
+      className={cn("flex items-center gap-2", className)}
       {...props}
     >
       {/* Avatar stack */}

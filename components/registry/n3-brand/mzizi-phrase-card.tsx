@@ -67,7 +67,7 @@ export function MziziPhraseCard({
       >
         <div className="h-5 w-1/2 rounded bg-muted" />
         <div className="h-3 w-2/3 rounded bg-muted" />
-        <div className="space-y-1.5 rounded-[var(--radius-sm,7px)] bg-muted p-3">
+        <div className="space-y-2 rounded-[var(--radius-sm,7px)] bg-muted p-3">
           <div className="h-2.5 w-full rounded bg-foreground/5" />
           <div className="h-2.5 w-1/2 rounded bg-foreground/5" />
         </div>
@@ -88,7 +88,7 @@ export function MziziPhraseCard({
     >
       <div className="space-y-3 p-4">
         <div className="flex items-start justify-between gap-2">
-          <div className="space-y-1">
+          <div className="space-y-2">
             <p
               className="text-lg font-bold text-foreground"
               style={{ fontFamily: "var(--font-serif)" }}
@@ -114,7 +114,7 @@ export function MziziPhraseCard({
         </div>
         <p className="text-sm text-muted-foreground">{translation}</p>
         {example && (
-          <div className="space-y-1 rounded-[var(--radius-sm,7px)] bg-muted p-3">
+          <div className="space-y-2 rounded-[var(--radius-sm,7px)] bg-muted p-3">
             <p className="text-xs text-foreground italic">&quot;{example}&quot;</p>
             {exampleTranslation && (
               <p className="text-sm text-muted-foreground">&quot;{exampleTranslation}&quot;</p>

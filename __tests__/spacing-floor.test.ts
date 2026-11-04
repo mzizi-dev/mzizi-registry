@@ -1,9 +1,19 @@
 // THE SPACING FLOOR (owner, 2026-11-04, #617): minimum padding, gaps and leading that nothing can go under.
 // One definition, `BUNDU_FLOOR.spacing` in lib/tokens/roles.source.ts; every test here reads it and fails when
 // a generated default, a density layer, a brand block or a copy of the floor breaks it.
-import { readFileSync } from "node:fs";
+import { readFileSync, readdirSync, statSync, writeFileSync } from "node:fs";
+import { isTag, type Element } from "domhandler";
+import { parseDocument } from "htmlparser2";
 import { join } from "node:path";
 import { describe, expect, it } from "vitest";
+import {
+  GAP_FLOOR_PX,
+  INSET_FLOOR_PX,
+  LEADING_FLOOR,
+  SPACING_GAPS,
+  spaceOf,
+  spacingViolations,
+} from "../contracts/runner";
 import { brandMeta } from "../lib/tokens/brand.source";
 import { primitives } from "../lib/tokens";
 import {
@@ -114,6 +124,35 @@ describe("the stylesheet: --inset-floor, --gap-floor, --leading-floor", () => {
   });
 });
 
+describe("the rendered geometry guard spec", () => {
+  const g = JSON.parse(
+    readFileSync(join(ROOT, "contracts/spacing-geometry.json"), "utf8"),
+  ) as {
+    floor: Record<string, number>;
+    measure: { id: string; min: string }[];
+    stress: Record<string, number | string>;
+  };
+  it("carries the floor, equal to BUNDU_FLOOR.spacing", () => {
+    expect(g.floor).toEqual(spacing);
+  });
+  it("measures every floor and names its minimum from the floor", () => {
+    expect(g.measure.map((m) => m.id)).toEqual([
+      "control-gap",
+      "label-gap",
+      "item-gap",
+      "text-inset",
+      "body-leading",
+    ]);
+    for (const m of g.measure) expect(g.floor, m.id).toHaveProperty(m.min);
+  });
+  it("stresses WCAG 1.4.12: line height 1.5, paragraph spacing 2x, letter 0.12em, word 0.16em", () => {
+    expect(g.stress.lineHeight).toBe(1.5);
+    expect(g.stress.paragraphSpacingEm).toBe(2);
+    expect(g.stress.letterSpacingEm).toBe(0.12);
+    expect(g.stress.wordSpacingEm).toBe(0.16);
+  });
+});
+
 describe("the base layer enforces the floor on a component with no padding", () => {
   it("sets body leading from --leading-floor", () => {
     expect(normalised).toMatch(
@@ -169,5 +208,177 @@ describe("the platform files carry the spacing floor", () => {
         ),
       );
     }
+  });
+});
+
+// ─── The contract runner, and its Rust twin ─────────────────────────────────────────────────
+
+describe("the contract runner holds the spacing floor", () => {
+  it("keeps a copy of BUNDU_FLOOR.spacing, equal to the source", () => {
+    expect(INSET_FLOOR_PX).toBe(spacing.insetPx);
+    expect(GAP_FLOOR_PX).toBe(spacing.controlGapPx);
+    expect(GAP_FLOOR_PX).toBe(spacing.labelGapPx);
+    expect(GAP_FLOOR_PX).toBe(spacing.itemGapPx);
+    expect(LEADING_FLOOR).toBe(spacing.leadingBody);
+  });
+  it("reads spacing utilities on the 4px scale", () => {
+    expect(spaceOf("1.75")).toBe(7);
+    expect(spaceOf("3.5")).toBe(14);
+    expect(spaceOf("px")).toBe(1);
+    expect(spaceOf("[7px]")).toBe(7);
+    expect(spaceOf("[0.875rem]")).toBe(14);
+    expect(spaceOf("md")).toBe(12);
+    expect(spaceOf("[var(--x)]")).toBeNull();
+    expect(spaceOf("floor")).toBeNull();
+  });
+  it("answers every shared case as mzizi-rs/contract-eval does", () => {
+    const table = JSON.parse(
+      readFileSync(join(ROOT, "contracts/spacing-cases.json"), "utf8"),
+    ) as { cases: { name: string; html: string; violations: number }[] };
+    expect(table.cases.length).toBeGreaterThan(15);
+    for (const c of table.cases) {
+      const first = parseDocument(c.html).children.find((n): n is Element =>
+        isTag(n),
+      );
+      expect(first, c.name).toBeDefined();
+      expect(spacingViolations(first!).length, c.name).toBe(c.violations);
+    }
+  });
+  it("pins the exceptions equal to the Rust copy, each with a reason", () => {
+    const rs = readFileSync(
+      join(ROOT, "mzizi-rs/contract-eval/contract_eval.rs"),
+      "utf8",
+    );
+    const block = /pub const SPACING_GAPS: &\[&str\] = &\[([\s\S]*?)\];/.exec(
+      rs,
+    )![1]!;
+    const rust = [...block.matchAll(/"([^"]+)"/g)].map((m) => m[1]!).sort();
+    expect(rust).toEqual(Object.keys(SPACING_GAPS).sort());
+    for (const [k, why] of Object.entries(SPACING_GAPS))
+      expect(why.length, k).toBeGreaterThan(30);
+  });
+  it("an exception names a class that its own contract's components still carry", () => {
+    const all = new Map<string, string[]>();
+    (function walk(d: string) {
+      for (const f of readdirSync(d)) {
+        const p = join(d, f);
+        if (statSync(p).isDirectory()) walk(p);
+        else if (/\.(tsx|astro|rs)$/.test(f))
+          all.set(f.replace(/\.[a-z]+$/, ""), [
+            ...(all.get(f.replace(/\.[a-z]+$/, "")) ?? []),
+            readFileSync(p, "utf8"),
+          ]);
+      }
+    })(join(ROOT, "components/registry"));
+    for (const key of Object.keys(SPACING_GAPS)) {
+      const [name, ...rest] = key.split(":");
+      const c = JSON.parse(
+        readFileSync(join(ROOT, `contracts/${name}.contract.json`), "utf8"),
+      ) as { implementations: Record<string, { registry?: string }> };
+      const src = Object.values(c.implementations)
+        .flatMap((i) => all.get(i?.registry ?? "") ?? [])
+        .join("\n");
+      expect(
+        src,
+        `${key} is stale: its components no longer carry the class`,
+      ).toContain(rest.join(":"));
+    }
+  });
+});
+
+// ─── Every registry component: the lint-style ratchet ───────────────────────────────────────
+//
+// The contract runner reads rendered markup, so it covers the components under a contract. This reads the
+// SOURCE of every registry component for the three things that are wrong wherever they sit: a gap under 7px
+// (`gap-0`, `gap-px`, `gap-1`, `space-y-1`), a zero-padding reset (`p-0`, `px-0`, `py-0`...) and a negative
+// margin. Each is counted per file against `spacing-floor-baseline.json`, which holds what predates the floor:
+// a file may not exceed its baseline, and a file below it must lower it, so the list only shrinks. A line that
+// carries `spacing-floor: exception <reason>` (or follows one) is not counted. Regenerate with
+// `UPDATE_SPACING_BASELINE=1 pnpm vitest run __tests__/spacing-floor.test.ts`.
+
+const BASELINE_FILE = join(__dirname, "spacing-floor-baseline.json");
+type Counts = { gap?: number; padZero?: number; negMargin?: number };
+
+function scanSource(src: string): Counts {
+  const counts: Counts = {};
+  const lines = src.split("\n");
+  lines.forEach((line, i) => {
+    if (
+      /spacing-floor: exception \S/.test(line) ||
+      /spacing-floor: exception \S/.test(lines[i - 1] ?? "")
+    )
+      return;
+    for (const m of line.matchAll(
+      /(?<![\w.[-])((?:[^\s"'`]+:)?)(-?)(gap-x|gap-y|gap|space-x|space-y|px|py|pt|pb|pl|pr|ps|pe|p|mx|my|mt|mb|ml|mr|ms|me|m)-(px|\d+(?:\.\d+)?)(?![\w.[%-])/g,
+    )) {
+      const [, , neg, kind, v] = m as unknown as [
+        string,
+        string,
+        string,
+        string,
+        string,
+      ];
+      const px = spaceOf(v);
+      if (px === null) continue;
+      if (neg && kind.startsWith("m") && px > 0)
+        counts.negMargin = (counts.negMargin ?? 0) + 1;
+      else if (!neg && /^(gap|space)/.test(kind) && px < GAP_FLOOR_PX)
+        counts.gap = (counts.gap ?? 0) + 1;
+      else if (!neg && /^p/.test(kind) && px === 0)
+        counts.padZero = (counts.padZero ?? 0) + 1;
+    }
+  });
+  return counts;
+}
+
+describe("every registry component: gaps, zero padding and negative margins are ratcheted", () => {
+  const files: string[] = [];
+  (function walk(dir: string) {
+    for (const f of readdirSync(dir)) {
+      const p = join(dir, f);
+      if (statSync(p).isDirectory()) walk(p);
+      else if (/\.(tsx|astro|rs|ts)$/.test(f)) files.push(p);
+    }
+  })(join(ROOT, "components/registry"));
+  const now: Record<string, Counts> = {};
+  for (const f of files) {
+    const c = scanSource(readFileSync(f, "utf8"));
+    if (Object.keys(c).length) now[f.slice(ROOT.length + 1)] = c;
+  }
+  if (process.env.UPDATE_SPACING_BASELINE)
+    writeFileSync(BASELINE_FILE, JSON.stringify(now, null, 2) + "\n");
+  const baseline = JSON.parse(readFileSync(BASELINE_FILE, "utf8")) as Record<
+    string,
+    Counts
+  >;
+
+  it("no file has more than its baseline, so nothing new goes under the floor", () => {
+    const over: string[] = [];
+    for (const [f, c] of Object.entries(now))
+      for (const k of ["gap", "padZero", "negMargin"] as const)
+        if ((c[k] ?? 0) > (baseline[f]?.[k] ?? 0))
+          over.push(`${f}: ${k} ${c[k]} > baseline ${baseline[f]?.[k] ?? 0}`);
+    expect(over).toEqual([]);
+  });
+  it("no baseline is stale: a file that improved lowers its entry", () => {
+    const stale: string[] = [];
+    for (const [f, b] of Object.entries(baseline))
+      for (const k of ["gap", "padZero", "negMargin"] as const)
+        if ((b[k] ?? 0) > (now[f]?.[k] ?? 0))
+          stale.push(`${f}: ${k} baseline ${b[k]} > ${now[f]?.[k] ?? 0}`);
+    expect(stale).toEqual([]);
+  });
+  it("the scanner finds what it should and honours an exception comment", () => {
+    expect(scanSource('<div className="flex gap-1 p-0 -mx-2">')).toEqual({
+      gap: 1,
+      padZero: 1,
+      negMargin: 1,
+    });
+    expect(scanSource('<div className="flex gap-2 p-3.5">')).toEqual({});
+    expect(
+      scanSource(
+        '// spacing-floor: exception hairline grid\n<div className="grid gap-px">',
+      ),
+    ).toEqual({});
   });
 });

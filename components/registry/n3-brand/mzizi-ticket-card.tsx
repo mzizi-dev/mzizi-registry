@@ -105,13 +105,13 @@ function MziziTicketCard({
         <div className="flex items-start justify-between">
           <div className="min-w-0 flex-1">
             <h4 className="font-serif text-base font-bold text-foreground">{eventTitle}</h4>
-            <div className="mt-1.5 flex flex-col gap-1 text-xs text-muted-foreground">
-              <span className="flex items-center gap-1.5">
+            <div className="mt-1.5 flex flex-col gap-2 text-xs text-muted-foreground">
+              <span className="flex items-center gap-2">
                 <Calendar className="size-3" />
                 {eventDate}
               </span>
               {eventVenue && (
-                <span className="flex items-center gap-1.5">
+                <span className="flex items-center gap-2">
                   <MapPin className="size-3" />
                   {eventVenue}
                 </span>
@@ -120,7 +120,7 @@ function MziziTicketCard({
           </div>
           {/* Status badge */}
           <span
-            className="flex items-center gap-1 rounded-full px-2 py-0.5 text-sm font-semibold"
+            className="flex items-center gap-2 rounded-full px-2 py-0.5 text-sm font-semibold"
             style={{
               backgroundColor: `color-mix(in srgb, ${sc.color} 15%, transparent)`,
               color: sc.color,
@@ -145,7 +145,7 @@ function MziziTicketCard({
           />
         </div>
         <div className="min-w-0 flex-1">
-          <div className="flex items-center gap-1.5">
+          <div className="flex items-center gap-2">
             <Ticket className="size-3.5" style={{ color: accent }} />
             <span className="text-sm font-medium text-foreground">{tierName}</span>
           </div>

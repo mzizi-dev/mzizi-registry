@@ -51,7 +51,7 @@ function AnalyticsDashboardCard({
           reports direction directly — rendered no change indicator at all. It
           now draws the arrow, and colours the row when `changePct` is absent. */}
       {(changePct !== undefined || changeLabel || trend) && (
-        <div className="mt-1 flex items-center gap-1.5 text-xs">
+        <div className="mt-1 flex items-center gap-2 text-xs">
           {trend && (
             <span
               aria-hidden="true"

@@ -101,7 +101,7 @@ function SearchResults() {
         {showFilters && (
           <Card className="mt-4" size="sm">
             <CardContent className="flex flex-wrap gap-4 text-sm">
-              <div className="space-y-1">
+              <div className="space-y-2">
                 <p className="font-medium text-foreground">Date range</p>
                 <div className="flex gap-2">
                   <Button variant="outline" size="sm">
@@ -116,7 +116,7 @@ function SearchResults() {
                 </div>
               </div>
               <Separator orientation="vertical" className="hidden self-stretch sm:block" />
-              <div className="space-y-1">
+              <div className="space-y-2">
                 <p className="font-medium text-foreground">Sort by</p>
                 <div className="flex gap-2">
                   <Button variant="outline" size="sm">
@@ -148,7 +148,7 @@ function SearchResults() {
         <div className="mt-4 space-y-4">
           {results.map((result) => (
             <article key={result.title} className="group">
-              <a href={result.href} className="block space-y-1.5">
+              <a href={result.href} className="block space-y-2">
                 <h3 className="text-base font-medium text-foreground group-hover:text-cobalt">
                   {result.title}
                 </h3>
@@ -170,7 +170,7 @@ function SearchResults() {
         </div>
 
         {/* Pagination */}
-        <div className="mt-6 flex items-center justify-center gap-1">
+        <div className="mt-6 flex items-center justify-center gap-2">
           <Button variant="ghost" size="icon-sm" disabled>
             <ChevronLeft className="size-4" />
           </Button>

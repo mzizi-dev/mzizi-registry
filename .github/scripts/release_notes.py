@@ -1,13 +1,13 @@
 #!/usr/bin/env python3
 """Release notes from CHANGELOG.md.
 
-Usage: release_notes.py <previous-ref> <ref>
+Usage: release_notes.py [--allow-empty] <previous-ref> <ref>
 
 Prints, as Markdown, every CHANGELOG.md entry present at <ref> but not at
-<previous-ref>. .github/workflows/main-release.yml puts it at the top of each
-GitHub release, so a release says what changed in the changelog's own words
-(adapted from mzizi-dev/mzizi's .github/scripts/release_notes.py, the same
-copy as mzizi-dev/mzizi-site's).
+<previous-ref>. The release workflows pass it to `gh release create`, so a
+release says what changed in the changelog's own words (adapted from
+mzizi-dev/mzizi's .github/scripts/release_notes.py). This file is identical in
+every Mzizi repository that carries it; change them together.
 
 An entry is a top-level bullet (`- ...`, with its continuation lines) under a
 `### ...` heading, or, for a `### ...` section written as prose, the whole
@@ -17,9 +17,13 @@ section is not reported twice; an entry whose words were edited counts as new.
 With an empty <previous-ref>, or one with no CHANGELOG.md (the first release),
 every `[Unreleased]` entry is new.
 
-CHANGELOG_URL, if set, is the link the notes give to CHANGELOG.md. Exits 0
-with a one-line notice when nothing is new, and 1 when CHANGELOG.md cannot be
-read at either ref.
+CHANGELOG_URL, if set, is the link the notes give to CHANGELOG.md. COMPARE_URL,
+if set, is printed last as "Full changelog". Exits 1, printing nothing to
+stdout, when nothing is new (a release with no changelog content must fail its
+job, not publish empty or generic notes) and when CHANGELOG.md cannot be read at
+either ref. --allow-empty is for a staging patch whose merge was exempt from
+the changelog gate (CI, lockfile or lint config, or a typo): the notes then say
+so, still with the compare link, and the exit is 0.
 """
 import os
 import subprocess
@@ -33,8 +37,16 @@ def show(ref: str, missing_ok: bool = False) -> str:
     out = subprocess.run(
         ["git", "show", f"{ref}:CHANGELOG.md"], capture_output=True, text=True
     )
-    if out.returncode != 0 and missing_ok and "does not exist" in out.stderr:
-        return ""
+    if out.returncode != 0 and missing_ok:
+        # Tell "the ref has no CHANGELOG.md" apart from any other failure: git's
+        # message for it differs with the working tree, so ask git directly.
+        def git_ok(*args: str) -> bool:
+            return subprocess.run(["git", *args], capture_output=True).returncode == 0
+
+        if git_ok("rev-parse", "--verify", "--quiet", f"{ref}^{{commit}}") and not git_ok(
+            "cat-file", "-e", f"{ref}:CHANGELOG.md"
+        ):
+            return ""
     if out.returncode != 0:
         # A wrong note is worse than a failed release run: the run can be re-tried.
         sys.exit(f"release_notes: cannot read CHANGELOG.md at {ref}: {out.stderr.strip()}")
@@ -89,9 +101,13 @@ def norm(heading: str, entry: str) -> str:
 
 
 def main() -> int:
-    if len(sys.argv) != 3:
-        sys.exit("usage: release_notes.py <previous-ref> <ref>")
-    prev, ref = sys.argv[1], sys.argv[2]
+    args = [a for a in sys.argv[1:] if a != "--allow-empty"]
+    allow_empty = len(args) != len(sys.argv) - 1
+    if len(args) != 2:
+        sys.exit("usage: release_notes.py [--allow-empty] <previous-ref> <ref>")
+    prev, ref = args
+    compare = os.environ.get("COMPARE_URL", "")
+    footer = f"**Full changelog**: {compare}\n" if compare else ""
     # A previous release with no CHANGELOG.md counts as the first release.
     before = show(prev, missing_ok=True)
     old = Counter(norm(h, e) for h, e, _ in entries(before))
@@ -106,8 +122,14 @@ def main() -> int:
         else:
             blocks.append((heading, [e], is_section))
     if not blocks:
-        print("No CHANGELOG.md entries were added since the previous release.")
-        return 0
+        if allow_empty:
+            print("## What changed\n")
+            print("This merge added no `CHANGELOG.md` entry. (The changelog gate lets "
+                  "changes to CI, lockfiles, lint config and typos through without one.)\n")
+            print(footer, end="")
+            return 0
+        sys.exit(f"release_notes: no CHANGELOG.md entries were added between {prev or 'the start'} and {ref}; "
+                 "a release needs its changelog entries (add them under [Unreleased] and re-run)")
     url = os.environ.get("CHANGELOG_URL", "CHANGELOG.md")
     print("## What changed\n")
     print(f"From [`CHANGELOG.md`]({url}).\n")
@@ -115,6 +137,7 @@ def main() -> int:
         print(f"### {heading}\n")
         print(("\n\n" if is_section else "\n").join(items))
         print()
+    print(footer, end="")
     return 0
 
 

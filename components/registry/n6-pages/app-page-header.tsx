@@ -41,9 +41,9 @@ function PageHeader({
       <div className="min-w-0">
         {crumbs.length > 0 && (
           <nav aria-label="Breadcrumb" className="mb-1">
-            <ol className="flex flex-wrap items-center gap-1 text-caption text-muted-foreground">
+            <ol className="flex flex-wrap items-center gap-2 text-caption text-muted-foreground">
               {crumbs.map((c, i) => (
-                <li key={`${i}-${c.label}`} className="flex items-center gap-1">
+                <li key={`${i}-${c.label}`} className="flex items-center gap-2">
                   {i > 0 && <span aria-hidden="true">/</span>}
                   {c.href ? (
                     <a
@@ -60,12 +60,12 @@ function PageHeader({
             </ol>
           </nav>
         )}
-        <div className="flex flex-wrap items-center gap-x-2.5 gap-y-1">
+        <div className="flex flex-wrap items-center gap-x-2.5 gap-y-2">
           <h1 className="text-h5 font-semibold tracking-tight">{title}</h1>
           {docsHref && (
             <a
               href={String(docsHref)}
-              className="inline-flex h-6 items-center rounded-full border border-border px-2.5 text-caption font-medium hover:bg-muted focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
+              className="inline-flex h-6 items-center rounded-full border border-border px-3.5 text-caption font-medium hover:bg-muted focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
               data-slot="docs-pill"
             >
               {docsLabel}

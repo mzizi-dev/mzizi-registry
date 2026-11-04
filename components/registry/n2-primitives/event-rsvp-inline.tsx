@@ -51,7 +51,7 @@ function EventRsvpInline({
           {attendeeCount ? ` · ${attendeeCount} going` : ""}
         </div>
         {onRsvp && (
-          <div className="mt-2 flex gap-1.5">
+          <div className="mt-2 flex gap-2">
             {(["going", "maybe", "declined"] as const).map((status) => (
               <button
                 key={status}

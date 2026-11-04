@@ -110,7 +110,7 @@ function MziziLeaderboardRow({
       </div>
       {/* Name */}
       <div className="min-w-0 flex-1">
-        <div className="flex items-center gap-1.5">
+        <div className="flex items-center gap-2">
           <span
             className={cn(
               "truncate text-sm",
@@ -127,7 +127,7 @@ function MziziLeaderboardRow({
         {trend && (
           <span
             className={cn(
-              "flex items-center gap-0.5 text-sm",
+              "flex items-center gap-2 text-sm",
               trend === "up"
                 ? "text-[var(--status-success,#4ADE80)]"
                 : trend === "down"
@@ -145,7 +145,7 @@ function MziziLeaderboardRow({
             {trendPositions && trendPositions}
           </span>
         )}
-        <span className="flex items-center gap-1 text-sm font-semibold text-foreground">
+        <span className="flex items-center gap-2 text-sm font-semibold text-foreground">
           <Star className="size-3 text-[var(--color-gold)]" />
           {typeof score === "number" ? score.toLocaleString() : score}
         </span>

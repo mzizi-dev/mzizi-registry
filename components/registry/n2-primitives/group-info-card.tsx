@@ -95,7 +95,7 @@ function GroupInfoCard({
         {rules && rules.length > 0 && (
           <div className="mt-3">
             <p className="text-sm font-medium text-muted-foreground">Group rules</p>
-            <ol className="mt-1 list-decimal space-y-0.5 pl-4 text-sm text-muted-foreground">
+            <ol className="mt-1 list-decimal space-y-2 pl-4 text-sm text-muted-foreground">
               {rules.map((rule, i) => (
                 <li key={i}>{rule}</li>
               ))}

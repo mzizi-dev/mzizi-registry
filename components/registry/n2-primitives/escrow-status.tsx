@@ -54,10 +54,10 @@ function EscrowStatus({
       </div>
 
       {/* Step indicator */}
-      <div className="mt-3 flex items-center gap-1">
+      <div className="mt-3 flex items-center gap-2">
         {steps.map((label, i) => (
           <React.Fragment key={i}>
-            <div className="flex flex-col items-center gap-0.5">
+            <div className="flex flex-col items-center gap-2">
               <div
                 className={cn("size-2.5 rounded-full", i < config.step ? "" : "bg-muted")}
                 style={i < config.step ? { backgroundColor: config.color } : undefined}
