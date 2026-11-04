@@ -1387,6 +1387,51 @@ function densityLayer(): string {
   }
 }
 
+/* ════════════════════════════════════════════════════════════════════════════
+ * THE SPACING FLOOR (owner, 2026-11-04, #617; \`BUNDU_FLOOR.spacing\`): minimums that nothing can go under, even a
+ * component that sets no padding at all. Inset ${BUNDU_FLOOR.spacing.insetPx}px, gaps ${BUNDU_FLOOR.spacing.controlGapPx}px, body leading ${BUNDU_FLOOR.spacing.leadingBody}.
+ * These are DEFAULTS in the base layer, like the hit-area rule above: a bare element gets the floor, and a utility
+ * on it (\`p-6\`, \`gap-2\`) is the author's own value, which \`__tests__/spacing-floor.test.ts\` holds to the floor
+ * for every registry component. They step aside, by design, for:
+ *   - controls with no text to inset: an icon-only button (\`> svg:only-child\`), an empty one, an \`svg\` (a spinner with \`role="status"\`), a fixed square
+ *     (\`size-*\`), a calendar day (\`[data-day]\`), and the native checkbox, radio, range, colour and file inputs;
+ *   - a surface whose padding lives on its structured children (a card with \`card-header\` / \`card-content\`
+ *     slots): padding the root as well would pad twice. The children carry the inset, and the test holds them to it.
+ * A control's BLOCK axis is not inset here: its height floors (the ${FLOOR_VISIBLE_FINE_PX}px drawn minimum, the ${FLOOR_COARSE_PX}px hit
+ * region) already decide it, and ${BUNDU_FLOOR.spacing.insetPx}px of block padding does not fit a ${FLOOR_VISIBLE_FINE_PX}px control.
+ * The legacy opt-out (data-mzizi-sizes="legacy", last in this file) sets the three variables to 0, 0 and 1: every rule below becomes a no-op.
+ * ════════════════════════════════════════════════════════════════════════════ */
+@layer base {
+  body {
+    line-height: max(var(--lh-body), var(--leading-floor));
+  }
+  :is(
+      button,
+      [role="button"],
+      [role="tab"],
+      [role="menuitem"],
+      [role="menuitemcheckbox"],
+      [role="menuitemradio"],
+      [role="option"],
+      select,
+      textarea,
+      input:not([type="checkbox"], [type="radio"], [type="range"], [type="hidden"], [type="file"], [type="color"], [type="image"])
+    ):not(:has(> svg:only-child, > img:only-child), :empty, [class*="size-"], [data-day]) {
+    padding-inline: var(--inset-floor);
+  }
+  :where(dialog, [popover], [role="alert"], [role="status"], [role="alertdialog"], [role="tooltip"], [data-slot="card"], [data-slot="alert"]):not(
+      :has(> [data-slot*="header"], > [data-slot*="content"], > [data-slot*="footer"], > [data-slot*="title"], > [data-slot*="description"]),
+      svg,
+      :empty,
+      [class*="size-"]
+    ) {
+    padding: var(--inset-floor);
+  }
+  :where([role="toolbar"], [role="tablist"], [role="radiogroup"], [role="group"], [role="menu"], [role="listbox"], [role="list"], ul, ol, menu, fieldset) {
+    gap: var(--gap-floor);
+  }
+}
+
 @media ${DENSITY_TABLET_QUERY} {
   :root {
 ${typeLines(TYPE_STEPS.tablet).join("\n")}
@@ -1410,6 +1455,9 @@ ${typeLines(TYPE_STEPS.desktop).join("\n")}
    steps OUT of the Bundu floor: 16px body, 12px captions, 48px targets); remove it to take the floor. */
 :root[data-mzizi-sizes="legacy"] {
   --target-floor: ${LEGACY_FLOOR_PX / 16}rem; /* ${LEGACY_FLOOR_PX}px */
+  --inset-floor: 0px; /* no spacing floor (steps out of #617) */
+  --gap-floor: 0px;
+  --leading-floor: 1;
   --control-floor: ${LEGACY_FLOOR_PX / 16}rem; /* ${LEGACY_FLOOR_PX}px */
   --touch-target-lg: 56px;
   --touch-target: 48px;
@@ -1581,6 +1629,9 @@ export function sizeRoleTheme(roles: readonly Role[], resolved: Map<string, Reso
       if (!own) throw new Error(`size role "${r.name}" was not resolved`)
       if (r.fixed) {
         if (r.name === touchMin.role.name) return `  --${r.name}: ${hit}; /* the hit-area floor: ${FLOOR_COARSE_PX}px on every device; no brand can lower it */`
+        // The spacing floor (#617): the same variables the base layer reads, so the legacy opt-out moves both.
+        if (r.name === "spacing-inset-floor") return `  --${r.name}: var(--inset-floor); /* the inset floor: ${BUNDU_FLOOR.spacing.insetPx}px; no brand can lower it */`
+        if (r.name === "spacing-gap-floor") return `  --${r.name}: var(--gap-floor); /* the gap floor: ${BUNDU_FLOOR.spacing.controlGapPx}px; no brand can lower it */`
         return `  --${r.name}: ${own.css.light}; /* a literal: fixed, no brand can move it */`
       }
       if (r.floor) return `  --${r.name}: max(var(${roleVar(r)}), ${floor}); /* never under the control floor: ${FLOOR_COARSE_PX}px, or ${FLOOR_VISIBLE_FINE_PX}px drawn at desktop density */`
@@ -1700,6 +1751,9 @@ function invariants(resolved: Map<string, ResolvedRole>): string {
   out.push(box("TOUCH TARGETS AND CONTROL HEIGHTS"))
   for (const [n, v, why] of SIZING) out.push(`  --${n}: ${v}; /* ${why} */`)
   out.push(`  --target-floor: ${FLOOR_COARSE_PX / 16}rem; /* ${FLOOR_COARSE_PX}px — the Bundu hit region (7 x 7), on every device. Density never lowers it. */`)
+  out.push(`  --inset-floor: ${BUNDU_FLOOR.spacing.insetPx / 16}rem; /* ${BUNDU_FLOOR.spacing.insetPx}px — the least padding between text and the edge of its container (2 x 7). Density never lowers it. */`)
+  out.push(`  --gap-floor: ${BUNDU_FLOOR.spacing.controlGapPx / 16}rem; /* ${BUNDU_FLOOR.spacing.controlGapPx}px — the least gap between adjacent controls, a label and its field, and sibling items (the 7px unit). */`)
+  out.push(`  --leading-floor: ${BUNDU_FLOOR.spacing.leadingBody}; /* body line height, never tighter (WCAG 1.4.12). */`)
   out.push(`  --control-floor: ${FLOOR_COARSE_PX / 16}rem; /* ${FLOOR_COARSE_PX}px: the smallest a floored control is drawn; desktop density lowers it to ${FLOOR_VISIBLE_FINE_PX}px. */`)
   out.push(`  /* Size roles (#484) — \`h-touch\`, \`min-h-touch-min\`, \`h-control\`… The touch floor is`)
   out.push(`     --target-floor, set here and by the density layer only; moving --size-touch-min does not`)
@@ -2009,6 +2063,9 @@ export function renderGlobalsJson(
           visibleFine: FLOOR_VISIBLE_FINE_PX,
           body: BODY_FLOOR_PX,
           caption: CAPTION_FLOOR_PX,
+          inset: BUNDU_FLOOR.spacing.insetPx,
+          gap: BUNDU_FLOOR.spacing.controlGapPx,
+          leading: BUNDU_FLOOR.spacing.leadingBody,
           // Deprecated aliases of the 4.21.0 keys, for one release, carrying the Bundu floor's values
           // (the hit area is 49px on both pointers; body is 17px on every device). Read the keys above.
           coarse: FLOOR_COARSE_PX,

@@ -153,6 +153,26 @@ Owner ruling, 2026-11-02: every interactive control keeps a **49px hit region on
 
 The sizes consumers pinned before 2026-11-01 (48px and 56px targets, 16px body, 12px captions) come back with `data-mzizi-sizes="legacy"` on the root element, until the app has migrated; that attribute steps out of the Bundu floor, so remove it to take it. The older tiers in `styling-touch-targets` (48 accessible, 56 comfortable) are superseded by this section.
 
+## Spacing Floor
+
+Owner ruling, 2026-11-04 (mzizi-registry#617): the Bundu floor also sets **minimums for space**, that nothing can go under, even a component that sets no padding at all. They are the named values `BUNDU_FLOOR.spacing` in `lib/tokens/roles.source.ts`, on the 7px unit, and `/v1/brand` carries them in `brand_meta.accessibility`.
+
+| Floor                    | Value | CSS custom property | Meaning                                                                                                                                                 |
+| ------------------------ | ----- | ------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Inset (`insetPx`)        | 14px  | `--inset-floor`     | Padding between text and the edge of its container (2 x 7). A control's label on the inline axis; a card, panel, dialog, alert or popover on both axes. |
+| Control gap              | 7px   | `--gap-floor`       | Gap between adjacent interactive controls, visible edge to visible edge. Hit regions may touch, never overlap.                                          |
+| Label gap (`labelGapPx`) | 7px   | `--gap-floor`       | Gap between a label and its field.                                                                                                                      |
+| Item gap (`itemGapPx`)   | 7px   | `--gap-floor`       | Gap between sibling items of a list, grid, stack or toolbar.                                                                                            |
+| Body leading             | 1.5   | `--leading-floor`   | Body line height, never tighter (WCAG 1.4.12). Headings and display type keep their own tighter leading.                                                |
+
+- **Enforced as defaults and as tests.** The base layer of `mzizi-tokens-globals.css` gives a bare control (a `button`, `select`, `textarea`, a text `input`) `padding-inline: var(--inset-floor)`, a bare text surface (a native `dialog`, a `[popover]`, an alert, a tooltip, a card with no structured children) `padding: var(--inset-floor)`, a list, group, toolbar or tablist `gap: var(--gap-floor)`, and `body` `line-height: max(var(--lh-body), var(--leading-floor))`. A utility on the element (`p-6`, `gap-2`) is the author's own value and wins, so the tests hold every explicit value to the floor.
+- **A control's block axis is held by its height.** 14px of block padding does not fit a control drawn at 28px, so a control's vertical room is decided by the 28px drawn and 49px hit-region floors, not by the inset.
+- **Hit regions may touch, never overlap.** The gap floor is measured between visible edges; the `hit-area` overlay of the hit-region floor may reach into neighbouring space as before.
+- **No `p-0`, `gap-0` or negative margin on a text container** without an explicit exception comment. Joined button groups (`gap-0`) and overlapping avatar stacks are listed exceptions.
+- **No brand pack, density layer or component may lower a floor.** `data-mzizi-sizes="legacy"` steps out of it with the other Bundu floors.
+
+`__tests__/spacing-floor.test.ts` fails when the floor numbers differ between `BUNDU_FLOOR`, canon, `/v1/tokens` and the stylesheet, when a density layer lowers a variable, or when the base-layer rules are gone.
+
 ## The Bundu Order
 
 The Bundu Order draws on biblical mathematical patterns and prime numbers (owner, 2026-11-02). This section states only what the code holds, in `lib/tokens/roles.source.ts` (`BUNDU_FLOOR`), `lib/tokens/brand.source.ts` and `scripts/render-globals-css.ts`.
@@ -160,6 +180,7 @@ The Bundu Order draws on biblical mathematical patterns and prime numbers (owner
 - **The unit is 7px** (`--radius-unit`). The radii are 4, 7, 12, 14 and 17px and a pill, and they do not change.
 - **P7 and P17** are prime steps of the surface-elevation ladder (`surface` is P7, `raised` is P17), and the seven experimental families are a heptagon of hues offset 17 degrees.
 - **The floors derive from the same numbers.** Body text is 17px (a prime; Apple's iOS default body size) on every device, including desktop. Captions, metadata and secondary labels are 14px (2 x 7), and nothing readable is smaller. Every interactive control keeps a 49px hit region (7 x 7, above Apple's 44 pt). A control may be drawn down to 28px (4 x 7) at desktop density, never with a smaller hit region.
+- **Spacing** floors stand beside them: 14px of inset (2 x 7), 7px gaps (the unit) and 1.5 body leading (see Spacing Floor).
 - **Contrast** floors stand beside them: body text 7:1, non-body text 4.5:1, UI parts 3:1 (see Contrast Minimums).
 
 `__tests__/bundu-floor.test.ts` fails when a default type step, a size role or a desktop control breaks any of these.
