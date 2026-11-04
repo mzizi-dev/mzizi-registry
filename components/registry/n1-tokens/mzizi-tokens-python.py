@@ -441,6 +441,8 @@ class MziziRoleMetrics:
     """Size and radius roles in pixels, and the font roles' families."""
     SPACING_TOUCH: int = 49
     SPACING_TOUCH_MIN: int = 49
+    SPACING_INSET_FLOOR: int = 14
+    SPACING_GAP_FLOOR: int = 7
     SPACING_CONTROL: int = 49
     SPACING_CONTROL_SM: int = 49
     SPACING_CONTROL_LG: int = 56

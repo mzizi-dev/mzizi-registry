@@ -1272,6 +1272,13 @@ export const brandMeta: BrandMeta = {
     focusIndicator: "2px ring with ring-offset-2, using --ring token",
     minTouchTarget: 49,
     defaultTouchTarget: 49,
+    // The spacing floor (owner, 2026-11-04, #617): minimums nothing can go under. `BUNDU_FLOOR.spacing` in
+    // roles.source.ts is the one source; the build fails if these disagree.
+    minInset: 14,
+    minControlGap: 7,
+    minLabelGap: 7,
+    minItemGap: 7,
+    minBodyLeading: 1.5,
     keyboardNavigation: "Full keyboard support via Radix UI primitives",
     contrastDescription:
       "Advanced Perceptual Contrast Algorithm for superior readability across all mineral colors, held to WCAG 2 minimums as well: 7:1 for body text, 4.5:1 for non-body text, 3:1 for UI parts",

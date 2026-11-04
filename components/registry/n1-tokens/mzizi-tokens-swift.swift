@@ -429,6 +429,8 @@ public struct MziziRoles {
 
     public static let spacingTouch: CGFloat = 49
     public static let spacingTouchMin: CGFloat = 49
+    public static let spacingInsetFloor: CGFloat = 14
+    public static let spacingGapFloor: CGFloat = 7
     public static let spacingControl: CGFloat = 49
     public static let spacingControlSm: CGFloat = 49
     public static let spacingControlLg: CGFloat = 56

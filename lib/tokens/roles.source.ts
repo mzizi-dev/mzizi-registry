@@ -47,7 +47,10 @@
  *
  * WHAT IS NOT A ROLE: icon sizes, the numeric spacing scale, layout widths and
  * grid templates, z-index, the focus-ring width and border widths. Those are
- * structural, not brand decisions.
+ * structural, not brand decisions. The scale itself stays structural; its MINIMUMS are not: the spacing floor
+ * (`BUNDU_FLOOR.spacing`: inset 14px, gaps 7px, body leading 1.5) is an invariant no pack can lower, registered
+ * as `--inset-floor`, `--gap-floor` and `--leading-floor` and as the fixed size roles `spacing-inset-floor` and
+ * `spacing-gap-floor` (#617).
  *
  * Values are READ from `brand.source.ts` and `palette.source.ts`, never retyped:
  * this file replaced the second copies of the status colours, the radius ladder
@@ -215,6 +218,14 @@ export interface Role {
  *     7 x 7, above Apple's 44 pt. A desktop control may DRAW smaller (`visibleControlMinPx` and up) but keeps the
  *     hit region through padding or the `hit-area` pseudo-element (see `densityLayer()`).
  *   - `visibleControlMinPx` 28: the smallest a control is DRAWN, at desktop density; 4 x 7 (Apple macOS default 28 pt).
+ *   - `spacing`: the SPACING FLOOR (owner, 2026-11-04, #617): minimums nothing can go under, even a component that
+ *     sets no padding at all. All on the 7px unit. `insetPx` 14 (2 x 7): padding between text and the edge of its
+ *     container (a control's label on the inline axis; a card, panel, dialog, alert or popover on both axes; a
+ *     control's block axis is held by its height floors instead). `controlGapPx` 7: the gap between adjacent
+ *     interactive controls, visible edge to visible edge (hit regions may touch, never overlap).
+ *     `labelGapPx` 7: a label and its field. `itemGapPx` 7: sibling items of a list, grid, stack or toolbar.
+ *     `leadingBody` 1.5: body line height (WCAG 1.4.12). Enforced as defaults in the base layer of the stylesheet
+ *     (`--inset-floor`, `--gap-floor`, `--leading-floor`) and as tests on every explicit value.
  *   - `contrast`: WCAG 2 ratios (#610, owner 2026-11-02): body text 7:1, non-body text 4.5:1, UI parts 3:1.
  *   - `apca`: the APCA Lc bars that stand beside them.
  */
@@ -224,6 +235,7 @@ export const BUNDU_FLOOR = {
   captionPx: 14,
   hitAreaPx: 49,
   visibleControlMinPx: 28,
+  spacing: { insetPx: 14, controlGapPx: 7, labelGapPx: 7, itemGapPx: 7, leadingBody: 1.5 },
   contrast: { body: 7, nonBody: 4.5, ui: 3 },
   apca: { body: 75, nonBody: 60, ui: 30 },
 } as const
@@ -316,6 +328,21 @@ function access(key: "minTouchTarget" | "defaultTouchTarget"): number {
   }
   return v
 }
+
+/** Canon (`/v1/brand`) carries the spacing floor too; `BUNDU_FLOOR.spacing` is the one source and canon must agree. */
+function spacingFloorInCanon(): void {
+  const a = brandMeta.accessibility
+  const want: Record<string, number> = {
+    minInset: BUNDU_FLOOR.spacing.insetPx,
+    minControlGap: BUNDU_FLOOR.spacing.controlGapPx,
+    minLabelGap: BUNDU_FLOOR.spacing.labelGapPx,
+    minItemGap: BUNDU_FLOOR.spacing.itemGapPx,
+    minBodyLeading: BUNDU_FLOOR.spacing.leadingBody,
+  }
+  for (const [k, v] of Object.entries(want))
+    if (a[k] !== v) throw new Error(`brand.source.ts accessibility.${k} is ${String(a[k])}, but BUNDU_FLOOR.spacing says ${v}`)
+}
+spacingFloorInCanon()
 
 /**
  * A radius role's default: the rung of the radius ladder it follows, so a
@@ -1142,6 +1169,26 @@ export const ROLES: readonly Role[] = [
     required: true,
     description: "The hit-area floor (`min-h-touch-min`): 49px (`BUNDU_FLOOR.hitAreaPx`, 7 x 7, above Apple HIG Buttons' 44x44 pt) on every device, desktop included, registered as `--target-floor`. Density never lowers it: a desktop control may be drawn smaller but keeps this hit region (owner ruling 2026-11-02, replacing the 24px desktop floor of 2026-11-01 and the 44px of 2026-11-01). No brand pack can move it.",
     default: { px: access("minTouchTarget") },
+    fixed: true,
+    block: "invariant",
+  },
+  {
+    name: "spacing-inset-floor",
+    group: "size",
+    kind: "size",
+    required: true,
+    description: "The inset floor (`p-inset-floor`, `px-inset-floor`): 14px (`BUNDU_FLOOR.spacing.insetPx`, 2 x 7), the least padding between text and the edge of its container, registered as `--inset-floor`. No component, density layer or brand pack can lower it (owner 2026-11-04, #617).",
+    default: { px: BUNDU_FLOOR.spacing.insetPx },
+    fixed: true,
+    block: "invariant",
+  },
+  {
+    name: "spacing-gap-floor",
+    group: "size",
+    kind: "size",
+    required: true,
+    description: "The gap floor (`gap-gap-floor`, `p-gap-floor`): 7px (`BUNDU_FLOOR.spacing.controlGapPx`, the unit), the least gap between adjacent controls, a label and its field, and sibling items, registered as `--gap-floor`. No component, density layer or brand pack can lower it (owner 2026-11-04, #617).",
+    default: { px: BUNDU_FLOOR.spacing.controlGapPx },
     fixed: true,
     block: "invariant",
   },
