@@ -1393,7 +1393,7 @@ function densityLayer(): string {
  * These are DEFAULTS in the base layer, like the hit-area rule above: a bare element gets the floor, and a utility
  * on it (\`p-6\`, \`gap-2\`) is the author's own value, which \`__tests__/spacing-floor.test.ts\` holds to the floor
  * for every registry component. They step aside, by design, for:
- *   - controls with no text to inset: an icon-only button (\`> svg:only-child\`), an empty one, a fixed square
+ *   - controls with no text to inset: an icon-only button (\`> svg:only-child\`), an empty one, an \`svg\` (a spinner with \`role="status"\`), a fixed square
  *     (\`size-*\`), a calendar day (\`[data-day]\`), and the native checkbox, radio, range, colour and file inputs;
  *   - a surface whose padding lives on its structured children (a card with \`card-header\` / \`card-content\`
  *     slots): padding the root as well would pad twice. The children carry the inset, and the test holds them to it.
@@ -1420,7 +1420,10 @@ function densityLayer(): string {
     padding-inline: var(--inset-floor);
   }
   :where(dialog, [popover], [role="alert"], [role="status"], [role="alertdialog"], [role="tooltip"], [data-slot="card"], [data-slot="alert"]):not(
-      :has(> [data-slot*="header"], > [data-slot*="content"], > [data-slot*="footer"], > [data-slot*="title"], > [data-slot*="description"])
+      :has(> [data-slot*="header"], > [data-slot*="content"], > [data-slot*="footer"], > [data-slot*="title"], > [data-slot*="description"]),
+      svg,
+      :empty,
+      [class*="size-"]
     ) {
     padding: var(--inset-floor);
   }
