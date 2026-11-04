@@ -221,7 +221,9 @@ export interface Role {
  *   - `spacing`: the SPACING FLOOR (owner, 2026-11-04, #617): minimums nothing can go under, even a component that
  *     sets no padding at all. All on the 7px unit. `insetPx` 14 (2 x 7): padding between text and the edge of its
  *     container (a control's label on the inline axis; a card, panel, dialog, alert or popover on both axes; a
- *     control's block axis is held by its height floors instead). `controlGapPx` 7: the gap between adjacent
+ *     control's block axis is held by its height floors instead; a one-line label chip or pill, such as a badge or a hero
+ *     status pill, is held by the 14px inline inset and its block axis is its line height or fixed height, owner,
+ *     2026-11-04, #625). `controlGapPx` 7: the gap between adjacent
  *     interactive controls, visible edge to visible edge (hit regions may touch, never overlap).
  *     `labelGapPx` 7: a label and its field. `itemGapPx` 7: sibling items of a list, grid, stack or toolbar.
  *     `leadingBody` 1.5: body line height (WCAG 1.4.12). Enforced as defaults in the base layer of the stylesheet
