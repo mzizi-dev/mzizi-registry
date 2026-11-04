@@ -306,9 +306,9 @@ jobs:
     # and the job fails if that changes a single committed file.
     #
     # Order in `needs:` is: structural (lint, typecheck) → behavioural
-    # (test) → integrity (audit, registry, rust). Adding a job above? Add it
+    # (test) → integrity (audit, registry, rust, mzizi). Adding a job above? Add it
     # here too so build still gates everything.
-    needs: [audit, lint, typecheck, test, registry, rust]
+    needs: [audit, lint, typecheck, test, registry, rust, mzizi]
     permissions:
       contents: read
     steps:
