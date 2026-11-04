@@ -90,7 +90,7 @@ export function WalletPage({
             <button
               key={i}
               onClick={a.onClick}
-              className="flex min-h-[48px] min-w-[72px] flex-1 flex-col items-center gap-1 rounded-[var(--radius-lg,14px)] border border-border bg-card p-3 text-xs font-medium transition-colors hover:bg-muted focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--color-primary,#00B0FF)]"
+              className="flex min-h-[48px] min-w-[72px] flex-1 flex-col items-center gap-2 rounded-[var(--radius-lg,14px)] border border-border bg-card p-3 text-xs font-medium transition-colors hover:bg-muted focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--color-primary,#00B0FF)]"
             >
               {a.icon}
               <span>{a.label}</span>

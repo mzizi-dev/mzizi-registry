@@ -40,7 +40,7 @@ const active = (search && q !== "") || Object.values(values).some((v) => v !== "
   {Object.entries(keep).map(([k, v]) => <input type="hidden" name={k} value={v} />)}
   {
     search && (
-      <div class="grid min-w-0 grow basis-72 gap-1.5">
+      <div class="grid min-w-0 grow basis-72 gap-2">
         <label for="filter-q" class={labelClasses}>
           {searchLabel}
         </label>
@@ -50,7 +50,7 @@ const active = (search && q !== "") || Object.values(values).some((v) => v !== "
   }
   {
     selects.map((s) => (
-      <div class="grid min-w-0 grow basis-48 gap-1.5">
+      <div class="grid min-w-0 grow basis-48 gap-2">
         <label for={`filter-${s.name}`} class={labelClasses}>
           {s.label}
         </label>

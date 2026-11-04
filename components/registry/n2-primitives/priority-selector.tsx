@@ -48,7 +48,7 @@ function PrioritySelector({
       role="radiogroup"
       aria-label="Priority"
       className={cn(
-        "inline-flex gap-1 rounded-full border border-border bg-muted/30 p-0.5",
+        "inline-flex gap-2 rounded-full border border-border bg-muted/30 p-0.5",
         className
       )}
       {...props}
@@ -61,7 +61,7 @@ function PrioritySelector({
           aria-label={p.label}
           onClick={() => onChange?.(p.value)}
           className={cn(
-            "flex items-center gap-1 rounded-full transition-colors",
+            "flex items-center gap-2 rounded-full transition-colors",
             compact ? "size-7 justify-center" : "h-8 px-2.5 text-xs font-medium",
             value === p.value
               ? `bg-card shadow-sm ${p.color}`

@@ -10,7 +10,7 @@ import { cva } from "class-variance-authority";
 export const skeletonClasses = "animate-pulse rounded-md bg-muted";
 
 /** Alert title and description, as `AlertTitle` / `AlertDescription` render them. */
-export const alertTitleClasses = "mb-1 font-medium leading-none";
+export const alertTitleClasses = "mb-1 font-medium leading-normal";
 export const alertDescriptionClasses =
   "text-body-sm [&_p]:leading-relaxed opacity-90";
 
@@ -117,7 +117,7 @@ export const appButtonVariants = cva(
           "border-destructive bg-card text-destructive hover:bg-destructive hover:text-destructive-foreground",
       },
       size: {
-        sm: "h-8 px-3 text-body-sm pointer-coarse:h-11 pointer-coarse:px-4",
+        sm: "h-8 px-3.5 text-body-sm pointer-coarse:h-11 pointer-coarse:px-4",
         md: "h-9 px-3.5 text-body-sm pointer-coarse:h-12 pointer-coarse:px-5 pointer-coarse:text-body",
         lg: "h-10 px-4 text-body pointer-coarse:h-12 pointer-coarse:px-6",
       },
@@ -134,7 +134,7 @@ export const appButtonVariants = cva(
 
 /** A dense app input or select: 36px, 48px on touch. */
 export const appInputClasses =
-  "flex h-9 w-full min-w-0 rounded-sm border border-border bg-card px-3 text-body-sm text-foreground transition-colors placeholder:text-muted-foreground outline-none focus-visible:border-ring focus-visible:ring-2 focus-visible:ring-ring/40 disabled:opacity-50 disabled:cursor-not-allowed pointer-coarse:h-12 pointer-coarse:text-body";
+  "flex h-9 w-full min-w-0 rounded-sm border border-border bg-card px-3.5 text-body-sm text-foreground transition-colors placeholder:text-muted-foreground outline-none focus-visible:border-ring focus-visible:ring-2 focus-visible:ring-ring/40 disabled:opacity-50 disabled:cursor-not-allowed pointer-coarse:h-12 pointer-coarse:text-body";
 
 /**
  * Badge, to the Mzizi registry's `badge` contract (`badge.tsx` / `badge.rs`
@@ -154,7 +154,7 @@ export const BADGE_VARIANTS = [
 export type BadgeVariant = (typeof BADGE_VARIANTS)[number];
 
 const badgeBase =
-  "h-6 gap-1 rounded-md border border-transparent px-2 py-0.5 text-xs font-medium transition-all has-data-[icon=inline-end]:pr-1.5 has-data-[icon=inline-start]:pl-1.5 [&>svg]:size-3! inline-flex items-center justify-center w-fit whitespace-nowrap shrink-0 [&>svg]:pointer-events-none focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:ring-[3px] aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive overflow-hidden group/badge";
+  "h-6 gap-2 rounded-md border border-transparent px-3.5 py-0.5 text-xs font-medium transition-all has-data-[icon=inline-end]:pr-3.5 has-data-[icon=inline-start]:pl-3.5 [&>svg]:size-3! inline-flex items-center justify-center w-fit whitespace-nowrap shrink-0 [&>svg]:pointer-events-none focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:ring-[3px] aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive overflow-hidden group/badge";
 
 const badgeVariantClasses: Record<BadgeVariant, string> = {
   default: "bg-primary text-primary-foreground [a]:hover:bg-primary/80",
@@ -183,7 +183,7 @@ export function badgeClasses(
  * never a 36px strip.
  */
 export const appTextareaClasses =
-  "flex min-h-20 w-full min-w-0 rounded-sm border border-border bg-card px-3 py-2 text-body-sm text-foreground transition-colors placeholder:text-muted-foreground outline-none focus-visible:border-ring focus-visible:ring-2 focus-visible:ring-ring/40 disabled:opacity-50 disabled:cursor-not-allowed pointer-coarse:min-h-24 pointer-coarse:text-body";
+  "flex min-h-20 w-full min-w-0 rounded-sm border border-border bg-card px-3.5 py-2 text-body-sm text-foreground transition-colors placeholder:text-muted-foreground outline-none focus-visible:border-ring focus-visible:ring-2 focus-visible:ring-ring/40 disabled:opacity-50 disabled:cursor-not-allowed pointer-coarse:min-h-24 pointer-coarse:text-body";
 
 /**
  * Added to `appInputClasses` for a file input: its height follows the
@@ -210,7 +210,7 @@ export const STATUS_TONES = [
 export type StatusTone = (typeof STATUS_TONES)[number];
 
 const statusToneBase =
-  "inline-flex h-5 w-fit shrink-0 items-center justify-center whitespace-nowrap rounded-md px-2 py-0.5 text-xs font-medium";
+  "inline-flex h-5 w-fit shrink-0 items-center justify-center whitespace-nowrap rounded-md px-3.5 py-0.5 text-xs font-medium";
 
 const statusToneVariantClasses: Record<StatusTone, string> = {
   neutral: "bg-muted text-muted-foreground",

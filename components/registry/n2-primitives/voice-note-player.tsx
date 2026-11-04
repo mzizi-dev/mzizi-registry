@@ -108,7 +108,7 @@ function VoiceNotePlayer({
           })}
         </div>
       </div>
-      <div className="flex flex-col items-end gap-0.5">
+      <div className="flex flex-col items-end gap-2">
         <span className="font-mono text-sm text-muted-foreground tabular-nums">
           {formatDuration(duration * (1 - progress))}
         </span>

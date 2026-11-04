@@ -199,7 +199,7 @@ const single = marks.length === 1 ? marks[0] : undefined;
       data-portal={PORTAL}
       role="group"
       aria-label={groupLabel ?? marks.map(nameOf).join(", ")}
-      class={cn("inline-flex shrink-0 items-center gap-0.5", className)}
+      class={cn("inline-flex shrink-0 items-center gap-2", className)}
     >
       {marks.map((m) => (
         <span

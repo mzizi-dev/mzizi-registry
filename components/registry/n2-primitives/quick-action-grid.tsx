@@ -28,7 +28,7 @@ export function QuickActionGrid({ actions, className }: QuickActionGridProps) {
           onClick={a.onClick}
           disabled={a.disabled}
           className={cn(
-            "flex min-h-[48px] min-w-[72px] flex-1 flex-col items-center gap-1 rounded-[var(--radius-lg,14px)] border border-border bg-card p-3 text-xs font-medium transition-colors",
+            "flex min-h-[48px] min-w-[72px] flex-1 flex-col items-center gap-2 rounded-[var(--radius-lg,14px)] border border-border bg-card p-3 text-xs font-medium transition-colors",
             a.disabled ? "cursor-not-allowed opacity-50" : "cursor-pointer hover:bg-muted",
             "focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary"
           )}

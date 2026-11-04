@@ -73,7 +73,7 @@ function CaptionEditor({
       {/* Toolbar */}
       <div className="flex items-center justify-between">
         {/* Font selector */}
-        <div className="flex gap-1">
+        <div className="flex gap-2">
           {fontOptions.map((f) => (
             <button
               key={f.key}
@@ -94,7 +94,7 @@ function CaptionEditor({
         </div>
 
         {/* Color palette */}
-        <div className="flex gap-1">
+        <div className="flex gap-2">
           {colorPresets.map((c) => (
             <button
               key={c}
@@ -112,7 +112,7 @@ function CaptionEditor({
 
         {/* Size slider */}
         {onFontSizeChange && (
-          <div className="flex items-center gap-1.5">
+          <div className="flex items-center gap-2">
             <span className="text-sm text-muted-foreground">A</span>
             <input
               type="range"

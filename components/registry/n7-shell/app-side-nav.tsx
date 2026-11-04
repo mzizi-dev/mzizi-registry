@@ -38,7 +38,7 @@ const row =
 const here =
   "bg-muted font-medium before:absolute before:inset-y-1.5 before:left-0 before:w-0.5 before:rounded-full before:bg-[var(--app-accent,var(--primary))]"
 const icon = "h-4 w-4 shrink-0 text-muted-foreground group-hover/row:text-foreground"
-const badge = "shrink-0 rounded-sm border border-border px-1.5 text-caption leading-4 font-medium text-muted-foreground"
+const badge = "shrink-0 rounded-sm border border-border px-3.5 text-caption leading-4 font-medium text-muted-foreground"
 const tip =
   "pointer-events-none z-50 hidden w-max max-w-64 rounded-sm bg-foreground px-2.5 py-1.5 text-caption leading-snug text-background shadow-md"
 
@@ -104,13 +104,13 @@ function SideNav({ groups: given, items, label = "Sections", current: currentPro
       {groups.map((group, gi) => {
         const labelId = group.label ? `${idPrefix}-group-${gi}` : undefined
         return (
-          <div key={gi} data-slot="nav-group" className="grid gap-0.5">
+          <div key={gi} data-slot="nav-group" className="grid gap-2">
             {group.label && (
               <p id={labelId} data-slot="nav-group-label" className="px-2.5 pt-1 pb-1 text-caption font-medium text-muted-foreground">
                 {group.label}
               </p>
             )}
-            <ul role="list" aria-labelledby={labelId} className="grid gap-0.5">
+            <ul role="list" aria-labelledby={labelId} className="grid gap-2">
               {group.items.map((item, ii) => {
                 const desc = describe(item)
                 const tipId = nextId()
@@ -175,7 +175,7 @@ function SideNav({ groups: given, items, label = "Sections", current: currentPro
                         )}
                         <Icon name="chevron-right" className="h-3.5 w-3.5 shrink-0 text-muted-foreground" />
                       </summary>
-                      <ul role="list" className="mt-0.5 ml-[1.0625rem] grid gap-0.5 border-l border-border pl-2" data-slot="nav-children">
+                      <ul role="list" className="mt-0.5 ml-[1.0625rem] grid gap-2 border-l border-border pl-2" data-slot="nav-children">
                         {branch.map((child, ci) => {
                           const childDesc = describe(child)
                           const childTip = nextId()

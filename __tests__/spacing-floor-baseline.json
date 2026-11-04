@@ -1,0 +1,210 @@
+{
+  "components/registry/n1-tokens/mzizi-a11y.tsx": {
+    "negMargin": 2,
+    "padZero": 2
+  },
+  "components/registry/n2-primitives/accordion.tsx": {
+    "padZero": 1
+  },
+  "components/registry/n2-primitives/activity-feed.tsx": {
+    "padZero": 1
+  },
+  "components/registry/n2-primitives/address-selector.astro": {
+    "padZero": 1
+  },
+  "components/registry/n2-primitives/address-selector.tsx": {
+    "padZero": 1
+  },
+  "components/registry/n2-primitives/analytics-dashboard-card.tsx": {
+    "gap": 1
+  },
+  "components/registry/n2-primitives/calendar-month-view.tsx": {
+    "gap": 2
+  },
+  "components/registry/n2-primitives/calendar.tsx": {
+    "padZero": 3
+  },
+  "components/registry/n2-primitives/card.astro": {
+    "padZero": 1
+  },
+  "components/registry/n2-primitives/card.rs": {
+    "padZero": 1
+  },
+  "components/registry/n2-primitives/card.tsx": {
+    "padZero": 1
+  },
+  "components/registry/n2-primitives/carousel.tsx": {
+    "negMargin": 2
+  },
+  "components/registry/n2-primitives/chart-bar-interactive.tsx": {
+    "padZero": 1
+  },
+  "components/registry/n2-primitives/chat-list.tsx": {
+    "padZero": 1
+  },
+  "components/registry/n2-primitives/combobox.tsx": {
+    "padZero": 2,
+    "negMargin": 2
+  },
+  "components/registry/n2-primitives/command.tsx": {
+    "padZero": 2
+  },
+  "components/registry/n2-primitives/context-menu.tsx": {
+    "negMargin": 1
+  },
+  "components/registry/n2-primitives/date-picker.tsx": {
+    "padZero": 2
+  },
+  "components/registry/n2-primitives/date-range-picker.tsx": {
+    "padZero": 1
+  },
+  "components/registry/n2-primitives/dropdown-menu.tsx": {
+    "negMargin": 1
+  },
+  "components/registry/n2-primitives/field.tsx": {
+    "negMargin": 4
+  },
+  "components/registry/n2-primitives/file-upload.tsx": {
+    "padZero": 1
+  },
+  "components/registry/n2-primitives/inline-edit.tsx": {
+    "negMargin": 1
+  },
+  "components/registry/n2-primitives/input-group.tsx": {
+    "negMargin": 2,
+    "padZero": 4
+  },
+  "components/registry/n2-primitives/item.tsx": {
+    "padZero": 1
+  },
+  "components/registry/n2-primitives/itinerary-timeline.tsx": {
+    "gap": 1
+  },
+  "components/registry/n2-primitives/mega-menu.tsx": {
+    "padZero": 1,
+    "gap": 1
+  },
+  "components/registry/n2-primitives/menubar.tsx": {
+    "negMargin": 1
+  },
+  "components/registry/n2-primitives/navigation-menu.tsx": {
+    "gap": 1
+  },
+  "components/registry/n2-primitives/notification-bell.tsx": {
+    "padZero": 2
+  },
+  "components/registry/n2-primitives/notification-center.tsx": {
+    "padZero": 1
+  },
+  "components/registry/n2-primitives/phone-input.tsx": {
+    "padZero": 1
+  },
+  "components/registry/n2-primitives/property-list.tsx": {
+    "padZero": 2
+  },
+  "components/registry/n2-primitives/search-bar.tsx": {
+    "padZero": 1
+  },
+  "components/registry/n2-primitives/select.tsx": {
+    "negMargin": 1
+  },
+  "components/registry/n2-primitives/sidebar.tsx": {
+    "padZero": 4,
+    "negMargin": 1
+  },
+  "components/registry/n2-primitives/stats-card.tsx": {
+    "gap": 1
+  },
+  "components/registry/n2-primitives/table.tsx": {
+    "padZero": 2
+  },
+  "components/registry/n2-primitives/timeline.tsx": {
+    "gap": 1,
+    "padZero": 2
+  },
+  "components/registry/n2-primitives/toolbar.tsx": {
+    "negMargin": 1
+  },
+  "components/registry/n2-primitives/vitals-display.tsx": {
+    "gap": 1
+  },
+  "components/registry/n2-primitives/voice-note-player.tsx": {
+    "gap": 1
+  },
+  "components/registry/n3-brand/mzizi-application-tracker.tsx": {
+    "gap": 1
+  },
+  "components/registry/n3-brand/mzizi-cover-header.rs": {
+    "negMargin": 1
+  },
+  "components/registry/n3-brand/mzizi-cover-header.tsx": {
+    "negMargin": 1
+  },
+  "components/registry/n3-brand/mzizi-health-dashboard.tsx": {
+    "gap": 2
+  },
+  "components/registry/n3-brand/mzizi-profile-header.tsx": {
+    "negMargin": 2
+  },
+  "components/registry/n3-brand/mzizi-profile-page.tsx": {
+    "negMargin": 3
+  },
+  "components/registry/n3-brand/mzizi-programme-item.tsx": {
+    "padZero": 1
+  },
+  "components/registry/n3-brand/mzizi-route-planner.tsx": {
+    "gap": 1
+  },
+  "components/registry/n5-resilience/error-page.tsx": {
+    "negMargin": 1
+  },
+  "components/registry/n6-pages/app-bar-chart.astro": {
+    "gap": 2
+  },
+  "components/registry/n6-pages/app-bar-chart.tsx": {
+    "gap": 2
+  },
+  "components/registry/n6-pages/app-data-table.astro": {
+    "padZero": 1
+  },
+  "components/registry/n6-pages/app-data-table.tsx": {
+    "padZero": 1
+  },
+  "components/registry/n6-pages/app-stat-tiles.astro": {
+    "negMargin": 2
+  },
+  "components/registry/n6-pages/app-stat-tiles.tsx": {
+    "negMargin": 2
+  },
+  "components/registry/n6-pages/app-toolbar.astro": {
+    "gap": 1
+  },
+  "components/registry/n6-pages/app-toolbar.tsx": {
+    "gap": 1
+  },
+  "components/registry/n6-pages/discover-related-rail.astro": {
+    "padZero": 1
+  },
+  "components/registry/n6-pages/discover-related-rail.tsx": {
+    "padZero": 1
+  },
+  "components/registry/n6-pages/individual-profile-page.tsx": {
+    "negMargin": 2
+  },
+  "components/registry/n6-pages/mzizi-detail-page.tsx": {
+    "negMargin": 1
+  },
+  "components/registry/n6-pages/mzizi-profile-page-layout.tsx": {
+    "negMargin": 1,
+    "gap": 1
+  },
+  "components/registry/n6-pages/org-profile-page.tsx": {
+    "negMargin": 1
+  },
+  "components/registry/n6-pages/report-page.tsx": {
+    "padZero": 1
+  },
+  "components/registry/n7-shell/mzizi-header.tsx": {
+    "padZero": 1
+  }
+}

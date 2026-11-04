@@ -53,7 +53,7 @@ function Sidebar11() {
               />
             </button>
             {open === section.title && (
-              <div className="ml-7 space-y-0.5 border-l border-border py-1 pl-3">
+              <div className="ml-7 space-y-2 border-l border-border py-1 pl-3">
                 {section.items.map((item) => (
                   <button
                     key={item}

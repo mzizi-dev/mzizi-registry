@@ -68,7 +68,7 @@ export function MziziProviderCard({
       >
         <div className="flex gap-3">
           <div className="size-12 shrink-0 rounded-full bg-muted" />
-          <div className="flex-1 space-y-1.5">
+          <div className="flex-1 space-y-2">
             <div className="h-3.5 w-1/2 rounded bg-muted" />
             <div className="h-2.5 w-1/3 rounded bg-muted" />
             <div className="h-2.5 w-1/4 rounded bg-muted" />
@@ -100,7 +100,7 @@ export function MziziProviderCard({
           {avatarUrl ? <img src={avatarUrl} alt={name} className="size-full object-cover" /> : "👨‍⚕️"}
         </div>
         <div className="min-w-0 flex-1">
-          <div className="flex items-center gap-1.5">
+          <div className="flex items-center gap-2">
             <h3 className="truncate text-sm font-semibold text-foreground">{name}</h3>
             {verified && (
               <span className="text-xs" style={{ color: tierMineral[verificationTier] }}>

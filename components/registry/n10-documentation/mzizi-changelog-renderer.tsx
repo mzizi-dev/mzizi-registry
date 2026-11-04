@@ -85,7 +85,7 @@ export function ChangelogRenderer({ entries, className }: ChangelogRendererProps
 
           {/* Nodes affected badges */}
           {entry.nodesAffected && entry.nodesAffected.length > 0 && (
-            <div className="mt-2 flex flex-wrap gap-1" aria-label="Nodes affected">
+            <div className="mt-2 flex flex-wrap gap-2" aria-label="Nodes affected">
               {entry.nodesAffected.map((n) => (
                 <span
                   key={n}
@@ -103,7 +103,7 @@ export function ChangelogRenderer({ entries, className }: ChangelogRendererProps
 
           {/* Component changes */}
           {entry.componentsAdded && entry.componentsAdded.length > 0 && (
-            <div className="mt-2 flex flex-wrap gap-1" aria-label="Components added">
+            <div className="mt-2 flex flex-wrap gap-2" aria-label="Components added">
               {entry.componentsAdded.map((c) => (
                 <span
                   key={c}
@@ -116,7 +116,7 @@ export function ChangelogRenderer({ entries, className }: ChangelogRendererProps
           )}
 
           {entry.componentsModified && entry.componentsModified.length > 0 && (
-            <div className="mt-1 flex flex-wrap gap-1" aria-label="Components modified">
+            <div className="mt-1 flex flex-wrap gap-2" aria-label="Components modified">
               {entry.componentsModified.map((c) => (
                 <span
                   key={c}
@@ -129,7 +129,7 @@ export function ChangelogRenderer({ entries, className }: ChangelogRendererProps
           )}
 
           {entry.componentsDeprecated && entry.componentsDeprecated.length > 0 && (
-            <div className="mt-1 flex flex-wrap gap-1" aria-label="Components deprecated">
+            <div className="mt-1 flex flex-wrap gap-2" aria-label="Components deprecated">
               {entry.componentsDeprecated.map((c) => (
                 <span
                   key={c}

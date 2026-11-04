@@ -188,7 +188,7 @@ const name = title === "Trust Score" ? "Trust score" : title;
       <div class="h-2 rounded-full bg-muted" />
       <div class="flex justify-between">
         {[0, 1, 2, 3].map(() => (
-          <div class="space-y-1">
+          <div class="space-y-2">
             <div class="h-2 w-8 rounded bg-muted" />
             <div class="h-1.5 w-6 rounded bg-muted" />
           </div>
@@ -214,7 +214,7 @@ const name = title === "Trust Score" ? "Trust score" : title;
           <span data-slot="trust-meter-title" class="text-sm font-medium text-foreground">{title}</span>
         </div>
         {showScore ? (
-          <div class="flex items-baseline gap-1.5">
+          <div class="flex items-baseline gap-2">
             <span data-slot="trust-meter-score" class={cn("text-2xl font-bold", scoreText)}>{trustScore.toFixed(3)}</span>
             <span class="text-xs text-muted-foreground">/ 1.000</span>
           </div>
@@ -250,7 +250,7 @@ const name = title === "Trust Score" ? "Trust score" : title;
           {breakdown.map((signal) => (
             <div data-slot="trust-breakdown-signal" data-signal={signal.key}>
               <div class="mb-1 flex items-center justify-between">
-                <div class="flex items-center gap-1.5">
+                <div class="flex items-center gap-2">
                   <Icon name={signal.icon} class={cn("size-3.5", signal.text)} />
                   <span class="text-xs font-medium text-muted-foreground">{signal.label}</span>
                 </div>
@@ -270,7 +270,7 @@ const name = title === "Trust Score" ? "Trust score" : title;
           ))}
 
           {ubuntuPoints != null && (
-            <div data-slot="trust-ubuntu-points" class="mt-1 flex items-center justify-center gap-1.5 text-sm text-muted-foreground">
+            <div data-slot="trust-ubuntu-points" class="mt-1 flex items-center justify-center gap-2 text-sm text-muted-foreground">
               <Icon name="star" class="size-3 text-status-warning" />
               <span>{ubuntuPoints.toLocaleString()} Ubuntu Points earned through community contribution</span>
             </div>

@@ -74,7 +74,7 @@ const { caption, showCaption = false, columns, rows, rowKey, actions = {} } = As
 const hasActions = Object.values(actions).some((list) => list.length > 0);
 const itemClasses = (destructive?: boolean) =>
   cn(
-    "flex min-h-8 w-full items-center rounded-sm px-2 text-start text-body-sm hover:bg-muted focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring pointer-coarse:min-h-11",
+    "flex min-h-8 w-full items-center rounded-sm px-3.5 text-start text-body-sm hover:bg-muted focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring pointer-coarse:min-h-11",
     destructive && "text-destructive",
   );
 const asObject = (cell: Cell): CellObject | null => {
@@ -86,18 +86,18 @@ const asObject = (cell: Cell): CellObject | null => {
 
 <div class="overflow-hidden rounded-md border border-border bg-card" data-slot="data-table">
   <table class="w-full border-collapse text-body-sm">
-    <caption class={showCaption ? "px-3 py-2 text-start text-caption text-muted-foreground" : "sr-only"}>{caption}</caption>
+    <caption class={showCaption ? "px-3.5 py-2 text-start text-caption text-muted-foreground" : "sr-only"}>{caption}</caption>
     <thead class="hidden border-b border-border bg-surface-muted md:table-header-group">
       <tr>
         {
           columns.map((c) => (
-            <th scope="col" class={`h-9 px-3 text-caption font-medium text-muted-foreground ${c.align === "end" ? "text-end" : "text-start"}`}>
+            <th scope="col" class={`h-9 px-3.5 text-caption font-medium text-muted-foreground ${c.align === "end" ? "text-end" : "text-start"}`}>
               {c.label}
             </th>
           ))
         }
         {hasActions && (
-          <th scope="col" class="h-9 px-3 text-end">
+          <th scope="col" class="h-9 px-3.5 text-end">
             <span class="sr-only">Actions</span>
           </th>
         )}
@@ -109,14 +109,14 @@ const asObject = (cell: Cell): CellObject | null => {
           const id = rowKey ? String((asObject(row[rowKey]) ?? { text: "" }).text) : undefined;
           const current = columns.some((c) => asObject(row[c.key])?.current);
           return (
-            <tr data-row={id} aria-current={current ? "true" : undefined} class={`block px-3 py-2.5 hover:bg-surface-muted md:table-row md:p-0 ${current ? "bg-muted" : ""}`}>
+            <tr data-row={id} aria-current={current ? "true" : undefined} class={`block px-3.5 py-2.5 hover:bg-surface-muted md:table-row md:p-0 ${current ? "bg-muted" : ""}`}>
               {columns.map((c, i) => {
                 const cell = asObject(row[c.key]);
                 const Tag = i === 0 ? "th" : "td";
                 return (
                   <Tag
                     scope={i === 0 ? "row" : undefined}
-                    class={`flex items-baseline justify-between gap-4 py-1 font-normal md:table-cell md:h-10 md:px-3 md:py-2 md:align-middle ${c.align === "end" ? "md:text-end" : "text-start"}`}
+                    class={`flex items-baseline justify-between gap-4 py-1 font-normal md:table-cell md:h-10 md:px-3.5 md:py-2 md:align-middle ${c.align === "end" ? "md:text-end" : "text-start"}`}
                   >
                     <span class="text-caption text-muted-foreground md:hidden" aria-hidden="true">
                       {c.label}
@@ -166,7 +166,7 @@ const asObject = (cell: Cell): CellObject | null => {
                 );
               })}
               {hasActions && (
-                <td data-slot="row-actions" class="flex justify-end py-1 md:table-cell md:h-10 md:px-3 md:py-2 md:text-end md:align-middle">
+                <td data-slot="row-actions" class="flex justify-end py-1 md:table-cell md:h-10 md:px-3.5 md:py-2 md:text-end md:align-middle">
                   {(() => {
                     const list = [...(actions[id ?? ""] ?? [])].sort((a, b) => Number(!!a.destructive) - Number(!!b.destructive));
                     const name = asObject(row[columns[0]?.key ?? ""])?.text ?? "";
@@ -191,11 +191,11 @@ const asObject = (cell: Cell): CellObject | null => {
                     }
                     return (
                       <details data-slot="row-actions-menu" class="relative inline-block text-start">
-                        <summary class="inline-flex h-8 cursor-pointer list-none items-center justify-center gap-1.5 rounded-sm px-2.5 text-body-sm font-medium outline-none hover:bg-muted focus-visible:ring-2 focus-visible:ring-ring pointer-coarse:h-11 [&::-webkit-details-marker]:hidden">
+                        <summary class="inline-flex h-8 cursor-pointer list-none items-center justify-center gap-2 rounded-sm px-2.5 text-body-sm font-medium outline-none hover:bg-muted focus-visible:ring-2 focus-visible:ring-ring pointer-coarse:h-11 [&::-webkit-details-marker]:hidden">
                           <Icon name="more" class="h-4 w-4 shrink-0" />
                           <span class="sr-only">Actions for {name}</span>
                         </summary>
-                        <ul role="list" aria-label={`Actions for ${name}`} class="absolute end-0 z-40 mt-1 grid min-w-44 gap-0.5 rounded-md border border-border bg-popover p-1 text-popover-foreground shadow-lg">
+                        <ul role="list" aria-label={`Actions for ${name}`} class="absolute end-0 z-40 mt-1 grid min-w-44 gap-2 rounded-md border border-border bg-popover p-1 text-popover-foreground shadow-lg">
                           {list.map((a) => (
                             <li>
                               {a.href ? (

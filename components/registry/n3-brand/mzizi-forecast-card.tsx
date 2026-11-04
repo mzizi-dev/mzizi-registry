@@ -82,7 +82,7 @@ export function MziziForecastCard({
         </div>
         <div className="flex justify-between border-t border-border px-2 py-3">
           {Array.from({ length: 5 }).map((_, i) => (
-            <div key={i} className="flex flex-1 flex-col items-center gap-1">
+            <div key={i} className="flex flex-1 flex-col items-center gap-2">
               <div className="h-2 w-6 rounded bg-muted" />
               <div className="size-6 rounded bg-muted" />
               <div className="h-2 w-4 rounded bg-muted" />
@@ -131,7 +131,7 @@ export function MziziForecastCard({
       {forecast.length > 0 && (
         <div className="flex justify-between border-t border-border px-2 py-3">
           {forecast.slice(0, 5).map((d, i) => (
-            <div key={i} className="flex-1 space-y-1 text-center">
+            <div key={i} className="flex-1 space-y-2 text-center">
               <p className="text-sm text-muted-foreground">{d.day}</p>
               <p className="text-sm">{d.icon}</p>
               <p className="text-sm font-medium text-foreground">{d.high}°</p>

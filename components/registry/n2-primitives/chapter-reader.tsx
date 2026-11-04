@@ -152,7 +152,7 @@ function ChapterReader({
         {onBookmark && (
           <button
             onClick={onBookmark}
-            className="mt-3 inline-flex h-8 items-center gap-1 rounded-full border border-border px-3 text-xs font-medium transition-colors hover:bg-muted"
+            className="mt-3 inline-flex h-8 items-center gap-2 rounded-full border border-border px-3 text-xs font-medium transition-colors hover:bg-muted"
             aria-label={isBookmarked ? "Remove bookmark" : "Add bookmark"}
           >
             {isBookmarked ? "★ Bookmarked" : "☆ Bookmark"}

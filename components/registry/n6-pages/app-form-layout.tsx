@@ -56,7 +56,7 @@ function FormLayout({
         )}
         data-slot="card"
       >
-        <div className="flex flex-col gap-1 border-b border-border px-4 py-3">
+        <div className="flex flex-col gap-2 border-b border-border px-4 py-3">
           <h2 id={`${id}-title`} className="text-h6 font-semibold">
             {title}
           </h2>

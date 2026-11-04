@@ -32,9 +32,9 @@ function PageHeader({
     >
       {breadcrumbs && breadcrumbs.length > 0 && (
         <nav aria-label="breadcrumb" data-slot="page-header-breadcrumbs">
-          <ol className="flex flex-wrap items-center gap-1.5 text-sm text-muted-foreground">
+          <ol className="flex flex-wrap items-center gap-2 text-sm text-muted-foreground">
             {breadcrumbs.map((crumb, index) => (
-              <li key={index} className="inline-flex items-center gap-1.5">
+              <li key={index} className="inline-flex items-center gap-2">
                 {index > 0 && <ChevronRightIcon className="size-3.5" aria-hidden="true" />}
                 {crumb.href && index < breadcrumbs.length - 1 ? (
                   <a href={crumb.href} className="transition-colors hover:text-foreground">
@@ -66,7 +66,7 @@ function PageHeader({
               <ArrowLeftIcon className="size-4" />
             </a>
           )}
-          <div className="flex flex-col gap-1">
+          <div className="flex flex-col gap-2">
             <h1
               data-slot="page-header-title"
               className="font-serif text-2xl font-semibold tracking-tight sm:text-3xl"

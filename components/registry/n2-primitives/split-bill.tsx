@@ -57,7 +57,7 @@ function SplitBill({
       </div>
 
       {/* Split type toggle */}
-      <div className="mt-3 flex gap-1 rounded-full bg-muted/30 p-0.5">
+      <div className="mt-3 flex gap-2 rounded-full bg-muted/30 p-0.5">
         {(["equal", "custom"] as const).map((type) => (
           <button
             key={type}
@@ -78,7 +78,7 @@ function SplitBill({
       {onTipChange && (
         <div className="mt-3 flex items-center justify-between text-sm">
           <span className="text-muted-foreground">Tip</span>
-          <div className="flex items-center gap-1">
+          <div className="flex items-center gap-2">
             <input
               type="text"
               inputMode="decimal"

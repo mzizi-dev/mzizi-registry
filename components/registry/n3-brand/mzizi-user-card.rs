@@ -96,7 +96,7 @@ pub fn MziziUserCard(props: MziziUserCardProps) -> Element {
                 role: "article",
                 class: "flex animate-pulse items-center gap-3 rounded-[var(--radius-lg,14px)] bg-card p-3 ring-1 ring-foreground/10",
                 div { class: "size-10 shrink-0 rounded-full bg-muted" }
-                div { class: "flex-1 space-y-1.5",
+                div { class: "flex-1 space-y-2",
                     div { class: "h-3.5 w-1/3 rounded bg-muted" }
                     div { class: "h-2.5 w-1/4 rounded bg-muted" }
                 }
@@ -135,7 +135,7 @@ pub fn MziziUserCard(props: MziziUserCardProps) -> Element {
                 }
             }
             if let Some(actions) = &props.actions {
-                div { class: "flex shrink-0 items-center gap-1", {actions} }
+                div { class: "flex shrink-0 items-center gap-2", {actions} }
             }
         }
     }

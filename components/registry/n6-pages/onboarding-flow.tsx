@@ -60,7 +60,7 @@ function OnboardingFlow() {
         <CardHeader>
           <div className="flex items-center justify-between gap-2">
             {steps.map((s, i) => (
-              <div key={s} className="flex flex-1 flex-col items-center gap-1">
+              <div key={s} className="flex flex-1 flex-col items-center gap-2">
                 <div
                   className={`flex size-8 items-center justify-center rounded-full text-xs font-medium transition-colors ${
                     i < step
@@ -77,7 +77,7 @@ function OnboardingFlow() {
             ))}
           </div>
           {/* Progress bar */}
-          <div className="mt-3 flex h-1 gap-1 overflow-hidden rounded-full">
+          <div className="mt-3 flex h-1 gap-2 overflow-hidden rounded-full">
             {steps.map((_, i) => (
               <div
                 key={i}
@@ -157,7 +157,7 @@ function OnboardingFlow() {
                 ))}
               </div>
               {selected.length > 0 && (
-                <div className="flex flex-wrap gap-1">
+                <div className="flex flex-wrap gap-2">
                   {selected.map((s) => (
                     <Badge key={s} variant="secondary">
                       {s}

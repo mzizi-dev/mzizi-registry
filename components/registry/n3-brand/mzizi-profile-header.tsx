@@ -61,7 +61,7 @@ function ProfileHeader({
         <div className="h-32 bg-muted" />
         <div className="-mt-8 px-4 pb-4">
           <div className="size-16 rounded-full border-3 border-card bg-card" />
-          <div className="mt-2 space-y-1.5">
+          <div className="mt-2 space-y-2">
             <div className="h-4 w-1/3 rounded bg-muted" />
             <div className="h-2.5 w-1/4 rounded bg-muted" />
           </div>

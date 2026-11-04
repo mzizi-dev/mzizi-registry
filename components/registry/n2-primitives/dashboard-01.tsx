@@ -70,7 +70,7 @@ function Dashboard01() {
           <Zap className="size-5 text-cobalt" />
           <span className="font-serif text-lg font-semibold text-foreground">mukoko</span>
         </div>
-        <nav data-slot="dashboard-01" role="main" className="flex flex-1 flex-col gap-1">
+        <nav data-slot="dashboard-01" role="main" className="flex flex-1 flex-col gap-2">
           {navItems.map((item) => (
             <button
               key={item.label}

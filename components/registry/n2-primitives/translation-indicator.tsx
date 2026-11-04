@@ -38,7 +38,7 @@ function TranslationIndicator({
       data-slot="translation-indicator"
       data-portal="https://mzizi.dev/components/translation-indicator"
       role="article"
-      className={cn("inline-flex items-center gap-1 text-xs", statusColors[status], className)}
+      className={cn("inline-flex items-center gap-2 text-xs", statusColors[status], className)}
       title={`${languageName || language} · ${statusLabels[status]}`}
       {...props}
     >

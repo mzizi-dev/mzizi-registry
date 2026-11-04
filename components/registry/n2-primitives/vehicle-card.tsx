@@ -62,7 +62,7 @@ function VehicleCard({
           )}
         </div>
         {driverName && (
-          <div className="mt-2 flex items-center gap-1 text-xs text-muted-foreground">
+          <div className="mt-2 flex items-center gap-2 text-xs text-muted-foreground">
             <span>{driverName}</span>
             {verified && <span className="text-[var(--color-gold,#FFD740)]">✓</span>}
           </div>
