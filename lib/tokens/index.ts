@@ -33,6 +33,7 @@ import {
   type MineralToken,
   type HeritageToken,
 } from "./palette.generated"
+import { BUNDU_FLOOR } from "./roles.source"
 
 // The seven minerals + seven heritage tones are the single source of truth for
 // the palette and are generated from the DB (see palette.generated.ts). Re-export
@@ -167,6 +168,16 @@ export const primitives = {
   touchTarget: {
     default: { value: "49px", description: "Default interactive element height: the Bundu hit area, 7 x 7 (above Apple's 44x44 pt)" },
     sm: { value: "49px", description: "Minimum hit region on every device, desktop included — NEVER below this (a desktop control may be drawn smaller, down to 28px, but keeps this hit region)" },
+  },
+
+  // ─── SPACING FLOOR (owner, 2026-11-04, #617) ─
+  // Minimums nothing can go under, read from BUNDU_FLOOR.spacing (lib/tokens/roles.source.ts), never retyped.
+  spacingFloor: {
+    inset: { value: `${BUNDU_FLOOR.spacing.insetPx}px`, cssVar: "--inset-floor", description: "Least padding between text and the edge of its container (2 x 7). A control's label on the inline axis; a card, panel, dialog, alert or popover on both axes." },
+    controlGap: { value: `${BUNDU_FLOOR.spacing.controlGapPx}px`, cssVar: "--gap-floor", description: "Least gap between adjacent interactive controls, visible edge to visible edge. Hit regions may touch, never overlap." },
+    labelGap: { value: `${BUNDU_FLOOR.spacing.labelGapPx}px`, cssVar: "--gap-floor", description: "Least gap between a label and its field." },
+    itemGap: { value: `${BUNDU_FLOOR.spacing.itemGapPx}px`, cssVar: "--gap-floor", description: "Least gap between sibling items in a list, grid, stack or toolbar." },
+    leadingBody: { value: `${BUNDU_FLOOR.spacing.leadingBody}`, cssVar: "--leading-floor", description: "Least body line height (WCAG 1.4.12). Headings and display type keep their own tighter leading." },
   },
 
   // ─── MOTION (canonical) ─────────────────────
@@ -838,6 +849,11 @@ export function generateCSSVariables(theme: ThemeMode = "dark", brand: BrandId =
   lines.push(`  --touch-target: ${primitives.touchTarget.default.value};`)
   lines.push(`  --touch-target-sm: ${primitives.touchTarget.sm.value};`)
 
+  // Spacing floor (#617)
+  lines.push(`  --inset-floor: ${primitives.spacingFloor.inset.value};`)
+  lines.push(`  --gap-floor: ${primitives.spacingFloor.controlGap.value};`)
+  lines.push(`  --leading-floor: ${primitives.spacingFloor.leadingBody.value};`)
+
   // Motion
   for (const [key, val] of Object.entries(primitives.motion.duration)) {
     lines.push(`  --motion-${key}: ${val.value};`)
@@ -1475,6 +1491,7 @@ export function generateTokensJSON(): string {
       spacing: primitives.spacing,
       motion: primitives.motion,
       touchTarget: primitives.touchTarget,
+      spacingFloor: primitives.spacingFloor,
       brandOverrides,
       chartColors: mineralChartColors,
       status: statusTokens,

@@ -357,6 +357,12 @@
   --spacing-touch-min: var(
     --target-floor
   ); /* the hit-area floor: 49px on every device; no brand can lower it */
+  --spacing-inset-floor: var(
+    --inset-floor
+  ); /* the inset floor: 14px; no brand can lower it */
+  --spacing-gap-floor: var(
+    --gap-floor
+  ); /* the gap floor: 7px; no brand can lower it */
   --spacing-control: max(
     var(--size-control),
     var(--control-floor)
@@ -947,6 +953,9 @@
   --h-button-sm: 3.0625rem; /* 49px — componentSpecs.button.heights.sm */
   --h-input: 3.0625rem; /* 49px — inputs match the default button */
   --target-floor: 3.0625rem; /* 49px — the Bundu hit region (7 x 7), on every device. Density never lowers it. */
+  --inset-floor: 0.875rem; /* 14px — the least padding between text and the edge of its container (2 x 7). Density never lowers it. */
+  --gap-floor: 0.4375rem; /* 7px — the least gap between adjacent controls, a label and its field, and sibling items (the 7px unit). */
+  --leading-floor: 1.5; /* body line height, never tighter (WCAG 1.4.12). */
   --control-floor: 3.0625rem; /* 49px: the smallest a floored control is drawn; desktop density lowers it to 28px. */
   /* Size roles (#484) — `h-touch`, `min-h-touch-min`, `h-control`… The touch floor is
      --target-floor, set here and by the density layer only; moving --size-touch-min does not
@@ -954,6 +963,8 @@
      @theme to max(var(--size-*), var(--target-floor)). */
   --size-touch: 3.0625rem; /* 49px — The default touch target (`h-touch`, `min-h-touch`). brandMeta.accessibility.defaultTouchTarget. */
   --size-touch-min: 3.0625rem; /* 49px — The hit-area floor (`min-h-touch-min`): 49px (`BUNDU_FLOOR.hitAreaPx`, 7 x 7, above Apple HIG Buttons' 44x44 pt) on every device, desktop included, registered as `--target-floor`. Density never lowers it: a desktop control may be drawn smaller but keeps this hit region (owner ruling 2026-11-02, replacing the 24px desktop floor of 2026-11-01 and the 44px of 2026-11-01). No brand pack can move it. */
+  --size-inset-floor: 0.875rem; /* 14px — The inset floor (`p-inset-floor`, `px-inset-floor`): 14px (`BUNDU_FLOOR.spacing.insetPx`, 2 x 7), the least padding between text and the edge of its container, registered as `--inset-floor`. No component, density layer or brand pack can lower it (owner 2026-11-04, #617). */
+  --size-gap-floor: 0.4375rem; /* 7px — The gap floor (`gap-gap-floor`, `p-gap-floor`): 7px (`BUNDU_FLOOR.spacing.controlGapPx`, the unit), the least gap between adjacent controls, a label and its field, and sibling items, registered as `--gap-floor`. No component, density layer or brand pack can lower it (owner 2026-11-04, #617). */
   --size-control: 3.0625rem; /* 49px — Default control height. componentSpecs.button.heights.default. */
   --size-control-sm: 3.0625rem; /* 49px — Small control height. componentSpecs.button.heights.sm. */
   --size-control-lg: 3.5rem; /* 56px — Large control height. componentSpecs.button.heights.lg. */
@@ -1392,6 +1403,88 @@
   }
 }
 
+/* ════════════════════════════════════════════════════════════════════════════
+ * THE SPACING FLOOR (owner, 2026-11-04, #617; `BUNDU_FLOOR.spacing`): minimums that nothing can go under, even a
+ * component that sets no padding at all. Inset 14px, gaps 7px, body leading 1.5.
+ * These are DEFAULTS in the base layer, like the hit-area rule above: a bare element gets the floor, and a utility
+ * on it (`p-6`, `gap-2`) is the author's own value, which `__tests__/spacing-floor.test.ts` holds to the floor
+ * for every registry component. They step aside, by design, for:
+ *   - controls with no text to inset: an icon-only button (`> svg:only-child`), an empty one, a fixed square
+ *     (`size-*`), a calendar day (`[data-day]`), and the native checkbox, radio, range, colour and file inputs;
+ *   - a surface whose padding lives on its structured children (a card with `card-header` / `card-content`
+ *     slots): padding the root as well would pad twice. The children carry the inset, and the test holds them to it.
+ * A control's BLOCK axis is not inset here: its height floors (the 28px drawn minimum, the 49px hit
+ * region) already decide it, and 14px of block padding does not fit a 28px control.
+ * The legacy opt-out (data-mzizi-sizes="legacy", last in this file) sets the three variables to 0, 0 and 1: every rule below becomes a no-op.
+ * ════════════════════════════════════════════════════════════════════════════ */
+@layer base {
+  body {
+    line-height: max(var(--lh-body), var(--leading-floor));
+  }
+  :is(
+    button,
+    [role="button"],
+    [role="tab"],
+    [role="menuitem"],
+    [role="menuitemcheckbox"],
+    [role="menuitemradio"],
+    [role="option"],
+    select,
+    textarea,
+    input:not(
+      [type="checkbox"],
+      [type="radio"],
+      [type="range"],
+      [type="hidden"],
+      [type="file"],
+      [type="color"],
+      [type="image"]
+    )
+  ):not(
+    :has(> svg:only-child, > img:only-child),
+    :empty,
+    [class*="size-"],
+    [data-day]
+  ) {
+    padding-inline: var(--inset-floor);
+  }
+  :where(
+    dialog,
+    [popover],
+    [role="alert"],
+    [role="status"],
+    [role="alertdialog"],
+    [role="tooltip"],
+    [data-slot="card"],
+    [data-slot="alert"]
+  ):not(
+    :has(
+      > [data-slot*="header"],
+      > [data-slot*="content"],
+      > [data-slot*="footer"],
+      > [data-slot*="title"],
+      > [data-slot*="description"]
+    )
+  ) {
+    padding: var(--inset-floor);
+  }
+  :where(
+    [role="toolbar"],
+    [role="tablist"],
+    [role="radiogroup"],
+    [role="group"],
+    [role="menu"],
+    [role="listbox"],
+    [role="list"],
+    ul,
+    ol,
+    menu,
+    fieldset
+  ) {
+    gap: var(--gap-floor);
+  }
+}
+
 @media (min-width: 48rem) {
   :root {
     --fs-display: 3rem; /* 48px */
@@ -1428,6 +1521,9 @@
    steps OUT of the Bundu floor: 16px body, 12px captions, 48px targets); remove it to take the floor. */
 :root[data-mzizi-sizes="legacy"] {
   --target-floor: 3rem; /* 48px */
+  --inset-floor: 0px; /* no spacing floor (steps out of #617) */
+  --gap-floor: 0px;
+  --leading-floor: 1;
   --control-floor: 3rem; /* 48px */
   --touch-target-lg: 56px;
   --touch-target: 48px;

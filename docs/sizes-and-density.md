@@ -16,6 +16,25 @@ Bundu sets the standard for outdoor reading and for people who find technology h
 
 The Bundu Order draws on biblical mathematical patterns and prime numbers (owner, 2026-11-02). The radii (4, 7, 12, 14, 17 and a pill) come from the 7px unit and do not change.
 
+### The spacing floor (owner, 2026-11-04, #617)
+
+Beside the sizes, the Bundu floor sets minimums for **space**: padding, gaps and leading that nothing can go under, even a component that sets no padding at all. `BUNDU_FLOOR.spacing` holds them, on the 7px unit.
+
+| Floor          | Value | CSS custom property | Meaning                                                     |
+| -------------- | ----- | ------------------- | ----------------------------------------------------------- |
+| `insetPx`      | 14px  | `--inset-floor`     | Padding between text and the edge of its container (2 x 7)  |
+| `controlGapPx` | 7px   | `--gap-floor`       | Gap between adjacent controls, visible edge to visible edge |
+| `labelGapPx`   | 7px   | `--gap-floor`       | Gap between a label and its field                           |
+| `itemGapPx`    | 7px   | `--gap-floor`       | Gap between sibling items of a list, grid, stack or toolbar |
+| `leadingBody`  | 1.5   | `--leading-floor`   | Body line height (WCAG 1.4.12)                              |
+
+- **The variables** are in `:root` of `mzizi-tokens-globals.css`, never lowered by a density layer, and registered as the fixed size roles `spacing-inset-floor` and `spacing-gap-floor` (`px-inset-floor`, `p-inset-floor`, `gap-gap-floor`), so the platform token files carry 14 and 7 as they carry 49. `/v1/brand` (`brand_meta.accessibility.minInset`, `minControlGap`, `minLabelGap`, `minItemGap`, `minBodyLeading`) and `/v1/tokens` (`spacingFloor`) carry them too.
+- **The base layer enforces defaults** for a component that sets nothing: `padding-inline: var(--inset-floor)` on a bare `button`, `select`, `textarea` or text `input`; `padding: var(--inset-floor)` on a bare text surface (a native `dialog`, a `[popover]`, an alert, a tooltip, a card with no structured children); `gap: var(--gap-floor)` on a list, group, toolbar or tablist; `line-height: max(var(--lh-body), var(--leading-floor))` on `body`. It steps aside for an icon-only button, an empty element, a fixed square (`size-*`), a calendar day and the native checkbox, radio, range, colour and file inputs, and for a card whose padding lives on its `card-header` / `card-content` children (padding both would pad twice).
+- **A utility is the author's own value.** `p-6` or `gap-2` on the element wins over the base layer, so the tests hold every explicit value to the floor.
+- **A control's block axis is held by its height.** 14px of block padding does not fit a control drawn at 28px, so the inset floor is the inline axis for a control, and both axes for a surface.
+- **Hit regions may touch, never overlap.** The gap floor is measured between visible edges. The `hit-area` overlay of the hit-region floor may reach into neighbouring space, as it did.
+- **Legacy.** `data-mzizi-sizes="legacy"` sets the three variables to 0, 0 and 1, so every base rule above is a no-op.
+
 ### How the hit region works at desktop density
 
 A desktop control may be drawn smaller (28 to 40px) but keeps a 49px hit region. The token layer's `hit-area` rule (`@layer base`, in `mzizi-tokens-globals.css`) gives every `button`, `summary`, `[role="button"]`, `[role="tab"]`, `[role="switch"]` and any `.hit-area` element a transparent `::after` of `max(100%, var(--target-floor))`. `--target-floor` is 49px and no density layer lowers it. The rule **steps aside, on purpose**, for:
@@ -112,6 +131,8 @@ It restores every value in the "Legacy" column (including the 48px floor and the
 `__tests__/density.test.ts` keeps the density rules (media queries need a fine pointer and hover and never a network signal, the legacy block restores the old values, the copies of the size table agree).
 
 The contract runner and the Rust evaluator fail any density row whose interactive control has a hit region under 49px on either pointer, or a button-like control drawn under 28px. Rows that predate the floor (`HIT_AREA_GAPS` in `contracts/runner.ts` and in `mzizi-rs/contract-eval/contract_eval.rs`, held equal by a test) are pinned and skipped; a new row cannot join the list without a reviewer seeing it, and the follow-up removes them as each build passes.
+
+`__tests__/spacing-floor.test.ts` fails when the spacing numbers differ between `BUNDU_FLOOR`, canon, `/v1/tokens` and the stylesheet, when a density layer lowers `--inset-floor`, `--gap-floor` or `--leading-floor`, when the base-layer rules are gone, or when a platform token file lacks the 14 and 7 roles.
 
 ## Semver
 
