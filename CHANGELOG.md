@@ -10,6 +10,17 @@ From 2026-10-04 releases follow the org versioning policy ([nyuchi/.github#80](h
 
 ## [Unreleased]
 
+### Removed — Dioxus leaves the live prose, the served doctrine and the plugin keywords; **Breaking** for callers that match `"dioxus"` in `rust.descriptors` (2026-11-04, [#635](https://github.com/mzizi-dev/mzizi-registry/issues/635))
+
+Owner decision, 2026-11-04: "dioxus is out!!!". This change is the first part: wording and served metadata. The Rust crates still compile against the framework; converting them to Mzizi's own render path is the second part, tracked in #635.
+
+- **Breaking, `/v1/architecture` (node documents for N2, N3, N6 and N7).** `rust.descriptors` no longer lists `"dioxus"` (N2: `["astro","react"]`; N3, N6 and N7 likewise). No replacement value was added: what the Rust side renders with is an open owner decision. A consumer that branched on the `"dioxus"` descriptor now sees none.
+- **Changed, served prose.** The `rust.note`, `rust.today` and `rust.target` text and the descriptions of nodes N2, N3, N6, N7, N10 and N11, the framework strand and the documentation, installation and ownership conventions now say "Rust (Mzizi Roots)" where they said "Dioxus". N2's `rust.target` no longer argues for a Rust UI framework.
+- **Changed, `registry.json`.** The `mzizi-tokens-rust` and `app-bar-chart` descriptions say "the Rust half" and "a Mzizi Roots (Rust) sibling". The generated `mzizi-tokens` crate header says the same.
+- **Changed, docs and metadata.** `AGENTS.md` states the order (Mzizi first, then TypeScript, native Swift and Kotlin where they exist) and that no third-party Rust UI framework is allowed; `README.md`, `contracts/README.md`, `docs/pulling-in-primitives.md`, the contract schema and runner comments, and the Claude Code plugin keywords no longer name Dioxus. `mzizi add` serving every component type is owner direction, not built.
+- **Not changed.** The Rust sources (`components/registry/**/*.rs` and the crate copies), the `dioxus` Cargo dependencies, `docs/roots/RFC-roots*.md` and earlier changelog entries (history), and `plugin/skills/*` (generated from `@nyuchi/mzizi-skills`; it follows when that skill is fixed in `mzizi-dev/agent-tools`).
+- **Site/docs/skills impact:** mzizi-api serves the changed doctrine after the pin moves; mzizi-site and mzizi-docs pages that read `rust.descriptors` or quote the N2 `rust.target` text, and the `mzizi-roots` skill, still say Dioxus and need the same change.
+
 ### Fixed — seven shell and page controls take the 14px inline inset, in React and Astro (2026-11-04, [#625](https://github.com/mzizi-dev/mzizi-registry/issues/625), [#627](https://github.com/mzizi-dev/mzizi-registry/pull/627), [#617](https://github.com/mzizi-dev/mzizi-registry/issues/617))
 
 Owner decision (#625, documented in #627): a one-line label chip or pill is held on its inline axis by the 14px inset, and the block axis is exempt. These controls still had less side padding; each is now `px-3.5`, in both its `.tsx` and its `.astro` (no `.rs` twin exists for any of them). Heights are unchanged (`h-8`, `pointer-coarse:h-11`), so hit regions are unchanged.

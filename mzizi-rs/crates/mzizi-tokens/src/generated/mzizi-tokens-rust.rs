@@ -17,7 +17,7 @@
 // DO NOT EDIT BY HAND. Run `pnpm tokens:sync`; `pnpm tokens:verify`
 // fails the build if this file drifts from the source.
 //
-// This is what the Dioxus half of the registry consumes, and what
+// This is what the Rust half of the registry consumes, and what
 // `mzizi-rs/crates/mzizi-tokens` includes by path so the crates registry
 // publishes the same palette the MCP and the shadcn registry do.
 

@@ -17,7 +17,7 @@ import { Badge } from "@/components/ui/badge"
  * The word is always rendered, so the status never depends on colour alone. Not interactive,
  * so no touch floor applies; wrap it in a link and it inherits the link's hit area.
  *
- * Siblings: `status-badge.rs` (Mzizi Roots, Dioxus) and `status-badge.mz` (the Mzizi
+ * Siblings: `status-badge.rs` (Mzizi Roots) and `status-badge.mz` (the Mzizi
  * language). The three share one contract, `contracts/ui/status-badge.contract.json`,
  * and `__tests__/contracts` evaluates every clause and check of it on this file's markup.
  */

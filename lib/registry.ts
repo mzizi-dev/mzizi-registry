@@ -150,7 +150,7 @@ export type RegistryItem = {
    * `{ tsx: "…/button.tsx", rs: "…/button.rs" }`.
    *
    * A component is one name with one contract and possibly several implementations — the
-   * React one and the Dioxus one are the same button (CLAUDE.md §8.9). This is what lets
+   * React one and the Rust one are the same button (CLAUDE.md §8.9). This is what lets
    * `/api/v1/ui/{name}` stay byte-identical for React while `/api/v1/rs/{name}` serves the
    * Rust, without inventing a second registry entry that would drift from the first.
    */
