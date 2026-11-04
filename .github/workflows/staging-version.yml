@@ -65,7 +65,9 @@ jobs:
           # The version job reports the previous version without its prefix.
           prev="v${PREVIOUS#v}"
           if ! git rev-parse --verify --quiet "refs/tags/${prev}^{commit}" >/dev/null; then
-            [ "${PREVIOUS#v}" = "0.0.0" ] || echo "::warning::The previous release tag ${prev} was not found; the notes list every entry under [Unreleased]."
+            if [ "${PREVIOUS#v}" != "0.0.0" ]; then
+              echo "::warning::Previous tag ${prev} not found; notes list every [Unreleased] entry."
+            fi
             prev=""
           fi
           if [ -n "$prev" ]; then
