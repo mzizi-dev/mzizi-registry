@@ -74,7 +74,7 @@ function RouteCard({
       {...props}
     >
       {/* Mode badge */}
-      <div className="flex flex-col items-center gap-1">
+      <div className="flex flex-col items-center gap-2">
         <span className={cn("rounded-full px-2 py-0.5 text-sm font-bold", modeColors[mode])}>
           {modeLabels[mode]}
         </span>

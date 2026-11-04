@@ -58,7 +58,7 @@ function ProfilePage({ loading = false }: { loading?: boolean } = {}) {
           </div>
           <div className="flex gap-6">
             {Array.from({ length: 3 }).map((_, i) => (
-              <div key={i} className="space-y-1 text-center">
+              <div key={i} className="space-y-2 text-center">
                 <div className="mx-auto h-4 w-8 rounded bg-muted" />
                 <div className="h-2.5 w-12 rounded bg-muted" />
               </div>
@@ -128,11 +128,11 @@ function ProfilePage({ loading = false }: { loading?: boolean } = {}) {
             open-source enthusiast based in Harare.
           </p>
           <div className="mt-2 flex flex-wrap items-center gap-3 text-sm text-muted-foreground">
-            <span className="flex items-center gap-1">
+            <span className="flex items-center gap-2">
               <MapPin className="size-3.5" />
               Harare, Zimbabwe
             </span>
-            <span className="flex items-center gap-1">
+            <span className="flex items-center gap-2">
               <Calendar className="size-3.5" />
               Joined March 2024
             </span>
@@ -163,7 +163,7 @@ function ProfilePage({ loading = false }: { loading?: boolean } = {}) {
               {posts.map((post) => (
                 <Card key={post.title} size="sm">
                   <CardContent className="flex items-start justify-between gap-4">
-                    <div className="space-y-1">
+                    <div className="space-y-2">
                       <p className="text-sm font-medium text-foreground">{post.title}</p>
                       <div className="flex items-center gap-2">
                         <Badge variant="secondary">{post.category}</Badge>

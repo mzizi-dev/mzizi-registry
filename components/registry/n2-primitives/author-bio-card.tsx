@@ -45,7 +45,7 @@ function AuthorBioCard({
           )}
         </div>
         <div className="min-w-0 flex-1">
-          <div className="flex items-center gap-1.5">
+          <div className="flex items-center gap-2">
             <span
               className="text-sm font-semibold"
               style={{ fontFamily: "var(--font-serif, serif)" }}

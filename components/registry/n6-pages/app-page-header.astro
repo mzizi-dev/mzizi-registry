@@ -24,9 +24,9 @@ const { title, description, crumbs = [], docsHref, docsLabel = "View docs" } = A
     {
       crumbs.length > 0 && (
         <nav aria-label="Breadcrumb" class="mb-1">
-          <ol class="flex flex-wrap items-center gap-1 text-caption text-muted-foreground">
+          <ol class="flex flex-wrap items-center gap-2 text-caption text-muted-foreground">
             {crumbs.map((c, i) => (
-              <li class="flex items-center gap-1">
+              <li class="flex items-center gap-2">
                 {i > 0 && <span aria-hidden="true">/</span>}
                 {c.href ? (
                   <a class="underline-offset-4 hover:text-foreground hover:underline" href={c.href}>
@@ -41,11 +41,11 @@ const { title, description, crumbs = [], docsHref, docsLabel = "View docs" } = A
         </nav>
       )
     }
-    <div class="flex flex-wrap items-center gap-x-2.5 gap-y-1">
+    <div class="flex flex-wrap items-center gap-x-2.5 gap-y-2">
       <h1 class="text-h5 font-semibold tracking-tight">{title}</h1>
       {
         docsHref && (
-          <a href={docsHref} class="inline-flex h-6 items-center rounded-full border border-border px-2.5 text-caption font-medium hover:bg-muted focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring" data-slot="docs-pill">
+          <a href={docsHref} class="inline-flex h-6 items-center rounded-full border border-border px-3.5 text-caption font-medium hover:bg-muted focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring" data-slot="docs-pill">
             {docsLabel}
             <span class="sr-only"> for {title}</span>
           </a>

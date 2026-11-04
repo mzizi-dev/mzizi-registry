@@ -75,7 +75,7 @@ function RevenueDashboardWidget({
       )}
 
       {recentPayouts && recentPayouts.length > 0 && (
-        <div className="mt-3 space-y-1.5">
+        <div className="mt-3 space-y-2">
           <div className="text-sm font-medium text-muted-foreground">Recent payouts</div>
           {recentPayouts.map((p, i) => (
             <div key={i} className="flex items-center justify-between text-xs">

@@ -141,7 +141,7 @@ function MziziOfferCard({
         </div>
         {/* Seller info */}
         {sellerName && (
-          <div className="mt-2 flex items-center gap-1.5 text-xs text-muted-foreground">
+          <div className="mt-2 flex items-center gap-2 text-xs text-muted-foreground">
             <ShoppingBag className="size-3" />
             <span>{sellerName}</span>
             {sellerVerified && <Shield className="size-3 text-[var(--color-gold)]" />}
@@ -154,7 +154,7 @@ function MziziOfferCard({
               e.stopPropagation()
               onInquire()
             }}
-            className="mt-3 flex h-9 w-full items-center justify-center gap-1.5 rounded-full text-xs font-semibold text-background transition-colors"
+            className="mt-3 flex h-9 w-full items-center justify-center gap-2 rounded-full text-xs font-semibold text-background transition-colors"
             style={{ backgroundColor: accent }}
           >
             <MessageCircle className="size-3.5" />

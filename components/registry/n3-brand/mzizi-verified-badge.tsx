@@ -233,7 +233,7 @@ function MziziVerifiedBadge({
       data-portal={PORTAL}
       role="group"
       aria-label={groupLabel ?? marks.map((m) => (m.key === "level" ? (ariaLabel ?? m.name) : m.name)).join(", ")}
-      className={cn("inline-flex shrink-0 items-center gap-0.5", className)}
+      className={cn("inline-flex shrink-0 items-center gap-2", className)}
     >
       {marks.map((m) => badge(m, false))}
     </span>

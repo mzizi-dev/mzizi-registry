@@ -120,7 +120,7 @@ function MziziBadgeDisplay({
           <div
             key={b.id}
             className={cn(
-              "flex flex-col items-center gap-1.5 rounded-[var(--radius-card,14px)] bg-card p-3 text-center ring-1 ring-foreground/10",
+              "flex flex-col items-center gap-2 rounded-[var(--radius-card,14px)] bg-card p-3 text-center ring-1 ring-foreground/10",
               b.locked && "opacity-30"
             )}
           >

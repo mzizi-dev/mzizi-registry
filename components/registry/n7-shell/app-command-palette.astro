@@ -61,7 +61,7 @@ const inputId = `${id}-q`;
           <p aria-hidden="true" class="px-2 pt-2 pb-1 text-caption font-medium text-muted-foreground">
             {s.label}
           </p>
-          <ul role="list" class="grid gap-0.5">
+          <ul role="list" class="grid gap-2">
             {s.items.map((i) => (
               <li data-cmdk-item data-search={[i.label, i.description ?? i.summary ?? "", i.group ?? "", ...i.trail].join(" ")}>
                 <a href={i.href} class="flex h-9 min-w-0 items-center gap-2.5 rounded-sm px-2 text-body-sm outline-none hover:bg-muted focus-visible:bg-muted focus-visible:ring-2 focus-visible:ring-ring pointer-coarse:h-11">

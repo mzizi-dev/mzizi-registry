@@ -79,7 +79,7 @@ function ProfileSettings({ loading = false }: { loading?: boolean } = {}) {
       <div className="mx-auto flex max-w-5xl flex-col gap-6 p-4 sm:p-6 md:flex-row">
         {/* Sidebar */}
         <aside className="w-full shrink-0 md:w-56">
-          <nav className="flex flex-row gap-1 overflow-x-auto md:flex-col">
+          <nav className="flex flex-row gap-2 overflow-x-auto md:flex-col">
             {sections.map((section) => (
               <button
                 key={section.id}

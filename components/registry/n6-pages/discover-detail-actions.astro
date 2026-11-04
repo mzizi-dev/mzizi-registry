@@ -59,11 +59,11 @@ const rel = (a: Action) => (a.external ? "external noopener" : undefined);
   </OpenInApp>
   {
     share.length > 0 && (
-      <div class="flex flex-wrap items-center gap-x-3 gap-y-1" data-slot="detail-actions-share">
+      <div class="flex flex-wrap items-center gap-x-3 gap-y-2" data-slot="detail-actions-share">
         <p class="text-body-sm font-semibold text-muted-foreground" aria-hidden="true">
           {shareLabel}
         </p>
-        <ul aria-label={shareLabel} class="flex flex-wrap items-center gap-1">
+        <ul aria-label={shareLabel} class="flex flex-wrap items-center gap-2">
           {share.map((a) => (
             <li>
               <a href={a.href} rel={rel(a)} class={buttonVariants({ variant: "ghost", size: "sm" })}>

@@ -35,8 +35,8 @@ interface Props {
 }
 const { name, href = "/", workspaces = [], links = [], label = "Switch workspace" } = Astro.props;
 const switchable = workspaces.length > 1 || links.length > 0;
-const row = "flex h-14 w-full min-w-0 items-center gap-2.5 rounded-sm px-2 text-start outline-none hover:bg-muted focus-visible:ring-2 focus-visible:ring-ring";
-const menuItem = "flex min-h-8 items-center gap-2 rounded-sm px-2 py-1.5 text-body-sm hover:bg-muted focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring pointer-coarse:min-h-11";
+const row = "flex h-14 w-full min-w-0 items-center gap-2.5 rounded-sm px-3.5 text-start outline-none hover:bg-muted focus-visible:ring-2 focus-visible:ring-ring";
+const menuItem = "flex min-h-8 items-center gap-2 rounded-sm px-3.5 py-1.5 text-body-sm hover:bg-muted focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring pointer-coarse:min-h-11";
 ---
 
 {
@@ -51,9 +51,9 @@ const menuItem = "flex min-h-8 items-center gap-2 rounded-sm px-2 py-1.5 text-bo
         </span>
         <Icon name="chevrons-up-down" class="h-4 w-4 shrink-0 text-muted-foreground" />
       </summary>
-      <div class="absolute inset-x-0 top-full z-40 mt-1 grid gap-0.5 rounded-md border border-border bg-popover p-1 text-popover-foreground shadow-lg" data-slot="workspace-menu">
+      <div class="absolute inset-x-0 top-full z-40 mt-1 grid gap-2 rounded-md border border-border bg-popover p-1 text-popover-foreground shadow-lg" data-slot="workspace-menu">
         {workspaces.length > 0 && (
-          <ul role="list" class="grid gap-0.5" aria-label="Workspaces">
+          <ul role="list" class="grid gap-2" aria-label="Workspaces">
             {workspaces.map((w) => (
               <li>
                 <a href={w.href} class={menuItem} aria-current={w.current ? "true" : undefined}>
@@ -68,7 +68,7 @@ const menuItem = "flex min-h-8 items-center gap-2 rounded-sm px-2 py-1.5 text-bo
           </ul>
         )}
         {links.length > 0 && (
-          <ul role="list" class={`grid gap-0.5 ${workspaces.length > 0 ? "border-t border-border pt-1" : ""}`}>
+          <ul role="list" class={`grid gap-2 ${workspaces.length > 0 ? "border-t border-border pt-1" : ""}`}>
             {links.map((l) => (
               <li>
                 <a href={l.href} class={menuItem}>

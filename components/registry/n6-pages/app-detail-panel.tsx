@@ -59,7 +59,7 @@ function DetailPanel({
         )}
         data-slot="card"
       >
-        <div className="flex flex-col gap-1 border-b border-border px-4 py-3">
+        <div className="flex flex-col gap-2 border-b border-border px-4 py-3">
           <Heading id={headingId} className="text-h6 font-semibold">
             {title}
           </Heading>
@@ -71,7 +71,7 @@ function DetailPanel({
           {items.map((item, i) => (
             <div
               key={i}
-              className="grid gap-0.5 px-4 py-2.5 @lg:grid-cols-[11rem_minmax(0,1fr)] @lg:gap-6"
+              className="grid gap-2 px-4 py-2.5 @lg:grid-cols-[11rem_minmax(0,1fr)] @lg:gap-6"
             >
               <dt className="text-body-sm font-medium text-muted-foreground">
                 {item.label}

@@ -147,12 +147,12 @@ export function MziziImageGallery({
         role="group"
         aria-label="Image gallery"
         className={cn(
-          "grid animate-pulse gap-1 overflow-hidden rounded-[var(--radius-lg,14px)]",
+          "grid animate-pulse gap-2 overflow-hidden rounded-[var(--radius-lg,14px)]",
           className
         )}
       >
         <div className="aspect-video bg-muted" />
-        <div className="grid grid-cols-3 gap-1">
+        <div className="grid grid-cols-3 gap-2">
           <div className="aspect-square bg-muted" />
           <div className="aspect-square bg-muted" />
           <div className="aspect-square bg-muted" />
@@ -179,7 +179,7 @@ export function MziziImageGallery({
       role="group"
       aria-label="Image gallery"
       className={cn(
-        "grid gap-1 overflow-hidden rounded-[var(--radius-card,14px)]",
+        "grid gap-2 overflow-hidden rounded-[var(--radius-card,14px)]",
         gridClass,
         className
       )}
@@ -264,7 +264,7 @@ export function MziziReaderMode({
         </button>
         <div className="flex items-center gap-2">
           {estimatedReadTime && (
-            <span className="flex items-center gap-1 text-xs opacity-60">
+            <span className="flex items-center gap-2 text-xs opacity-60">
               <BookOpen className="size-3" />
               {estimatedReadTime}
             </span>
@@ -296,7 +296,7 @@ export function MziziReaderMode({
               <Plus className="size-4" />
             </button>
           </div>
-          <div className="flex gap-1">
+          <div className="flex gap-2">
             {(["dark", "light", "sepia"] as ReaderTheme[]).map((t) => (
               <button
                 key={t}
@@ -489,7 +489,7 @@ export function MziziStoryRing({
     <button
       data-slot="mzizi-story-ring"
       onClick={onClick}
-      className={cn("flex flex-col items-center gap-1.5", className)}
+      className={cn("flex flex-col items-center gap-2", className)}
     >
       <div
         className="rounded-full p-[3px]"

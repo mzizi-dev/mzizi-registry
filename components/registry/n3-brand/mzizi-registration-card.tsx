@@ -213,7 +213,7 @@ function MziziRegistrationCard({
       {/* Quantity stepper */}
       <div className="flex items-center justify-between">
         <span className="text-sm font-medium text-muted-foreground">Quantity</span>
-        <div className="flex items-center gap-1">
+        <div className="flex items-center gap-2">
           <button
             type="button"
             aria-label="Decrease quantity"

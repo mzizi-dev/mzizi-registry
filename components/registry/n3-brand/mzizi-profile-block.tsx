@@ -182,7 +182,7 @@ export function MziziProfileBlock({
         <div className="h-2.5 w-16 rounded bg-muted" />
         <div className="mt-2 flex gap-6">
           {Array.from({ length: 3 }).map((_, i) => (
-            <div key={i} className="space-y-1 text-center">
+            <div key={i} className="space-y-2 text-center">
               <div className="mx-auto h-4 w-8 rounded bg-muted" />
               <div className="h-2 w-10 rounded bg-muted" />
             </div>
@@ -241,7 +241,7 @@ export function MziziProfileBlock({
       </div>
 
       {/* Name + inline verified badge */}
-      <div className="mt-3.5 flex items-center gap-1.5">
+      <div className="mt-3.5 flex items-center gap-2">
         <h2 className="font-serif text-xl font-bold text-foreground">{name}</h2>
         {/* Render custom badge component if provided, otherwise show built-in */}
         {verifiedBadge
@@ -267,7 +267,7 @@ export function MziziProfileBlock({
           <div className="flex items-center justify-center gap-3">
             {/* Verification tier pill */}
             <span
-              className="inline-flex items-center gap-1.5 rounded-full px-2.5 py-1 text-sm font-semibold"
+              className="inline-flex items-center gap-2 rounded-full px-2.5 py-1 text-sm font-semibold"
               style={{ backgroundColor: tierConfig.bg, color: tierConfig.fg }}
             >
               <Shield className="size-3" strokeWidth={2.5} />
@@ -275,7 +275,7 @@ export function MziziProfileBlock({
             </span>
             {/* Status pill */}
             <span
-              className="inline-flex items-center gap-1.5 rounded-full px-2.5 py-1 text-sm font-semibold"
+              className="inline-flex items-center gap-2 rounded-full px-2.5 py-1 text-sm font-semibold"
               style={{ backgroundColor: statusConfig.bg, color: statusConfig.color }}
             >
               <Activity className="size-3" strokeWidth={2.5} />
@@ -285,9 +285,9 @@ export function MziziProfileBlock({
 
           {/* Row 2: Trust score meter */}
           {trustScore != null && (
-            <div className="flex flex-col items-center gap-1.5">
+            <div className="flex flex-col items-center gap-2">
               <div className="flex w-full items-center justify-between text-sm">
-                <span className="flex items-center gap-1 font-medium text-muted-foreground">
+                <span className="flex items-center gap-2 font-medium text-muted-foreground">
                   <TrendingUp className="size-3" />
                   Trust Score
                 </span>
@@ -307,7 +307,7 @@ export function MziziProfileBlock({
               </div>
               {/* Ubuntu points */}
               {ubuntuPoints != null && (
-                <span className="flex items-center gap-1 text-sm text-muted-foreground">
+                <span className="flex items-center gap-2 text-sm text-muted-foreground">
                   <Star
                     className="size-2.5"
                     style={{ color: "var(--color-gold, var(--color-gold,#FFD740))" }}

@@ -114,7 +114,7 @@ impl ButtonSize {
                 "h-control gap-2 px-5 has-data-[icon=inline-end]:pr-4 has-data-[icon=inline-start]:pl-4"
             }
             Self::Sm => {
-                "h-control-sm gap-1.5 px-4 has-data-[icon=inline-end]:pr-3 has-data-[icon=inline-start]:pl-3"
+                "h-control-sm gap-2 px-4 has-data-[icon=inline-end]:pr-3.5 has-data-[icon=inline-start]:pl-3.5"
             }
             Self::Lg => {
                 "h-control-lg gap-2 px-6 has-data-[icon=inline-end]:pr-5 has-data-[icon=inline-start]:pl-5"

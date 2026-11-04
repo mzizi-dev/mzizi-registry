@@ -284,7 +284,7 @@ function MziziPlaceCard({
             {/* The name is the card's text, so the image is decorative. */}
             <img src={image} alt="" {...imageLoading} className="size-full object-cover" />
             {distance && (
-              <span className="absolute bottom-2 left-2 flex items-center gap-1 rounded-full bg-black/50 px-2 py-0.5 text-sm font-medium text-white backdrop-blur-sm">
+              <span className="absolute bottom-2 left-2 flex items-center gap-2 rounded-full bg-black/50 px-2 py-0.5 text-sm font-medium text-white backdrop-blur-sm">
                 <Navigation className="size-2.5" aria-hidden="true" />
                 {distance}
               </span>
@@ -292,14 +292,14 @@ function MziziPlaceCard({
           </div>
         )}
         <div className="p-3">
-          <div className="flex items-center gap-1.5">
+          <div className="flex items-center gap-2">
             <h4 className="line-clamp-1 text-sm font-medium text-foreground">{name}</h4>
             <TierMark tier={verificationTier} showLabel={showTierLabel} label={tierLabel} />
           </div>
           {category && <span className="text-xs text-muted-foreground">{category}</span>}
           <div className="mt-1.5 flex items-center gap-3 text-xs text-muted-foreground">
             {rating != null && (
-              <span className="flex items-center gap-0.5">
+              <span className="flex items-center gap-2">
                 <Star
                   className="size-3 fill-[var(--color-gold)] text-[var(--color-gold)]"
                   aria-hidden="true"
@@ -338,7 +338,7 @@ function MziziPlaceCard({
           </div>
         )}
         <div className="min-w-0 flex-1">
-          <div className="flex items-center gap-1.5">
+          <div className="flex items-center gap-2">
             <span className="line-clamp-1 text-sm font-medium text-foreground">{name}</span>
             <TierMark tier={verificationTier} showLabel={showTierLabel} label={tierLabel} />
           </div>
@@ -347,24 +347,24 @@ function MziziPlaceCard({
               {category}
             </span>
           )}
-          <div className="mt-0.5 flex flex-wrap items-center gap-x-3 gap-y-0.5 text-xs text-muted-foreground">
+          <div className="mt-0.5 flex flex-wrap items-center gap-x-3 gap-y-2 text-xs text-muted-foreground">
             {address && (
-              <span className="flex items-center gap-1">
+              <span className="flex items-center gap-2">
                 <MapPin className="size-3" aria-hidden="true" />
                 {address}
               </span>
             )}
             {distance && (
-              <span className="flex items-center gap-1">
+              <span className="flex items-center gap-2">
                 <Navigation className="size-3" aria-hidden="true" />
                 {distance}
               </span>
             )}
           </div>
         </div>
-        <div className="flex shrink-0 flex-col items-end gap-0.5">
+        <div className="flex shrink-0 flex-col items-end gap-2">
           {rating != null && (
-            <span className="flex items-center gap-0.5 text-xs font-semibold text-foreground">
+            <span className="flex items-center gap-2 text-xs font-semibold text-foreground">
               <Star
                 className="size-3 fill-[var(--color-gold)] text-[var(--color-gold)]"
                 aria-hidden="true"

@@ -153,7 +153,7 @@ export function MziziFooter({
             &copy; {year} {companyName}. All rights reserved.
           </p>
           {/* L1: TOKENS — Seven African Minerals dots */}
-          <div className="flex items-center gap-1.5" aria-hidden="true">
+          <div className="flex items-center gap-2" aria-hidden="true">
             {[
               "var(--color-primary, #00B0FF)",
               "var(--color-primary, #00B0FF)",

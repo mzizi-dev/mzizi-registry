@@ -190,7 +190,7 @@ const stateOf = (rank: number) =>
       </p>
       {
         chips.length > 0 && (
-          <ul data-slot="tier-attested" aria-label={words.attested} class="mt-2 flex flex-wrap gap-1.5">
+          <ul data-slot="tier-attested" aria-label={words.attested} class="mt-2 flex flex-wrap gap-2">
             {chips.map((r) => {
               const t = r.type;
               const a = ATTESTATION_DATA[t];
@@ -201,7 +201,7 @@ const stateOf = (rank: number) =>
                   data-source={p?.source}
                   data-checked-at={p?.checkedAt}
                   class={cn(
-                    "inline-flex min-h-7 items-center gap-1.5 rounded-full px-2.5 text-caption font-medium",
+                    "inline-flex min-h-7 items-center gap-2 rounded-full px-3.5 text-caption font-medium",
                     p && "py-1",
                     a.classes.container,
                     a.classes.onContainer,
@@ -228,7 +228,7 @@ const stateOf = (rank: number) =>
     </div>
   </div>
 
-  <ol data-slot="tier-ladder" aria-label={words.ladder} class="mt-4 grid gap-0.5">
+  <ol data-slot="tier-ladder" aria-label={words.ladder} class="mt-4 grid gap-2">
     {
       ASSURANCE_ORDER.map((l) => {
         const rung = ASSURANCE_DATA[l];
@@ -268,7 +268,7 @@ const stateOf = (rank: number) =>
       attestations.length === 0 ? (
         <p class="text-body-sm text-muted-foreground">{words.none}</p>
       ) : (
-        <ul class="grid gap-1.5">
+        <ul class="grid gap-2">
           {attestations.map((a) => (
             <li class="flex items-start gap-2 text-body-sm">
               <Icon name="check" class="mt-0.5 h-4 w-4 shrink-0 text-status-success" />
@@ -291,7 +291,7 @@ const stateOf = (rank: number) =>
             {`${words.next} ${nameOf(next.level)}`}
           </Sub>
           {requirements.length > 0 && (
-            <ul class="grid list-disc gap-1 ps-5 text-body-sm text-muted-foreground">
+            <ul class="grid list-disc gap-2 ps-5 text-body-sm text-muted-foreground">
               {requirements.map((r) => (
                 <li>{r}</li>
               ))}

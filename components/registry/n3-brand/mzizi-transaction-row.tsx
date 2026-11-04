@@ -88,7 +88,7 @@ function MziziTransactionRow({
         className="flex animate-pulse items-center gap-3 py-3"
       >
         <div className="size-10 shrink-0 rounded-full bg-muted" />
-        <div className="flex-1 space-y-1.5">
+        <div className="flex-1 space-y-2">
           <div className="h-3.5 w-1/3 rounded bg-muted" />
           <div className="h-2.5 w-1/4 rounded bg-muted" />
         </div>
@@ -104,7 +104,7 @@ function MziziTransactionRow({
         className="flex animate-pulse items-center gap-3 px-4 py-3"
       >
         <div className="size-10 shrink-0 rounded-full bg-muted" />
-        <div className="flex-1 space-y-1.5">
+        <div className="flex-1 space-y-2">
           <div className="h-3.5 w-1/3 rounded bg-muted" />
           <div className="h-2.5 w-1/4 rounded bg-muted" />
         </div>
@@ -143,7 +143,7 @@ function MziziTransactionRow({
         <div className="mt-0.5 flex items-center gap-2 text-xs text-muted-foreground">
           <span>{time}</span>
           {status !== "completed" && (
-            <span className="flex items-center gap-0.5 capitalize" style={{ color: sc.color }}>
+            <span className="flex items-center gap-2 capitalize" style={{ color: sc.color }}>
               <sc.icon className="size-3" />
               {status}
             </span>

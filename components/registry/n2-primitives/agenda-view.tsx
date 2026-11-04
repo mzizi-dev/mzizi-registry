@@ -39,23 +39,23 @@ function AgendaView({
           <h3 className="text-xs font-semibold tracking-wider text-muted-foreground uppercase">
             {date}
           </h3>
-          <div className="flex flex-col gap-1.5">
+          <div className="flex flex-col gap-2">
             {dayEvents.map((event, index) => (
               <div
                 key={index}
                 className="flex items-center gap-3 rounded-[var(--radius-lg,14px)] bg-card px-3 py-2.5 ring-1 ring-foreground/10"
               >
-                <div className="flex min-w-0 flex-1 flex-col gap-0.5">
+                <div className="flex min-w-0 flex-1 flex-col gap-2">
                   <span className="truncate text-sm font-medium text-foreground">
                     {event.title}
                   </span>
                   <div className="flex items-center gap-3 text-xs text-muted-foreground">
-                    <span className="inline-flex items-center gap-1">
+                    <span className="inline-flex items-center gap-2">
                       <Clock className="size-3" />
                       {event.time}
                     </span>
                     {event.location && (
-                      <span className="inline-flex items-center gap-1 truncate">
+                      <span className="inline-flex items-center gap-2 truncate">
                         <MapPin className="size-3 shrink-0" />
                         {event.location}
                       </span>

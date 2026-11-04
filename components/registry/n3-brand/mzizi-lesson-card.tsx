@@ -66,7 +66,7 @@ export function MziziLessonCard({
       >
         <div className="flex gap-3">
           <div className="size-10 shrink-0 rounded-[var(--radius-sm,7px)] bg-muted" />
-          <div className="flex-1 space-y-1.5">
+          <div className="flex-1 space-y-2">
             <div className="h-3.5 w-2/3 rounded bg-muted" />
             <div className="h-2.5 w-1/3 rounded bg-muted" />
           </div>
@@ -109,13 +109,13 @@ export function MziziLessonCard({
           </p>
         </div>
         {streak != null && streak > 0 && (
-          <div className="flex shrink-0 items-center gap-1 rounded-full bg-[var(--color-gold,#FFD740)]/10 px-2 py-0.5 text-sm font-bold text-[var(--color-gold,#FFD740)]">
+          <div className="flex shrink-0 items-center gap-2 rounded-full bg-[var(--color-gold,#FFD740)]/10 px-2 py-0.5 text-sm font-bold text-[var(--color-gold,#FFD740)]">
             🔥 {streak}
           </div>
         )}
       </div>
       {progress > 0 && (
-        <div className="space-y-1">
+        <div className="space-y-2">
           <div className="flex justify-between text-sm text-muted-foreground">
             <span>{completedLessons ?? Math.round(progress)}% complete</span>
             {totalLessons && (

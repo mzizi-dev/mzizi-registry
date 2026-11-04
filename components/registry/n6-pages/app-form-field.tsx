@@ -98,7 +98,7 @@ function FormField({
   );
   return (
     <div
-      className={cn("grid content-start gap-1.5", wide && "@xl:col-span-2")}
+      className={cn("grid content-start gap-2", wide && "@xl:col-span-2")}
       data-slot="form-field"
     >
       {toggle ? (
