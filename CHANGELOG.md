@@ -24,6 +24,10 @@ Owner decision (#625, documented in #627): a one-line label chip or pill is held
 - **`/v1/brand` and `mzizi_get_tokens(ecosystem)`.** The `bundu` row said the ecosystem was "built by Nyuchi Africa" with "Three pillars". bundu.org (read 2026-11-04) says the Foundation governs four pillars: Bundu Labs (research), Mukoko (consumer), Nyuchi (commercial) and Shamwari AI (community). The description now says that, names Nyuchi as a sibling pillar and Shamwari's commercial operator, and keeps the sister brands as specialist verticals. Text only: no field, mineral or URL changes.
 - **Not changed here.** `plugin/skills/mzizi-design` still says "three pillars"; it is generated from `@nyuchi/mzizi-skills` and follows when that skill is fixed in `mzizi-dev/agent-tools`.
 
+### Changed — the `Mzizi components` job now gates `Build`, as the owner decided for Registry Snapshot and Rust (2026-11-04, [#267](https://github.com/mzizi-dev/mzizi-registry/issues/267))
+
+Owner decision, 2026-10-07 (#267): all three of Registry Snapshot, Rust and Mzizi components gate merges. `Registry Snapshot` and `Rust` already did, through `build.needs`; `Mzizi components` (`mz check` and `mz contract` on every registry `.mz`) did not, so a red run could merge. `.github/workflows/ci.yml` `build.needs` now lists it. Nothing a consumer of the registry sees changes. The ruleset side (listing the three contexts directly in ruleset `repo-ci`, so a failure reads as a failing check and not as `Build` skipped) is owner-only and still open on #267.
+
 ### Changed — the registry takes `@nyuchi/mzizi-skills` 0.18.0: twelve skills, five of them dev skills (2026-11-04, [#617](https://github.com/mzizi-dev/mzizi-registry/issues/617))
 
 - **The Claude Code plugin moves to 1.7.0** (was 1.6.0), as every earlier skills bump did (#596, #601, #611): `plugin/.claude-plugin/plugin.json` `version`, so a client that updates by version picks up skills 0.18.0. The plugin and marketplace descriptions now say twelve skills at 0.18.0 and name the new ones.
