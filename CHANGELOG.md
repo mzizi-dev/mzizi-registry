@@ -10,6 +10,13 @@ From 2026-10-04 releases follow the org versioning policy ([nyuchi/.github#80](h
 
 ## [Unreleased]
 
+### Changed — every release carries notes built from the changelog (2026-11-04, (repository), [mzizi-registry#619](https://github.com/mzizi-dev/mzizi-registry/issues/619))
+
+- The `release.yml` minor release builds its notes first (a new `notes` job fails, before anything is tagged, when `CHANGELOG.md` has no entry since the previous release), tags without the org workflow's auto-generated release, then creates the GitHub release as a draft carrying the notes (the `CHANGELOG.md` entries since the previous release plus a compare link) and publishes it once. The `notes` job that rewrote the release after it was published with `gh release edit` is gone (releases are immutable), and GitHub's list of merged pull requests is no longer appended. No API change.
+- The Mzizi Roots crates release (`mzizi-rs-vX.Y.Z`, `publish-crates.yml`) now carries the `CHANGELOG.md` entries added since the previous crates tag and a compare link beside its crate list (it linked the changelog only), fails before anything is published to crates.io when there are none, and is created as a draft and published once.
+- Staging patch tags (`v*`) no longer carry GitHub's auto text: `staging-version.yml` tags with the org workflow's `create-release: false` (it has no input for notes) and a new `release` job writes the pre-release with the `CHANGELOG.md` entries the merge added and a compare link. A merge the changelog gate exempts says so.
+- The new `release notes` workflow tests the scripts and, on a `release/` pull request into `main`, fails when the release would have no changelog entries and prints the notes in the run summary. `AGENTS.md` gains "Release notes (hard rule)".
+
 ### Added — the spacing floor: 14px inset, 7px gaps, 1.5 body leading, that nothing can go under (2026-11-04, [#618](https://github.com/mzizi-dev/mzizi-registry/pull/618), [#617](https://github.com/mzizi-dev/mzizi-registry/issues/617))
 
 Owner, 2026-11-04: "these are the minimums that you can't cross ... when you have padding, we have a minimum padding allowance between items ... even if we don't do anything or add any padding or anything, there's already a default padding that cannot go under a certain number ... update everything, release everything to main." The Bundu floor had minimums for text (17/14px), hit area (49px), the drawn control (28px) and contrast; it had none for space, and `roles.source.ts` listed "the numeric spacing scale" as not a role. This is the core: the numbers, the tokens and the base-layer rules. The component audit, contract and Rust parity, geometry guard and lint-style tests follow in their own pull request.
