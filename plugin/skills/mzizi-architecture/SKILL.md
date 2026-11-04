@@ -1,7 +1,6 @@
 ---
 name: mzizi-architecture
 description: Use this skill before you start a new Mzizi app, site, console or page, before you add a page to one, and whenever you decide where code, data or a component belongs. Design architecture is the DNA helix (8 nodes, 4 rungs, 6 strands), read live from api.mzizi.dev/v1/architecture or mzizi_get_architecture, with what each placement obliges. App architecture puts the shell first: every app or page mounts exactly one shell before anything else (AppShell for a signed-in app, the Dashboard Standard; DiscoverShell for a public browse site, the Discover Standard), then the page patterns, the five application layers, and the rule that a missing component goes upstream. System architecture covers Rust first, Astro as the default UI, Cloudflare Workers, the four API gateways, files as the registry's data layer at a pinned commit, one service per domain database, and what is decided versus built. Use it when an app lacks a shell, a page invents its own chrome, or someone asks how the pieces fit.
-user-invocable: true
 ---
 
 # Mzizi architecture: design, app and system
@@ -221,15 +220,15 @@ applies.
 - [ ] Shell chosen from the surface table, its contract read, and `@bundu/ui` installed.
 - [ ] One layout mounts the shell, and every page uses it (the check in step 3 prints nothing).
 - [ ] Pages built from the Standard's patterns, with no hand-rolled header, nav or footer.
-- [ ] Tokens and brand overlay from `mzizi-design`. No local colour, radius, spacing or type.
+- [ ] Tokens and brand overlay from `mzizi-design`. No local colour, radius, spacing or type. Nothing under the spacing floor (14px inset, 7px gaps between controls, labels and items, 1.5 leading); `mzizi check` passes.
 - [ ] Data read through the owning gateway. No new direct database read.
 - [ ] Anything missing or wrong in the registry raised upstream, with any local stopgap marked
       `TODO(mzizi): <PR URL>`.
 
 ## See also
 
-- `mzizi-design`: tokens, brand overlays, Apple HIG and where Mzizi overrides it, and the 44px
-  touch floor with the desktop density layer.
+- `mzizi-design`: tokens, brand overlays, Apple HIG and where Mzizi overrides it, and the Bundu
+  floor (17px body, 14px captions, a 49px hit region, and the spacing floor: 14px inset, 7px gaps, 1.5 leading) with the desktop density layer.
 - `mzizi-roots`: the components, Rust first. "Starting an app" covers project setup, and
   "Contributing a component" covers adding one upstream.
 - `mzizi-backend`: Workers and MCP servers.
