@@ -426,6 +426,8 @@ export const MziziRoles = {
   size: {
     spacingTouch: 49,
     spacingTouchMin: 49,
+    spacingInsetFloor: 14,
+    spacingGapFloor: 7,
     spacingControl: 49,
     spacingControlSm: 49,
     spacingControlLg: 56,
