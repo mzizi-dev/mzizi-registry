@@ -23,7 +23,7 @@ const current = choices.find((c) => c.current) ?? choices[0];
 ---
 
 <details class="relative" data-slot="toolbar-menu">
-  <summary class="inline-flex h-8 cursor-pointer list-none items-center gap-2 rounded-sm px-2.5 text-body-sm font-medium outline-none hover:bg-muted focus-visible:ring-2 focus-visible:ring-ring pointer-coarse:h-11 [&::-webkit-details-marker]:hidden">
+  <summary class="inline-flex h-8 cursor-pointer list-none items-center gap-2 rounded-sm px-3.5 text-body-sm font-medium outline-none hover:bg-muted focus-visible:ring-2 focus-visible:ring-ring pointer-coarse:h-11 [&::-webkit-details-marker]:hidden">
     {icon && <Icon name={icon} class="h-4 w-4 shrink-0 text-muted-foreground" />}
     <span class="sr-only">{label}: </span>
     <span>{current?.label}</span>
