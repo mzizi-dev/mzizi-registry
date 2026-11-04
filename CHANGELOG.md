@@ -10,14 +10,7 @@ From 2026-10-04 releases follow the org versioning policy ([nyuchi/.github#80](h
 
 ## [Unreleased]
 
-### Changed — every release carries notes built from the changelog (2026-11-04, (repository), [mzizi-registry#619](https://github.com/mzizi-dev/mzizi-registry/issues/619))
-
-- The `release.yml` minor release builds its notes first (a new `notes` job fails, before anything is tagged, when `CHANGELOG.md` has no entry since the previous release), tags without the org workflow's auto-generated release, then creates the GitHub release as a draft carrying the notes (the `CHANGELOG.md` entries since the previous release plus a compare link) and publishes it once. The `notes` job that rewrote the release after it was published with `gh release edit` is gone (releases are immutable), and GitHub's list of merged pull requests is no longer appended. No API change.
-- The Mzizi Roots crates release (`mzizi-rs-vX.Y.Z`, `publish-crates.yml`) now carries the `CHANGELOG.md` entries added since the previous crates tag and a compare link beside its crate list (it linked the changelog only), fails before anything is published to crates.io when there are none, and is created as a draft and published once.
-- Staging patch tags (`v*`) no longer carry GitHub's auto text: `staging-version.yml` tags with the org workflow's `create-release: false` (it has no input for notes) and a new `release` job writes the pre-release with the `CHANGELOG.md` entries the merge added and a compare link. A merge the changelog gate exempts says so.
-- The new `release notes` workflow tests the scripts and, on a `release/` pull request into `main`, fails when the release would have no changelog entries and prints the notes in the run summary. `AGENTS.md` gains "Release notes (hard rule)".
-
-### Changed — the spacing floor, part 2: every contract is held to it, in React, Astro and Rust, and every component is ratcheted (2026-11-04, [#617](https://github.com/mzizi-dev/mzizi-registry/issues/617))
+### Changed — the spacing floor, part 2: every contract is held to it, in React, Astro and Rust, and every component is ratcheted (2026-11-04, [#622](https://github.com/mzizi-dev/mzizi-registry/pull/622), [#617](https://github.com/mzizi-dev/mzizi-registry/issues/617))
 
 Follows the core ([#618](https://github.com/mzizi-dev/mzizi-registry/pull/618): `BUNDU_FLOOR.spacing`, `--inset-floor`, `--gap-floor`, `--leading-floor`, the base-layer rules). The core made a bare element safe; this holds every explicit value to the floor.
 
@@ -29,6 +22,13 @@ Follows the core ([#618](https://github.com/mzizi-dev/mzizi-registry/pull/618): 
 - **Docs.** `docs/sizes-and-density.md` gains "What fails the build, for spacing"; `contracts/README.md` notes that every contract is held to the floor with no field to write.
 - **Not in this change.** Inline padding under 14px on components that no contract covers (about 700 uses) is not yet fixed or counted: the contract runner reads rendered text containers and cannot be pointed at them from source. They are the follow-up under #617.
 - **Site/docs/skills impact:** `@bundu/ui` (`mzizi-dev/packages-npm`) takes the new `gap-2`/`px-3.5` classes and `evaluateSpacing` at the next registry pin (its contract tests can call it); mzizi-site's `audit-ui.mjs --guard` and the CLI check read `contracts/spacing-geometry.json`.
+
+### Changed — every release carries notes built from the changelog (2026-11-04, (repository), [mzizi-registry#619](https://github.com/mzizi-dev/mzizi-registry/issues/619))
+
+- The `release.yml` minor release builds its notes first (a new `notes` job fails, before anything is tagged, when `CHANGELOG.md` has no entry since the previous release), tags without the org workflow's auto-generated release, then creates the GitHub release as a draft carrying the notes (the `CHANGELOG.md` entries since the previous release plus a compare link) and publishes it once. The `notes` job that rewrote the release after it was published with `gh release edit` is gone (releases are immutable), and GitHub's list of merged pull requests is no longer appended. No API change.
+- The Mzizi Roots crates release (`mzizi-rs-vX.Y.Z`, `publish-crates.yml`) now carries the `CHANGELOG.md` entries added since the previous crates tag and a compare link beside its crate list (it linked the changelog only), fails before anything is published to crates.io when there are none, and is created as a draft and published once.
+- Staging patch tags (`v*`) no longer carry GitHub's auto text: `staging-version.yml` tags with the org workflow's `create-release: false` (it has no input for notes) and a new `release` job writes the pre-release with the `CHANGELOG.md` entries the merge added and a compare link. A merge the changelog gate exempts says so.
+- The new `release notes` workflow tests the scripts and, on a `release/` pull request into `main`, fails when the release would have no changelog entries and prints the notes in the run summary. `AGENTS.md` gains "Release notes (hard rule)".
 
 ### Added — the spacing floor: 14px inset, 7px gaps, 1.5 body leading, that nothing can go under (2026-11-04, [#618](https://github.com/mzizi-dev/mzizi-registry/pull/618), [#617](https://github.com/mzizi-dev/mzizi-registry/issues/617))
 
