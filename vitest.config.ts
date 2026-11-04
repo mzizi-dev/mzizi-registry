@@ -18,7 +18,7 @@ const REGISTRY_UI_ROOTS = readdirSync(path.resolve(__dirname, "components/regist
  * Extensions this alias map may point at.
  *
  * The registry is bilingual — `button.tsx` and `button.rs` are one component implemented for
- * React and for Dioxus (CLAUDE.md §8.9) — and stripping the extension collapses both onto the
+ * React and for Rust (CLAUDE.md §8.9) — and stripping the extension collapses both onto the
  * same `find` key. `readdirSync` returns them alphabetically, so `.rs` sorted ahead of `.tsx`
  * and the first matching alias won: every test importing a primitive got handed Rust, and
  * vite failed on `pub const fn` as invalid JS. An allow-list is right here (unlike in

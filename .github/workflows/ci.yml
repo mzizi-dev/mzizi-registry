@@ -177,7 +177,7 @@ jobs:
     #
     # `cargo test` runs the contract suite, which reads each component's `.tsx` sibling and
     # asserts the two agree on variants, `data-slot` names and classes. `cargo check` alone
-    # cannot catch a Dioxus button that compiles perfectly and renders markup the shared
+    # cannot catch a Rust button that compiles perfectly and renders markup the shared
     # stylesheet does not style.
     steps:
       - uses: actions/checkout@v7.0.1
