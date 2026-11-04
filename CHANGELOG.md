@@ -10,7 +10,7 @@ From 2026-10-04 releases follow the org versioning policy ([nyuchi/.github#80](h
 
 ## [Unreleased]
 
-### Added — the spacing floor: 14px inset, 7px gaps, 1.5 body leading, that nothing can go under (2026-11-04, [#617](https://github.com/mzizi-dev/mzizi-registry/issues/617))
+### Added — the spacing floor: 14px inset, 7px gaps, 1.5 body leading, that nothing can go under (2026-11-04, [#618](https://github.com/mzizi-dev/mzizi-registry/pull/618), [#617](https://github.com/mzizi-dev/mzizi-registry/issues/617))
 
 Owner, 2026-11-04: "these are the minimums that you can't cross ... when you have padding, we have a minimum padding allowance between items ... even if we don't do anything or add any padding or anything, there's already a default padding that cannot go under a certain number ... update everything, release everything to main." The Bundu floor had minimums for text (17/14px), hit area (49px), the drawn control (28px) and contrast; it had none for space, and `roles.source.ts` listed "the numeric spacing scale" as not a role. This is the core: the numbers, the tokens and the base-layer rules. The component audit, contract and Rust parity, geometry guard and lint-style tests follow in their own pull request.
 
