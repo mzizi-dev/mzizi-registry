@@ -77,6 +77,26 @@
       "violations": 1
     },
     {
+      "name": "a hero status pill with 14px inline inset and a line-height block axis holds",
+      "html": "<p class=\"flex w-fit items-center gap-2 rounded-full border bg-card px-3.5 py-1\">Phase 0</p>",
+      "violations": 0
+    },
+    {
+      "name": "a hero status pill with 12px inline inset is under the inset",
+      "html": "<p class=\"flex w-fit items-center gap-2 rounded-full border bg-card px-3 py-1\">Phase 0</p>",
+      "violations": 1
+    },
+    {
+      "name": "a badge of fixed height with 14px inline inset holds",
+      "html": "<span class=\"inline-flex h-6 items-center rounded-md border px-3.5 py-0.5\">Beta</span>",
+      "violations": 0
+    },
+    {
+      "name": "a badge of fixed height with 8px inline inset is under the inset",
+      "html": "<span class=\"inline-flex h-6 items-center rounded-md border px-2 py-0.5\">Beta</span>",
+      "violations": 1
+    },
+    {
       "name": "a negative margin on a text container pulls the text past its edge",
       "html": "<div class=\"-mx-2 border\">Hello</div>",
       "violations": 1

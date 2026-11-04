@@ -10,6 +10,13 @@ From 2026-10-04 releases follow the org versioning policy ([nyuchi/.github#80](h
 
 ## [Unreleased]
 
+### Changed — the spacing floor states that a label chip or pill is held on its inline axis (2026-11-04, [#625](https://github.com/mzizi-dev/mzizi-registry/issues/625), [#617](https://github.com/mzizi-dev/mzizi-registry/issues/617))
+
+Owner decision, 2026-11-04, on mzizi-site's spacing guard finding: the floor stays as it is, and a one-line label chip or pill is held by its 14px inline inset, with its block axis being its line height or fixed height. This writes down what the contract runner and its Rust twin already enforce; no size, component or contract changed. The inline half of the finding (`Badge` at 8px, the hero's status pill at 12px) was fixed by #622 and shipped in 4.25.0.
+
+- **Docs.** `BUNDU_FLOOR.spacing`'s comment in `lib/tokens/roles.source.ts` and `docs/sizes-and-density.md` state the rule. mzizi-site's `audit-ui.mjs --guard` should measure a pill on its inline axis only.
+- **Tests.** `contracts/spacing-cases.json` gains four cases (27), shared with the Rust evaluator: a hero status pill and a fixed-height badge at 14px inline hold, and at 12px and 8px they fail. `__tests__/spacing-floor.test.ts` pins the rule's wording in the docs and the source comment.
+
 ### Changed — the spacing floor, part 2: every contract is held to it, in React, Astro and Rust, and every component is ratcheted (2026-11-04, [#622](https://github.com/mzizi-dev/mzizi-registry/pull/622), [#617](https://github.com/mzizi-dev/mzizi-registry/issues/617))
 
 Follows the core ([#618](https://github.com/mzizi-dev/mzizi-registry/pull/618): `BUNDU_FLOOR.spacing`, `--inset-floor`, `--gap-floor`, `--leading-floor`, the base-layer rules). The core made a bare element safe; this holds every explicit value to the floor.
