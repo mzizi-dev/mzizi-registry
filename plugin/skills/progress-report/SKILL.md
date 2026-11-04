@@ -1,7 +1,6 @@
 ---
 name: progress-report
-description: Use this skill whenever dev work starts, in any repo. All dev work runs on a 10-minute progress-report loop. When work starts, schedule a recurring report every 10 minutes (`/loop 10m` or CronCreate `*/10 * * * *` in Claude Code; the cron dies with the session; without cron, report at each checkpoint). Measure, don't guess: each report has 20-cell progress bars with a percentage and a one-line basis (plan steps done of total, features done, code migrated as lines in the new tree against the old, and an Overall bar labelled estimate when it is not exact) and per workstream open PRs, latest release, staging ahead of main, CI, and a live HTTP check for deployed sites. It ends with one 'Since last report:' line and a final 'Needs you:' line. When nothing changed, report a single line. Ticks are read-only: never publish, release, merge, delete or deploy from a tick unless the owner approved that exact action. No secrets or PII. Ships progress.sh (bar, pct, repo, lines, http).
-user-invocable: true
+description: Use this skill whenever dev work starts, in any repo. All dev work runs on a 10-minute progress-report loop. When work starts, schedule a recurring report every 10 minutes (`/loop 10m` or CronCreate `*/10 * * * *`; the cron dies with the session; without cron, report at each checkpoint). Measure, don't guess: each report has 20-cell progress bars with a percentage and a one-line basis (plan steps, features, code migrated as lines, and an Overall bar labelled estimate when not exact) and per workstream open PRs, latest release, staging ahead of main, CI, and a live HTTP check for deployed sites. It ends with one 'Since last report:' line and a final 'Needs you:' line. A "what's blocking / what's live" status gives each product one line: live value, what waits, who acts. When nothing changed, report a single line. Ticks are read-only: never publish, release, merge, delete or deploy from a tick unless the owner approved that exact action. No secrets or PII. Ships progress.sh (bar, pct, repo, lines, http).
 ---
 
 # Progress report: measured, every ten minutes
@@ -12,9 +11,9 @@ All dev work runs on a 10-minute progress-report loop. The owner reads the repor
 what to do next, so every number in them is measured, and every report ends with what the
 owner has to do. A report that guesses is worse than none, because it is believed.
 
-This skill has four parts: **starting** the loop, **what a report holds**, **the rules for a
-tick**, and **stopping**. The script `progress.sh` in this skill folder renders the bars and
-reads the repo state for you.
+This skill has five parts: **starting** the loop, **what a report holds**, the **"what's
+blocking / what's live" status**, **the rules for a tick**, and **stopping**. The script
+`progress.sh` in this skill folder renders the bars and reads the repo state for you.
 
 ## Get the script
 
@@ -137,6 +136,53 @@ Since last report: #57 merged; code in app/ 64% → 69%.
 Needs you: approve the 1.7.0 store submission (staged, not submitted).
 ```
 
+## Status: what's blocking, what's live
+
+Use this format when the owner asks "what's blocking?" or "what's live?", when work crosses
+several products, or when a release is in flight. It can stand in for the per-workstream block
+of a tick, or follow it. Its one rule: **merged to `staging` is not live.** A product is live
+when you read its live value this minute, and deploys lag a minute or two behind a merge to
+`main`, so say "not yet" before you say "stale".
+
+One line per product, with three parts: **live value**, **waiting**, **who acts**.
+
+- **Live value:** what the product serves now, read from its own source in this tick (a
+  version, a registry commit, an HTTP status), or `?` and why. Never a value from an earlier
+  tick or from a merged PR.
+- **Waiting:** what stands between here and the target, specific enough to check, such as
+  `PR #120 in the merge queue`, `release PR #340 open` or `npm lists 0.17.0, not 0.18.0`.
+  Write `nothing` when the live value is the target.
+- **Who acts:** `me` (the agent, within what the owner approved), `CI`, `bot`, `deploy` (a
+  Cloudflare deploy, which lags), or `owner` for a decision only the owner can make: a
+  release, the `forward-ported` label, a major version. Name a person only by role.
+
+```text
+Status 14:20 (registry 4.25.0 to every product)   target: registry=c3e6e87c49ee
+
+mzizi-api    live registry=1ac4f81a0571   waiting: bump PR #121 in the merge queue, then release   who: CI, then owner
+mzizi-mcp    live registry=1ac4f81a0571   waiting: bump PR open, parity not run                    who: me
+@bundu/ui    live 0.10.0, pin 780457a     waiting: registry:sync not run                           who: me
+mzizi-site   live 200, counts for 675     waiting: the API release first                           who: owner (release)
+mzizi-docs   live 200                     waiting: nothing                                         who: -
+
+Blocking: the API release (release PR not cut; the main gate may need the owner's forward-ported label).
+Since last report: API bump PR moved from open to queued.
+Needs you: say whether to cut the API release now, and whether forward-ported is approved for it.
+```
+
+(The values above are illustrative: read yours from the live commands. `ship-release`'s
+`verify-live.sh` prints most of them, and `registry-propagation` has the alignment table.)
+
+Rules for this status:
+
+- **One line per product**, plus a `Blocking:` line naming the single thing that, once
+  cleared, moves the most lines. If nothing blocks, write `Blocking: nothing`.
+- **Honest wording.** `merged` and `queued` are not `live`. Say `live` only with a value read
+  now; say `not yet` for what a deploy has not reached; say `?` when a read failed.
+- **End with `Needs you:`**, the owner's actions and decisions, each one specific enough to act on
+  (`Needs you: nothing` when nothing is). It is still the last line of the report.
+- Still read-only: reading the live state never publishes, releases, merges or deploys.
+
 ## Rules for a tick
 
 - **Ticks are read-only by default.** Never publish, release, merge, delete or deploy from a
@@ -168,6 +214,7 @@ finished work.
 - [ ] Each bar has a measured basis; the Overall bar says `estimate` when it is one.
 - [ ] Each workstream shows PRs, release, staging vs main, CI, live HTTP, and content counts.
 - [ ] One "Since last report:" line, and "Needs you:" is the last line.
+- [ ] A "what's blocking / what's live" status has one line per product (live value, waiting, who acts), says live only for a value read this tick, and keeps merged and live apart.
 - [ ] Nothing published, released, merged, deleted or deployed by a tick without approval.
 - [ ] No secrets, no PII.
 - [ ] A final report when the work is done, and the loop cancelled.

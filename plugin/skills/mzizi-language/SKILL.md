@@ -1,7 +1,6 @@
 ---
 name: mzizi-language
 description: Use this skill when writing, checking or fixing Mzizi language source (.mz files): LANGUAGE-TRACKER.md as the one list of what Mzizi can and cannot do, the component syntax (enum tables, props, the view tree, when / for each, records, use motion), the backend service (routes, handlers with when / header / respond, example and ensure contracts; RFC-0011), the `mz check --agent` loop and its NDJSON diagnostics, `mz fix` for every exact fix, `mz contract`, `mz build` (a service to a local Rust + axum package), the diagnostic codes you will meet (MZ0101, MZ0106, MZ0312, MZ0313, MZ0406-MZ0409, MZ0602-MZ0613, MZ07xx, MZ08xx), programs (RFC-0013: fn main, let / var, functions, when / match, loops, int / float, text, list / map / set, records, enums, result with try) checked by `mz check` and run by `mz run`, the language harness, and exactly what is not built yet (modules, a standard library, component lowering, Rust interop, I/O, concurrency, generics, mz test, a release).
-user-invocable: true
 ---
 
 # Writing and checking Mzizi
@@ -353,7 +352,10 @@ One file holds one component, or one service (see "Services" below). There is on
 intent: if a construct is not shown here or in the RFCs, assume it does not exist. The order
 inside a component is doc lines, `use`, `enum` and `record`, `prop`, `view`, `fn`, `contract`.
 
-A complete primitive, `primitives/badge.mz`:
+A complete primitive, `primitives/badge.mz`. Its `px-2 py-0.5` and `gap-1` are the corpus
+badge's, copied unchanged, and are below the spacing floor (14px inset, 7px gaps, 1.5 leading;
+the `mzizi-design` skill), so they are not a model for new code: a component you write keeps
+the floor, or carries a `mzizi-spacing-exempt: <reason>` comment:
 
 ```mz
 ## A small status label. Not interactive, so no touch floor applies.

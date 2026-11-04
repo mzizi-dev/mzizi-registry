@@ -16,6 +16,38 @@ import type { ChangelogRow } from "@/lib/db/types";
 
 export const CHANGELOG_RELEASES: readonly ChangelogRow[] = [
   {
+    version: "4.26.0",
+    title:
+      "v4.26.0 — @nyuchi/mzizi-skills 0.18.0: twelve skills, five dev skills, plugin 1.7.0",
+    description:
+      "Releases staging to main as the next minor above v4.25.0 (nyuchi/.github#80). Changed: the registry takes @nyuchi/mzizi-skills 0.18.0 (#628, #617): twelve skills (was nine), with new dev skills ship-release, registry-propagation and pr-gates and an extended progress-report; /v1/skills and mzizi_get_skills serve 12 once the gateway pin moves to this release. The Claude Code plugin moves to 1.7.0. The spacing floor states that a label chip or pill is held on its inline axis (#627; docs and tests only). CHANGELOG.md section [4.26.0] is the narrative.",
+    line: "public",
+    line_rank: 1,
+    major: 4,
+    minor: 26,
+    patch: 0,
+    release_kind: "minor",
+    breaking: false,
+    released_at: "2026-11-04T13:00:00.000+00:00",
+    created_at: "2026-11-04T13:00:00.000+00:00",
+    nodes_affected: null,
+    components_added: null,
+    components_modified: null,
+    components_deprecated: null,
+    components_removed: null,
+    components_touched: null,
+    tools_added: null,
+    tools_modified: null,
+    tools_deprecated: null,
+    tools_removed: null,
+    linked_issues: null,
+    total_stable: null,
+    total_deprecated: null,
+    total_alpha: null,
+    changed_by: "claude-code",
+    entry_order: 0,
+  },
+  {
     version: "4.25.0",
     title:
       "v4.25.0 — the spacing floor, part 2: every contract held to it, in React, Astro and Rust",

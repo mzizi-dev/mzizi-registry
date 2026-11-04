@@ -10,6 +10,24 @@ From 2026-10-04 releases follow the org versioning policy ([nyuchi/.github#80](h
 
 ## [Unreleased]
 
+## [4.26.0] - 2026-11-04
+
+Releases `staging` to `main` as the next minor above v4.25.0 ([nyuchi/.github#80](https://github.com/nyuchi/.github/issues/80)). `package.json`, `README.md` and `content/changelog/releases.json` (and `lib/changelog.generated.ts`) carry 4.26.0. The headline is `@nyuchi/mzizi-skills` 0.18.0 ([#628](https://github.com/mzizi-dev/mzizi-registry/pull/628), [#617](https://github.com/mzizi-dev/mzizi-registry/issues/617)): twelve skills (was nine), five of them dev skills, and the Claude Code plugin at 1.7.0. The spacing floor's inline-axis wording ([#627](https://github.com/mzizi-dev/mzizi-registry/pull/627)) rides along.
+
+### Changed — the registry takes `@nyuchi/mzizi-skills` 0.18.0: twelve skills, five of them dev skills (2026-11-04, [#617](https://github.com/mzizi-dev/mzizi-registry/issues/617))
+
+- **The Claude Code plugin moves to 1.7.0** (was 1.6.0), as every earlier skills bump did (#596, #601, #611): `plugin/.claude-plugin/plugin.json` `version`, so a client that updates by version picks up skills 0.18.0. The plugin and marketplace descriptions now say twelve skills at 0.18.0 and name the new ones.
+- **Three new dev skills, and `progress-report` extended.** `ship-release`, `registry-propagation` and `pr-gates` join `digital-hygiene` and `progress-report` (dev skills: 2 to 5; all skills: 9 to 12). `package.json` now asks for `>=0.18.0` (a floor, was `>=0.16.0`) and the lockfile resolves 0.18.0. `lib/skills.generated.ts`, which `/v1/skills` and `mzizi_get_skills` serve, and `plugin/skills/`, the public plugin's copy, are regenerated (`pnpm skills:generate`, `pnpm plugin:skills`: 12 skills, 37 plugin files); the other eight skills' text moved with 0.17.0 and 0.18.0. The package also drops `user-invocable: true` from the frontmatter of the existing skills (no skill sets it now), so a Claude Code client that does not default it to true may stop listing them as `/mzizi:<skill>` commands; this is the package's change, not made here.
+- **Docs in this repo.** `AGENTS.md` ("Dev skills, progress reports and the merge gate") and `plugin/agents/fundi.md` list all five dev skills.
+- **Site/docs/skills impact:** `/v1/skills` and `mzizi_get_skills` serve 12 skills (was 9) once a registry release reaches `main` and the `mzizi-api` pin moves to it; mzizi.dev `/skills` follows from the API at its next build. Any page that says nine skills, or two dev skills, on mzizi-site or docs.mzizi.dev is stale from then.
+
+### Changed — the spacing floor states that a label chip or pill is held on its inline axis (2026-11-04, [#625](https://github.com/mzizi-dev/mzizi-registry/issues/625), [#617](https://github.com/mzizi-dev/mzizi-registry/issues/617))
+
+Owner decision, 2026-11-04, on mzizi-site's spacing guard finding: the floor stays as it is, and a one-line label chip or pill is held by its 14px inline inset, with its block axis being its line height or fixed height. This writes down what the contract runner and its Rust twin already enforce; no size, component or contract changed. The inline half of the finding (`Badge` at 8px, the hero's status pill at 12px) was fixed by #622 and shipped in 4.25.0.
+
+- **Docs.** `BUNDU_FLOOR.spacing`'s comment in `lib/tokens/roles.source.ts` and `docs/sizes-and-density.md` state the rule. mzizi-site's `audit-ui.mjs --guard` should measure a pill on its inline axis only.
+- **Tests.** `contracts/spacing-cases.json` gains four cases (27), shared with the Rust evaluator: a hero status pill and a fixed-height badge at 14px inline hold, and at 12px and 8px they fail. `__tests__/spacing-floor.test.ts` pins the rule's wording in the docs and the source comment.
+
 ## [4.25.0] - 2026-11-04
 
 Releases `staging` to `main` as the next minor above v4.24.x ([nyuchi/.github#80](https://github.com/nyuchi/.github/issues/80)). `package.json`, `README.md` and `content/changelog/releases.json` (and `lib/changelog.generated.ts`) carry 4.25.0. The headline is the second part of the spacing floor ([#617](https://github.com/mzizi-dev/mzizi-registry/issues/617), [#622](https://github.com/mzizi-dev/mzizi-registry/pull/622)): every contract held to the 14px inset, 7px gap and 1.5 body leading in React, Astro and Rust, about 570 gaps and 70 insets fixed, and a per-file ratchet. Release notes are now built from this changelog ([#621](https://github.com/mzizi-dev/mzizi-registry/pull/621)).
