@@ -83,11 +83,11 @@ function ChatBubble({
         </AvatarFallback>
       </Avatar>
 
-      <div className={cn("flex flex-col gap-1", isSent ? "items-end" : "items-start")}>
+      <div className={cn("flex flex-col gap-2", isSent ? "items-end" : "items-start")}>
         <div className={chatBubbleVariants({ variant })}>
           <p className="break-words whitespace-pre-wrap">{content}</p>
         </div>
-        <div className={cn("flex items-center gap-1 px-1 text-xs text-muted-foreground")}>
+        <div className={cn("flex items-center gap-2 px-1 text-xs text-muted-foreground")}>
           <span>{timestamp}</span>
           {isSent && status && <StatusIcon status={status} />}
         </div>

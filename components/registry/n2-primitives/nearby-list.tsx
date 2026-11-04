@@ -41,7 +41,7 @@ function NearbyList({
   return (
     <div
       data-slot="nearby-list"
-      className={cn("space-y-1", className)}
+      className={cn("space-y-2", className)}
       role="list"
       aria-label="Nearby results"
       {...props}
@@ -59,7 +59,7 @@ function NearbyList({
             </div>
           )}
           <div className="min-w-0 flex-1">
-            <div className="flex items-center gap-1">
+            <div className="flex items-center gap-2">
               <span className="truncate text-sm font-medium">{item.title}</span>
               {item.verified && (
                 <span className="text-sm text-[var(--color-gold,#FFD740)]">✓</span>

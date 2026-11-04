@@ -114,7 +114,7 @@ export function MziziFeedPage<T>({
               </div>
             )}
             {filters && filters.length > 0 && (
-              <div className="flex scrollbar-none gap-1.5 overflow-x-auto pb-1">
+              <div className="flex scrollbar-none gap-2 overflow-x-auto pb-1">
                 {filters.map((f) => (
                   <select
                     key={f.key}

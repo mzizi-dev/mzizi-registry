@@ -60,7 +60,7 @@ function TaskBoard({
       {...props}
     >
       {labels && labels.length > 0 && (
-        <div className="mb-2 flex flex-wrap gap-1">
+        <div className="mb-2 flex flex-wrap gap-2">
           {labels.map((l, i) => (
             <span
               key={i}

@@ -360,7 +360,7 @@ pub fn DocsEngine(props: DocsEngineProps) -> Element {
 
                             if !page.related_nodes.is_empty() {
                                 div {
-                                    class: "mt-3 flex flex-wrap gap-1.5",
+                                    class: "mt-3 flex flex-wrap gap-2",
                                     "aria-label": "Related ecosystem nodes",
                                     for n in page.related_nodes.iter().copied() {
                                         {

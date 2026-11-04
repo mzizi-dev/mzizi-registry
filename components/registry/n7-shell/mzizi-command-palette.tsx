@@ -210,7 +210,7 @@ export function MziziCommandPalette({
 
         {/* Keyboard hint bar */}
         <div className="flex items-center gap-4 border-t border-border px-4 py-2 text-sm text-muted-foreground">
-          <span className="flex items-center gap-1.5">
+          <span className="flex items-center gap-2">
             <kbd className="rounded border border-border bg-muted px-1.5 py-0.5 font-mono text-sm">
               ↑
             </kbd>
@@ -219,13 +219,13 @@ export function MziziCommandPalette({
             </kbd>
             navigate
           </span>
-          <span className="flex items-center gap-1.5">
+          <span className="flex items-center gap-2">
             <kbd className="rounded border border-border bg-muted px-1.5 py-0.5 font-mono text-sm">
               ↵
             </kbd>
             select
           </span>
-          <span className="ml-auto flex items-center gap-1.5">
+          <span className="ml-auto flex items-center gap-2">
             <kbd className="rounded border border-border bg-muted px-1.5 py-0.5 font-mono text-sm">
               esc
             </kbd>

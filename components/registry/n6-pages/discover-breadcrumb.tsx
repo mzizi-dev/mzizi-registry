@@ -52,7 +52,7 @@ export function DiscoverBreadcrumb({ crumbs, label = "Breadcrumb", origin, jsonL
   return (
     <>
       <nav aria-label={label} className="text-body-sm" data-slot="discover-breadcrumb">
-        <ol className="flex flex-wrap items-center gap-x-2 gap-y-1">
+        <ol className="flex flex-wrap items-center gap-x-2 gap-y-2">
           {crumbs.map((c, i) => (
             <li key={`${i}|${c.label}`} className="inline-flex min-w-0 items-center gap-2">
               {i > 0 && (

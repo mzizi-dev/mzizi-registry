@@ -120,7 +120,7 @@ export function MziziSearchView({
       </div>
 
       {/* Category filters */}
-      <div className="flex scrollbar-none gap-1.5 overflow-x-auto pb-1">
+      <div className="flex scrollbar-none gap-2 overflow-x-auto pb-1">
         {categories.map((cat) => (
           <button
             key={cat.key}
@@ -150,7 +150,7 @@ export function MziziSearchView({
           ))}
         </div>
       ) : results.length > 0 ? (
-        <div className="space-y-1.5">
+        <div className="space-y-2">
           {results.map((r) => (
             <button
               key={r.id}
@@ -194,7 +194,7 @@ export function MziziSearchView({
           {recentSearches.length > 0 && (
             <div>
               <p className="mb-2 text-sm font-semibold text-muted-foreground">Recent</p>
-              <div className="space-y-1">
+              <div className="space-y-2">
                 {recentSearches.map((s) => (
                   <button
                     key={s}
@@ -213,7 +213,7 @@ export function MziziSearchView({
           {trending.length > 0 && (
             <div>
               <p className="mb-2 text-sm font-semibold text-muted-foreground">Trending</p>
-              <div className="flex flex-wrap gap-1.5">
+              <div className="flex flex-wrap gap-2">
                 {trending.map((t) => (
                   <button
                     key={t}

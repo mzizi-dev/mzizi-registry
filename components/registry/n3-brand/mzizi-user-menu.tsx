@@ -100,7 +100,7 @@ function UserMenu({
       </DropdownMenuTrigger>
       <DropdownMenuContent className="w-56" align="end" forceMount>
         <DropdownMenuLabel className="font-normal">
-          <div className="flex flex-col space-y-1">
+          <div className="flex flex-col space-y-2">
             <p className="text-sm leading-none font-medium">{name}</p>
             {email && <p className="text-xs leading-none text-muted-foreground">{email}</p>}
           </div>

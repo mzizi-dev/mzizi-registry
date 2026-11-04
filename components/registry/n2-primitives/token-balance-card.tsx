@@ -79,7 +79,7 @@ function TokenBalanceCard({
                 {token.balance.toLocaleString()}
               </div>
               {token.fiatValue !== undefined && (
-                <div className="flex items-center gap-1 text-sm text-muted-foreground">
+                <div className="flex items-center gap-2 text-sm text-muted-foreground">
                   <span>{fiat(token.fiatValue)}</span>
                   {token.change24h !== undefined && (
                     <span

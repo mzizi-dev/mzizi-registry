@@ -53,7 +53,7 @@ function CommentNode({
             </div>
           )}
         </div>
-        <div className="flex min-w-0 flex-1 flex-col gap-1">
+        <div className="flex min-w-0 flex-1 flex-col gap-2">
           <div className="flex items-center gap-2">
             <span className="text-sm font-medium text-foreground">{comment.author}</span>
             <span className="text-xs text-muted-foreground">{comment.timestamp}</span>
@@ -63,7 +63,7 @@ function CommentNode({
             <button
               type="button"
               onClick={() => onReply(comment.id)}
-              className="mt-0.5 inline-flex items-center gap-1 self-start text-xs text-muted-foreground transition-colors hover:text-foreground"
+              className="mt-0.5 inline-flex items-center gap-2 self-start text-xs text-muted-foreground transition-colors hover:text-foreground"
             >
               <MessageSquare className="size-3" />
               Reply

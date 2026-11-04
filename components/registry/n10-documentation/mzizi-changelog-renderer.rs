@@ -223,7 +223,7 @@ pub fn ChangelogRenderer(props: ChangelogRendererProps) -> Element {
 
                     if !entry.nodes_affected.is_empty() {
                         div {
-                            class: "mt-2 flex flex-wrap gap-1",
+                            class: "mt-2 flex flex-wrap gap-2",
                             "aria-label": "Nodes affected",
                             for n in entry.nodes_affected.iter().copied() {
                                 {
@@ -243,7 +243,7 @@ pub fn ChangelogRenderer(props: ChangelogRendererProps) -> Element {
 
                     if !entry.components_added.is_empty() {
                         div {
-                            class: "mt-2 flex flex-wrap gap-1",
+                            class: "mt-2 flex flex-wrap gap-2",
                             "aria-label": "Components added",
                             for c in entry.components_added.iter() {
                                 span { key: "{c}", class: ADDED, "+{c}" }
@@ -253,7 +253,7 @@ pub fn ChangelogRenderer(props: ChangelogRendererProps) -> Element {
 
                     if !entry.components_modified.is_empty() {
                         div {
-                            class: "mt-1 flex flex-wrap gap-1",
+                            class: "mt-1 flex flex-wrap gap-2",
                             "aria-label": "Components modified",
                             for c in entry.components_modified.iter() {
                                 span { key: "{c}", class: MODIFIED, "~{c}" }
@@ -263,7 +263,7 @@ pub fn ChangelogRenderer(props: ChangelogRendererProps) -> Element {
 
                     if !entry.components_deprecated.is_empty() {
                         div {
-                            class: "mt-1 flex flex-wrap gap-1",
+                            class: "mt-1 flex flex-wrap gap-2",
                             "aria-label": "Components deprecated",
                             for c in entry.components_deprecated.iter() {
                                 span { key: "{c}", class: DEPRECATED, "{c}" }

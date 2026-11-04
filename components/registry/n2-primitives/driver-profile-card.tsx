@@ -52,7 +52,7 @@ function DriverProfileCard({
         )}
       </div>
       <div className="min-w-0 flex-1">
-        <div className="flex items-center gap-1.5">
+        <div className="flex items-center gap-2">
           <span className="truncate text-sm font-medium">{name}</span>
           {verificationTier !== undefined && verificationTier > 0 && (
             <span className={cn("text-sm font-medium", tierColors[verificationTier])}>

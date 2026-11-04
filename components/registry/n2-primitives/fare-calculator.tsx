@@ -33,7 +33,7 @@ function FareCalculator({
       {...props}
     >
       <div className="text-xs font-medium text-muted-foreground">Fare breakdown</div>
-      <div className="mt-2 space-y-1.5">
+      <div className="mt-2 space-y-2">
         {segments.map((seg, i) => (
           <div key={i} className="flex items-center justify-between text-sm">
             <span className="text-muted-foreground">{seg.label}</span>

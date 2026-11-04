@@ -53,7 +53,7 @@ function SendMoneyFlow({
       {...props}
     >
       {/* Step indicator */}
-      <div className="flex items-center gap-1 border-b border-border px-5 py-3">
+      <div className="flex items-center gap-2 border-b border-border px-5 py-3">
         {(["recipient", "amount", "confirm", "receipt"] as FlowStep[]).map((s, i) => (
           <React.Fragment key={s}>
             <div
@@ -94,7 +94,7 @@ function SendMoneyFlow({
                         onSelectRecipient?.(r)
                         onStepChange?.("amount")
                       }}
-                      className="flex flex-col items-center gap-1 text-center"
+                      className="flex flex-col items-center gap-2 text-center"
                     >
                       <div className="flex size-10 items-center justify-center rounded-full bg-muted text-xs font-medium">
                         {r.avatar ? (
@@ -123,7 +123,7 @@ function SendMoneyFlow({
               Sending to{" "}
               <span className="font-medium text-foreground">{selectedRecipient?.name}</span>
             </div>
-            <div className="flex items-baseline gap-1">
+            <div className="flex items-baseline gap-2">
               <span className="text-sm text-muted-foreground">{currency}</span>
               <input
                 type="text"

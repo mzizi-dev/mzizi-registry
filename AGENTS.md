@@ -317,6 +317,28 @@ add it as its own section rather than re-creating a dead link.
   mzizi-api (formerly mzizi-api-gateway) and agent-tools, so api.mzizi.dev and mcp.mzizi.dev follow `main`
   without waiting for the bots' hourly run.
 
+## Release notes (hard rule)
+
+Owner, 2026-11-04: "Every release should have release notes too with a changelog."
+
+- **Every GitHub release carries notes built from `CHANGELOG.md`**, never GitHub's auto text:
+  the entries added since the previous release (`.github/scripts/release_notes.py`) and a "Full
+  changelog" compare link. That covers the minor release `release.yml` makes on `main` and the
+  pre-release for each staging patch tag (`staging-version.yml` tags with the org workflow's
+  `create-release: false`, then its `release` job writes the notes).
+- **A release with no changelog content fails its job.** A minor release builds its notes
+  before it pushes the tag, so a failure tags nothing. A staging patch whose merge added no
+  entry (the changelog gate exempts CI, lockfiles, lint config and typos) says so in its notes.
+- **Notes are set when the release is created.** `.github/scripts/publish-release.sh` makes a
+  draft with the notes and publishes it once. Never `gh release edit` a published release
+  (immutable releases); a re-run leaves a published release alone.
+- **A release PR's body carries the same notes.** Before merging a `release/` PR into `main`,
+  paste the notes it will release (the `release notes / release PR` job prints them in its run
+  summary) into the PR body, so they exist before publish.
+- `.github/scripts/release_notes.py`, `publish-release.sh` and their tests are identical in
+  every Mzizi repository that carries them (mzizi-api, mzizi-docs, mzizi-site, mzizi-registry,
+  agent-tools). Change them everywhere together.
+
 ## Track big work in GitHub issues
 
 Any substantial build, migration, investigation or multi-step task gets a GitHub issue in the repo that owns it — before or as work starts — so another session, agent or person can pick it up.

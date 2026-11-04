@@ -78,7 +78,7 @@ export function DiscoverShell({
           </a>
           {nav.length > 0 && (
             <nav aria-label="Main" className="order-3 w-full sm:order-none sm:w-auto">
-              <ul className="flex flex-wrap items-center gap-x-6 gap-y-1 text-body-sm">
+              <ul className="flex flex-wrap items-center gap-x-6 gap-y-2 text-body-sm">
                 {nav.map((l) => (
                   <li key={`${l.href}|${l.label}`}>
                     <a
@@ -104,7 +104,7 @@ export function DiscoverShell({
           {footer}
           {footerLinks.length > 0 && (
             <nav aria-label="Footer" className="text-body-sm">
-              <ul className="space-y-1">
+              <ul className="space-y-2">
                 {footerLinks.map((l) => (
                   <li key={`${l.href}|${l.label}`}>
                     <a

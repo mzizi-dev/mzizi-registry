@@ -108,7 +108,7 @@ export function MziziPage({
       {/* Breadcrumbs */}
       {breadcrumbs && breadcrumbs.length > 0 && (
         <nav aria-label="Breadcrumb" className="mb-4">
-          <ol className="flex items-center gap-1.5 text-sm text-muted-foreground">
+          <ol className="flex items-center gap-2 text-sm text-muted-foreground">
             {breadcrumbs.map((crumb, i) => (
               <React.Fragment key={i}>
                 {i > 0 && (

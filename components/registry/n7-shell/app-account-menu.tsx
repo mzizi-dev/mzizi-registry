@@ -57,7 +57,7 @@ function AccountMenu({ name = null, email = null, signOutAction, signOutLabel = 
           <form method="post" action={signOutAction} className="border-t border-border p-1">
             <button
               type="submit"
-              className="flex h-8 w-full items-center gap-2 rounded-sm px-2 text-body-sm hover:bg-muted focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring pointer-coarse:h-11"
+              className="flex h-8 w-full items-center gap-2 rounded-sm px-3.5 text-body-sm hover:bg-muted focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring pointer-coarse:h-11"
             >
               <Icon name="log-out" className="h-4 w-4 text-muted-foreground" />
               {signOutLabel}
