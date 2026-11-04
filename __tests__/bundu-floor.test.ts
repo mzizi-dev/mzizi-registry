@@ -56,12 +56,22 @@ describe("BUNDU_FLOOR: the one definition", () => {
       captionPx: 14,
       hitAreaPx: 49,
       visibleControlMinPx: 28,
+      spacing: {
+        insetPx: 14,
+        controlGapPx: 7,
+        labelGapPx: 7,
+        itemGapPx: 7,
+        leadingBody: 1.5,
+      },
       contrast: { body: 7, nonBody: 4.5, ui: 3 },
       apca: { body: 75, nonBody: 60, ui: 30 },
     });
     expect(BUNDU_FLOOR.captionPx).toBe(2 * BUNDU_FLOOR.unitPx);
     expect(BUNDU_FLOOR.hitAreaPx).toBe(BUNDU_FLOOR.unitPx ** 2);
     expect(BUNDU_FLOOR.visibleControlMinPx).toBe(4 * BUNDU_FLOOR.unitPx);
+    expect(BUNDU_FLOOR.spacing.insetPx).toBe(2 * BUNDU_FLOOR.unitPx);
+    for (const k of ["controlGapPx", "labelGapPx", "itemGapPx"] as const)
+      expect(BUNDU_FLOOR.spacing[k]).toBe(BUNDU_FLOOR.unitPx);
   });
   it("is what the contrast constants read", () => {
     expect([WCAG_BODY, WCAG_NON_BODY, WCAG_UI]).toEqual([

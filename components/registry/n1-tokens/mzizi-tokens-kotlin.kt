@@ -432,6 +432,8 @@ object MziziRoles {
 
     val spacingTouch = 49.dp
     val spacingTouchMin = 49.dp
+    val spacingInsetFloor = 14.dp
+    val spacingGapFloor = 7.dp
     val spacingControl = 49.dp
     val spacingControlSm = 49.dp
     val spacingControlLg = 56.dp
