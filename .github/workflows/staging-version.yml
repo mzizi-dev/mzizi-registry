@@ -21,5 +21,60 @@ jobs:
     uses: nyuchi/.github/.github/workflows/reusable-staging-release.yml@c2e2506a4eadf67fbf824b41720aa220c539fc21 # main, 2026-10-19
     with:
       bump: ${{ inputs.bump || '' }}
+      # Tag only; the `release` job below writes the pre-release with notes.
+      create-release: false
     permissions:
       contents: write
+
+  # The org's reusable workflow only tags here (create-release: false): it has
+  # no input for release notes, and its own pre-release would carry GitHub's
+  # auto text. This job creates the pre-release instead, with the CHANGELOG.md
+  # entries this merge added and a compare link, as a draft that is published
+  # once (immutable releases: the notes are set at creation and never edited).
+  # A merge the changelog gate exempts (CI, lockfile, lint config, typo) gets a
+  # line saying so. Idempotent: an already published release is left alone.
+  release:
+    name: Pre-release with changelog notes
+    needs: version
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    # One run per tag, so a re-run cannot race the original into a duplicate
+    # or half-made release; runs for different tags never cancel each other.
+    concurrency:
+      group: release-notes-${{ needs.version.outputs.tag }}
+      cancel-in-progress: false
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          # The tag the version job pushed; full history and tags for the
+          # previous release to diff the changelog against.
+          ref: ${{ needs.version.outputs.tag }}
+          fetch-depth: 0
+          persist-credentials: false
+
+      - name: Publish the pre-release
+        env:
+          GH_TOKEN: ${{ github.token }}
+          GH_REPO: ${{ github.repository }}
+          TAG: ${{ needs.version.outputs.tag }}
+          PREVIOUS: ${{ needs.version.outputs.previous }}
+        run: |
+          set -euo pipefail
+          # The version job reports the previous version without its prefix.
+          prev="v${PREVIOUS#v}"
+          if ! git rev-parse --verify --quiet "refs/tags/${prev}^{commit}" >/dev/null; then
+            if [ "${PREVIOUS#v}" != "0.0.0" ]; then
+              echo "::warning::Previous tag ${prev} not found; notes list every [Unreleased] entry."
+            fi
+            prev=""
+          fi
+          if [ -n "$prev" ]; then
+            compare="https://github.com/${GH_REPO}/compare/${prev}...${TAG}"
+          else
+            compare="https://github.com/${GH_REPO}/commits/${TAG}"
+          fi
+          CHANGELOG_URL="https://github.com/${GH_REPO}/blob/${TAG}/CHANGELOG.md" COMPARE_URL="$compare" \
+            python3 .github/scripts/release_notes.py --allow-empty "$prev" "$TAG" >"$RUNNER_TEMP/notes.md"
+          bash .github/scripts/publish-release.sh "$TAG" "$TAG (beta)" "$RUNNER_TEMP/notes.md" prerelease
