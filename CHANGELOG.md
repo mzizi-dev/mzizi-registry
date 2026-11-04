@@ -17,6 +17,10 @@ Owner decision, 2026-11-04, on mzizi-site's spacing guard finding: the floor sta
 - **Docs.** `BUNDU_FLOOR.spacing`'s comment in `lib/tokens/roles.source.ts` and `docs/sizes-and-density.md` state the rule. mzizi-site's `audit-ui.mjs --guard` should measure a pill on its inline axis only.
 - **Tests.** `contracts/spacing-cases.json` gains four cases (27), shared with the Rust evaluator: a hero status pill and a fixed-height badge at 14px inline hold, and at 12px and 8px they fail. `__tests__/spacing-floor.test.ts` pins the rule's wording in the docs and the source comment.
 
+## [4.25.0] - 2026-11-04
+
+Releases `staging` to `main` as the next minor above v4.24.x ([nyuchi/.github#80](https://github.com/nyuchi/.github/issues/80)). `package.json`, `README.md` and `content/changelog/releases.json` (and `lib/changelog.generated.ts`) carry 4.25.0. The headline is the second part of the spacing floor ([#617](https://github.com/mzizi-dev/mzizi-registry/issues/617), [#622](https://github.com/mzizi-dev/mzizi-registry/pull/622)): every contract held to the 14px inset, 7px gap and 1.5 body leading in React, Astro and Rust, about 570 gaps and 70 insets fixed, and a per-file ratchet. Release notes are now built from this changelog ([#621](https://github.com/mzizi-dev/mzizi-registry/pull/621)).
+
 ### Changed — the spacing floor, part 2: every contract is held to it, in React, Astro and Rust, and every component is ratcheted (2026-11-04, [#622](https://github.com/mzizi-dev/mzizi-registry/pull/622), [#617](https://github.com/mzizi-dev/mzizi-registry/issues/617))
 
 Follows the core ([#618](https://github.com/mzizi-dev/mzizi-registry/pull/618): `BUNDU_FLOOR.spacing`, `--inset-floor`, `--gap-floor`, `--leading-floor`, the base-layer rules). The core made a bare element safe; this holds every explicit value to the floor.
