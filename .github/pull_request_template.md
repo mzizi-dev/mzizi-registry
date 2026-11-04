@@ -50,6 +50,7 @@ Brief description of what this PR does and why.
 - [ ] `CHANGELOG.md` updated
 - [ ] `openapi.yaml` updated if API surface changed
 - [ ] Version bumped in `package.json`, and a new entry added to `content/changelog/releases.json` (then `pnpm changelog:generate`), if releasing
+- [ ] Release PR (`release/*` into `main`): the body carries the release notes, the `CHANGELOG.md` entries being released (the `release notes / release PR` job prints them in its run summary)
 
 ## Site/docs/skills impact
 
