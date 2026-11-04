@@ -21,7 +21,7 @@ owner: "nyuchi"
 role: "N10 — the ecosystem documents itself in code"
 rust:
   kind: "ui-framework"
-  note: "N10's guarantee — doctrine that names something deleted does not pass — depends on the doctrine living beside the components at one commit and on a check that resolves its references, not on any compiler's language. That reference check is owed (see the rules above). What Rust adds is a build of N10's own components: the mzizi-docs crate carries AI context, the docs API core, the changelog renderer and portal rendering for Dioxus. That is a Rust alternative for consumers on Rust, not a Rust implementation of the doctrine pipeline."
+  note: "N10's guarantee — doctrine that names something deleted does not pass — depends on the doctrine living beside the components at one commit and on a check that resolves its references, not on any compiler's language. That reference check is owed (see the rules above). What Rust adds is a build of N10's own components: the mzizi-docs crate carries AI context, the docs API core, the changelog renderer and portal rendering. That is a Rust alternative for consumers on Rust, not a Rust implementation of the doctrine pipeline."
   state: "shipped"
   today: "Doctrine and node/rung definitions are .mdx in mzizi-dev/mzizi-registry, inlined into lib/doctrine.generated.ts by `pnpm doctrine:generate` (with a --check gate in CI) and served by api.mzizi.dev and mcp.mzizi.dev at a pinned registry commit. Long-form documentation is Mintlify MDX in mzizi-dev/mzizi-docs. The mzizi-docs crate (re-exported by mzizi-roots-server) ships the N10 components in Rust beside their TypeScript."
   target: "The doctrine pipeline stays where it is. N10's components keep their Rust and TypeScript builds under one contract each."
