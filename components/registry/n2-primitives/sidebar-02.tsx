@@ -70,7 +70,7 @@ function Sidebar02() {
               />
             </button>
             {!collapsed[section.title] && (
-              <div className="mt-1 space-y-0.5">
+              <div className="mt-1 space-y-2">
                 {section.items.map((item) => (
                   <Button
                     key={item.label}

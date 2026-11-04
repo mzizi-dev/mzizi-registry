@@ -199,7 +199,7 @@ function CommandPalette({
             <p aria-hidden="true" className="px-2 pt-2 pb-1 text-caption font-medium text-muted-foreground">
               {s.label}
             </p>
-            <ul role="list" className="grid gap-0.5">
+            <ul role="list" className="grid gap-2">
               {s.items.map((i) => (
                 <li
                   key={i.href}

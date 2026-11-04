@@ -36,7 +36,7 @@ function SettingsNav({ className, ...props }: React.ComponentProps<"nav">) {
   return (
     <nav
       data-slot="settings-nav"
-      className={cn("flex gap-1 overflow-x-auto md:flex-col md:overflow-visible", className)}
+      className={cn("flex gap-2 overflow-x-auto md:flex-col md:overflow-visible", className)}
       {...props}
     />
   )
@@ -80,7 +80,7 @@ function SettingsSection({
       className={cn("flex flex-col gap-6", className)}
       {...props}
     >
-      <div className="flex flex-col gap-1">
+      <div className="flex flex-col gap-2">
         <h2 className="text-lg font-semibold tracking-tight">{title}</h2>
         {description && <p className="text-sm text-muted-foreground">{description}</p>}
       </div>

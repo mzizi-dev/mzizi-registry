@@ -499,6 +499,263 @@ pub const HIT_AREA_GAPS: &[&str] = &[
     "ui/address-share-card:link",
 ];
 
+/// THE SPACING FLOOR (owner, 2026-11-04, #617), a copy of `BUNDU_FLOOR.spacing` in
+/// `lib/tokens/roles.source.ts`; `__tests__/spacing-floor.test.ts` holds it equal to the source.
+pub const INSET_FLOOR_PX: f32 = 14.0;
+/// The least gap between controls, a label and its field, and sibling items, in px.
+pub const GAP_FLOOR_PX: f32 = 7.0;
+/// The least body line height.
+pub const LEADING_FLOOR: f32 = 1.5;
+
+/// The named spacing steps (`--space-*`, px) a class can name: `p-md`, `gap-sm`. A copy of `SPACE_NAMES`
+/// in `contracts/runner.ts`.
+const SPACE_NAMES: &[(&str, f32)] = &[
+    ("xxs", 2.0),
+    ("xs", 4.0),
+    ("xs-plus", 6.0),
+    ("sm", 8.0),
+    ("sm-plus", 10.0),
+    ("md", 12.0),
+    ("base", 16.0),
+    ("base-plus", 20.0),
+    ("lg", 24.0),
+    ("xl", 32.0),
+    ("xl-plus", 40.0),
+    ("2xl", 48.0),
+    ("2xl-plus", 56.0),
+    ("3xl", 64.0),
+    ("4xl", 80.0),
+    ("5xl", 96.0),
+    ("6xl", 128.0),
+];
+
+fn is_decimal(v: &str) -> bool {
+    let mut parts = v.splitn(2, '.');
+    let int = parts.next().unwrap_or("");
+    let frac = parts.next();
+    !int.is_empty()
+        && int.bytes().all(|b| b.is_ascii_digit())
+        && frac.is_none_or(|f| !f.is_empty() && f.bytes().all(|b| b.is_ascii_digit()))
+}
+
+/// A spacing utility's value in px, or `None` where the evaluator cannot read it (a var, a calc, a role).
+pub fn space_of(v: &str) -> Option<f32> {
+    if v == "px" {
+        return Some(1.0);
+    }
+    if is_decimal(v) {
+        return v.parse::<f32>().ok().map(|n| n * 4.0);
+    }
+    if let Some(inner) = v.strip_prefix('[') {
+        if let Some(n) = inner.strip_suffix("px]").filter(|n| is_decimal(n)) {
+            return n.parse().ok();
+        }
+        if let Some(n) = inner.strip_suffix("rem]").filter(|n| is_decimal(n)) {
+            return n.parse::<f32>().ok().map(|n| n * 16.0);
+        }
+        return None;
+    }
+    SPACE_NAMES.iter().find(|(n, _)| *n == v).map(|(_, px)| *px)
+}
+
+/// A class token without its variants (`sm:`, `group-data-[size=sm]/card:`) and a leading `!`.
+fn utility_of(token: &str) -> &str {
+    let mut depth = 0i32;
+    let mut cut = None;
+    for (i, c) in token.char_indices() {
+        match c {
+            '[' | '(' => depth += 1,
+            ']' | ')' => depth -= 1,
+            ':' if depth == 0 => cut = Some(i + 1),
+            _ => {}
+        }
+    }
+    let u = &token[cut.unwrap_or(0)..];
+    u.strip_prefix('!').unwrap_or(u)
+}
+
+const SPACING_KINDS: &[&str] = &[
+    "gap-x", "gap-y", "gap", "space-x", "space-y", "px", "py", "pt", "pb", "pl", "pr", "ps", "pe",
+    "p", "mx", "my", "mt", "mb", "ml", "mr", "ms", "me", "m",
+];
+
+/// `(negative, kind, value)` for a spacing utility such as `-mt-2`, `gap-x-3`, `px-3.5`.
+fn spacing_utility(u: &str) -> Option<(bool, &'static str, &str)> {
+    let (neg, rest) = match u.strip_prefix('-') {
+        Some(r) => (true, r),
+        None => (false, u),
+    };
+    SPACING_KINDS.iter().find_map(|k| {
+        let v = rest.strip_prefix(k)?.strip_prefix('-')?;
+        (!v.is_empty()).then_some((neg, *k, v))
+    })
+}
+
+fn is_gap_kind(k: &str) -> bool {
+    matches!(k, "gap" | "gap-x" | "gap-y" | "space-x" | "space-y")
+}
+
+/// Whether an element's classes draw an edge of their own: a fill, a border, a ring, a shadow or an outline.
+fn draws_edge(classes: &[&str]) -> bool {
+    classes.iter().any(|t| {
+        let u = utility_of(t);
+        if let Some(r) = u.strip_prefix("bg-") {
+            return !(r == "transparent"
+                || r == "none"
+                || ["clip", "origin", "position", "repeat", "size", "blend"]
+                    .iter()
+                    .any(|p| r.starts_with(p)));
+        }
+        if u == "border" {
+            return true;
+        }
+        if let Some(r) = u.strip_prefix("border-") {
+            return !(["0", "t-0", "b-0", "l-0", "r-0", "x-0", "y-0"].contains(&r)
+                || ["collapse", "separate", "spacing"]
+                    .iter()
+                    .any(|p| r.starts_with(p)));
+        }
+        u == "ring"
+            || u.starts_with("ring-")
+            || u.starts_with("shadow")
+            || u == "outline"
+            || u.starts_with("outline-")
+    })
+}
+
+/// Whether an element's own classes fix its height, which then decides its block axis.
+fn fixes_height(classes: &[&str]) -> bool {
+    classes.iter().any(|t| {
+        let u = utility_of(t);
+        u.starts_with("h-") || u.starts_with("min-h-") || u.starts_with("size-")
+    })
+}
+
+/// Whether an element is inline-level or a pill: a chip, a tag, a badge, an eyebrow.
+fn inline_level(node: &Node, classes: &[&str]) -> bool {
+    [
+        "span", "code", "kbd", "mark", "small", "a", "abbr", "b", "i", "em", "strong", "label",
+    ]
+    .contains(&node.tag())
+        || classes.iter().any(|t| {
+            matches!(
+                utility_of(t),
+                "inline"
+                    | "inline-flex"
+                    | "inline-block"
+                    | "inline-grid"
+                    | "w-fit"
+                    | "rounded-full"
+            )
+        })
+}
+
+fn own_text(node: &Node) -> bool {
+    match node {
+        Node::Element { children, .. } => children
+            .iter()
+            .any(|c| matches!(c, Node::Text(t) if !t.trim().is_empty())),
+        Node::Text(_) => false,
+    }
+}
+
+fn has_siblings(node: &Node) -> bool {
+    match node {
+        Node::Element { children, .. } => {
+            children
+                .iter()
+                .filter(|c| match c {
+                    Node::Element { tag, .. } => {
+                        !["style", "script", "link", "meta"].contains(&tag.as_str())
+                    }
+                    Node::Text(t) => !t.trim().is_empty(),
+                })
+                .count()
+                >= 2
+        }
+        Node::Text(_) => false,
+    }
+}
+
+/// What a node's own classes violate of the spacing floor, as `(class, sentence)` pairs: a `gap-*` or `space-*`
+/// under `GAP_FLOOR_PX` on a node with two or more children; padding under `INSET_FLOOR_PX` on a node with text
+/// of its own that draws an edge (inline axis; block axis too unless it is a control, fixes its own height or is
+/// inline-level); a negative margin on a text container; a tight `leading-*` on body copy. A copy of
+/// `spacingViolations` in `contracts/runner.ts`; `contracts/spacing-cases.json` is the shared table.
+pub fn spacing_violations(node: &Node) -> Vec<(String, String)> {
+    let mut out = Vec::new();
+    let classes: Vec<&str> = class_of(node).split_whitespace().collect();
+    let text = own_text(node);
+    let edge = draws_edge(&classes);
+    let control = is_interactive(node) || fixes_height(&classes) || inline_level(node, &classes);
+    let siblings = has_siblings(node);
+    let body_copy = ["p", "li", "dd", "blockquote", "figcaption", "td", "th"].contains(&node.tag());
+    for t in &classes {
+        let u = utility_of(t);
+        if let Some((neg, kind, v)) = spacing_utility(u) {
+            let px = space_of(v);
+            if let Some(p) =
+                px.filter(|p| is_gap_kind(kind) && !neg && *p < GAP_FLOOR_PX && siblings)
+            {
+                out.push((
+                    t.to_string(),
+                    format!("`{t}` is a {p}px gap, below the {GAP_FLOOR_PX}px Bundu spacing floor"),
+                ));
+            } else if text && neg && kind.starts_with('m') && px.is_some_and(|p| p > 0.0) {
+                out.push((
+                    t.to_string(),
+                    format!("`{t}` is a negative margin on a text container"),
+                ));
+            } else if let Some(p) = px.filter(|_| text && edge && !neg) {
+                let inline = ["p", "px", "pl", "pr", "ps", "pe"].contains(&kind);
+                let block = ["p", "py", "pt", "pb"].contains(&kind) && !control;
+                if (inline || block) && p < INSET_FLOOR_PX {
+                    out.push((
+                        t.to_string(),
+                        format!(
+                            "`{t}` is {p}px of {} padding on a text container, below the {INSET_FLOOR_PX}px Bundu inset floor",
+                            if inline { "inline" } else { "block" }
+                        ),
+                    ));
+                }
+            }
+            continue;
+        }
+        if body_copy && text {
+            let l = match u.strip_prefix("leading-") {
+                Some("none") => Some(1.0),
+                Some("tight") => Some(1.25),
+                Some("snug") => Some(1.375),
+                Some(r) => r
+                    .strip_prefix('[')
+                    .and_then(|r| r.strip_suffix(']'))
+                    .filter(|n| {
+                        n.bytes().all(|b| b.is_ascii_digit() || b == b'.')
+                            && n.bytes().any(|b| b.is_ascii_digit())
+                    })
+                    .and_then(|n| n.parse::<f32>().ok()),
+                None => None,
+            };
+            if let Some(n) = l.filter(|n| *n < LEADING_FLOOR) {
+                out.push((
+                    t.to_string(),
+                    format!("`{t}` is a {n} line height on body copy, below the {LEADING_FLOOR} Bundu floor"),
+                ));
+            }
+        }
+    }
+    out
+}
+
+/// Spacing exceptions, `<contract name>:<offending class>`. A copy of `SPACING_GAPS` in `contracts/runner.ts`
+/// (keys only; the reasons live there); `__tests__/spacing-floor.test.ts` holds the two equal.
+pub const SPACING_GAPS: &[&str] = &[
+    "app/bar-chart:gap-px",
+    "app/toolbar:sm:gap-0",
+    "ui/card:has-[>img:first-child]:pt-0",
+    "ui/markdown-renderer:px-1.5",
+];
+
 /// The largest height, in px, an element's classes declare on a fine pointer at desktop density:
 /// `h-N`, `min-h-N`, `size-N` on the 4px Tailwind scale, their `[Npx]` arbitrary forms, or a
 /// size role (`h-control`).

@@ -24,7 +24,7 @@ function ToolbarMenu({ label, choices, icon }: ToolbarMenuProps) {
   const current = choices.find((c) => c.current) ?? choices[0];
   return (
     <details className="relative" data-slot="toolbar-menu">
-      <summary className="inline-flex h-8 cursor-pointer list-none items-center gap-1.5 rounded-sm px-2.5 text-body-sm font-medium outline-none hover:bg-muted focus-visible:ring-2 focus-visible:ring-ring pointer-coarse:h-11 [&::-webkit-details-marker]:hidden">
+      <summary className="inline-flex h-8 cursor-pointer list-none items-center gap-2 rounded-sm px-2.5 text-body-sm font-medium outline-none hover:bg-muted focus-visible:ring-2 focus-visible:ring-ring pointer-coarse:h-11 [&::-webkit-details-marker]:hidden">
         {icon && (
           <Icon
             name={icon}
@@ -41,14 +41,14 @@ function ToolbarMenu({ label, choices, icon }: ToolbarMenuProps) {
       <ul
         role="list"
         aria-label={label}
-        className="absolute right-0 z-40 mt-1 grid min-w-44 gap-0.5 rounded-md border border-border bg-popover p-1 text-popover-foreground shadow-lg"
+        className="absolute right-0 z-40 mt-1 grid min-w-44 gap-2 rounded-md border border-border bg-popover p-1 text-popover-foreground shadow-lg"
       >
         {choices.map((c, i) => (
           <li key={`${i}-${c.label}`}>
             <a
               href={String(c.href)}
               aria-current={c.current ? "true" : undefined}
-              className="flex min-h-8 items-center justify-between gap-3 rounded-sm px-2 text-body-sm hover:bg-muted focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring aria-[current=true]:font-medium pointer-coarse:min-h-11"
+              className="flex min-h-8 items-center justify-between gap-3 rounded-sm px-3.5 text-body-sm hover:bg-muted focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring aria-[current=true]:font-medium pointer-coarse:min-h-11"
             >
               {c.label}
               {c.current && <Icon name="check" className="h-4 w-4 shrink-0" />}

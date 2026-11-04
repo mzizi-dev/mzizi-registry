@@ -71,7 +71,7 @@ function SymptomChecker({
       </div>
 
       {/* Region selector */}
-      <div className="flex flex-wrap gap-1">
+      <div className="flex flex-wrap gap-2">
         {regions.map((r) => (
           <button
             key={r.key}
@@ -134,7 +134,7 @@ function SymptomChecker({
 
       {/* Current symptoms */}
       {symptoms.length > 0 && (
-        <div className="space-y-1.5">
+        <div className="space-y-2">
           <div className="text-xs font-medium text-muted-foreground">Reported symptoms</div>
           {symptoms.map((s, i) => (
             <div

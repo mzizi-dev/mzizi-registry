@@ -110,7 +110,7 @@ export function MziziJobCard({
           >
             {title}
           </h3>
-          <div className="flex items-center gap-1 text-sm text-muted-foreground">
+          <div className="flex items-center gap-2 text-sm text-muted-foreground">
             <span>{company}</span>
             {companyVerified && <span className="text-[var(--color-gold,#FFD740)]">✓</span>}
           </div>
@@ -139,7 +139,7 @@ export function MziziJobCard({
         )}
       </div>
       {skills.length > 0 && (
-        <div className="flex flex-wrap gap-1">
+        <div className="flex flex-wrap gap-2">
           {skills.slice(0, 4).map((s) => (
             <span
               key={s}

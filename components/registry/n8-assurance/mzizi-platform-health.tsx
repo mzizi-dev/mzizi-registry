@@ -87,7 +87,7 @@ export function MziziPlatformHealth({
           {allOk ? "All Systems Operational" : "Issues Detected"}
         </p>
       </div>
-      <div className={compact ? "divide-y divide-border" : "space-y-1 p-3"}>
+      <div className={compact ? "divide-y divide-border" : "space-y-2 p-3"}>
         {services.map((svc) => {
           const c = STATUS_CONFIG[svc.status]
           return (

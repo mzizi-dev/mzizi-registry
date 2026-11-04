@@ -78,9 +78,9 @@ function AudioPlayer({
       >
         {playing ? <Pause className="size-4" /> : <Play className="ml-0.5 size-4" />}
       </button>
-      <div className="flex min-w-0 flex-1 flex-col gap-1">
+      <div className="flex min-w-0 flex-1 flex-col gap-2">
         {(title || artist) && (
-          <div className="flex items-baseline gap-1.5 truncate">
+          <div className="flex items-baseline gap-2 truncate">
             {title && <span className="truncate text-sm font-medium text-foreground">{title}</span>}
             {artist && <span className="truncate text-xs text-muted-foreground">{artist}</span>}
           </div>

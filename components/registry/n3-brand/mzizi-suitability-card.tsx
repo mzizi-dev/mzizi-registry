@@ -63,7 +63,7 @@ export function MziziSuitabilityCard({
         className="flex animate-pulse items-center gap-3 rounded-[var(--radius-lg,14px)] bg-card p-4 ring-1 ring-foreground/10"
       >
         <div className="size-10 rounded-[var(--radius-sm,7px)] bg-muted" />
-        <div className="flex-1 space-y-1.5">
+        <div className="flex-1 space-y-2">
           <div className="h-3.5 w-1/2 rounded bg-muted" />
           <div className="h-2.5 w-2/3 rounded bg-muted" />
         </div>

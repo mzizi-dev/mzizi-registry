@@ -46,7 +46,7 @@ function Sidebar13() {
         <p className="mb-2 px-3 text-xs font-medium tracking-wider text-muted-foreground uppercase">
           Quick Actions
         </p>
-        <div className="space-y-1">
+        <div className="space-y-2">
           {quickActions.map((action) => (
             <Button
               key={action.label}
@@ -61,7 +61,7 @@ function Sidebar13() {
         </div>
       </div>
       <Separator />
-      <nav className="flex-1 space-y-1 p-3">
+      <nav className="flex-1 space-y-2 p-3">
         <p className="mb-1 px-3 text-xs font-medium tracking-wider text-muted-foreground uppercase">
           Navigation
         </p>

@@ -27,6 +27,7 @@ import {
   evaluateChecks,
   evaluateClauses,
   evaluateDensity,
+  evaluateSpacing,
   evaluateTheming,
   hydrate,
 } from "../../contracts/runner"
@@ -125,6 +126,10 @@ describe.each(contracts.map((c) => [c.name, c] as const))("%s (.astro) keeps its
 
   test("density: fine and coarse pointer heights", () => {
     expect(evaluateDensity(c, rendered)).toEqual([])
+  })
+
+  test("spacing: nothing under the 14px inset, the 7px gap or the 1.5 body leading", () => {
+    expect(evaluateSpacing(c, rendered)).toEqual([])
   })
 
   test("brand overlay and CSP: no colour values, minerals only as status colours, no inline style", () => {

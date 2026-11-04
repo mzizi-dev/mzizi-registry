@@ -28,9 +28,9 @@ function Sidebar12() {
       </div>
       <Separator />
       {/* Breadcrumb */}
-      <div className="flex items-center gap-1 px-4 py-2">
+      <div className="flex items-center gap-2 px-4 py-2">
         {breadcrumb.map((crumb, i) => (
-          <span key={crumb} className="flex items-center gap-1">
+          <span key={crumb} className="flex items-center gap-2">
             {i > 0 && <ChevronRight className="size-3 text-muted-foreground" />}
             <button
               className={`text-xs ${
@@ -45,7 +45,7 @@ function Sidebar12() {
         ))}
       </div>
       <Separator />
-      <nav className="flex-1 space-y-1 p-3">
+      <nav className="flex-1 space-y-2 p-3">
         {navItems.map((item) => (
           <Button
             key={item.label}

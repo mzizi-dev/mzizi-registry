@@ -106,7 +106,7 @@ export function MziziProfilePageLayout({
               )}
             </div>
             <div className="min-w-0 flex-1 pb-1">
-              <div className="flex items-center gap-1.5">
+              <div className="flex items-center gap-2">
                 <h1 className="truncate text-lg font-bold text-foreground">{name}</h1>
                 {verified && verificationTier > 0 && <span>{tierBadge[verificationTier]}</span>}
               </div>

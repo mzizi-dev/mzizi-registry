@@ -148,7 +148,7 @@ pub fn MziziHeroStat(props: MziziHeroStatProps) -> Element {
             div { class: "flex items-start justify-between gap-2",
                 div { class: "min-w-0",
                     p { class: "text-sm font-medium text-muted-foreground", "{props.title}" }
-                    div { class: "mt-1 flex items-baseline gap-1",
+                    div { class: "mt-1 flex items-baseline gap-2",
                         span {
                             class: "font-mono text-6xl font-bold tracking-tighter text-foreground sm:text-7xl",
                             "aria-label": "{label}",
@@ -167,7 +167,7 @@ pub fn MziziHeroStat(props: MziziHeroStatProps) -> Element {
                         p { class: "mt-1 text-sm text-muted-foreground", "{subtitle}" }
                     }
                     if !props.secondary_stats.is_empty() {
-                        div { class: "mt-2 flex flex-wrap gap-x-3 gap-y-1 text-sm text-muted-foreground",
+                        div { class: "mt-2 flex flex-wrap gap-x-3 gap-y-2 text-sm text-muted-foreground",
                             for (i, s) in props.secondary_stats.iter().enumerate() {
                                 span { key: "{i}",
                                     "{s.label} "

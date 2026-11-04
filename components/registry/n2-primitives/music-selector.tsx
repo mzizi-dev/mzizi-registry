@@ -51,7 +51,7 @@ function MusicSelector({
           className="h-10 w-full rounded-full border border-input bg-input/30 px-4 text-sm outline-none placeholder:text-muted-foreground focus:border-ring"
         />
       )}
-      <div className="max-h-60 space-y-0.5 overflow-y-auto">
+      <div className="max-h-60 space-y-2 overflow-y-auto">
         {filtered.map((track) => (
           <button
             key={track.id}

@@ -108,7 +108,7 @@ function MziziNotificationItem({
         className="flex animate-pulse items-start gap-3 p-3"
       >
         <div className="size-9 shrink-0 rounded-full bg-muted" />
-        <div className="flex-1 space-y-1.5">
+        <div className="flex-1 space-y-2">
           <div className="h-3 w-3/4 rounded bg-muted" />
           <div className="h-2.5 w-1/2 rounded bg-muted" />
         </div>
@@ -124,7 +124,7 @@ function MziziNotificationItem({
         className="flex animate-pulse items-start gap-3 px-4 py-3"
       >
         <div className="size-10 shrink-0 rounded-full bg-muted" />
-        <div className="flex-1 space-y-1.5">
+        <div className="flex-1 space-y-2">
           <div className="h-3 w-3/4 rounded bg-muted" />
           <div className="h-2.5 w-1/2 rounded bg-muted" />
         </div>

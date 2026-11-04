@@ -114,7 +114,7 @@ export function MziziShareCard({
         </div>
 
         {/* Share options */}
-        <div className="space-y-1 px-4 pb-2">
+        <div className="space-y-2 px-4 pb-2">
           {onShareToCampfire && (
             <button
               onClick={() => {

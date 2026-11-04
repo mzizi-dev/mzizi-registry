@@ -74,7 +74,7 @@ function PresetPicker({
                     type="button"
                     aria-pressed={isActive}
                     onClick={() => onActiveChange(p.id)}
-                    className="flex min-h-28 w-full flex-col items-center gap-1.5 rounded-[14px] p-3 pr-10 text-center focus-visible:ring-2 focus-visible:ring-ring focus-visible:outline-none"
+                    className="flex min-h-28 w-full flex-col items-center gap-2 rounded-[14px] p-3 pr-10 text-center focus-visible:ring-2 focus-visible:ring-ring focus-visible:outline-none"
                   >
                     <SafeAreaFrame width={p.width} height={p.height} safe={p.safe} box={48} />
                     <span className="text-sm leading-tight font-medium text-foreground">

@@ -113,7 +113,7 @@ function Stepper({
               )}
             </div>
             {/* Text content */}
-            <div className={cn("flex flex-col gap-0.5", orientation === "horizontal" && "mt-2")}>
+            <div className={cn("flex flex-col gap-2", orientation === "horizontal" && "mt-2")}>
               <span
                 className={cn(
                   "text-sm font-medium",

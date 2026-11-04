@@ -31,7 +31,7 @@ function ReactionPicker({
       data-portal="https://mzizi.dev/components/reaction-picker"
       role="grid"
       aria-label="Choose a reaction"
-      className={cn("flex flex-wrap items-center gap-1.5", className)}
+      className={cn("flex flex-wrap items-center gap-2", className)}
       {...props}
     >
       {reactions.map((reaction) => (
@@ -39,7 +39,7 @@ function ReactionPicker({
           key={reaction.emoji}
           onClick={() => onReact?.(reaction.emoji)}
           className={cn(
-            "inline-flex items-center gap-1 rounded-full border px-2 py-0.5 text-xs font-medium transition-colors",
+            "inline-flex items-center gap-2 rounded-full border px-2 py-0.5 text-xs font-medium transition-colors",
             reaction.active
               ? "border-primary/30 bg-primary/10 text-foreground"
               : "border-border bg-input/30 text-muted-foreground hover:bg-input/50"
@@ -56,7 +56,7 @@ function ReactionPicker({
           </button>
         </PopoverTrigger>
         <PopoverContent className="w-auto p-2">
-          <div className="flex gap-1">
+          <div className="flex gap-2">
             {emojis.map((emoji) => (
               <button
                 key={emoji}

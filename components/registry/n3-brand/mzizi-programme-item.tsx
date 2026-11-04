@@ -65,7 +65,7 @@ function MziziProgrammeItem({
         className="flex animate-pulse gap-3 py-2"
       >
         <div className="mt-1.5 size-2.5 rounded-full bg-muted" />
-        <div className="flex-1 space-y-1.5">
+        <div className="flex-1 space-y-2">
           <div className="h-3 w-1/4 rounded bg-muted" />
           <div className="h-3.5 w-2/3 rounded bg-muted" />
         </div>
@@ -103,7 +103,7 @@ function MziziProgrammeItem({
           {title}
         </h4>
         {speaker && (
-          <div className="mt-1 flex items-center gap-1.5 text-xs text-muted-foreground">
+          <div className="mt-1 flex items-center gap-2 text-xs text-muted-foreground">
             <User className="size-3" />
             <span>{speaker}</span>
             {speakerRole && <span className="opacity-60">· {speakerRole}</span>}

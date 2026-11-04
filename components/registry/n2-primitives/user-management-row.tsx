@@ -61,7 +61,7 @@ function UserManagementRow({
         />
       </div>
       <div className="min-w-0 flex-1">
-        <div className="flex items-center gap-1.5">
+        <div className="flex items-center gap-2">
           <span className="truncate text-sm font-medium">{name}</span>
           {verificationTier !== undefined && verificationTier > 0 && (
             <span className="text-sm text-[var(--color-gold,#FFD740)]">✓</span>
@@ -75,7 +75,7 @@ function UserManagementRow({
       {lastActive && (
         <span className="hidden text-sm text-muted-foreground lg:inline">{lastActive}</span>
       )}
-      <div className="flex gap-1">
+      <div className="flex gap-2">
         {onEditRole && (
           <button
             onClick={onEditRole}

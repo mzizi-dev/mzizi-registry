@@ -92,7 +92,7 @@ export function MziziAuthCard({
         className
       )}
     >
-      <header className="mb-5 space-y-1">
+      <header className="mb-5 space-y-2">
         <h2 className="text-lg font-semibold tracking-tight">
           {isRegister ? `Join ${surface}` : `Sign in to ${surface}`}
         </h2>
@@ -131,7 +131,7 @@ export function MziziAuthCard({
 
       <form onSubmit={handleSubmit} className="grid gap-3">
         {isRegister && (
-          <label className="grid gap-1.5 text-sm">
+          <label className="grid gap-2 text-sm">
             <span className="font-medium">Name</span>
             <input
               type="text"
@@ -143,7 +143,7 @@ export function MziziAuthCard({
             />
           </label>
         )}
-        <label className="grid gap-1.5 text-sm">
+        <label className="grid gap-2 text-sm">
           <span className="font-medium">Email</span>
           <input
             type="email"

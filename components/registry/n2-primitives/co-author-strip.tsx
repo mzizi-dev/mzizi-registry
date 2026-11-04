@@ -19,7 +19,7 @@ function CoAuthorStrip({ authors, className, ...props }: CoAuthorStripProps) {
     <div
       data-slot="co-author-strip"
       data-portal="https://mzizi.dev/components/co-author-strip"
-      className={cn("flex items-center gap-1.5", className)}
+      className={cn("flex items-center gap-2", className)}
       aria-label={`Co-authored by ${authors.map((a) => a.name).join(", ")}`}
       {...props}
     >

@@ -98,9 +98,9 @@ export function BillingPage({
                 {plan.price}
                 <span className="text-sm font-normal text-muted-foreground"> / {plan.period}</span>
               </p>
-              <ul className="mt-3 space-y-1 text-sm text-muted-foreground">
+              <ul className="mt-3 space-y-2 text-sm text-muted-foreground">
                 {plan.features.map((f, i) => (
-                  <li key={i} className="flex items-center gap-1.5">
+                  <li key={i} className="flex items-center gap-2">
                     <svg
                       width="12"
                       height="12"

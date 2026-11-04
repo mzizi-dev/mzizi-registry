@@ -84,7 +84,7 @@ function AppSwitcher({ apps = DEFAULT_APPS, currentApp, className }: AppSwitcher
 
         <div className="mb-2 px-2 text-xs font-medium text-muted-foreground">Mukoko Ecosystem</div>
 
-        <div className="grid grid-cols-3 gap-1" role="menu" aria-label="ecosystem apps">
+        <div className="grid grid-cols-3 gap-2" role="menu" aria-label="ecosystem apps">
           {/* L5: RESILIENCE — Guard against empty/undefined apps */}
           {(apps ?? []).map((app, index) => {
             const Icon = app.icon ?? GlobeIcon
@@ -105,7 +105,7 @@ function AppSwitcher({ apps = DEFAULT_APPS, currentApp, className }: AppSwitcher
                 role="menuitem"
                 aria-current={isCurrent ? "true" : undefined}
                 className={cn(
-                  "flex flex-col items-center gap-1.5 p-2.5 text-xs transition-colors",
+                  "flex flex-col items-center gap-2 p-2.5 text-xs transition-colors",
                   /* L1: TOKENS — Radius + hover using brand tokens */
                   "rounded-[var(--radius-inner,7px)]",
                   "hover:bg-muted",

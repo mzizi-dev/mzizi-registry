@@ -30,7 +30,7 @@ function QuickSearch({ target = "command-palette", label = "Quick search" }: Qui
       <kbd
         data-qs-kbd
         aria-hidden="true"
-        className="hidden shrink-0 rounded-sm border border-border px-1.5 font-sans text-caption leading-4 lg:inline"
+        className="hidden shrink-0 rounded-sm border border-border px-3.5 font-sans text-caption leading-4 lg:inline"
       >
         ⌘K
       </kbd>

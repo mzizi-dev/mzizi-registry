@@ -44,7 +44,7 @@ function MapCard({
         </div>
       )}
       <div className="min-w-0 flex-1">
-        <div className="flex items-center gap-1">
+        <div className="flex items-center gap-2">
           <span className="truncate text-sm font-medium">{title}</span>
           {verified && <span className="text-xs text-[var(--color-gold,#FFD740)]">✓</span>}
         </div>

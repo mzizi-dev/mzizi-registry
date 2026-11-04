@@ -51,7 +51,7 @@ function SessionList({
             <div className="flex size-10 shrink-0 items-center justify-center rounded-[var(--radius-lg,14px)] bg-muted">
               <DeviceIcon className="size-5 text-muted-foreground" />
             </div>
-            <div className="flex min-w-0 flex-1 flex-col gap-0.5">
+            <div className="flex min-w-0 flex-1 flex-col gap-2">
               <div className="flex items-center gap-2">
                 <span className="truncate text-sm font-medium text-foreground">
                   {session.device}
@@ -63,7 +63,7 @@ function SessionList({
                 )}
               </div>
               <div className="flex items-center gap-2 text-xs text-muted-foreground">
-                <span className="inline-flex items-center gap-1">
+                <span className="inline-flex items-center gap-2">
                   <Globe className="size-3" />
                   {session.location}
                 </span>

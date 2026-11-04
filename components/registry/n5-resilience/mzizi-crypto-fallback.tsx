@@ -63,7 +63,7 @@ export function MziziCryptoFallback({
       {showIndicator && state !== "pqc-active" && (
         <div
           role="status"
-          className="mt-2 flex items-center gap-1.5 text-xs"
+          className="mt-2 flex items-center gap-2 text-xs"
           style={{ color: config.color }}
         >
           <svg
