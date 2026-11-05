@@ -446,7 +446,7 @@ export function MziziMediaMessage({
       )}
     >
       <div className="flex size-10 shrink-0 items-center justify-center rounded-[var(--radius-inner,7px)] bg-[var(--color-cobalt)]/10">
-        <Icon className="size-5 text-[var(--color-cobalt)]" />
+        <Icon className="size-5 text-cobalt-text" />
       </div>
       <div className="min-w-0 flex-1">
         <div className="truncate text-sm font-medium text-foreground">

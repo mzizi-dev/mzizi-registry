@@ -72,7 +72,7 @@ function NodeStatusCard({
         </div>
         <div>
           <div className="text-sm text-muted-foreground">NHC Earned</div>
-          <div className="text-sm font-medium text-[var(--color-gold,#FFD740)] tabular-nums">
+          <div className="text-sm font-medium text-[var(--color-gold-text,#FFD740)] tabular-nums">
             {nhcEarned.toLocaleString()}
           </div>
         </div>

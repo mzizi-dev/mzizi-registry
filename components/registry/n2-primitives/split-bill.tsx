@@ -127,7 +127,7 @@ function SplitBill({
               <span className="text-sm font-medium tabular-nums">{equalShare.toFixed(2)}</span>
             )}
             {p.paid && (
-              <span className="text-sm text-[var(--color-malachite,#64FFDA)]">Paid</span>
+              <span className="text-sm text-[var(--color-malachite-text,#64FFDA)]">Paid</span>
             )}
           </div>
         ))}

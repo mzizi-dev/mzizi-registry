@@ -146,7 +146,7 @@ function MziziLeaderboardRow({
           </span>
         )}
         <span className="flex items-center gap-2 text-sm font-semibold text-foreground">
-          <Star className="size-3 text-[var(--color-gold)]" />
+          <Star className="size-3 text-gold-text" />
           {typeof score === "number" ? score.toLocaleString() : score}
         </span>
       </div>

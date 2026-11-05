@@ -142,7 +142,7 @@ export function MziziForecastCard({
       )}
       {farmingAdvice && (
         <div className="border-t border-border px-4 py-3">
-          <p className="mb-1 text-sm font-semibold text-[var(--color-malachite,#64FFDA)]">
+          <p className="mb-1 text-sm font-semibold text-[var(--color-malachite-text,#64FFDA)]">
             🌾 Farming Advisory
           </p>
           <p className="text-xs leading-relaxed text-muted-foreground">{farmingAdvice}</p>

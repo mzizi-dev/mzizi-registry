@@ -21,8 +21,8 @@ interface MemberListProps extends React.ComponentProps<"div"> {
 }
 
 const roleStyles: Record<MemberRole, string> = {
-  admin: "bg-[var(--color-tanzanite,#B388FF)]/15 text-[var(--color-tanzanite,#B388FF)]",
-  moderator: "bg-[var(--color-cobalt,#00B0FF)]/15 text-[var(--color-cobalt,#00B0FF)]",
+  admin: "bg-[var(--color-tanzanite,#B388FF)]/15 text-[var(--color-tanzanite-text,#B388FF)]",
+  moderator: "bg-[var(--color-cobalt,#00B0FF)]/15 text-[var(--color-cobalt-text,#00B0FF)]",
   member: "bg-transparent text-transparent",
 }
 

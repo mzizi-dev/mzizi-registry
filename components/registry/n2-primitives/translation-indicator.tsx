@@ -21,9 +21,9 @@ const statusLabels: Record<TranslationStatus, string> = {
 
 const statusColors: Record<TranslationStatus, string> = {
   original: "text-muted-foreground",
-  machine: "text-[var(--color-cobalt,#00B0FF)]",
-  community: "text-[var(--color-gold,#FFD740)]",
-  verified: "text-[var(--color-malachite,#64FFDA)]",
+  machine: "text-[var(--color-cobalt-text,#00B0FF)]",
+  community: "text-[var(--color-gold-text,#FFD740)]",
+  verified: "text-[var(--color-malachite-text,#64FFDA)]",
 }
 
 function TranslationIndicator({

@@ -10,6 +10,14 @@ From 2026-10-04 releases follow the org versioning policy ([nyuchi/.github#80](h
 
 ## [Unreleased]
 
+### Fixed — mineral accents are no longer painted as text; `lint:colors` rejects the idiom (2026-11-04, [#315](https://github.com/mzizi-dev/mzizi-registry/issues/315), [#312](https://github.com/mzizi-dev/mzizi-registry/issues/312))
+
+Owner decision, 2026-10-07: text on the base surface uses the per-family `-text` token (APCA Lc 75 on `--base`, both themes), not the accent and not the container pair. `text-[var(--color-<name>)]` resolved to the family's accent/fill value (`darkHex` in dark mode), which fell below Lc 75 for most families (sodalite at Lc 26).
+
+- **Components.** 134 text class occurrences in the component sources (React and Rust, `lib/harness` included) now read `text-<name>-text`, or `text-[var(--color-<name>-text,<fallback>)]` where the build kept a `var()` fallback for installs without the tokens. `fill-*` and `bg-*` tints are unchanged. No class names, props or contracts change; only the colour a text or icon takes in dark mode moves to the tuned value.
+- **Lint.** `pnpm lint:colors` now also fails on `text-[var(--color-<mineral or heritage name>)]` (with or without a fallback) in `.ts`/`.tsx`, naming the `-text` replacement. The bare `text-<name>` utility is not flagged yet; that is a wider migration.
+- **Site/docs/skills impact:** None to a stated fact. Components installed from the next release render text with the `-text` token.
+
 ### Removed — Dioxus leaves the live prose, the served doctrine and the plugin keywords; **Breaking** for callers that match `"dioxus"` in `rust.descriptors` (2026-11-04, [#635](https://github.com/mzizi-dev/mzizi-registry/issues/635))
 
 Owner decision, 2026-11-04: "dioxus is out!!!". This change is the first part: wording and served metadata. The Rust crates still compile against the framework; converting them to Mzizi's own render path is the second part, tracked in #635.
