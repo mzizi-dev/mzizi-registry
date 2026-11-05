@@ -7,7 +7,7 @@
 [![CodeQL](https://github.com/mzizi-dev/mzizi-registry/actions/workflows/github-code-scanning/codeql/badge.svg)](https://github.com/mzizi-dev/mzizi-registry/security/code-scanning)
 [![License: Apache 2.0](https://img.shields.io/badge/License-Apache_2.0-blue.svg)](https://www.apache.org/licenses/LICENSE-2.0)
 
-**Version:** 4.26.0 | **API:** [api.mzizi.dev](https://api.mzizi.dev/v1/ui) | **Console:** [app.mzizi.dev](https://app.mzizi.dev) | **MCP:** `mcp.mzizi.dev/mcp` | **Docs:** [docs.mzizi.dev](https://docs.mzizi.dev)
+**Version:** 4.27.0 | **API:** [api.mzizi.dev](https://api.mzizi.dev/v1/ui) | **Console:** [app.mzizi.dev](https://app.mzizi.dev) | **MCP:** `mcp.mzizi.dev/mcp` | **Docs:** [docs.mzizi.dev](https://docs.mzizi.dev)
 
 > **This repo serves no website and no API.** It is the registry's source: `registry.json`, the
 > component files, the token pipeline, the Rust crates and the generators that check them. The
@@ -29,7 +29,7 @@ source of truth checked from both directions.
 npx shadcn@latest add https://api.mzizi.dev/v1/ui/button
 ```
 
-**575 components** across 8 architectural nodes and 4 rungs, served from disk —
+**675 registry items** (`registry.json`: 488 `registry:ui`, 105 `registry:block` and 82 libraries, hooks and other items) across 8 architectural nodes and 4 rungs, served from disk —
 `registry.json` and the component files in this repo are the source of truth, not a
 database. **21 colour families.** **One MCP server** (served from `mzizi-dev/agent-tools`) any AI
 client can install against.
@@ -71,7 +71,8 @@ its own repo:
 `mzizi-rs/` is the Rust half of the bet above: a Cargo workspace whose `mzizi-ui` crate
 (N2 primitives) and `mzizi-tokens` crate (generated from the same palette source as the
 CSS custom properties) are compiled and contract-tested in CI, not just committed as text.
-The UI crates still depend on Dioxus. Mzizi is replacing that with its own `render(props) -> String`
+The UI crates still depend on a third-party Rust UI framework that the owner has removed from the stack
+(2026-11-04, [#635](https://github.com/mzizi-dev/mzizi-registry/issues/635)). Mzizi is replacing it with its own `render(props) -> String`
 path, which is in progress and described in [`docs/roots/RFC-roots-renderer.md`](docs/roots/RFC-roots-renderer.md).
 
 The server crates are host-agnostic and are meant for three build targets: Cloudflare Workers,
@@ -81,7 +82,7 @@ designed and waits for the Phase 0 gate (see
 [`docs/roots/RFC-roots.md`](docs/roots/RFC-roots.md) §2.2).
 
 `contracts/` holds a versioned, machine-readable contract for each `@bundu/ui` app
-component of the Mzizi Dashboard Standard: 31 in `contracts/app/`, in the format
+component of the Mzizi Dashboard Standard: 35 in `contracts/app/`, in the format
 `contracts/schema/component-contract.schema.json` defines, listed in `contracts/index.json`.
 [`contracts/README.md`](./contracts/README.md) has the coverage table; see
 [docs.mzizi.dev/registry/contracts](https://docs.mzizi.dev/registry/contracts).
@@ -145,7 +146,7 @@ radius scale value.
 ## API
 
 `api.mzizi.dev` is served by
-[`mzizi-dev/mzizi-api-gateway`](https://github.com/mzizi-dev/mzizi-api-gateway), not by
+[`mzizi-dev/mzizi-api`](https://github.com/mzizi-dev/mzizi-api) (formerly `mzizi-api-gateway`), not by
 this repo. The gateway bundles this repo's files — `registry.json`, the component sources
 and the `lib/` readers (`lib/registry`, `lib/db`, `lib/skills`, `lib/tokens`, …) — at a
 pinned commit. The spec stays here in [`openapi.yaml`](openapi.yaml) (inlined into
@@ -192,18 +193,18 @@ portal. Raw data:
 
 ## Tech Stack
 
-| Layer                | Technology                                                                                                         | Version        |
-| -------------------- | ------------------------------------------------------------------------------------------------------------------ | -------------- |
-| Language             | TypeScript (strict mode)                                                                                           | 6.0.3          |
-| Styling              | Tailwind CSS 4 + CSS custom properties                                                                             | 4.2.4          |
-| Component Primitives | Radix UI + Base UI                                                                                                 | radix-ui 1.4.3 |
-| Variant Management   | class-variance-authority (CVA)                                                                                     | 0.7.1          |
-| Charts               | Recharts                                                                                                           | 3.8.1          |
-| Forms                | react-hook-form + zod                                                                                              | 7.73.1 / 4.3.6 |
-| Registry storage     | `registry.json` + component files on disk — no database                                                            | —              |
-| Rust                 | `mzizi-rs/` workspace — `mzizi-ui` (Dioxus, being replaced by Mzizi's own render path), `mzizi-tokens` (generated) | —              |
-| Testing              | Vitest, `cargo test` for the Rust half                                                                             | 5.0.2          |
-| CI/CD                | GitHub Actions — this repo deploys no app                                                                          | —              |
+| Layer                | Technology                                                                                                                                       | Version        |
+| -------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------ | -------------- |
+| Language             | TypeScript (strict mode)                                                                                                                         | 6.0.3          |
+| Styling              | Tailwind CSS 4 + CSS custom properties                                                                                                           | 4.2.4          |
+| Component Primitives | Radix UI + Base UI                                                                                                                               | radix-ui 1.4.3 |
+| Variant Management   | class-variance-authority (CVA)                                                                                                                   | 0.7.1          |
+| Charts               | Recharts                                                                                                                                         | 3.8.1          |
+| Forms                | react-hook-form + zod                                                                                                                            | 7.73.1 / 4.3.6 |
+| Registry storage     | `registry.json` + component files on disk — no database                                                                                          | —              |
+| Rust                 | `mzizi-rs/` workspace — `mzizi-ui` (its third-party UI framework is being replaced by Mzizi's own render path, #635), `mzizi-tokens` (generated) | —              |
+| Testing              | Vitest, `cargo test` for the Rust half                                                                                                           | 5.0.2          |
+| CI/CD                | GitHub Actions — this repo deploys no app                                                                                                        | —              |
 
 See [`AGENTS.md`](./AGENTS.md) for the full command reference, the CI gate list, and what an
 agent working in this repo needs to know before pushing.

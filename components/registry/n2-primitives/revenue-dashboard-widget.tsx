@@ -49,7 +49,7 @@ function RevenueDashboardWidget({
         <div className="mt-3 flex gap-3 text-xs">
           <div>
             <span className="text-muted-foreground">Your share: </span>
-            <span className="font-medium text-[var(--color-malachite,#64FFDA)]">
+            <span className="font-medium text-[var(--color-malachite-text,#64FFDA)]">
               {creatorShare}%
             </span>
           </div>
@@ -88,9 +88,9 @@ function RevenueDashboardWidget({
                   className={cn(
                     "rounded-full px-1.5 py-0.5 text-sm",
                     p.status === "paid"
-                      ? "bg-[var(--color-malachite,#64FFDA)]/10 text-[var(--color-malachite,#64FFDA)]"
+                      ? "bg-[var(--color-malachite,#64FFDA)]/10 text-[var(--color-malachite-text,#64FFDA)]"
                       : p.status === "pending"
-                        ? "bg-[var(--color-gold,#FFD740)]/10 text-[var(--color-gold,#FFD740)]"
+                        ? "bg-[var(--color-gold,#FFD740)]/10 text-[var(--color-gold-text,#FFD740)]"
                         : "bg-muted text-muted-foreground"
                   )}
                 >

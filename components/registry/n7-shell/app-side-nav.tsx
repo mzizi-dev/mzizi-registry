@@ -106,7 +106,7 @@ function SideNav({ groups: given, items, label = "Sections", current: currentPro
         return (
           <div key={gi} data-slot="nav-group" className="grid gap-2">
             {group.label && (
-              <p id={labelId} data-slot="nav-group-label" className="px-2.5 pt-1 pb-1 text-caption font-medium text-muted-foreground">
+              <p id={labelId} data-slot="nav-group-label" className="px-3.5 pt-1 pb-1 text-caption font-medium text-muted-foreground">
                 {group.label}
               </p>
             )}

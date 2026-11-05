@@ -67,7 +67,7 @@ function InviteLink({
         {onRegenerate && (
           <button
             onClick={onRegenerate}
-            className="text-[var(--color-cobalt,#00B0FF)] transition-all hover:underline"
+            className="text-[var(--color-cobalt-text,#00B0FF)] transition-all hover:underline"
           >
             Regenerate
           </button>

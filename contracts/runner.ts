@@ -12,7 +12,7 @@
  * - `contract`: the `contract … end` block, in the clause grammar of
  *   mzizi-dev/mzizi design/RFC-0006, the subset that applies to rendered
  *   markup (the same subset mzizi-brand's tests/contract.rs evaluates on
- *   dioxus-ssr output):
+ *   the Rust crates' rendered output):
  *     slot | role | label | class | portal  <predicate>   (root element)
  *     <element> "<text>" min_height <n>                   (every state)
  *     uses <data-slot>                                     (default state)

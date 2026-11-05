@@ -70,7 +70,7 @@ describe("registry source is served from the generated artifact", () => {
   })
 
   it("404s the Rust target for a TypeScript-only component", () => {
-    // /api/v1/rs/{name} must not pretend a Dioxus version exists.
+    // /api/v1/rs/{name} must not pretend a Rust version exists.
     expect(readComponentSourceFor("data-table", "rs")).toBeNull()
     // …and must serve it where one does.
     expect(readComponentSourceFor("button", "rs")).toMatch(/Dioxus|dioxus/)
