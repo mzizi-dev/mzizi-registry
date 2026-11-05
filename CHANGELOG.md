@@ -10,6 +10,51 @@ From 2026-10-04 releases follow the org versioning policy ([nyuchi/.github#80](h
 
 ## [Unreleased]
 
+## [4.27.0] - 2026-11-05
+
+Releases `staging` to `main` as the next minor above v4.26.0 ([nyuchi/.github#80](https://github.com/nyuchi/.github/issues/80)). `package.json`, `README.md` and `content/changelog/releases.json` (and `lib/changelog.generated.ts`) carry 4.27.0. Mineral accents are no longer painted as text ([#634](https://github.com/mzizi-dev/mzizi-registry/pull/634)); Dioxus leaves the live prose, the served doctrine and the plugin keywords ([#636](https://github.com/mzizi-dev/mzizi-registry/pull/636), **Breaking** for callers that match `"dioxus"` in `rust.descriptors`); seven controls take the 14px inline inset ([#631](https://github.com/mzizi-dev/mzizi-registry/pull/631)); the `bundu` row states four pillars ([#632](https://github.com/mzizi-dev/mzizi-registry/pull/632)); the `Mzizi components` job gates `Build` ([#630](https://github.com/mzizi-dev/mzizi-registry/pull/630)); and the README counts are current ([#633](https://github.com/mzizi-dev/mzizi-registry/pull/633)).
+
+### Fixed — mineral accents are no longer painted as text; `lint:colors` rejects the idiom (2026-11-04, [#315](https://github.com/mzizi-dev/mzizi-registry/issues/315), [#312](https://github.com/mzizi-dev/mzizi-registry/issues/312))
+
+Owner decision, 2026-10-07: text on the base surface uses the per-family `-text` token (APCA Lc 75 on `--base`, both themes), not the accent and not the container pair. `text-[var(--color-<name>)]` resolved to the family's accent/fill value (`darkHex` in dark mode), which fell below Lc 75 for most families (sodalite at Lc 26).
+
+- **Components.** 134 text class occurrences in the component sources (React and Rust, `lib/harness` included) now read `text-<name>-text`, or `text-[var(--color-<name>-text,<fallback>)]` where the build kept a `var()` fallback for installs without the tokens. `fill-*` and `bg-*` tints are unchanged. No class names, props or contracts change; only the colour a text or icon takes in dark mode moves to the tuned value.
+- **Lint.** `pnpm lint:colors` now also fails on `text-[var(--color-<mineral or heritage name>)]` (with or without a fallback) in `.ts`/`.tsx`, naming the `-text` replacement. The bare `text-<name>` utility is not flagged yet; that is a wider migration.
+- **Site/docs/skills impact:** None to a stated fact. Components installed from the next release render text with the `-text` token.
+
+### Removed — Dioxus leaves the live prose, the served doctrine and the plugin keywords; **Breaking** for callers that match `"dioxus"` in `rust.descriptors` (2026-11-04, [#635](https://github.com/mzizi-dev/mzizi-registry/issues/635))
+
+Owner decision, 2026-11-04: "dioxus is out!!!". This change is the first part: wording and served metadata. The Rust crates still compile against the framework; converting them to Mzizi's own render path is the second part, tracked in #635.
+
+- **Breaking, `/v1/architecture` (node documents for N2, N3, N6 and N7).** `rust.descriptors` no longer lists `"dioxus"` (N2: `["astro","react"]`; N3, N6 and N7 likewise). No replacement value was added: what the Rust side renders with is an open owner decision. A consumer that branched on the `"dioxus"` descriptor now sees none.
+- **Changed, served prose.** The `rust.note`, `rust.today` and `rust.target` text and the descriptions of nodes N2, N3, N6, N7, N10 and N11, the framework strand and the documentation, installation and ownership conventions now say "Rust (Mzizi Roots)" where they said "Dioxus". N2's `rust.target` no longer argues for a Rust UI framework.
+- **Changed, `registry.json`.** The `mzizi-tokens-rust` and `app-bar-chart` descriptions say "the Rust half" and "a Mzizi Roots (Rust) sibling". The generated `mzizi-tokens` crate header says the same.
+- **Changed, docs and metadata.** `AGENTS.md` states the order (Mzizi first, then TypeScript, native Swift and Kotlin where they exist) and that no third-party Rust UI framework is allowed; `README.md`, `contracts/README.md`, `docs/pulling-in-primitives.md`, the contract schema and runner comments, and the Claude Code plugin keywords no longer name Dioxus. `mzizi add` serving every component type is owner direction, not built.
+- **Not changed.** The Rust sources (`components/registry/**/*.rs` and the crate copies), the `dioxus` Cargo dependencies, `docs/roots/RFC-roots*.md` and earlier changelog entries (history), and `plugin/skills/*` (generated from `@nyuchi/mzizi-skills`; it follows when that skill is fixed in `mzizi-dev/agent-tools`).
+- **Site/docs/skills impact:** mzizi-api serves the changed doctrine after the pin moves; mzizi-site and mzizi-docs pages that read `rust.descriptors` or quote the N2 `rust.target` text, and the `mzizi-roots` skill, still say Dioxus and need the same change.
+
+### Fixed — seven shell and page controls take the 14px inline inset, in React and Astro (2026-11-04, [#625](https://github.com/mzizi-dev/mzizi-registry/issues/625), [#627](https://github.com/mzizi-dev/mzizi-registry/pull/627), [#617](https://github.com/mzizi-dev/mzizi-registry/issues/617))
+
+Owner decision (#625, documented in #627): a one-line label chip or pill is held on its inline axis by the 14px inset, and the block axis is exempt. These controls still had less side padding; each is now `px-3.5`, in both its `.tsx` and its `.astro` (no `.rs` twin exists for any of them). Heights are unchanged (`h-8`, `pointer-coarse:h-11`), so hit regions are unchanged.
+
+- **Changed (from `px-2.5` to `px-3.5`):** the `<summary>` of `app-toolbar-menu` (ToolbarMenu), the row-action `<summary>` of `app-data-table` (DataTable), the `app-quick-search` field (QuickSearch), and the `nav-group-label` of `app-side-nav` (SideNav group labels).
+- **Changed (from `px-2` to `px-3.5`):** `app-top-bar-action` (TopBarAction) and the item links of `app-command-palette` (CommandPalette). The palette's group heading moved with its items (`px-2` to `px-3.5`) so the heading stays aligned with them; it is a label, not a control.
+- **Not changed:** the AppShell search is the QuickSearch in the sidebar's search slot, so it takes the QuickSearch change; the slot wrapper's `px-2` is the sidebar's gutter, shared with its head, body and foot, and was left. SideNav's navigation rows (`px-2.5`) and tooltip, and the `px-2` of AppShell's top bar, were not on the list and are not changed, so a SideNav group label now sits 4px further in than the rows beneath it. Nothing else in the registry was audited or changed here.
+- **Tests.** `__tests__/spacing-floor.test.ts` gains a source-level check that no bare `px-<n>` under 14px sits on those control lines in the `.astro` and `.tsx` files (it fails on the previous sources). The evaluator and `contracts/spacing-cases.json` are unchanged: the rendered contracts cannot see these classes because the label sits in a child element, so the source is pinned instead. `lib/registry-source.generated.json` is regenerated (`pnpm registry:source`).
+
+### Fixed — the `bundu` ecosystem row states four pillars governed by the Bundu Foundation (2026-11-04, [#314](https://github.com/mzizi-dev/mzizi-registry/issues/314))
+
+- **`/v1/brand` and `mzizi_get_tokens(ecosystem)`.** The `bundu` row said the ecosystem was "built by Nyuchi Africa" with "Three pillars". bundu.org (read 2026-11-04) says the Foundation governs four pillars: Bundu Labs (research), Mukoko (consumer), Nyuchi (commercial) and Shamwari AI (community). The description now says that, names Nyuchi as a sibling pillar and Shamwari's commercial operator, and keeps the sister brands as specialist verticals. Text only: no field, mineral or URL changes.
+- **Not changed here.** `plugin/skills/mzizi-design` still says "three pillars"; it is generated from `@nyuchi/mzizi-skills` and follows when that skill is fixed in `mzizi-dev/agent-tools`.
+
+### Changed — the `Mzizi components` job now gates `Build`, as the owner decided for Registry Snapshot and Rust (2026-11-04, [#267](https://github.com/mzizi-dev/mzizi-registry/issues/267))
+
+Owner decision, 2026-10-07 (#267): all three of Registry Snapshot, Rust and Mzizi components gate merges. `Registry Snapshot` and `Rust` already did, through `build.needs`; `Mzizi components` (`mz check` and `mz contract` on every registry `.mz`) did not, so a red run could merge. `.github/workflows/ci.yml` `build.needs` now lists it. Nothing a consumer of the registry sees changes. The ruleset side (listing the three contexts directly in ruleset `repo-ci`, so a failure reads as a failing check and not as `Build` skipped) is owner-only and still open on #267.
+
+### Fixed — the README's counts and API link are current, and a test reads them from the files (2026-11-04, [#583](https://github.com/mzizi-dev/mzizi-registry/issues/583))
+
+From the 2026-10-29 audit (#583). `README.md` said **575 components**, a number no file gives; it now says **675 registry items** and splits them as `registry.json` does (488 `registry:ui`, 105 `registry:block`, 82 libraries, hooks and other items). It said 31 app contracts; `contracts/app/` holds 35. The API section linked `mzizi-dev/mzizi-api-gateway`; it links `mzizi-dev/mzizi-api` (formerly `mzizi-api-gateway`). `__tests__/readme-counts.test.ts` reads the item split and the app-contract count from `registry.json` and `contracts/app/`, so the README cannot drift again without a red test. Nothing a consumer of the API sees changes. The audit's other findings (the `.mz` rule in AGENTS.md, the manifest's `.rs`/`.mz`/`.astro` coverage, the duplicate issues) are not in this change.
+
 ## [4.26.0] - 2026-11-04
 
 Releases `staging` to `main` as the next minor above v4.25.0 ([nyuchi/.github#80](https://github.com/nyuchi/.github/issues/80)). `package.json`, `README.md` and `content/changelog/releases.json` (and `lib/changelog.generated.ts`) carry 4.26.0. The headline is `@nyuchi/mzizi-skills` 0.18.0 ([#628](https://github.com/mzizi-dev/mzizi-registry/pull/628), [#617](https://github.com/mzizi-dev/mzizi-registry/issues/617)): twelve skills (was nine), five of them dev skills, and the Claude Code plugin at 1.7.0. The spacing floor's inline-axis wording ([#627](https://github.com/mzizi-dev/mzizi-registry/pull/627)) rides along.

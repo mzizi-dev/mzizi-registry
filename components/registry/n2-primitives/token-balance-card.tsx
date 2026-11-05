@@ -85,7 +85,7 @@ function TokenBalanceCard({
                     <span
                       className={
                         token.change24h >= 0
-                          ? "text-[var(--color-malachite,#64FFDA)]"
+                          ? "text-[var(--color-malachite-text,#64FFDA)]"
                           : "text-destructive"
                       }
                     >

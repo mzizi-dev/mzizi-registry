@@ -54,7 +54,7 @@ function AncestryMemorial({
           </div>
           <div className="text-xs text-muted-foreground">Age {fixedAge} · Ancestral</div>
           {communityRole && (
-            <div className="text-sm text-[var(--color-terracotta)]">
+            <div className="text-sm text-terracotta-text">
               {communityRole}
             </div>
           )}

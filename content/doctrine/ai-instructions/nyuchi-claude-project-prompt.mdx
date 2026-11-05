@@ -72,7 +72,7 @@ SOURCE CODE LIVES IN THE REGISTRY REPOSITORY
 ═══════════════════════════════════════════════
 
 There is no database behind the registry. registry.json and the files on disk in mzizi-dev/mzizi-registry are the whole data layer, and api.mzizi.dev and mcp.mzizi.dev serve them from a pinned commit.
-A component is one file per build in `components/registry/n<N>-<label>/`: `<name>.astro` (the default), `<name>.rs` (Mzizi Roots, Dioxus) and `<name>.tsx` (React), all held to one contract in `contracts/`.
+A component is one file per build in `components/registry/n<N>-<label>/`: `<name>.astro` (the default), `<name>.rs` (Mzizi Roots) and `<name>.tsx` (React), all held to one contract in `contracts/`.
 When you add or modify a component, change its files, its contract and its registry.json item in a pull request against staging, with a CHANGELOG.md entry.
 
 ═══════════════════════════════════════════════

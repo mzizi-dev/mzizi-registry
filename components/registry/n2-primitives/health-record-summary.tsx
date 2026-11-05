@@ -29,7 +29,7 @@ function HealthRecordSummary({
       <div className="flex items-center justify-between">
         <span className="text-sm font-medium">Health Summary</span>
         {podEncrypted && (
-          <span className="rounded-full bg-[var(--color-malachite,#64FFDA)]/10 px-2 py-0.5 text-sm font-medium text-[var(--color-malachite,#64FFDA)]">
+          <span className="rounded-full bg-[var(--color-malachite,#64FFDA)]/10 px-2 py-0.5 text-sm font-medium text-[var(--color-malachite-text,#64FFDA)]">
             🔒 Pod Encrypted
           </span>
         )}

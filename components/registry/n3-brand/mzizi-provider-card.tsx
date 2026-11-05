@@ -117,7 +117,7 @@ export function MziziProviderCard({
               </span>
             )}
             {telemedicine && (
-              <span className="rounded-full bg-[var(--color-cobalt,#00B0FF)]/10 px-1.5 py-0.5 text-[var(--color-cobalt,#00B0FF)]">
+              <span className="rounded-full bg-[var(--color-cobalt,#00B0FF)]/10 px-1.5 py-0.5 text-[var(--color-cobalt-text,#00B0FF)]">
                 📹 Tele
               </span>
             )}

@@ -81,7 +81,7 @@ function VerificationReviewCard({
         {onApprove && (
           <button
             onClick={onApprove}
-            className="h-9 flex-1 rounded-full bg-[var(--color-malachite,#64FFDA)]/15 text-xs font-medium text-[var(--color-malachite,#64FFDA)]"
+            className="h-9 flex-1 rounded-full bg-[var(--color-malachite,#64FFDA)]/15 text-xs font-medium text-[var(--color-malachite-text,#64FFDA)]"
           >
             Approve
           </button>
@@ -97,7 +97,7 @@ function VerificationReviewCard({
         {onRequestMore && (
           <button
             onClick={onRequestMore}
-            className="h-9 rounded-full bg-[var(--color-cobalt,#00B0FF)]/10 px-3 text-xs font-medium text-[var(--color-cobalt,#00B0FF)]"
+            className="h-9 rounded-full bg-[var(--color-cobalt,#00B0FF)]/10 px-3 text-xs font-medium text-[var(--color-cobalt-text,#00B0FF)]"
           >
             More Info
           </button>

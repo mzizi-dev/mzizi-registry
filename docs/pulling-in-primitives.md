@@ -26,14 +26,14 @@ position: the contract exists, the source is yours to write. Do not wait for it.
 
 `readiness` is not the same question as `tier`, and you need both:
 
-| `tier`     | Meaning                                                                                        |
-| ---------- | ---------------------------------------------------------------------------------------------- |
-| `primary`  | Where Mzizi is heading — Rust: `dioxus` (Mzizi's own render path is replacing it), `crates-io` |
-| `native`   | First-class native shells — swift, kotlin, arkts, RN                                           |
-| `optional` | Supported, not the destination — none today                                                    |
-| `legacy`   | Still ships, being moved away from — `react`                                                   |
+| `tier`     | Meaning                                                                           |
+| ---------- | --------------------------------------------------------------------------------- |
+| `primary`  | Where Mzizi is heading — Rust: `crates-io` (Mzizi's own render path, in progress) |
+| `native`   | First-class native shells — swift, kotlin, arkts, RN                              |
+| `optional` | Supported, not the destination — none today                                       |
+| `legacy`   | Still ships, being moved away from — `react`                                      |
 
-They can point different ways, on purpose: **dioxus is `metadata_only` + `primary`**
+They can point different ways, on purpose: a target can be `metadata_only` and `primary`
 (the direction, source not wired). One field would force a false choice between
 "has components" and "is the plan", and whichever it answered would mislead you.
 
@@ -63,8 +63,8 @@ Two things that will bite you if the manifest is wrong, both now gate-checked by
 
 ### Rust (Mzizi Roots)
 
-The Rust build is Mzizi Roots. Its UI crates still depend on Dioxus until Mzizi's own render path
-replaces it (`docs/roots/RFC-roots-renderer.md`). The crate names stay; the component API changes in the
+The Rust build is Mzizi Roots. Its UI crates still depend on a third-party Rust UI framework until Mzizi's own render path
+replaces it (#635) (`docs/roots/RFC-roots-renderer.md`). The crate names stay; the component API changes in the
 breaking release that RFC proposes, after the published 0.4.0 (not yet published).
 
 Consumed as a **crate**, not via a CLI:

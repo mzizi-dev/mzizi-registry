@@ -255,7 +255,7 @@ function MziziCalendar({
                   className={cn(
                     "text-sm",
                     isSelected && "font-semibold text-background",
-                    isToday && !isSelected && "font-semibold text-[var(--color-malachite)]",
+                    isToday && !isSelected && "font-semibold text-malachite-text",
                     !isToday && !isSelected && "text-foreground"
                   )}
                 >

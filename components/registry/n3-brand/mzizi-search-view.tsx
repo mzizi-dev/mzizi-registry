@@ -167,7 +167,7 @@ export function MziziSearchView({
               <div className="min-w-0 flex-1">
                 <p className="truncate text-sm font-medium text-foreground">
                   {r.title}
-                  {r.verified && <span className="ml-1 text-[var(--color-gold,#FFD740)]">✓</span>}
+                  {r.verified && <span className="ml-1 text-[var(--color-gold-text,#FFD740)]">✓</span>}
                 </p>
                 {r.subtitle && (
                   <p className="truncate text-sm text-muted-foreground">{r.subtitle}</p>

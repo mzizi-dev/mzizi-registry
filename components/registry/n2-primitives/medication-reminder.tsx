@@ -60,7 +60,7 @@ function MedicationReminder({
           {onTake && (
             <button
               onClick={onTake}
-              className="h-9 flex-1 rounded-full bg-[var(--color-malachite,#64FFDA)]/15 text-xs font-medium text-[var(--color-malachite,#64FFDA)]"
+              className="h-9 flex-1 rounded-full bg-[var(--color-malachite,#64FFDA)]/15 text-xs font-medium text-[var(--color-malachite-text,#64FFDA)]"
             >
               Take
             </button>
@@ -83,7 +83,7 @@ function MedicationReminder({
           )}
         </div>
       )}
-      {taken && <div className="mt-2 text-xs text-[var(--color-malachite,#64FFDA)]">✓ Taken</div>}
+      {taken && <div className="mt-2 text-xs text-[var(--color-malachite-text,#64FFDA)]">✓ Taken</div>}
     </div>
   )
 }
