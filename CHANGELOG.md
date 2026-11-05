@@ -10,6 +10,10 @@ From 2026-10-04 releases follow the org versioning policy ([nyuchi/.github#80](h
 
 ## [Unreleased]
 
+## [4.27.0] - 2026-11-05
+
+Releases `staging` to `main` as the next minor above v4.26.0 ([nyuchi/.github#80](https://github.com/nyuchi/.github/issues/80)). `package.json`, `README.md` and `content/changelog/releases.json` (and `lib/changelog.generated.ts`) carry 4.27.0. Mineral accents are no longer painted as text ([#634](https://github.com/mzizi-dev/mzizi-registry/pull/634)); Dioxus leaves the live prose, the served doctrine and the plugin keywords ([#636](https://github.com/mzizi-dev/mzizi-registry/pull/636), **Breaking** for callers that match `"dioxus"` in `rust.descriptors`); seven controls take the 14px inline inset ([#631](https://github.com/mzizi-dev/mzizi-registry/pull/631)); the `bundu` row states four pillars ([#632](https://github.com/mzizi-dev/mzizi-registry/pull/632)); the `Mzizi components` job gates `Build` ([#630](https://github.com/mzizi-dev/mzizi-registry/pull/630)); and the README counts are current ([#633](https://github.com/mzizi-dev/mzizi-registry/pull/633)).
+
 ### Fixed — mineral accents are no longer painted as text; `lint:colors` rejects the idiom (2026-11-04, [#315](https://github.com/mzizi-dev/mzizi-registry/issues/315), [#312](https://github.com/mzizi-dev/mzizi-registry/issues/312))
 
 Owner decision, 2026-10-07: text on the base surface uses the per-family `-text` token (APCA Lc 75 on `--base`, both themes), not the accent and not the container pair. `text-[var(--color-<name>)]` resolved to the family's accent/fill value (`darkHex` in dark mode), which fell below Lc 75 for most families (sodalite at Lc 26).
