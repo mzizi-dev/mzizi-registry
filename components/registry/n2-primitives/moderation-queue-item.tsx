@@ -44,7 +44,7 @@ function ModerationQueueItem({
           </span>
           <span className="text-sm text-muted-foreground">{contentType}</span>
           {reportCount > 1 && (
-            <span className="text-sm font-medium text-[var(--color-terracotta)]">
+            <span className="text-sm font-medium text-terracotta-text">
               {reportCount} reports
             </span>
           )}
@@ -61,7 +61,7 @@ function ModerationQueueItem({
         {onApprove && (
           <button
             onClick={onApprove}
-            className="h-9 flex-1 rounded-full bg-[var(--color-malachite,#64FFDA)]/15 text-xs font-medium text-[var(--color-malachite,#64FFDA)]"
+            className="h-9 flex-1 rounded-full bg-[var(--color-malachite,#64FFDA)]/15 text-xs font-medium text-[var(--color-malachite-text,#64FFDA)]"
           >
             Approve
           </button>
@@ -77,7 +77,7 @@ function ModerationQueueItem({
         {onEscalate && (
           <button
             onClick={onEscalate}
-            className="h-9 rounded-full bg-[var(--color-gold,#FFD740)]/10 px-3 text-xs font-medium text-[var(--color-gold,#FFD740)]"
+            className="h-9 rounded-full bg-[var(--color-gold,#FFD740)]/10 px-3 text-xs font-medium text-[var(--color-gold-text,#FFD740)]"
           >
             Escalate
           </button>

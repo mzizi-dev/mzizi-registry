@@ -301,7 +301,7 @@ function MziziPlaceCard({
             {rating != null && (
               <span className="flex items-center gap-2">
                 <Star
-                  className="size-3 fill-[var(--color-gold)] text-[var(--color-gold)]"
+                  className="size-3 fill-[var(--color-gold)] text-gold-text"
                   aria-hidden="true"
                 />
                 {rating.toFixed(1)}
@@ -366,7 +366,7 @@ function MziziPlaceCard({
           {rating != null && (
             <span className="flex items-center gap-2 text-xs font-semibold text-foreground">
               <Star
-                className="size-3 fill-[var(--color-gold)] text-[var(--color-gold)]"
+                className="size-3 fill-[var(--color-gold)] text-gold-text"
                 aria-hidden="true"
               />
               {rating.toFixed(1)}

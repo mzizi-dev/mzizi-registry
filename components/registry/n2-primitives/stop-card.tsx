@@ -57,7 +57,7 @@ function StopCard({
                 <span className="font-medium">{v.routeName}</span>
                 <span className="text-muted-foreground">→ {v.destination}</span>
               </div>
-              <span className="font-medium text-[var(--color-malachite,#64FFDA)]">{v.eta}</span>
+              <span className="font-medium text-[var(--color-malachite-text,#64FFDA)]">{v.eta}</span>
             </div>
           ))}
         </div>

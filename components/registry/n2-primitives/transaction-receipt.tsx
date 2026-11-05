@@ -52,9 +52,9 @@ function TransactionReceipt({
           className={cn(
             "rounded-full px-3 py-1 text-xs font-medium",
             status === "confirmed"
-              ? "bg-[var(--color-malachite,#64FFDA)]/10 text-[var(--color-malachite,#64FFDA)]"
+              ? "bg-[var(--color-malachite,#64FFDA)]/10 text-[var(--color-malachite-text,#64FFDA)]"
               : status === "pending"
-                ? "bg-[var(--color-gold,#FFD740)]/10 text-[var(--color-gold,#FFD740)]"
+                ? "bg-[var(--color-gold,#FFD740)]/10 text-[var(--color-gold-text,#FFD740)]"
                 : "bg-destructive/10 text-destructive"
           )}
         >

@@ -148,7 +148,7 @@ export function MziziRoutePlanner({
         </div>
         {fare && (
           <div className="text-right">
-            <p className="text-sm font-bold text-[var(--color-gold,#FFD740)]">
+            <p className="text-sm font-bold text-[var(--color-gold-text,#FFD740)]">
               {new Intl.NumberFormat(undefined, {
                 style: "currency",
                 currency: currency || "USD",

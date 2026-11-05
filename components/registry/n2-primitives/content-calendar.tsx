@@ -89,7 +89,7 @@ function ContentCalendar({
               <div
                 className={cn(
                   "mb-1 text-center text-sm font-medium",
-                  isToday ? "text-[var(--color-malachite,#64FFDA)]" : "text-muted-foreground"
+                  isToday ? "text-[var(--color-malachite-text,#64FFDA)]" : "text-muted-foreground"
                 )}
               >
                 {showWeekday && day.toLocaleDateString(undefined, { weekday: "short" })}

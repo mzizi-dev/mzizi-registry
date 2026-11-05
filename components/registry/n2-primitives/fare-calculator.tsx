@@ -43,7 +43,7 @@ function FareCalculator({
           </div>
         ))}
         {discount && (
-          <div className="flex items-center justify-between text-sm text-[var(--color-malachite,#64FFDA)]">
+          <div className="flex items-center justify-between text-sm text-[var(--color-malachite-text,#64FFDA)]">
             <span>{discount.label}</span>
             <span className="tabular-nums">
               -{discount.amount.toFixed(2)} {currency}

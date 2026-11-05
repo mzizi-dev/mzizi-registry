@@ -132,7 +132,7 @@ export function MziziPaymentSummary({
             <span
               className={cn(
                 item.type === "discount"
-                  ? "text-[var(--color-malachite,#64FFDA)]"
+                  ? "text-[var(--color-malachite-text,#64FFDA)]"
                   : item.type === "fee" || item.type === "tax"
                     ? "text-muted-foreground"
                     : "text-foreground"
@@ -144,7 +144,7 @@ export function MziziPaymentSummary({
               className={cn(
                 "font-medium",
                 item.type === "discount"
-                  ? "text-[var(--color-malachite,#64FFDA)]"
+                  ? "text-[var(--color-malachite-text,#64FFDA)]"
                   : "text-foreground"
               )}
             >
@@ -171,7 +171,7 @@ export function MziziPaymentSummary({
         <div className="flex items-center justify-between border-t border-border px-4 py-2.5 text-sm text-muted-foreground">
           {paymentMethod && <span>💳 {paymentMethod}</span>}
           {escrow && (
-            <span className="rounded-full bg-[var(--color-malachite,#64FFDA)]/10 px-2 py-0.5 font-medium text-[var(--color-malachite,#64FFDA)]">
+            <span className="rounded-full bg-[var(--color-malachite,#64FFDA)]/10 px-2 py-0.5 font-medium text-[var(--color-malachite-text,#64FFDA)]">
               🔒 Escrow protected
             </span>
           )}

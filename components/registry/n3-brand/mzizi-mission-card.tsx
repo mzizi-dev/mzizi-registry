@@ -108,7 +108,7 @@ function MziziMissionCard({
           )}
         >
           {isCompleted ? (
-            <Check className="size-6 text-[var(--color-malachite)]" strokeWidth={2.5} />
+            <Check className="size-6 text-malachite-text" strokeWidth={2.5} />
           ) : isLocked ? (
             <Target className="size-6 text-muted-foreground" />
           ) : (
@@ -147,7 +147,7 @@ function MziziMissionCard({
             </span>
             {badgeName && (
               <span className="flex items-center gap-2 text-muted-foreground">
-                <Award className="size-3 text-[var(--color-tanzanite)]" />
+                <Award className="size-3 text-tanzanite-text" />
                 {badgeName}
               </span>
             )}

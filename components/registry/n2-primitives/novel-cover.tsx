@@ -18,9 +18,9 @@ interface NovelCoverProps extends React.ComponentProps<"div"> {
 }
 
 const statusColors: Record<WorkStatus, string> = {
-  ongoing: "bg-[var(--color-malachite,#64FFDA)]/15 text-[var(--color-malachite,#64FFDA)]",
-  completed: "bg-[var(--color-cobalt,#00B0FF)]/15 text-[var(--color-cobalt,#00B0FF)]",
-  hiatus: "bg-[var(--color-gold,#FFD740)]/15 text-[var(--color-gold,#FFD740)]",
+  ongoing: "bg-[var(--color-malachite,#64FFDA)]/15 text-[var(--color-malachite-text,#64FFDA)]",
+  completed: "bg-[var(--color-cobalt,#00B0FF)]/15 text-[var(--color-cobalt-text,#00B0FF)]",
+  hiatus: "bg-[var(--color-gold,#FFD740)]/15 text-[var(--color-gold-text,#FFD740)]",
   dropped: "bg-muted text-muted-foreground",
 }
 
