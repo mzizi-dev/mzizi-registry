@@ -51,6 +51,10 @@ Owner decision, 2026-10-07 (#267): all three of Registry Snapshot, Rust and Mziz
 
 From the 2026-10-29 audit (#583). `README.md` said **575 components**, a number no file gives; it now says **675 registry items** and splits them as `registry.json` does (488 `registry:ui`, 105 `registry:block`, 82 libraries, hooks and other items). It said 31 app contracts; `contracts/app/` holds 35. The API section linked `mzizi-dev/mzizi-api-gateway`; it links `mzizi-dev/mzizi-api` (formerly `mzizi-api-gateway`). `__tests__/readme-counts.test.ts` reads the item split and the app-contract count from `registry.json` and `contracts/app/`, so the README cannot drift again without a red test. Nothing a consumer of the API sees changes. The audit's other findings (the `.mz` rule in AGENTS.md, the manifest's `.rs`/`.mz`/`.astro` coverage, the duplicate issues) are not in this change.
 
+## [4.26.0] - 2026-11-04
+
+Releases `staging` to `main` as the next minor above v4.25.0 ([nyuchi/.github#80](https://github.com/nyuchi/.github/issues/80)). `package.json`, `README.md` and `content/changelog/releases.json` (and `lib/changelog.generated.ts`) carry 4.26.0. The headline is `@nyuchi/mzizi-skills` 0.18.0 ([#628](https://github.com/mzizi-dev/mzizi-registry/pull/628), [#617](https://github.com/mzizi-dev/mzizi-registry/issues/617)): twelve skills (was nine), five of them dev skills, and the Claude Code plugin at 1.7.0. The spacing floor's inline-axis wording ([#627](https://github.com/mzizi-dev/mzizi-registry/pull/627)) rides along.
+
 ### Changed — the registry takes `@nyuchi/mzizi-skills` 0.18.0: twelve skills, five of them dev skills (2026-11-04, [#617](https://github.com/mzizi-dev/mzizi-registry/issues/617))
 
 - **The Claude Code plugin moves to 1.7.0** (was 1.6.0), as every earlier skills bump did (#596, #601, #611): `plugin/.claude-plugin/plugin.json` `version`, so a client that updates by version picks up skills 0.18.0. The plugin and marketplace descriptions now say twelve skills at 0.18.0 and name the new ones.
