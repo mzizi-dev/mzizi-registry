@@ -55,9 +55,9 @@ function ChapterList({
           <span className="flex-1 truncate">{ch.title}</span>
           <div className="flex items-center gap-2 text-sm text-muted-foreground">
             {ch.wordCount && <span>{(ch.wordCount / 1000).toFixed(1)}k</span>}
-            {ch.locked && <span className="text-[var(--color-gold,#FFD740)]">🔒</span>}
+            {ch.locked && <span className="text-[var(--color-gold-text,#FFD740)]">🔒</span>}
             {ch.read && !ch.locked && (
-              <span className="text-[var(--color-malachite,#64FFDA)]">✓</span>
+              <span className="text-[var(--color-malachite-text,#64FFDA)]">✓</span>
             )}
           </div>
         </button>

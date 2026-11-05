@@ -82,8 +82,8 @@ function TimeTracker({
             "rounded-full px-3 text-xs font-medium",
             compact ? "h-7" : "h-8",
             state === "running"
-              ? "bg-[var(--color-gold,#FFD740)]/15 text-[var(--color-gold,#FFD740)]"
-              : "bg-[var(--color-malachite,#64FFDA)]/15 text-[var(--color-malachite,#64FFDA)]"
+              ? "bg-[var(--color-gold,#FFD740)]/15 text-[var(--color-gold-text,#FFD740)]"
+              : "bg-[var(--color-malachite,#64FFDA)]/15 text-[var(--color-malachite-text,#64FFDA)]"
           )}
         >
           {state === "running" ? "Pause" : "Start"}

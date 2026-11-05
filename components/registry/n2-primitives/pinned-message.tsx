@@ -50,7 +50,7 @@ function PinnedMessage({
             `pinnedBy` alone — so a message pinned with only a timestamp showed
             no pin attribution line at all. */}
         {(pinnedBy || pinnedAt) && (
-          <div className="text-sm font-medium text-[var(--color-cobalt,#00B0FF)]">
+          <div className="text-sm font-medium text-[var(--color-cobalt-text,#00B0FF)]">
             Pinned{pinnedBy ? ` by ${pinnedBy}` : ""}
             {pinnedAt ? ` · ${new Date(pinnedAt).toLocaleDateString()}` : ""}
           </div>

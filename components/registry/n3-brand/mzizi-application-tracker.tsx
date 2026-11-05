@@ -107,9 +107,9 @@ export function MziziApplicationTracker({
                   s.stage === "rejected" || s.stage === "withdrawn"
                     ? "bg-[var(--status-error,#FF5252)]/10 text-red-400"
                     : s.active
-                      ? "bg-[var(--color-gold,#FFD740)]/20 text-[var(--color-gold,#FFD740)]"
+                      ? "bg-[var(--color-gold,#FFD740)]/20 text-[var(--color-gold-text,#FFD740)]"
                       : s.date
-                        ? "bg-[var(--color-malachite,#64FFDA)]/20 text-[var(--color-malachite,#64FFDA)]"
+                        ? "bg-[var(--color-malachite,#64FFDA)]/20 text-[var(--color-malachite-text,#64FFDA)]"
                         : "bg-muted text-muted-foreground/40"
                 )}
               >

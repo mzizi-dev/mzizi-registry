@@ -19,8 +19,8 @@ interface VitalsDisplayProps extends React.ComponentProps<"div"> {
 }
 
 const statusColors: Record<VitalStatus, string> = {
-  normal: "text-[var(--color-malachite,#64FFDA)]",
-  warning: "text-[var(--color-gold,#FFD740)]",
+  normal: "text-[var(--color-malachite-text,#64FFDA)]",
+  warning: "text-[var(--color-gold-text,#FFD740)]",
   critical: "text-destructive",
 }
 const statusBg: Record<VitalStatus, string> = {

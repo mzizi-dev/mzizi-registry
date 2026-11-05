@@ -86,7 +86,7 @@ function CalendarMonthView({
               className={cn(
                 "flex flex-col items-center gap-2 rounded-[var(--radius-sm,7px)] py-1.5 text-sm transition-colors",
                 isSelected && "bg-primary text-primary-foreground",
-                isToday && !isSelected && "font-bold text-[var(--color-malachite,#64FFDA)]",
+                isToday && !isSelected && "font-bold text-[var(--color-malachite-text,#64FFDA)]",
                 !isSelected && !isToday && "hover:bg-muted"
               )}
             >

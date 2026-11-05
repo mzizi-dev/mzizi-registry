@@ -47,7 +47,7 @@ function CommentOnParagraph({
         data-portal="https://mzizi.dev/components/comment-on-paragraph"
         onClick={() => onOpenChange?.(true)}
         className={cn(
-          "inline-flex size-6 items-center justify-center rounded-full bg-[var(--color-cobalt,#00B0FF)]/15 text-sm font-bold text-[var(--color-cobalt,#00B0FF)] transition-colors hover:bg-[var(--color-cobalt,#00B0FF)]/25",
+          "inline-flex size-6 items-center justify-center rounded-full bg-[var(--color-cobalt,#00B0FF)]/15 text-sm font-bold text-[var(--color-cobalt-text,#00B0FF)] transition-colors hover:bg-[var(--color-cobalt,#00B0FF)]/25",
           className
         )}
         aria-label={`${comments.length} comment${comments.length !== 1 ? "s" : ""} on this passage`}

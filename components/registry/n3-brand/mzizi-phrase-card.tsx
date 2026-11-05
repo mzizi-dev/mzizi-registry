@@ -96,7 +96,7 @@ export function MziziPhraseCard({
               {phrase}
             </p>
             {pronunciation && (
-              <p className="text-xs text-[var(--color-cobalt,#00B0FF)] italic">/{pronunciation}/</p>
+              <p className="text-xs text-[var(--color-cobalt-text,#00B0FF)] italic">/{pronunciation}/</p>
             )}
           </div>
           {onPlayAudio && (
@@ -105,7 +105,7 @@ export function MziziPhraseCard({
                 e.stopPropagation()
                 onPlayAudio()
               }}
-              className="flex size-10 shrink-0 items-center justify-center rounded-full bg-[var(--color-cobalt,#00B0FF)]/10 text-[var(--color-cobalt,#00B0FF)] transition-colors hover:bg-[var(--color-cobalt,#00B0FF)]/20"
+              className="flex size-10 shrink-0 items-center justify-center rounded-full bg-[var(--color-cobalt,#00B0FF)]/10 text-[var(--color-cobalt-text,#00B0FF)] transition-colors hover:bg-[var(--color-cobalt,#00B0FF)]/20"
               aria-label="Play audio"
             >
               🔊
@@ -124,7 +124,7 @@ export function MziziPhraseCard({
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-2 text-sm text-muted-foreground">
             {category && (
-              <span className="rounded-full bg-[var(--color-cobalt,#00B0FF)]/10 px-1.5 py-0.5 text-[var(--color-cobalt,#00B0FF)]">
+              <span className="rounded-full bg-[var(--color-cobalt,#00B0FF)]/10 px-1.5 py-0.5 text-[var(--color-cobalt-text,#00B0FF)]">
                 {category}
               </span>
             )}
@@ -132,7 +132,7 @@ export function MziziPhraseCard({
               {language}
               {targetLanguage ? ` → ${targetLanguage}` : ""}
             </span>
-            {mastered && <span className="text-[var(--color-malachite,#64FFDA)]">✓ Mastered</span>}
+            {mastered && <span className="text-[var(--color-malachite-text,#64FFDA)]">✓ Mastered</span>}
           </div>
           {onPractice && (
             <button
