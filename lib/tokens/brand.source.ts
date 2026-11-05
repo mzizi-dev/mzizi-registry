@@ -801,7 +801,7 @@ export const ecosystem: BrandEcosystemEntry[] = [
     language: "Shona",
     sortOrder: 0,
     description:
-      "The complete ecosystem built by Nyuchi Africa. Three pillars — mukoko (consumer super app, tanzanite), nyuchi (infrastructure and enterprise, gold), and shamwari (sovereign AI, the intelligence pillar, sodalite) — with the sister brands as specialist verticals, all connected through one identity, one design system, and one open data commons.",
+      "The ecosystem governed by the Bundu Foundation (Zimbabwe CLG), one identity, one design system and one open data commons across four pillars: Bundu Labs (research, standards and open articles), mukoko (the consumer super app, tanzanite), nyuchi (the commercial pillar: infrastructure and products for organisations, gold) and shamwari (the community pillar: sovereign AI, sodalite). Nyuchi is a sibling pillar, not the parent, and sells Shamwari commercially as its operator; the sister brands are specialist verticals.",
     adopterType: "ecosystem_brand",
   },
   {

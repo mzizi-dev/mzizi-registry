@@ -825,7 +825,7 @@ function renderRust(
 
   return `${banner("//", "Rust")}
 //
-// This is what the Dioxus half of the registry consumes, and what
+// This is what the Rust half of the registry consumes, and what
 // \`mzizi-rs/crates/mzizi-tokens\` includes by path so the crates registry
 // publishes the same palette the MCP and the shadcn registry do.
 
@@ -897,7 +897,7 @@ ${rustRoles(roles(resolved))}
 /**
  * \`Roles { light, dark }\` and \`Roles::mzizi()\` (#484): every colour role for one
  * theme, plus the size, radius and font roles as associated consts. A native
- * target reads a role here; Dioxus on the web needs nothing beyond the CSS,
+ * target reads a role here; a Rust web build needs nothing beyond the CSS,
  * which already switches by brand.
  */
 function rustRoles(rs: ResolvedRole[]): string {

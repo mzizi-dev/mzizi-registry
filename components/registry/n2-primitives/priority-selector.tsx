@@ -16,19 +16,19 @@ const priorities: { value: Priority; label: string; color: string; dot: string }
   {
     value: "low",
     label: "Low",
-    color: "text-[var(--color-cobalt,#00B0FF)]",
+    color: "text-[var(--color-cobalt-text,#00B0FF)]",
     dot: "bg-[var(--color-cobalt,#00B0FF)]",
   },
   {
     value: "medium",
     label: "Medium",
-    color: "text-[var(--color-gold,#FFD740)]",
+    color: "text-[var(--color-gold-text,#FFD740)]",
     dot: "bg-[var(--color-gold,#FFD740)]",
   },
   {
     value: "high",
     label: "High",
-    color: "text-[var(--color-terracotta)]",
+    color: "text-terracotta-text",
     dot: "bg-[var(--color-terracotta)]",
   },
   { value: "urgent", label: "Urgent", color: "text-destructive", dot: "bg-destructive" },

@@ -44,7 +44,7 @@ function ExchangeRate({
           <div
             className={cn(
               "text-sm font-medium",
-              isPositive ? "text-[var(--color-malachite,#64FFDA)]" : "text-destructive"
+              isPositive ? "text-[var(--color-malachite-text,#64FFDA)]" : "text-destructive"
             )}
           >
             {isPositive ? "+" : ""}

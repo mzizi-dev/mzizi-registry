@@ -22,10 +22,10 @@ interface DaoProposalCardProps extends React.ComponentProps<"div"> {
 }
 
 const statusStyles: Record<ProposalStatus, string> = {
-  active: "bg-[var(--color-malachite,#64FFDA)]/10 text-[var(--color-malachite,#64FFDA)]",
-  passed: "bg-[var(--color-cobalt,#00B0FF)]/10 text-[var(--color-cobalt,#00B0FF)]",
+  active: "bg-[var(--color-malachite,#64FFDA)]/10 text-[var(--color-malachite-text,#64FFDA)]",
+  passed: "bg-[var(--color-cobalt,#00B0FF)]/10 text-[var(--color-cobalt-text,#00B0FF)]",
   rejected: "bg-destructive/10 text-destructive",
-  pending: "bg-[var(--color-gold,#FFD740)]/10 text-[var(--color-gold,#FFD740)]",
+  pending: "bg-[var(--color-gold,#FFD740)]/10 text-[var(--color-gold-text,#FFD740)]",
   executed: "bg-muted text-muted-foreground",
 }
 
@@ -97,7 +97,7 @@ function DaoProposalCard({
           <div className="h-full bg-destructive" style={{ width: `${againstPct}%` }} />
         </div>
         <div className="mt-1.5 flex justify-between text-sm">
-          <span className="text-[var(--color-malachite,#64FFDA)]">
+          <span className="text-[var(--color-malachite-text,#64FFDA)]">
             For {votesFor.toLocaleString()} ({forPct.toFixed(0)}%)
           </span>
           <span className="text-destructive">
@@ -116,7 +116,7 @@ function DaoProposalCard({
         <div className="mt-3 flex gap-2">
           <button
             onClick={() => onVote("for")}
-            className="h-9 flex-1 rounded-full bg-[var(--color-malachite,#64FFDA)]/15 text-xs font-medium text-[var(--color-malachite,#64FFDA)]"
+            className="h-9 flex-1 rounded-full bg-[var(--color-malachite,#64FFDA)]/15 text-xs font-medium text-[var(--color-malachite-text,#64FFDA)]"
           >
             For
           </button>

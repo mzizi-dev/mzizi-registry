@@ -23,7 +23,7 @@ function QuickSearch({ target = "command-palette", label = "Quick search" }: Qui
       aria-label={label}
       aria-keyshortcuts="Meta+K Control+K"
       data-slot="quick-search"
-      className="flex h-8 w-full min-w-0 items-center gap-2 rounded-sm border border-border bg-background px-2.5 text-body-sm text-muted-foreground outline-none transition-colors hover:bg-muted hover:text-foreground focus-visible:ring-2 focus-visible:ring-ring pointer-coarse:h-11"
+      className="flex h-8 w-full min-w-0 items-center gap-2 rounded-sm border border-border bg-background px-3.5 text-body-sm text-muted-foreground outline-none transition-colors hover:bg-muted hover:text-foreground focus-visible:ring-2 focus-visible:ring-ring pointer-coarse:h-11"
     >
       <Icon name="search" className="h-4 w-4 shrink-0" />
       <span data-qs-text className="min-w-0 flex-1 truncate text-start">{`${label}…`}</span>

@@ -82,7 +82,7 @@ Node numbers are labels, not a sequence. Read the live model with `GET https://a
 
 Mzizi has no database behind it. The registry repository, `mzizi-dev/mzizi-registry`, is the whole data layer, and every change to it is a pull request:
 
-- **Components** — one file per build under `components/registry/n<N>-<node>/`: `.astro` (the default), `.rs` (Mzizi Roots, Dioxus) and `.tsx` (React), each held to the component's one contract under `contracts/`. `registry.json` indexes them.
+- **Components** — one file per build under `components/registry/n<N>-<node>/`: `.astro` (the default), `.rs` (Mzizi Roots) and `.tsx` (React), each held to the component's one contract under `contracts/`. `registry.json` indexes them.
 - **Design tokens** — `lib/tokens/palette.source.ts` (the palette) and `lib/tokens/brand.source.ts` (semantic colours, typography, spacing, the ecosystem brands).
 - **Doctrine** — `content/doctrine/`, this page included, inlined into `lib/doctrine.generated.ts` by `pnpm doctrine:generate`.
 - **AI instructions and skills** — `content/doctrine/ai-instructions/`; the agent skills are published as `@nyuchi/mzizi-skills`.

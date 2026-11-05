@@ -99,7 +99,7 @@ function MziziCredentialCard({
     >
       <div className="flex items-start gap-3">
         <div className="flex size-11 shrink-0 items-center justify-center rounded-[var(--radius-inner,7px)] bg-[var(--color-tanzanite)]/10">
-          <Award className="size-6 text-[var(--color-tanzanite)]" />
+          <Award className="size-6 text-tanzanite-text" />
         </div>
         <div className="min-w-0 flex-1">
           <div className="flex items-start justify-between gap-2">
@@ -141,7 +141,7 @@ function MziziCredentialCard({
             </div>
           </div>
           {verifiedByPlatform && (
-            <div className="mt-2 flex items-center gap-2 text-sm font-medium text-[var(--color-tanzanite)]">
+            <div className="mt-2 flex items-center gap-2 text-sm font-medium text-tanzanite-text">
               <Shield className="size-3" />
               Platform Verified
             </div>

@@ -196,7 +196,7 @@ function CommandPalette({
       <div className="max-h-[min(60vh,28rem)] overflow-y-auto p-1" data-cmdk-list>
         {sections.map((s) => (
           <section key={s.label} data-cmdk-group aria-label={s.label}>
-            <p aria-hidden="true" className="px-2 pt-2 pb-1 text-caption font-medium text-muted-foreground">
+            <p aria-hidden="true" className="px-3.5 pt-2 pb-1 text-caption font-medium text-muted-foreground">
               {s.label}
             </p>
             <ul role="list" className="grid gap-2">
@@ -208,7 +208,7 @@ function CommandPalette({
                 >
                   <a
                     href={i.href}
-                    className="flex h-9 min-w-0 items-center gap-2.5 rounded-sm px-2 text-body-sm outline-none hover:bg-muted focus-visible:bg-muted focus-visible:ring-2 focus-visible:ring-ring pointer-coarse:h-11"
+                    className="flex h-9 min-w-0 items-center gap-2.5 rounded-sm px-3.5 text-body-sm outline-none hover:bg-muted focus-visible:bg-muted focus-visible:ring-2 focus-visible:ring-ring pointer-coarse:h-11"
                   >
                     {i.icon ? <Icon name={i.icon} className="h-4 w-4 shrink-0 text-muted-foreground" /> : <span className="w-4 shrink-0" />}
                     <span className="shrink-0">

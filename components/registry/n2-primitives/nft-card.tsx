@@ -13,11 +13,11 @@ interface NftCardProps extends React.ComponentProps<"div"> {
 }
 
 const typeColors: Record<NftType, string> = {
-  ticket: "bg-[var(--color-malachite,#64FFDA)]/15 text-[var(--color-malachite,#64FFDA)]",
-  badge: "bg-[var(--color-gold,#FFD740)]/15 text-[var(--color-gold,#FFD740)]",
-  chapter: "bg-[var(--color-tanzanite,#B388FF)]/15 text-[var(--color-tanzanite,#B388FF)]",
-  artwork: "bg-[var(--color-cobalt,#00B0FF)]/15 text-[var(--color-cobalt,#00B0FF)]",
-  collectible: "bg-[var(--color-terracotta)]/15 text-[var(--color-terracotta)]",
+  ticket: "bg-[var(--color-malachite,#64FFDA)]/15 text-[var(--color-malachite-text,#64FFDA)]",
+  badge: "bg-[var(--color-gold,#FFD740)]/15 text-[var(--color-gold-text,#FFD740)]",
+  chapter: "bg-[var(--color-tanzanite,#B388FF)]/15 text-[var(--color-tanzanite-text,#B388FF)]",
+  artwork: "bg-[var(--color-cobalt,#00B0FF)]/15 text-[var(--color-cobalt-text,#00B0FF)]",
+  collectible: "bg-[var(--color-terracotta)]/15 text-terracotta-text",
 }
 
 function NftCard({

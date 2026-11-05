@@ -62,7 +62,7 @@ function NearbyList({
             <div className="flex items-center gap-2">
               <span className="truncate text-sm font-medium">{item.title}</span>
               {item.verified && (
-                <span className="text-sm text-[var(--color-gold,#FFD740)]">✓</span>
+                <span className="text-sm text-[var(--color-gold-text,#FFD740)]">✓</span>
               )}
             </div>
             {item.subtitle && (
@@ -75,7 +75,7 @@ function NearbyList({
                 </span>
               )}
               {item.rating !== undefined && (
-                <span className="text-[var(--color-gold,#FFD740)]">★ {item.rating.toFixed(1)}</span>
+                <span className="text-[var(--color-gold-text,#FFD740)]">★ {item.rating.toFixed(1)}</span>
               )}
             </div>
           </div>

@@ -109,7 +109,7 @@ export function MziziLessonCard({
           </p>
         </div>
         {streak != null && streak > 0 && (
-          <div className="flex shrink-0 items-center gap-2 rounded-full bg-[var(--color-gold,#FFD740)]/10 px-2 py-0.5 text-sm font-bold text-[var(--color-gold,#FFD740)]">
+          <div className="flex shrink-0 items-center gap-2 rounded-full bg-[var(--color-gold,#FFD740)]/10 px-2 py-0.5 text-sm font-bold text-[var(--color-gold-text,#FFD740)]">
             🔥 {streak}
           </div>
         )}
