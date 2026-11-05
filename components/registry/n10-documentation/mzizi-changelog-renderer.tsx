@@ -54,10 +54,10 @@ const NODE_AXIS: Record<number, "vertical" | "horizontal" | "depth" | "outlier">
 }
 
 const AXIS_COLOURS: Record<string, string> = {
-  horizontal: "bg-[var(--color-cobalt)]/10 text-[var(--color-cobalt)]",
-  vertical: "bg-[var(--color-tanzanite)]/10 text-[var(--color-tanzanite)]",
-  depth: "bg-[var(--color-malachite)]/10 text-[var(--color-malachite)]",
-  outlier: "bg-[var(--color-gold)]/10 text-[var(--color-gold)]",
+  horizontal: "bg-[var(--color-cobalt)]/10 text-cobalt-text",
+  vertical: "bg-[var(--color-tanzanite)]/10 text-tanzanite-text",
+  depth: "bg-[var(--color-malachite)]/10 text-malachite-text",
+  outlier: "bg-[var(--color-gold)]/10 text-gold-text",
 }
 
 export function ChangelogRenderer({ entries, className }: ChangelogRendererProps) {
@@ -120,7 +120,7 @@ export function ChangelogRenderer({ entries, className }: ChangelogRendererProps
               {entry.componentsModified.map((c) => (
                 <span
                   key={c}
-                  className="rounded bg-[var(--color-cobalt)]/10 px-1.5 py-0.5 text-xs text-[var(--color-cobalt)]"
+                  className="rounded bg-[var(--color-cobalt)]/10 px-1.5 py-0.5 text-xs text-cobalt-text"
                 >
                   ~{c}
                 </span>

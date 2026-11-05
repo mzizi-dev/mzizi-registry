@@ -144,7 +144,7 @@ function MziziOfferCard({
           <div className="mt-2 flex items-center gap-2 text-xs text-muted-foreground">
             <ShoppingBag className="size-3" />
             <span>{sellerName}</span>
-            {sellerVerified && <Shield className="size-3 text-[var(--color-gold)]" />}
+            {sellerVerified && <Shield className="size-3 text-gold-text" />}
           </div>
         )}
         {/* Inquiry CTA */}

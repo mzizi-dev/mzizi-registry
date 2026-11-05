@@ -30,11 +30,11 @@ const mineralAccents = {
 } as const
 
 const mineralBadgeBg = {
-  cobalt: "bg-[var(--color-cobalt)]/15 text-[var(--color-cobalt)]",
-  tanzanite: "bg-[var(--color-tanzanite)]/15 text-[var(--color-tanzanite)]",
-  malachite: "bg-[var(--color-malachite)]/15 text-[var(--color-malachite)]",
-  gold: "bg-[var(--color-gold)]/15 text-[var(--color-gold)]",
-  terracotta: "bg-[var(--color-terracotta)]/15 text-[var(--color-terracotta)]",
+  cobalt: "bg-[var(--color-cobalt)]/15 text-cobalt-text",
+  tanzanite: "bg-[var(--color-tanzanite)]/15 text-tanzanite-text",
+  malachite: "bg-[var(--color-malachite)]/15 text-malachite-text",
+  gold: "bg-[var(--color-gold)]/15 text-gold-text",
+  terracotta: "bg-[var(--color-terracotta)]/15 text-terracotta-text",
 } as const
 
 const listingCardVariants = cva(
@@ -267,7 +267,7 @@ function MziziListingCard({
               className={cn(
                 "text-sm font-semibold",
                 formattedPrice === "Free" || price === 0
-                  ? "text-[var(--color-malachite)]"
+                  ? "text-malachite-text"
                   : "text-foreground"
               )}
             >

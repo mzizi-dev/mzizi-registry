@@ -38,10 +38,10 @@ const modeLabels: Record<TransportMode, string> = {
 }
 
 const modeColors: Record<TransportMode, string> = {
-  bus: "bg-[var(--color-cobalt,#00B0FF)]/15 text-[var(--color-cobalt,#00B0FF)]",
-  kombi: "bg-[var(--color-gold,#FFD740)]/15 text-[var(--color-gold,#FFD740)]",
-  train: "bg-[var(--color-malachite,#64FFDA)]/15 text-[var(--color-malachite,#64FFDA)]",
-  taxi: "bg-[var(--color-terracotta)]/15 text-[var(--color-terracotta)]",
+  bus: "bg-[var(--color-cobalt,#00B0FF)]/15 text-[var(--color-cobalt-text,#00B0FF)]",
+  kombi: "bg-[var(--color-gold,#FFD740)]/15 text-[var(--color-gold-text,#FFD740)]",
+  train: "bg-[var(--color-malachite,#64FFDA)]/15 text-[var(--color-malachite-text,#64FFDA)]",
+  taxi: "bg-[var(--color-terracotta)]/15 text-terracotta-text",
   walk: "bg-muted text-muted-foreground",
 }
 

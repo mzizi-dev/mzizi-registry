@@ -189,7 +189,7 @@ function MziziArticleCard({
           {sourceName && (
             <span className="flex items-center gap-2">
               {sourceName}
-              {sourceVerified && <CheckCircle className="size-2.5 text-[var(--color-malachite)]" />}
+              {sourceVerified && <CheckCircle className="size-2.5 text-malachite-text" />}
             </span>
           )}
           {publishedAt && <span>· {publishedAt}</span>}

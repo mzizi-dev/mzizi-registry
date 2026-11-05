@@ -46,7 +46,7 @@ function MapCard({
       <div className="min-w-0 flex-1">
         <div className="flex items-center gap-2">
           <span className="truncate text-sm font-medium">{title}</span>
-          {verified && <span className="text-xs text-[var(--color-gold,#FFD740)]">✓</span>}
+          {verified && <span className="text-xs text-[var(--color-gold-text,#FFD740)]">✓</span>}
         </div>
         {subtitle && <div className="truncate text-xs text-muted-foreground">{subtitle}</div>}
         <div className="mt-1 flex items-center gap-2 text-sm text-muted-foreground">
@@ -55,7 +55,7 @@ function MapCard({
           )}
           {distance && <span>{distance}</span>}
           {rating !== undefined && (
-            <span className="text-[var(--color-gold,#FFD740)]">★ {rating.toFixed(1)}</span>
+            <span className="text-[var(--color-gold-text,#FFD740)]">★ {rating.toFixed(1)}</span>
           )}
         </div>
       </div>

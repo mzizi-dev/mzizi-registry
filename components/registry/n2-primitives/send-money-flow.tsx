@@ -62,7 +62,7 @@ function SendMoneyFlow({
                 step === s
                   ? "bg-primary text-primary-foreground"
                   : ["recipient", "amount", "confirm", "receipt"].indexOf(step) > i
-                    ? "bg-[var(--color-malachite,#64FFDA)]/20 text-[var(--color-malachite,#64FFDA)]"
+                    ? "bg-[var(--color-malachite,#64FFDA)]/20 text-[var(--color-malachite-text,#64FFDA)]"
                     : "bg-muted text-muted-foreground"
               )}
             >

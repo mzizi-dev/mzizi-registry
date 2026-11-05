@@ -39,7 +39,7 @@ const severityColors: Record<Severity, { bg: string; text: string; dot: string }
   },
   cold: {
     bg: "bg-[var(--color-cobalt,#00B0FF)]/10",
-    text: "text-[var(--color-cobalt,#00B0FF)]",
+    text: "text-[var(--color-cobalt-text,#00B0FF)]",
     dot: "bg-[var(--color-cobalt,#00B0FF)]",
   },
 }

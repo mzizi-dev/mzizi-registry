@@ -145,6 +145,23 @@ for (const h of heritageColors) {
 const HEX = /#[0-9a-fA-F]{6}\b/g
 
 /**
+ * A mineral or heritage accent used as TEXT (#315, #312; owner, 2026-10-07).
+ *
+ * `--color-<name>` resolves to the family's accent/fill value (`lightHex` in light,
+ * `darkHex` in dark), which is not tuned for text: in dark mode 45 of the 91 call sites
+ * that used it rendered below APCA Lc 75. Text on the page uses `text-<name>-text`
+ * (the per-family `--color-<name>-text`, Lc 75 on `--base` in both themes). Matches
+ * `text-[var(--color-<name>)]`, never `text-<name>-text`,
+ * `-on-container` or any other suffixed token. The bare `text-<name>` utility is a wider
+ * migration and is not flagged here yet.
+ */
+const FAMILIES = [...minerals, ...heritageColors].map((f) => f.name).join("|")
+const ACCENT_AS_TEXT = new RegExp(
+  `(?<![\\w-])text-\\[var\\(--color-(?:${FAMILIES})(?:,[^)]*)?\\)\\]`,
+  "g"
+)
+
+/**
  * Is the position at the end of `before` inside an unclosed `var(`?
  *
  * This walks the parentheses with a stack instead of counting them, because
@@ -203,6 +220,12 @@ async function main() {
       const seen = new Set<string>()
       text.split("\n").forEach((line, i) => {
         const code = line.replace(/\/\/.*$/, "")
+        for (const match of code.matchAll(ACCENT_AS_TEXT)) {
+          const name = /--color-([a-z]+)/.exec(match[0])?.[1]
+          violations.push(
+            `  ${rel}:${i + 1}  ${match[0]} paints the accent as text — use text-${name}-text (APCA Lc 75 on the page, both themes)`
+          )
+        }
         for (const match of code.matchAll(HEX)) {
           const hex = match[0].toLowerCase()
           const token = paletteHex.get(hex)

@@ -45,11 +45,11 @@ version: "4.0.34-reviewed"
 Every component has one contract and up to three builds. Astro is the default; the
 others are the same component for projects that are not on Astro.
 
-| Build           | For                        | Served at                                 |
-| --------------- | -------------------------- | ----------------------------------------- |
-| Astro (default) | Astro sites and apps       | `https://api.mzizi.dev/v1/astro/<name>`   |
-| Rust (Dioxus)   | Rust apps, via Mzizi Roots | crates.io (`mzizi-roots` and node crates) |
-| React           | React and Next.js projects | `https://api.mzizi.dev/v1/ui/<name>`      |
+| Build              | For                        | Served at                                 |
+| ------------------ | -------------------------- | ----------------------------------------- |
+| Astro (default)    | Astro sites and apps       | `https://api.mzizi.dev/v1/astro/<name>`   |
+| Rust (Mzizi Roots) | Rust apps, via Mzizi Roots | crates.io (`mzizi-roots` and node crates) |
+| React              | React and Next.js projects | `https://api.mzizi.dev/v1/ui/<name>`      |
 
 Web builds use Tailwind CSS 4 and the Mzizi tokens. Not every component has every
 build yet: `GET https://api.mzizi.dev/v1/astro` lists the Astro ones.

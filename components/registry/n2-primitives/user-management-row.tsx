@@ -64,7 +64,7 @@ function UserManagementRow({
         <div className="flex items-center gap-2">
           <span className="truncate text-sm font-medium">{name}</span>
           {verificationTier !== undefined && verificationTier > 0 && (
-            <span className="text-sm text-[var(--color-gold,#FFD740)]">✓</span>
+            <span className="text-sm text-[var(--color-gold-text,#FFD740)]">✓</span>
           )}
         </div>
         <div className="truncate text-xs text-muted-foreground">{email}</div>
@@ -87,7 +87,7 @@ function UserManagementRow({
         {onSuspend && (
           <button
             onClick={onSuspend}
-            className="h-7 rounded-full px-2 text-sm font-medium text-[var(--color-gold,#FFD740)] transition-colors hover:bg-[var(--color-gold,#FFD740)]/10"
+            className="h-7 rounded-full px-2 text-sm font-medium text-[var(--color-gold-text,#FFD740)] transition-colors hover:bg-[var(--color-gold,#FFD740)]/10"
           >
             {status === "suspended" ? "Unsuspend" : "Suspend"}
           </button>
