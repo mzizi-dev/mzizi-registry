@@ -91,7 +91,7 @@ export function ChartBarInteractive({
       className={className}
     >
       <CardHeader className="flex flex-col items-stretch border-b border-border p-0 sm:flex-row">
-        <div className="flex flex-1 flex-col justify-center gap-1 px-6 py-5 sm:py-6">
+        <div className="flex flex-1 flex-col justify-center gap-2 px-6 py-5 sm:py-6">
           <CardTitle>{title}</CardTitle>
           <CardDescription>{description}</CardDescription>
         </div>
@@ -100,7 +100,7 @@ export function ChartBarInteractive({
             <button
               key={s.key}
               onClick={() => setActiveKey(s.key)}
-              className={`relative flex flex-1 flex-col justify-center gap-1 border-t border-border px-6 py-4 text-left transition-colors sm:border-t-0 sm:border-l sm:px-8 sm:py-6 ${activeKey === s.key ? "bg-muted/50" : ""}`}
+              className={`relative flex flex-1 flex-col justify-center gap-2 border-t border-border px-6 py-4 text-left transition-colors sm:border-t-0 sm:border-l sm:px-8 sm:py-6 ${activeKey === s.key ? "bg-muted/50" : ""}`}
               aria-pressed={activeKey === s.key}
               aria-label={`Show ${s.label}`}
             >

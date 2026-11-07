@@ -41,7 +41,7 @@ function ChangelogEntry({
       </div>
       <div className="flex flex-col gap-3">
         {changes.map((group) => (
-          <div key={group.type} className="flex flex-col gap-1.5">
+          <div key={group.type} className="flex flex-col gap-2">
             <span
               className={cn(
                 "inline-flex w-fit rounded-full px-2 py-0.5 text-xs font-medium capitalize",
@@ -50,7 +50,7 @@ function ChangelogEntry({
             >
               {group.type}
             </span>
-            <ul className="flex flex-col gap-1 pl-4">
+            <ul className="flex flex-col gap-2 pl-4">
               {group.items.map((item, index) => (
                 <li
                   key={index}

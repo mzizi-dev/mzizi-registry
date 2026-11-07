@@ -39,18 +39,18 @@ function CodeBlock({
       <div className="flex items-center justify-between border-b border-border bg-muted/80 px-4 py-2">
         <div className="flex items-center gap-2">
           {filename && (
-            <div className="flex items-center gap-1.5 text-sm text-muted-foreground">
+            <div className="flex items-center gap-2 text-sm text-muted-foreground">
               <FileCode className="size-3.5" />
               <span className="font-mono text-xs">{filename}</span>
             </div>
           )}
           {!filename && (
-            <Badge variant="secondary" className="font-mono text-[10px] uppercase">
+            <Badge variant="secondary" className="font-mono text-sm uppercase">
               {language}
             </Badge>
           )}
           {filename && (
-            <Badge variant="secondary" className="font-mono text-[10px] uppercase">
+            <Badge variant="secondary" className="font-mono text-sm uppercase">
               {language}
             </Badge>
           )}

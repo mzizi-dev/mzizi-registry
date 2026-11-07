@@ -38,16 +38,18 @@ Local checks use **Vite+** (`vp`), as the org CI does: `vp run test` runs the te
 
 ### Every component, every format, one place (owner decision 2026-10-04)
 
-This registry is the single source of every component in every format: `.tsx` (React),
-`.rs` (Mzizi Roots; Dioxus until Mzizi's own render path replaces it), `.astro` (pure Astro) and, from the owner's work in progress,
-`.mz` (the Mzizi language). One component has one name and one contract; each format is a
+This registry is the single source of every component in every format. The order is Mzizi first,
+then TypeScript, with native builds (Swift, Kotlin) where they exist (owner, 2026-11-04): `.mz` (the Mzizi
+language, from the owner's work in progress), `.rs` (Mzizi Roots; its Rust UI framework is being replaced by
+Mzizi's own render path, #635), `.tsx` (React) and `.astro` (pure Astro). `mzizi add` is to serve every type (owner direction, not yet built).
+One component has one name and one contract; each format is a
 sibling file `components/registry/n<N>-*/<name>.<ext>`. **Do not create, edit or move `.mz`
 files or `mz`-language directories here**: they are being built elsewhere and land as their
 own change.
 
-**No new Dioxus, Leptos or Yew work, and Svelte is out everywhere** (owner, 2026-10-20). Mzizi's
-Rust components use Mzizi's own render path (`render(props) -> String`, `docs/roots/RFC-roots-renderer.md`);
-Dioxus stays a dependency of some crates until that migration finishes. The guards that refuse Svelte imports stay.
+**No third-party Rust UI framework (Dioxus, Leptos, Yew) and no Svelte, anywhere** (owner, 2026-10-20 and 2026-11-04:
+"dioxus is out!!!"). Mzizi's Rust components use Mzizi's own render path (`render(props) -> String`,
+`docs/roots/RFC-roots-renderer.md`); some crates still carry the framework until that migration finishes (#635). The guards that refuse Svelte imports stay.
 
 **Astro is the default web UI; other stacks get the same component** (owner, 2026-10-05: "Astro
 is our default web ui but other may not use Astro"). Mzizi's own sites and apps are built in
@@ -93,7 +95,7 @@ to the wrong file:
 
 - `mzizi-ui/` at the repo root — a small Cloudflare Worker (`src/index.ts`) that proxies
   `ui.mzizi.dev`, one of two domain-proxy Workers in this repo alongside `mzizi-plus/`.
-- `mzizi-rs/crates/mzizi-ui` — the **Rust component crate** (N2 on the helix; Dioxus today,
+- `mzizi-rs/crates/mzizi-ui` — the **Rust component crate** (N2 on the helix; its UI framework is
   being replaced by Mzizi's own render path, see `docs/roots/RFC-roots-renderer.md`), a
   genuinely different codebase that happens to share the name because both serve node N2's
   viewable surface, one in TypeScript/React and one in Rust.
@@ -317,6 +319,28 @@ add it as its own section rather than re-creating a dead link.
   mzizi-api (formerly mzizi-api-gateway) and agent-tools, so api.mzizi.dev and mcp.mzizi.dev follow `main`
   without waiting for the bots' hourly run.
 
+## Release notes (hard rule)
+
+Owner, 2026-11-04: "Every release should have release notes too with a changelog."
+
+- **Every GitHub release carries notes built from `CHANGELOG.md`**, never GitHub's auto text:
+  the entries added since the previous release (`.github/scripts/release_notes.py`) and a "Full
+  changelog" compare link. That covers the minor release `release.yml` makes on `main` and the
+  pre-release for each staging patch tag (`staging-version.yml` tags with the org workflow's
+  `create-release: false`, then its `release` job writes the notes).
+- **A release with no changelog content fails its job.** A minor release builds its notes
+  before it pushes the tag, so a failure tags nothing. A staging patch whose merge added no
+  entry (the changelog gate exempts CI, lockfiles, lint config and typos) says so in its notes.
+- **Notes are set when the release is created.** `.github/scripts/publish-release.sh` makes a
+  draft with the notes and publishes it once. Never `gh release edit` a published release
+  (immutable releases); a re-run leaves a published release alone.
+- **A release PR's body carries the same notes.** Before merging a `release/` PR into `main`,
+  paste the notes it will release (the `release notes / release PR` job prints them in its run
+  summary) into the PR body, so they exist before publish.
+- `.github/scripts/release_notes.py`, `publish-release.sh` and their tests are identical in
+  every Mzizi repository that carries them (mzizi-api, mzizi-docs, mzizi-site, mzizi-registry,
+  agent-tools). Change them everywhere together.
+
 ## Track big work in GitHub issues
 
 Any substantial build, migration, investigation or multi-step task gets a GitHub issue in the repo that owns it — before or as work starts — so another session, agent or person can pick it up.
@@ -327,9 +351,22 @@ Any substantial build, migration, investigation or multi-step task gets a GitHub
 - Work spanning repos gets a tracking issue that links the per-repo issues.
 - Never put secrets, credential status or exploitable detail in issues on public repos.
 
+## Merge convention
+
+Read off the repo rulesets on 2026-11-03 (`gh api repos/mzizi-dev/<repo>/rulesets`); the rulesets are the authority if this drifts.
+
+- **Merge method.** Squash merges through the merge queue: `gh pr merge <n> --squash --auto`. Never `--admin`. Rebase and merge commits are not how PRs land. Org admins can bypass the rulesets; agents never do.
+- **The `staging` queue.** Target config: `merge_method` `SQUASH`, `min_entries_to_merge_wait_minutes` `0`, up to 5 entries built and merged together, grouping `ALLGREEN`, check timeout 60 minutes. The owner applies it in the repo rulesets (agents cannot write them). Until `merge-queue-staging` reads `SQUASH` and `0`, it still rebases and waits 5 minutes: keep every branch **linear** (no merge commits), because a rebase queue drops a branch that carries one with `MERGE_CONFLICT`. `staging` keeps `required_linear_history`, non-fast-forward blocking, 0 required approvals and required thread resolution.
+- **The `main` queue.** `MERGE`, no wait. Leave it: a release lands as one squash commit and the trees match.
+- **Enqueue as soon as the gate is met** (complete, CI green, verified at runtime, `/code-review` run with findings resolved; see "Dev skills, progress reports and the merge gate" below). Do not park a green PR.
+- **Every PR body carries one issue line** for the `issue attached` check: `Refs #n`, `Closes #n` or `No issue: <reason>`. Re-running that check needs the PR closed and reopened or the body edited.
+- **Releases.** `main` is released from `staging` by a `release/` branch made of `main` plus `staging`'s exact tree, squashed. Minors and patches release automatically; only a **major** needs the owner's go-ahead (owner, 2026-11-02: "we are about a 1000 minor releases away from deciding v1").
+- **Forward-port before you release.** The release-version-check gate fails a release PR while `main` has commits `staging` lacks (the registry-pin bot's commits, usually). Forward-port them to `staging` first, then cut the release. Do not push to the pin bot's branch (`bot/registry-pin`) unless you are taking the bump over.
+- **Sync back after a release.** The squash commit on `main` is never in `staging`'s history. If the trees differ, open a sync PR into `staging` from a branch off `staging` with `origin/main` merged in, squashed. Compare trees (`git diff origin/main origin/staging`), not commit counts.
+
 ## Dev skills, progress reports and the merge gate
 
-Load the Mzizi **dev skills** before starting work: `mzizi_get_skills category=dev` on the Mzizi MCP (`mcp.mzizi.dev`), or `@nyuchi/mzizi-skills` from npm. They are `digital-hygiene` and `progress-report`.
+Load the Mzizi **dev skills** before starting work: `mzizi_get_skills category=dev` on the Mzizi MCP (`mcp.mzizi.dev`), or `@nyuchi/mzizi-skills` from npm. They are `digital-hygiene`, `progress-report`, `ship-release`, `registry-propagation` and `pr-gates`.
 
 - **Digital hygiene.** Check free disk before starting, clone only under `$TMPDIR`, share build caches, and audit, then delete, your clones once the work merges (`digital-hygiene` skill).
 - **Clone isolation.** Clone only into a directory unique to you; never touch another agent's.

@@ -43,8 +43,8 @@ function ExchangeRate({
         {change24h !== undefined && (
           <div
             className={cn(
-              "text-[10px] font-medium",
-              isPositive ? "text-[var(--color-malachite,#64FFDA)]" : "text-destructive"
+              "text-sm font-medium",
+              isPositive ? "text-[var(--color-malachite-text,#64FFDA)]" : "text-destructive"
             )}
           >
             {isPositive ? "+" : ""}
@@ -55,7 +55,7 @@ function ExchangeRate({
             omission on this particular card: an FX rate with no timestamp looks
             live no matter how stale it is. */}
         {lastUpdated && (
-          <div className="text-[9px] text-muted-foreground">
+          <div className="text-sm text-muted-foreground">
             {new Date(lastUpdated).toLocaleTimeString()}
           </div>
         )}

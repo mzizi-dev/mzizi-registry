@@ -73,7 +73,7 @@
   "dependencies": {
     "@base-ui/react": ">=1.7.0",
     "@hookform/resolvers": ">=5.9.1",
-    "@nyuchi/mzizi-skills": ">=0.15.0",
+    "@nyuchi/mzizi-skills": ">=0.18.0",
     "@radix-ui/react-accordion": ">=1.2.20",
     "@radix-ui/react-alert-dialog": ">=1.1.23",
     "@radix-ui/react-aspect-ratio": ">=1.1.15",
@@ -139,7 +139,7 @@
     "astro": ">=7.3.5",
     "css-select": ">=6.0.0",
     "domhandler": ">=5.0.3",
-    "domutils": ">=3.2.2",
+    "domutils": "4.0.2",
     "eslint": ">=10.9.1",
     "htmlparser2": ">=10.1.0",
     "husky": ">=9.1.7",

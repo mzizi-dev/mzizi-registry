@@ -30,7 +30,7 @@ function TextSizeAdjuster({
       role="radiogroup"
       aria-label="Text size"
       className={cn(
-        "inline-flex items-end gap-1 rounded-full border border-border bg-muted/30 p-1",
+        "inline-flex items-end gap-2 rounded-full border border-border bg-muted/30 p-1",
         className
       )}
       {...props}

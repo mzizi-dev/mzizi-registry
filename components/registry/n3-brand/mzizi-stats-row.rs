@@ -229,7 +229,7 @@ pub fn MziziStatsRow(props: MziziStatsRowProps) -> Element {
                 "aria-label": "Statistics",
                 class: "flex animate-pulse gap-4",
                 for i in 0..3 {
-                    div { key: "{i}", class: "flex-1 space-y-1.5 rounded-[var(--radius-md,12px)] bg-muted p-3",
+                    div { key: "{i}", class: "flex-1 space-y-2 rounded-[var(--radius-md,12px)] bg-muted p-3",
                         div { class: "h-2.5 w-1/2 rounded bg-foreground/5" }
                         div { class: "h-5 w-2/3 rounded bg-foreground/5" }
                     }
@@ -261,7 +261,7 @@ pub fn MziziStatsRow(props: MziziStatsRowProps) -> Element {
                                         span { class: "size-4", style: "{tint}", {stat.icon.clone()} }
                                     }
                                     if let (Some(trend), Some(d)) = (&stat.trend, direction) {
-                                        span { class: "text-[11px] font-medium {d.class()}", "{trend}" }
+                                        span { class: "text-sm font-medium {d.class()}", "{trend}" }
                                     }
                                 }
                                 div { class: "text-2xl font-bold text-foreground", "{stat.value}" }
@@ -275,11 +275,11 @@ pub fn MziziStatsRow(props: MziziStatsRowProps) -> Element {
                                     span { class: "size-4", style: "{tint}", {stat.icon.clone()} }
                                 }
                                 div { class: "min-w-0",
-                                    div { class: "text-[10px] text-muted-foreground", "{stat.label}" }
-                                    div { class: "flex items-baseline gap-1.5",
-                                        span { class: "text-[13px] font-semibold text-foreground", "{stat.value}" }
+                                    div { class: "text-sm text-muted-foreground", "{stat.label}" }
+                                    div { class: "flex items-baseline gap-2",
+                                        span { class: "text-sm font-semibold text-foreground", "{stat.value}" }
                                         if let (Some(trend), Some(d)) = (&stat.trend, direction) {
-                                            span { class: "text-[10px] font-medium {d.inline_class()}", "{trend}" }
+                                            span { class: "text-sm font-medium {d.inline_class()}", "{trend}" }
                                         }
                                     }
                                 }

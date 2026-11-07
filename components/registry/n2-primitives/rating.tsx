@@ -57,7 +57,7 @@ function Rating({
         data-readonly=""
         role="img"
         aria-label={label ?? `${spoken} out of ${max} stars`}
-        className={cn("inline-flex items-center gap-1", className)}
+        className={cn("inline-flex items-center gap-2", className)}
       >
         {Array.from({ length: max }, (_, i) => {
           const isFilled = i + 1 <= controlledValue
@@ -88,7 +88,7 @@ function Rating({
       data-portal="https://mzizi.dev/components/rating"
       role="group"
       aria-label={label ?? "Rating"}
-      className={cn("inline-flex items-center gap-1", className)}
+      className={cn("inline-flex items-center gap-2", className)}
       onMouseLeave={() => setHoverValue(null)}
     >
       {Array.from({ length: max }, (_, i) => {

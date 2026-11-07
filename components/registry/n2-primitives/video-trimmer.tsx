@@ -134,7 +134,7 @@ function VideoTrimmer({
 
       {/* Range inputs for keyboard accessibility */}
       <div className="flex gap-4">
-        <label className="flex-1 text-[10px] text-muted-foreground">
+        <label className="flex-1 text-sm text-muted-foreground">
           Start
           <input
             type="range"
@@ -146,7 +146,7 @@ function VideoTrimmer({
             className="mt-0.5 h-1 w-full accent-[var(--color-malachite,#64FFDA)]"
           />
         </label>
-        <label className="flex-1 text-[10px] text-muted-foreground">
+        <label className="flex-1 text-sm text-muted-foreground">
           End
           <input
             type="range"

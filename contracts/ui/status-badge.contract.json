@@ -84,8 +84,8 @@
     {
       "part": "status-badge",
       "select": "span",
-      "fine": 20,
-      "coarse": 20
+      "fine": 24,
+      "coarse": 24
     }
   ],
   "theming": {

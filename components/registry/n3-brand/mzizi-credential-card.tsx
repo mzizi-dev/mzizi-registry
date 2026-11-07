@@ -70,7 +70,7 @@ function MziziCredentialCard({
       >
         <div className="flex items-center gap-3">
           <div className="size-10 rounded-full bg-muted" />
-          <div className="flex-1 space-y-1.5">
+          <div className="flex-1 space-y-2">
             <div className="h-3.5 w-1/2 rounded bg-muted" />
             <div className="h-2.5 w-1/3 rounded bg-muted" />
           </div>
@@ -99,20 +99,20 @@ function MziziCredentialCard({
     >
       <div className="flex items-start gap-3">
         <div className="flex size-11 shrink-0 items-center justify-center rounded-[var(--radius-inner,7px)] bg-[var(--color-tanzanite)]/10">
-          <Award className="size-6 text-[var(--color-tanzanite)]" />
+          <Award className="size-6 text-tanzanite-text" />
         </div>
         <div className="min-w-0 flex-1">
           <div className="flex items-start justify-between gap-2">
             <div>
               <h4 className="text-sm font-semibold text-foreground">{name}</h4>
               {credentialType && (
-                <span className="text-[10px] font-medium tracking-wider text-muted-foreground uppercase">
+                <span className="text-sm font-medium tracking-wider text-muted-foreground uppercase">
                   {credentialType}
                 </span>
               )}
             </div>
             <span
-              className="flex shrink-0 items-center gap-1 rounded-full px-2 py-0.5 text-[10px] font-semibold"
+              className="flex shrink-0 items-center gap-2 rounded-full px-2 py-0.5 text-sm font-semibold"
               style={{
                 backgroundColor: `color-mix(in srgb, ${sc.color} 15%, transparent)`,
                 color: sc.color,
@@ -122,17 +122,17 @@ function MziziCredentialCard({
               {sc.label}
             </span>
           </div>
-          <div className="mt-2 flex flex-col gap-1 text-xs text-muted-foreground">
-            <span className="flex items-center gap-1.5">
+          <div className="mt-2 flex flex-col gap-2 text-xs text-muted-foreground">
+            <span className="flex items-center gap-2">
               <Building2 className="size-3" />
               {issuingBody}
             </span>
             {licenseNumber && (
-              <span className="font-mono text-[10px]">License: {licenseNumber}</span>
+              <span className="font-mono text-sm">License: {licenseNumber}</span>
             )}
             <div className="flex items-center gap-3">
               {issuedDate && (
-                <span className="flex items-center gap-1">
+                <span className="flex items-center gap-2">
                   <Calendar className="size-3" />
                   Issued: {issuedDate}
                 </span>
@@ -141,7 +141,7 @@ function MziziCredentialCard({
             </div>
           </div>
           {verifiedByPlatform && (
-            <div className="mt-2 flex items-center gap-1 text-[10px] font-medium text-[var(--color-tanzanite)]">
+            <div className="mt-2 flex items-center gap-2 text-sm font-medium text-tanzanite-text">
               <Shield className="size-3" />
               Platform Verified
             </div>

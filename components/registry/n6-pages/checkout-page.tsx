@@ -53,7 +53,7 @@ export function CheckoutPage({
       className={cn("mx-auto flex max-w-lg flex-col gap-6 p-4", className)}
     >
       {step !== "processing" && step !== "confirmed" && (
-        <nav aria-label="Checkout steps" className="flex gap-1">
+        <nav aria-label="Checkout steps" className="flex gap-2">
           {STEPS.map((s, i) => (
             <div
               key={s}

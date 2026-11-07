@@ -88,7 +88,7 @@ function TreeNodeItem({
     <div data-slot="tree-node" role="treeitem" aria-expanded={hasChildren ? isExpanded : undefined}>
       <div
         className={cn(
-          "flex cursor-pointer items-center gap-1.5 rounded-[var(--radius-md,12px)] px-2 py-1.5 transition-colors hover:bg-muted",
+          "flex cursor-pointer items-center gap-2 rounded-[var(--radius-md,12px)] px-2 py-1.5 transition-colors hover:bg-muted",
           "outline-none focus-visible:ring-[3px] focus-visible:ring-ring/50"
         )}
         style={{ paddingLeft: `${level * 20 + 8}px` }}

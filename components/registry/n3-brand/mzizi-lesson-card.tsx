@@ -66,7 +66,7 @@ export function MziziLessonCard({
       >
         <div className="flex gap-3">
           <div className="size-10 shrink-0 rounded-[var(--radius-sm,7px)] bg-muted" />
-          <div className="flex-1 space-y-1.5">
+          <div className="flex-1 space-y-2">
             <div className="h-3.5 w-2/3 rounded bg-muted" />
             <div className="h-2.5 w-1/3 rounded bg-muted" />
           </div>
@@ -103,20 +103,20 @@ export function MziziLessonCard({
           >
             {title}
           </h3>
-          <p className="text-[11px] text-muted-foreground">
+          <p className="text-sm text-muted-foreground">
             {language}
             {targetLanguage ? ` → ${targetLanguage}` : ""}
           </p>
         </div>
         {streak != null && streak > 0 && (
-          <div className="flex shrink-0 items-center gap-1 rounded-full bg-[var(--color-gold,#FFD740)]/10 px-2 py-0.5 text-[10px] font-bold text-[var(--color-gold,#FFD740)]">
+          <div className="flex shrink-0 items-center gap-2 rounded-full bg-[var(--color-gold,#FFD740)]/10 px-2 py-0.5 text-sm font-bold text-[var(--color-gold-text,#FFD740)]">
             🔥 {streak}
           </div>
         )}
       </div>
       {progress > 0 && (
-        <div className="space-y-1">
-          <div className="flex justify-between text-[10px] text-muted-foreground">
+        <div className="space-y-2">
+          <div className="flex justify-between text-sm text-muted-foreground">
             <span>{completedLessons ?? Math.round(progress)}% complete</span>
             {totalLessons && (
               <span>
@@ -133,7 +133,7 @@ export function MziziLessonCard({
         </div>
       )}
       <div className="flex items-center justify-between">
-        <div className="flex items-center gap-2 text-[10px] text-muted-foreground">
+        <div className="flex items-center gap-2 text-sm text-muted-foreground">
           {difficulty && (
             <span
               className="rounded-full px-1.5 py-0.5 capitalize"
@@ -153,7 +153,7 @@ export function MziziLessonCard({
               e.stopPropagation()
               onStart()
             }}
-            className="h-10 rounded-full bg-[var(--color-cobalt,#00B0FF)] px-4 text-[12px] font-medium text-[var(--brand-accent-foreground,#0A0A0A)] hover:opacity-80"
+            className="h-10 rounded-full bg-[var(--color-cobalt,#00B0FF)] px-4 text-sm font-medium text-[var(--brand-accent-foreground,#0A0A0A)] hover:opacity-80"
           >
             {progress > 0 ? "Continue" : "Start"}
           </button>

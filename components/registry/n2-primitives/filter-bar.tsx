@@ -107,7 +107,7 @@ function FilterBar({
         <Button
           variant="ghost"
           size="sm"
-          className="min-h-11 gap-1 px-3 text-xs text-muted-foreground"
+          className="min-h-11 gap-2 px-3 text-xs text-muted-foreground"
           onClick={() => setSelected([])}
         >
           <X className="size-3" aria-hidden="true" />

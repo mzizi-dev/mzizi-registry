@@ -72,7 +72,7 @@ function ColorPicker({ value = "#0047AB", onChange, className }: ColorPickerProp
       </div>
       <div className="flex flex-col gap-2">
         <span className="text-xs font-medium text-muted-foreground">Minerals</span>
-        <div className="flex flex-wrap gap-1.5">
+        <div className="flex flex-wrap gap-2">
           {MINERAL_PRESETS.map(({ name, hex: presetHex }) => (
             <button
               key={name}
@@ -89,7 +89,7 @@ function ColorPicker({ value = "#0047AB", onChange, className }: ColorPickerProp
           ))}
         </div>
         <span className="text-xs font-medium text-muted-foreground">Common</span>
-        <div className="flex flex-wrap gap-1.5">
+        <div className="flex flex-wrap gap-2">
           {COMMON_PRESETS.map((presetHex) => (
             <button
               key={presetHex}

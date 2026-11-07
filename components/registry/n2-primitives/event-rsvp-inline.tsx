@@ -51,7 +51,7 @@ function EventRsvpInline({
           {attendeeCount ? ` · ${attendeeCount} going` : ""}
         </div>
         {onRsvp && (
-          <div className="mt-2 flex gap-1.5">
+          <div className="mt-2 flex gap-2">
             {(["going", "maybe", "declined"] as const).map((status) => (
               <button
                 key={status}
@@ -60,9 +60,9 @@ function EventRsvpInline({
                   "h-8 flex-1 rounded-full text-xs font-medium capitalize transition-colors",
                   rsvpStatus === status
                     ? status === "going"
-                      ? "bg-[var(--color-malachite,#64FFDA)]/15 text-[var(--color-malachite,#64FFDA)]"
+                      ? "bg-[var(--color-malachite,#64FFDA)]/15 text-[var(--color-malachite-text,#64FFDA)]"
                       : status === "maybe"
-                        ? "bg-[var(--color-gold,#FFD740)]/15 text-[var(--color-gold,#FFD740)]"
+                        ? "bg-[var(--color-gold,#FFD740)]/15 text-[var(--color-gold-text,#FFD740)]"
                         : "bg-muted text-muted-foreground"
                     : "border border-border hover:bg-muted/30"
                 )}

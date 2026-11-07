@@ -2,7 +2,7 @@
 _schemaVersion: "v1"
 covenant: "A brand component is a primitive with Ubuntu in it."
 currentVersion: 3
-description: "Primitives wrapped in Ubuntu philosophy. Brand components consume the harness for observability, motion and accessibility, and N2 primitives never do. In the React build every one destructures { log, motion, LiveRegion } from useMziziHarness (lib/harness in mzizi-dev/mzizi-registry); the Rust build (Dioxus, in the mzizi-brand crate) and the Astro build take the facility they branch on, usually reduced motion, as a prop (docs/roots/RFC-roots.md). The component stays framework-specific: Astro by default, Dioxus on the Rust path, React kept at parity, Swift / Kotlin / ArkTS / React Native idiomatic native."
+description: "Primitives wrapped in Ubuntu philosophy. Brand components consume the harness for observability, motion and accessibility, and N2 primitives never do. In the React build every one destructures { log, motion, LiveRegion } from useMziziHarness (lib/harness in mzizi-dev/mzizi-registry); the Rust build (in the mzizi-brand crate) and the Astro build take the facility they branch on, usually reduced motion, as a prop (docs/roots/RFC-roots.md). The component stays framework-specific: Astro by default, Mzizi Roots on the Rust path, React kept at parity, Swift / Kotlin / ArkTS / React Native idiomatic native."
 dnaRole: "documentation"
 doctrineVersion: "4.1.0"
 helix_model: "double-helix"
@@ -21,12 +21,11 @@ rust:
   kind: "ui-framework"
   note: "The N2/N3 boundary is unchanged by any of this: N3 takes the harness, N2 never does, whatever language the build is written in. In Rust and Astro the harness is props rather than a context, which keeps the boundary visible in every component signature."
   state: "shipped"
-  today: "The mzizi-brand crate (Mzizi Roots, on crates.io) ships Dioxus brand components — cards, stats, alerts and states — each generated from a registry .rs sibling with a checkable contract, taking harness facilities as props. The React harness is lib/harness/index.tsx, a TypeScript React context. Astro brand builds exist for some components and are growing; the registry files are the inventory."
-  target: "Every brand component in Astro (the default), Dioxus and React, each the same component under one contract. The harness stays per build — a React context, props in Astro and Rust — rather than one WASM module, because what it carries is browser facilities, not shared logic. Native targets get the contract and the tokens, not source."
+  today: "The mzizi-brand crate (Mzizi Roots, on crates.io) ships Rust brand components — cards, stats, alerts and states — each generated from a registry .rs sibling with a checkable contract, taking harness facilities as props. The React harness is lib/harness/index.tsx, a TypeScript React context. Astro brand builds exist for some components and are growing; the registry files are the inventory."
+  target: "Every brand component in Astro (the default), Rust and React, each the same component under one contract. The harness stays per build — a React context, props in Astro and Rust — rather than one WASM module, because what it carries is browser facilities, not shared logic. Native targets get the contract and the tokens, not source."
   position: "alternative"
   descriptors:
   - "astro"
-  - "dioxus"
   - "react"
 sort_order: 3
 stakeholder: "Brand system steward"

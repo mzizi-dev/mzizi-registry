@@ -46,7 +46,7 @@ function SourceCitation({
       data-slot="source-citation"
       data-portal="https://mzizi.dev/components/source-citation"
       className={cn(
-        "group flex flex-col gap-1.5 rounded-[var(--radius-xl,17px)] bg-card p-3 text-sm ring-1 ring-foreground/10",
+        "group flex flex-col gap-2 rounded-[var(--radius-xl,17px)] bg-card p-3 text-sm ring-1 ring-foreground/10",
         className
       )}
       {...props}
@@ -56,7 +56,7 @@ function SourceCitation({
           href={url}
           target="_blank"
           rel="noopener noreferrer"
-          className="inline-flex items-center gap-1.5 font-medium text-foreground transition-colors hover:text-primary"
+          className="inline-flex items-center gap-2 font-medium text-foreground transition-colors hover:text-primary"
         >
           {title}
           <ExternalLink className="size-3 shrink-0 text-muted-foreground" />

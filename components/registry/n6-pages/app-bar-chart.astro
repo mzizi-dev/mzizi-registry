@@ -14,7 +14,7 @@
  * figures are in a real table under "Show the figures" (WCAG 1.1.1, 1.4.1).
  *
  * Follows the Mzizi registry's `chart` contract (bar variants), whose
- * builds are Recharts (React) and Dioxus; this is the Astro build, with no
+ * builds are Recharts (React) and Rust; this is the Astro build, with no
  * client island. Bar sizes are SVG geometry attributes (a `<rect>`'s
  * `height` or `width` in a 0–100 viewBox), never inline `style`, so a page's
  * Content-Security-Policy needs no `style-src-attr 'unsafe-inline'`.
@@ -97,7 +97,7 @@ const phoneLabelClass = "absolute top-0 left-1/2 -translate-x-1/2 whitespace-now
     ) : (
       <ul class="grid gap-3" aria-hidden="true">
         {data.map((d) => (
-          <li class="grid gap-1 sm:grid-cols-[minmax(0,12rem)_minmax(0,1fr)] sm:items-center sm:gap-4">
+          <li class="grid gap-2 sm:grid-cols-[minmax(0,12rem)_minmax(0,1fr)] sm:items-center sm:gap-4">
             <span class="truncate text-body-sm">{d.label}</span>
             <span class="flex items-center gap-3">
               <span class="h-3 min-w-0 flex-1 overflow-hidden rounded-full bg-muted">

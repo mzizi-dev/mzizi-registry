@@ -33,7 +33,7 @@ Brief description of what this PR does and why.
 - [ ] All packages at latest (run `pnpm outdated` — zero results allowed)
 - [ ] No hardcoded colors — using CSS custom properties from `globals.css`
 - [ ] Brand wordmarks are lowercase: `mukoko`, `nyuchi`, `shamwari`, `bundu`
-- [ ] Accessibility: APCA Lc 90+ body text, Lc 75+ large text, 56px default / 48px minimum touch targets
+- [ ] Accessibility (the Bundu floor, `BUNDU_FLOOR` in `lib/tokens/roles.source.ts`): body text 17px and captions 14px, a 49px hit region on every control on every device (a desktop control may be drawn smaller but keeps it), contrast 7:1 body, 4.5:1 non-body, 3:1 UI
 - [ ] Ubuntu design checklist: shared devices, 3G performant, localisable strings
 - [ ] AI output runs through `fullSafetyCheck()` + `validateCulturalContext()` (if AI features touched)
 
@@ -50,6 +50,7 @@ Brief description of what this PR does and why.
 - [ ] `CHANGELOG.md` updated
 - [ ] `openapi.yaml` updated if API surface changed
 - [ ] Version bumped in `package.json`, and a new entry added to `content/changelog/releases.json` (then `pnpm changelog:generate`), if releasing
+- [ ] Release PR (`release/*` into `main`): the body carries the release notes, the `CHANGELOG.md` entries being released (the `release notes / release PR` job prints them in its run summary)
 
 ## Site/docs/skills impact
 

@@ -50,7 +50,7 @@ function WalletConnectButton({
           <span className="font-mono text-xs">
             {address ? truncateAddress(address) : "Connected"}
           </span>
-          {network && <span className="text-[10px] text-muted-foreground">({network})</span>}
+          {network && <span className="text-sm text-muted-foreground">({network})</span>}
         </>
       ) : (
         <span>Connect Wallet</span>

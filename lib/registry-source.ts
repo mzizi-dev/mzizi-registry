@@ -152,7 +152,7 @@ export function readComponentSource(name: string): string | null {
  *
  * Returns `null` when the component has no implementation for that target, which is the
  * honest answer for the many components that are TypeScript-only: `/api/v1/rs/{name}` 404s
- * rather than pretending a Dioxus version exists (CLAUDE.md §8.9 — never present a
+ * rather than pretending a Rust version exists (CLAUDE.md §8.9 — never present a
  * `metadata_only` target as though components exist for it).
  */
 export function readComponentSourceFor(name: string, ext: string): string | null {

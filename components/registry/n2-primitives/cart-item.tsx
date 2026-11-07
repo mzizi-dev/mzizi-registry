@@ -55,11 +55,11 @@ function CartItem({
       <div className="size-16 shrink-0 overflow-hidden rounded-[var(--radius-lg,14px)] bg-muted">
         <img src={image} alt={title} className="size-full object-cover" />
       </div>
-      <div className="flex min-w-0 flex-1 flex-col gap-1">
+      <div className="flex min-w-0 flex-1 flex-col gap-2">
         <h4 className="truncate text-sm font-medium text-foreground">{title}</h4>
         <span className="text-sm text-muted-foreground">{formatter.format(price)} each</span>
       </div>
-      <div className="flex items-center gap-1.5">
+      <div className="flex items-center gap-2">
         <button
           type="button"
           onClick={() => onQuantityChange(Math.max(1, quantity - 1))}

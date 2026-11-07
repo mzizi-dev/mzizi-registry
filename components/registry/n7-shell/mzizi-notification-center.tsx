@@ -66,7 +66,7 @@ export function MziziNotificationCenter({
           <div className="flex items-center gap-2">
             <h2 className="text-sm font-semibold">Notifications</h2>
             {unreadCount > 0 && (
-              <span className="rounded-full bg-primary px-1.5 py-0.5 text-[10px] font-bold text-primary-foreground">
+              <span className="rounded-full bg-primary px-1.5 py-0.5 text-sm font-bold text-primary-foreground">
                 {unreadCount}
               </span>
             )}
@@ -125,11 +125,11 @@ export function MziziNotificationCenter({
                     <p className="mt-0.5 line-clamp-2 text-xs text-muted-foreground">{n.message}</p>
                   )}
                   <div className="mt-1 flex items-center gap-2">
-                    <time className="text-[10px] text-muted-foreground/60">{n.timestamp}</time>
+                    <time className="text-sm text-muted-foreground/60">{n.timestamp}</time>
                     {n.action && (
                       <button
                         onClick={n.action.onClick}
-                        className="text-[10px] text-primary hover:underline"
+                        className="text-sm text-primary hover:underline"
                       >
                         {n.action.label}
                       </button>

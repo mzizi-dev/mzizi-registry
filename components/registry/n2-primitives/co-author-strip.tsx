@@ -19,7 +19,7 @@ function CoAuthorStrip({ authors, className, ...props }: CoAuthorStripProps) {
     <div
       data-slot="co-author-strip"
       data-portal="https://mzizi.dev/components/co-author-strip"
-      className={cn("flex items-center gap-1.5", className)}
+      className={cn("flex items-center gap-2", className)}
       aria-label={`Co-authored by ${authors.map((a) => a.name).join(", ")}`}
       {...props}
     >
@@ -27,7 +27,7 @@ function CoAuthorStrip({ authors, className, ...props }: CoAuthorStripProps) {
         {authors.map((author) => (
           <div
             key={author.id}
-            className="flex size-6 items-center justify-center rounded-full bg-muted text-[9px] font-medium ring-2 ring-background"
+            className="flex size-6 items-center justify-center rounded-full bg-muted text-sm font-medium ring-2 ring-background"
             title={`${author.name} (${author.revenueSharePct}%)`}
           >
             {author.avatar ? (
@@ -42,7 +42,7 @@ function CoAuthorStrip({ authors, className, ...props }: CoAuthorStripProps) {
           </div>
         ))}
       </div>
-      <span className="text-[10px] text-muted-foreground">
+      <span className="text-sm text-muted-foreground">
         {authors.length} authors · {authors.map((a) => `${a.revenueSharePct}%`).join("/")} split
       </span>
     </div>

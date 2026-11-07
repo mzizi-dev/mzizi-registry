@@ -33,6 +33,7 @@ import {
   type MineralToken,
   type HeritageToken,
 } from "./palette.generated"
+import { BUNDU_FLOOR } from "./roles.source"
 
 // The seven minerals + seven heritage tones are the single source of truth for
 // the palette and are generated from the DB (see palette.generated.ts). Re-export
@@ -142,16 +143,16 @@ export const primitives = {
 
   // Type scale (canonical)
   fontSize: {
-    caption: { value: "12px", description: "0.75rem — Labels, metadata, timestamps" },
-    bodySmall: { value: "14px", description: "0.875rem — Secondary text, descriptions" },
-    body: { value: "16px", description: "1rem — Default body text" },
+    caption: { value: "14px", description: "0.875rem — Labels, metadata, timestamps: the Bundu caption floor, never smaller" },
+    bodySmall: { value: "14px", description: "0.875rem — Secondary text: the Bundu caption floor on every device" },
+    body: { value: "17px", description: "1.0625rem — Default body text on every device, desktop included: the Bundu body floor (Apple Body 17 pt)" },
     bodyLarge: { value: "18px", description: "1.125rem — Lead paragraphs" },
-    h5: { value: "20px", description: "1.25rem — Noto Sans 600 — Small headings" },
-    h4: { value: "24px", description: "1.5rem — Noto Sans 600 — Card titles" },
-    h3: { value: "30px", description: "1.875rem — Noto Serif 600 — Sub-sections" },
-    h2: { value: "36px", description: "2.25rem — Noto Serif 600 — Section headings" },
-    h1: { value: "48px", description: "3rem — Noto Serif 700 — Page titles" },
-    display: { value: "72px", description: "4.5rem — Noto Serif 700 — Hero headlines" },
+    h5: { value: "17px", description: "1.0625rem — Noto Sans 600 — Small headings (Apple Headline 17 pt)" },
+    h4: { value: "20px", description: "1.25rem — Noto Sans 600 — Card titles (Apple Title 3 20 pt)" },
+    h3: { value: "22px", description: "1.375rem — Noto Serif 600 — Sub-sections (Apple Title 2 22 pt)" },
+    h2: { value: "28px", description: "1.75rem — Noto Serif 600 — Section headings (Apple Title 1 28 pt)" },
+    h1: { value: "34px", description: "2.125rem — Noto Serif 700 — Page titles (Apple Large Title 34 pt)" },
+    display: { value: "40px", description: "2.5rem — Noto Serif 700 — Hero headlines; 48px tablet and desktop" },
   },
 
   fontWeight: {
@@ -165,8 +166,18 @@ export const primitives = {
   // ─── TOUCH TARGETS (canonical) ──────────────
   // APCA 3.0 AAA accessibility standard
   touchTarget: {
-    default: { value: "56px", description: "Default interactive element height" },
-    sm: { value: "48px", description: "Minimum — NEVER below this" },
+    default: { value: "49px", description: "Default interactive element height: the Bundu hit area, 7 x 7 (above Apple's 44x44 pt)" },
+    sm: { value: "49px", description: "Minimum hit region on every device, desktop included — NEVER below this (a desktop control may be drawn smaller, down to 28px, but keeps this hit region)" },
+  },
+
+  // ─── SPACING FLOOR (owner, 2026-11-04, #617) ─
+  // Minimums nothing can go under, read from BUNDU_FLOOR.spacing (lib/tokens/roles.source.ts), never retyped.
+  spacingFloor: {
+    inset: { value: `${BUNDU_FLOOR.spacing.insetPx}px`, cssVar: "--inset-floor", description: "Least padding between text and the edge of its container (2 x 7). A control's label on the inline axis; a card, panel, dialog, alert or popover on both axes." },
+    controlGap: { value: `${BUNDU_FLOOR.spacing.controlGapPx}px`, cssVar: "--gap-floor", description: "Least gap between adjacent interactive controls, visible edge to visible edge. Hit regions may touch, never overlap." },
+    labelGap: { value: `${BUNDU_FLOOR.spacing.labelGapPx}px`, cssVar: "--gap-floor", description: "Least gap between a label and its field." },
+    itemGap: { value: `${BUNDU_FLOOR.spacing.itemGapPx}px`, cssVar: "--gap-floor", description: "Least gap between sibling items in a list, grid, stack or toolbar." },
+    leadingBody: { value: `${BUNDU_FLOOR.spacing.leadingBody}`, cssVar: "--leading-floor", description: "Least body line height (WCAG 1.4.12). Headings and display type keep their own tighter leading." },
   },
 
   // ─── MOTION (canonical) ─────────────────────
@@ -771,9 +782,9 @@ export const componentTokens = {
   bottomNav: { height: "80px", fabSize: "52px", fabRise: "24px" },
   sidebar: { width: "256px", collapsedWidth: "64px" },
   avatar: { sm: "32px", md: "40px", lg: "64px", xl: "80px", xxl: "120px" },
-  badge: { height: "20px", padding: "0 8px", fontSize: "10px" },
-  input: { height: "48px" },
-  button: { height: "56px", heightSm: "48px", heightLg: "56px" },
+  badge: { height: "24px", padding: "0 8px", fontSize: "14px" },
+  input: { height: "49px" },
+  button: { height: "49px", heightSm: "49px", heightLg: "56px" },
   card: { padding: "16px", gap: "14px" },
   page: { maxWidth: "1280px", margin: "20px" },
   focusRing: { width: "2px", offset: "2px", color: "var(--ring)" },
@@ -837,6 +848,11 @@ export function generateCSSVariables(theme: ThemeMode = "dark", brand: BrandId =
   // Touch targets
   lines.push(`  --touch-target: ${primitives.touchTarget.default.value};`)
   lines.push(`  --touch-target-sm: ${primitives.touchTarget.sm.value};`)
+
+  // Spacing floor (#617)
+  lines.push(`  --inset-floor: ${primitives.spacingFloor.inset.value};`)
+  lines.push(`  --gap-floor: ${primitives.spacingFloor.controlGap.value};`)
+  lines.push(`  --leading-floor: ${primitives.spacingFloor.leadingBody.value};`)
 
   // Motion
   for (const [key, val] of Object.entries(primitives.motion.duration)) {
@@ -1475,6 +1491,7 @@ export function generateTokensJSON(): string {
       spacing: primitives.spacing,
       motion: primitives.motion,
       touchTarget: primitives.touchTarget,
+      spacingFloor: primitives.spacingFloor,
       brandOverrides,
       chartColors: mineralChartColors,
       status: statusTokens,
