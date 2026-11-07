@@ -23,7 +23,7 @@ export function AddressCode({ code, href, linkLabel = "Open", label = "Address",
       data-slot="address-code"
       data-portal="https://mzizi.dev/components/address-code"
       className={cn(
-        "inline-flex min-h-11 max-w-full min-w-0 items-center gap-1 rounded-full border border-border bg-card ps-4 pe-1 text-foreground",
+        "inline-flex min-h-11 max-w-full min-w-0 items-center gap-2 rounded-full border border-border bg-card ps-4 pe-1 text-foreground",
         !href && "pe-4",
         className
       )}
@@ -37,7 +37,7 @@ export function AddressCode({ code, href, linkLabel = "Open", label = "Address",
           href={href}
           data-slot="address-code-link"
           aria-label={`${linkLabel} ${label.toLowerCase()} ${code}`}
-          className="inline-flex h-11 shrink-0 items-center rounded-full px-3 text-body-sm font-medium text-primary no-underline outline-none hover:bg-muted focus-visible:ring-[3px] focus-visible:ring-ring/50"
+          className="inline-flex h-11 shrink-0 items-center rounded-full px-3.5 text-body-sm font-medium text-primary no-underline outline-none hover:bg-muted focus-visible:ring-[3px] focus-visible:ring-ring/50"
         >
           {linkLabel}
         </a>

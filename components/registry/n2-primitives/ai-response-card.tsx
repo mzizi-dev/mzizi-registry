@@ -44,7 +44,7 @@ function AiResponseCard({
       {sources && sources.length > 0 && (
         <div data-slot="ai-response-sources" className="flex flex-col gap-2">
           <span className="text-xs font-medium text-muted-foreground">Sources</span>
-          <div className="flex flex-col gap-1.5">
+          <div className="flex flex-col gap-2">
             {sources.map((source, i) => (
               <a
                 key={i}

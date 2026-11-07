@@ -1,7 +1,6 @@
 ---
 name: mzizi-architecture
-description: Use this skill before you start a new Mzizi app, site, console or page, before you add a page to one, and whenever you decide where code, data or a component belongs. It covers three architectures. Design architecture is the DNA helix (8 nodes, 4 rungs, 6 strands), read live from api.mzizi.dev/v1/architecture or mzizi_get_architecture, with what each placement obliges. App architecture puts the shell first. Every app or page mounts exactly one shell before anything else. AppShell from @bundu/ui serves a signed-in app or console (the Mzizi Dashboard Standard), and DiscoverShell serves a public discover or browse site (the Mzizi Discover Standard). A check shows that the shell is installed and wraps every page, followed by the page patterns, the five application layers and the rule that a missing component goes upstream. System architecture covers Rust first, Astro as the default UI, Cloudflare Workers, the four API gateways, files as the registry's data layer at a pinned commit, the domain databases each owned by one service, and what is decided versus built. Use it when an app was built without a shell, when a page invents its own chrome, or when someone asks how the pieces fit.
-user-invocable: true
+description: Use this skill before you start a new Mzizi app, site, console or page, before you add a page to one, and whenever you decide where code, data or a component belongs. Design architecture is the DNA helix (8 nodes, 4 rungs, 6 strands), read live from api.mzizi.dev/v1/architecture or mzizi_get_architecture, with what each placement obliges. App architecture puts the shell first: every app or page mounts exactly one shell before anything else (AppShell for a signed-in app, the Dashboard Standard; DiscoverShell for a public browse site, the Discover Standard), then the page patterns, the five application layers, and the rule that a missing component goes upstream. System architecture covers Rust first, Astro as the default UI, Cloudflare Workers, the four API gateways, files as the registry's data layer at a pinned commit, one service per domain database, and what is decided versus built. Use it when an app lacks a shell, a page invents its own chrome, or someone asks how the pieces fit.
 ---
 
 # Mzizi architecture: design, app and system
@@ -221,15 +220,15 @@ applies.
 - [ ] Shell chosen from the surface table, its contract read, and `@bundu/ui` installed.
 - [ ] One layout mounts the shell, and every page uses it (the check in step 3 prints nothing).
 - [ ] Pages built from the Standard's patterns, with no hand-rolled header, nav or footer.
-- [ ] Tokens and brand overlay from `mzizi-design`. No local colour, radius, spacing or type.
+- [ ] Tokens and brand overlay from `mzizi-design`. No local colour, radius, spacing or type. Nothing under the spacing floor (14px inset, 7px gaps between controls, labels and items, 1.5 leading); `mzizi check` passes.
 - [ ] Data read through the owning gateway. No new direct database read.
 - [ ] Anything missing or wrong in the registry raised upstream, with any local stopgap marked
       `TODO(mzizi): <PR URL>`.
 
 ## See also
 
-- `mzizi-design`: tokens, brand overlays, Apple HIG and where Mzizi overrides it, and the 48px
-  floor.
+- `mzizi-design`: tokens, brand overlays, Apple HIG and where Mzizi overrides it, and the Bundu
+  floor (17px body, 14px captions, a 49px hit region, and the spacing floor: 14px inset, 7px gaps, 1.5 leading) with the desktop density layer.
 - `mzizi-roots`: the components, Rust first. "Starting an app" covers project setup, and
   "Contributing a component" covers adding one upstream.
 - `mzizi-backend`: Workers and MCP servers.

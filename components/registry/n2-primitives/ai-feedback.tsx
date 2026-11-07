@@ -33,7 +33,7 @@ function AiFeedback({
       className={cn("flex flex-col gap-2", className)}
       {...props}
     >
-      <div className="flex items-center gap-1">
+      <div className="flex items-center gap-2">
         <button
           onClick={() => handleFeedback("positive")}
           aria-label="Helpful"

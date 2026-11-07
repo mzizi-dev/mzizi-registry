@@ -22,7 +22,8 @@ anything:
   contributing a component.
 - `mzizi-backend` for Workers and MCP servers, `mzizi-language` for `.mz` files, and
   `discoverability` for preview images and structured data.
-- `digital-hygiene` and `progress-report` for any dev work.
+- `digital-hygiene`, `progress-report`, `ship-release`, `registry-propagation` and `pr-gates` for
+  any dev work.
 
 ## Tools
 

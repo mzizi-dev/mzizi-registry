@@ -73,7 +73,7 @@ from:
 Each level and each attestation has a role defined once in `lib/tokens/roles.source.ts` and
 emitted by `pnpm tokens:sync` with light and dark values. Each carries the same four parts as a
 status tone: `--<name>` (icons, bars, tinted fills), `--<name>-container`,
-`--<name>-on-container` and `--<name>-text`. All of them pass the APCA contrast gate in both
+`--<name>-on-container` and `--<name>-text`. All of them pass the APCA contrast gate and the WCAG minimums (7:1 for text, 3:1 for UI) in both
 themes; where a family's own value misses its bar (sodalite's dark base, Lc 26.9 on the dark
 page), the role carries a measured, walked value instead.
 

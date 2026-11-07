@@ -32,7 +32,7 @@ function Sidebar03() {
         </div>
       </div>
       <Separator />
-      <nav className="flex-1 space-y-1 p-3">
+      <nav className="flex-1 space-y-2 p-3">
         {navItems.map((item) => (
           <Button key={item.label} variant="ghost" className="w-full justify-start gap-3" size="sm">
             <item.icon className="size-4" />

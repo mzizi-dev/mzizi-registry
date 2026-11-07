@@ -107,7 +107,7 @@ function EnvEditor({
       <button
         type="button"
         onClick={addVariable}
-        className="flex items-center gap-1.5 self-start rounded-[var(--radius-lg,14px)] px-3 py-1.5 text-sm font-medium text-muted-foreground transition-colors hover:bg-muted hover:text-foreground"
+        className="flex items-center gap-2 self-start rounded-[var(--radius-lg,14px)] px-3 py-1.5 text-sm font-medium text-muted-foreground transition-colors hover:bg-muted hover:text-foreground"
       >
         <Plus className="size-4" />
         Add variable

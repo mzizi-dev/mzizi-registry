@@ -173,9 +173,9 @@ pub mod classes {
         "text-sm font-semibold mt-3 mb-1 first:mt-0 text-muted-foreground",
     ];
     /// A bulleted list.
-    pub const UL: &str = "my-4 list-disc space-y-1 pl-6";
+    pub const UL: &str = "my-4 list-disc space-y-2 pl-6";
     /// A numbered list.
-    pub const OL: &str = "my-4 list-decimal space-y-1 pl-6";
+    pub const OL: &str = "my-4 list-decimal space-y-2 pl-6";
     /// Added to a nested list.
     pub const NESTED: &str = "mt-1 mb-0";
     /// A blockquote.
@@ -195,9 +195,9 @@ pub mod classes {
     /// A table.
     pub const TABLE: &str = "w-full border-collapse text-sm";
     /// A header cell.
-    pub const TH: &str = "border border-border px-3 py-2 font-medium";
+    pub const TH: &str = "border border-border px-3.5 py-3.5 font-medium";
     /// A body cell.
-    pub const TD: &str = "border border-border px-3 py-2";
+    pub const TD: &str = "border border-border px-3.5 py-3.5";
     /// Left, centre and right alignment.
     pub const LEFT: &str = "text-left";
     /// Centre.

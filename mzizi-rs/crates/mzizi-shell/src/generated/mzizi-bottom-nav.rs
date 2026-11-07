@@ -45,7 +45,7 @@ const FAB: &str = "flex size-[52px] -translate-y-6 items-center justify-center r
      transition-transform active:scale-95";
 
 const NAV_ITEM: &str = "relative flex min-w-[56px] flex-col items-center gap-[3px] py-1 \
-     text-[10px] font-medium transition-colors";
+     text-sm font-medium transition-colors";
 
 /// Props for [`MziziBottomNav`].
 #[derive(Props, Clone, PartialEq)]

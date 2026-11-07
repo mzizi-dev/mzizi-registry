@@ -29,6 +29,7 @@ import {
   evaluateChecks,
   evaluateClauses,
   evaluateDensity,
+  evaluateSpacing,
   evaluateTheming,
 } from "../../contracts/runner"
 import { loadContracts, registryFile } from "./contract-files"
@@ -67,6 +68,7 @@ describe.each(full.map((c) => [c.name, c] as const))("%s (.tsx) keeps its contra
     expect(evaluateClauses(c, rendered), "clauses").toEqual([])
     expect(evaluateChecks(c, rendered), "checks").toEqual([])
     expect(evaluateDensity(c, rendered), "density").toEqual([])
+    expect(evaluateSpacing(c, rendered), "spacing").toEqual([])
     expect(evaluateTheming(c, rendered), "theming").toEqual([])
   })
 

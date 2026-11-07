@@ -108,10 +108,10 @@ public struct MziziRoles {
         public static let surfaceQr = Color(hex: "#FFFFFF")
         public static let onSurfaceQr = Color(hex: "#0E0D0C")
         public static let textPrimary = Color(hex: "#373635")
-        public static let textSecondary = Color(hex: "#575655")
+        public static let textSecondary = Color(hex: "#504F4E")
         public static let textTertiary = Color(hex: "#6B6A69")
         public static let heroText = Color(hex: "#FFFFFF")
-        public static let mutedForeground = Color(hex: "#575655")
+        public static let mutedForeground = Color(hex: "#504F4E")
         public static let success = Color(hex: "#004D40")
         public static let warning = Color(hex: "#7A5C00")
         public static let error = Color(hex: "#B3261E")
@@ -135,7 +135,7 @@ public struct MziziRoles {
         public static let statusDanger = Color(hex: "#A0522D")
         public static let statusDangerContainer = Color(hex: "#F5E6D3")
         public static let statusDangerOnContainer = Color(hex: "#5D2906")
-        public static let statusDangerText = Color(hex: "#844425")
+        public static let statusDangerText = Color(hex: "#7B3F23")
         public static let statusPremium = Color(hex: "#4B0082")
         public static let statusPremiumContainer = Color(hex: "#F3E5F5")
         public static let statusPremiumOnContainer = Color(hex: "#2E004D")
@@ -143,7 +143,7 @@ public struct MziziRoles {
         public static let statusNeutral = Color(hex: "#55514B")
         public static let statusNeutralContainer = Color(hex: "#E5E4E1")
         public static let statusNeutralOnContainer = Color(hex: "#373635")
-        public static let statusNeutralText = Color(hex: "#575655")
+        public static let statusNeutralText = Color(hex: "#504F4E")
         public static let statusStable = Color(hex: "#004D40")
         public static let statusStableContainer = Color(hex: "#E0F2F1")
         public static let statusStableOnContainer = Color(hex: "#00332B")
@@ -159,11 +159,11 @@ public struct MziziRoles {
         public static let statusDeprecated = Color(hex: "#A0522D")
         public static let statusDeprecatedContainer = Color(hex: "#F5E6D3")
         public static let statusDeprecatedOnContainer = Color(hex: "#5D2906")
-        public static let statusDeprecatedText = Color(hex: "#844425")
+        public static let statusDeprecatedText = Color(hex: "#7B3F23")
         public static let assuranceNone = Color(hex: "#55514B")
         public static let assuranceNoneContainer = Color(hex: "#E5E4E1")
         public static let assuranceNoneOnContainer = Color(hex: "#373635")
-        public static let assuranceNoneText = Color(hex: "#575655")
+        public static let assuranceNoneText = Color(hex: "#504F4E")
         public static let assuranceOtp = Color(hex: "#0047AB")
         public static let assuranceOtpContainer = Color(hex: "#E3F2FD")
         public static let assuranceOtpOnContainer = Color(hex: "#002966")
@@ -183,7 +183,7 @@ public struct MziziRoles {
         public static let attestationCommunity = Color(hex: "#A0522D")
         public static let attestationCommunityContainer = Color(hex: "#F5E6D3")
         public static let attestationCommunityOnContainer = Color(hex: "#5D2906")
-        public static let attestationCommunityText = Color(hex: "#844425")
+        public static let attestationCommunityText = Color(hex: "#7B3F23")
         public static let attestationBusiness = Color(hex: "#004D40")
         public static let attestationBusinessContainer = Color(hex: "#E0F2F1")
         public static let attestationBusinessOnContainer = Color(hex: "#00332B")
@@ -191,15 +191,15 @@ public struct MziziRoles {
         public static let attestationDomain = Color(hex: "#BF5A36")
         public static let attestationDomainContainer = Color(hex: "#FBE4DA")
         public static let attestationDomainOnContainer = Color(hex: "#5C2410")
-        public static let attestationDomainText = Color(hex: "#894027")
+        public static let attestationDomainText = Color(hex: "#7E3B24")
         public static let tierUnverified = Color(hex: "#55514B")
         public static let tierUnverifiedContainer = Color(hex: "#E5E4E1")
         public static let tierUnverifiedOnContainer = Color(hex: "#373635")
-        public static let tierUnverifiedText = Color(hex: "#575655")
+        public static let tierUnverifiedText = Color(hex: "#504F4E")
         public static let tierCommunity = Color(hex: "#A0522D")
         public static let tierCommunityContainer = Color(hex: "#F5E6D3")
         public static let tierCommunityOnContainer = Color(hex: "#5D2906")
-        public static let tierCommunityText = Color(hex: "#844425")
+        public static let tierCommunityText = Color(hex: "#7B3F23")
         public static let tierOtp = Color(hex: "#0047AB")
         public static let tierOtpContainer = Color(hex: "#E3F2FD")
         public static let tierOtpOnContainer = Color(hex: "#002966")
@@ -239,7 +239,7 @@ public struct MziziRoles {
         public static let secondaryForeground = Color(hex: "#373635")
         public static let destructive = Color(hex: "#B3261E")
         public static let destructiveForeground = Color(hex: "#FFFFFF")
-        public static let destructiveText = Color(hex: "#9F221B")
+        public static let destructiveText = Color(hex: "#98201A")
         public static let statusError = Color(hex: "#B3261E")
         public static let overlayForeground = Color(hex: "#373635")
         public static let accent = Color(hex: "#DFE2E2")
@@ -427,15 +427,17 @@ public struct MziziRoles {
         public static let sidebarRing = Color(hex: "#86DCFF")
     }
 
-    public static let spacingTouch: CGFloat = 56
-    public static let spacingTouchMin: CGFloat = 48
-    public static let spacingControl: CGFloat = 56
-    public static let spacingControlSm: CGFloat = 48
+    public static let spacingTouch: CGFloat = 49
+    public static let spacingTouchMin: CGFloat = 49
+    public static let spacingInsetFloor: CGFloat = 14
+    public static let spacingGapFloor: CGFloat = 7
+    public static let spacingControl: CGFloat = 49
+    public static let spacingControlSm: CGFloat = 49
     public static let spacingControlLg: CGFloat = 56
-    public static let spacingControlIcon: CGFloat = 48
+    public static let spacingControlIcon: CGFloat = 49
     public static let spacingControlDense: CGFloat = 32
-    public static let spacingField: CGFloat = 56
-    public static let spacingFieldSm: CGFloat = 48
+    public static let spacingField: CGFloat = 49
+    public static let spacingFieldSm: CGFloat = 49
     public static let radiusControl: CGFloat = 9999
     public static let radiusField: CGFloat = 9999
     public static let radiusBadge: CGFloat = 9999

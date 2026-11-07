@@ -39,7 +39,7 @@ const severityColors: Record<Severity, { bg: string; text: string; dot: string }
   },
   cold: {
     bg: "bg-[var(--color-cobalt,#00B0FF)]/10",
-    text: "text-[var(--color-cobalt,#00B0FF)]",
+    text: "text-[var(--color-cobalt-text,#00B0FF)]",
     dot: "bg-[var(--color-cobalt,#00B0FF)]",
   },
 }
@@ -78,7 +78,7 @@ export function SeverityBadge({
       role="status"
       aria-label={`Severity: ${displayLabel}`}
       className={cn(
-        "inline-flex items-center gap-1.5 rounded-full px-2.5 py-0.5 text-xs font-medium",
+        "inline-flex items-center gap-2 rounded-full px-2.5 py-0.5 text-xs font-medium",
         colors.bg,
         colors.text,
         className

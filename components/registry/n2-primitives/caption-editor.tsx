@@ -66,14 +66,14 @@ function CaptionEditor({
         className="w-full resize-none rounded-[var(--radius-md,12px)] border border-border bg-transparent p-3 text-center outline-none placeholder:text-muted-foreground focus:border-ring"
         style={{ fontFamily: selectedFont.family, fontSize, color: textColor }}
       />
-      <div className="text-right text-[9px] text-muted-foreground">
+      <div className="text-right text-sm text-muted-foreground">
         {value.length}/{maxLength}
       </div>
 
       {/* Toolbar */}
       <div className="flex items-center justify-between">
         {/* Font selector */}
-        <div className="flex gap-1">
+        <div className="flex gap-2">
           {fontOptions.map((f) => (
             <button
               key={f.key}
@@ -94,7 +94,7 @@ function CaptionEditor({
         </div>
 
         {/* Color palette */}
-        <div className="flex gap-1">
+        <div className="flex gap-2">
           {colorPresets.map((c) => (
             <button
               key={c}
@@ -112,8 +112,8 @@ function CaptionEditor({
 
         {/* Size slider */}
         {onFontSizeChange && (
-          <div className="flex items-center gap-1.5">
-            <span className="text-[10px] text-muted-foreground">A</span>
+          <div className="flex items-center gap-2">
+            <span className="text-sm text-muted-foreground">A</span>
             <input
               type="range"
               min={14}

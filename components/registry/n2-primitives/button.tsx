@@ -11,7 +11,7 @@ import { cn } from "@/lib/utils"
    
    Token compliance:
    ✅ Radius: rounded-full (9999px) — buttons are ALWAYS pill per brand
-   ✅ Touch target: 56px default, 48px minimum — NEVER below 48px
+   ✅ Touch target: 44px on a coarse pointer (Apple HIG: 44x44 pt), 36px under desktop density — set once in the token layer (h-control…), NEVER below 24px
    ✅ Focus ring: uses --ring token from semantic layer
    ✅ Colors: uses semantic tokens (primary, secondary, muted, destructive)
    ✅ data-slot: present for CSS targeting and testing
@@ -37,16 +37,16 @@ const buttonVariants = cva(
         link: "text-primary underline-offset-4 hover:underline",
       },
       size: {
-        /* DEFAULT = 56px (--touch-target) — the brand standard */
+        /* DEFAULT = --size-control: 44px touch, 36px desktop */
         default:
-          "h-14 gap-2 px-5 has-data-[icon=inline-end]:pr-4 has-data-[icon=inline-start]:pl-4",
-        /* SM = 48px (--touch-target-sm) — the MINIMUM allowed */
-        sm: "h-12 gap-1.5 px-4 has-data-[icon=inline-end]:pr-3 has-data-[icon=inline-start]:pl-3",
-        /* LG = 56px — same as default, wider padding */
-        lg: "h-14 gap-2 px-6 has-data-[icon=inline-end]:pr-5 has-data-[icon=inline-start]:pl-5",
+          "h-control gap-2 px-5 has-data-[icon=inline-end]:pr-4 has-data-[icon=inline-start]:pl-4",
+        /* SM = --size-control-sm: 44px touch (the floor), 32px desktop */
+        sm: "h-control-sm gap-2 px-4 has-data-[icon=inline-end]:pr-3.5 has-data-[icon=inline-start]:pl-3.5",
+        /* LG = --size-control-lg: 48px touch, 40px desktop, wider padding */
+        lg: "h-control-lg gap-2 px-6 has-data-[icon=inline-end]:pr-5 has-data-[icon=inline-start]:pl-5",
         /* ICON variants — square touch targets */
-        icon: "size-14",
-        "icon-sm": "size-12",
+        icon: "size-control-icon",
+        "icon-sm": "size-control-sm",
       },
     },
     defaultVariants: {

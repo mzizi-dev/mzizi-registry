@@ -7,7 +7,7 @@ import { Calendar } from "@/lib/icons"
 import { cn } from "@/lib/utils"
 
 const priorityVariants = cva(
-  "inline-flex rounded-full px-2 py-0.5 text-[10px] font-medium uppercase tracking-wider",
+  "inline-flex rounded-full px-2 py-0.5 text-sm font-medium uppercase tracking-wider",
   {
     variants: {
       priority: {
@@ -97,7 +97,7 @@ function TodoItem({
       </span>
       <span className={cn(priorityVariants({ priority }))}>{priority}</span>
       {dueDate && (
-        <span className="inline-flex items-center gap-1 text-xs text-muted-foreground">
+        <span className="inline-flex items-center gap-2 text-xs text-muted-foreground">
           <Calendar className="size-3" />
           {dueDate}
         </span>

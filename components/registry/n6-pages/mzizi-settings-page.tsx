@@ -48,7 +48,7 @@ export function MziziSettingsPage({
         <div className="flex flex-col gap-6 md:flex-row">
           {/* Sidebar nav (desktop) / horizontal scroll (mobile) */}
           <nav className="shrink-0 md:w-48">
-            <div className="flex scrollbar-none gap-1 overflow-x-auto md:flex-col md:overflow-visible">
+            <div className="flex scrollbar-none gap-2 overflow-x-auto md:flex-col md:overflow-visible">
               {sections.map((s) => (
                 <button
                   key={s.id}

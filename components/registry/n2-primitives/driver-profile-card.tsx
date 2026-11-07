@@ -15,10 +15,10 @@ interface DriverProfileCardProps extends React.ComponentProps<"div"> {
 const tierLabels = ["Unverified", "Community", "OTP", "Government", "Licensed"]
 const tierColors = [
   "text-muted-foreground",
-  "text-[var(--color-terracotta)]",
-  "text-[var(--color-cobalt,#00B0FF)]",
-  "text-[var(--color-gold,#FFD740)]",
-  "text-[var(--color-tanzanite,#B388FF)]",
+  "text-terracotta-text",
+  "text-[var(--color-cobalt-text,#00B0FF)]",
+  "text-[var(--color-gold-text,#FFD740)]",
+  "text-[var(--color-tanzanite-text,#B388FF)]",
 ]
 
 function DriverProfileCard({
@@ -52,16 +52,16 @@ function DriverProfileCard({
         )}
       </div>
       <div className="min-w-0 flex-1">
-        <div className="flex items-center gap-1.5">
+        <div className="flex items-center gap-2">
           <span className="truncate text-sm font-medium">{name}</span>
           {verificationTier !== undefined && verificationTier > 0 && (
-            <span className={cn("text-[10px] font-medium", tierColors[verificationTier])}>
+            <span className={cn("text-sm font-medium", tierColors[verificationTier])}>
               ✓ {tierLabels[verificationTier]}
             </span>
           )}
         </div>
         <div className="flex items-center gap-2 text-xs text-muted-foreground">
-          <span className="font-medium text-[var(--color-gold,#FFD740)]">
+          <span className="font-medium text-[var(--color-gold-text,#FFD740)]">
             ★ {rating.toFixed(1)}
           </span>
           <span>{totalTrips} trips</span>

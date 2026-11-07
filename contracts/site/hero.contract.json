@@ -13,7 +13,10 @@
       "export": "@bundu/ui/Hero.astro",
       "since": "0.3.0"
     },
-    "tsx": { "registry": "site-hero", "identity": "contract" },
+    "tsx": {
+      "registry": "site-hero",
+      "identity": "contract"
+    },
     "rs": null,
     "related": ["discover-hero", "site-cta-button"]
   },
@@ -106,7 +109,10 @@
         "subtitle": "Nyuchi Africa",
         "title": "Infrastructure for African builders",
         "description": "Open tools, open data, built to last.",
-        "primaryCTA": { "text": "Get started", "href": "/start" },
+        "primaryCTA": {
+          "text": "Get started",
+          "href": "/start"
+        },
         "secondaryCTA": {
           "text": "Read the docs",
           "href": "https://docs.example.org",
@@ -121,12 +127,18 @@
         "description": "Courses for every learner.",
         "align": "center",
         "variant": "light",
-        "primaryCTA": { "text": "Browse courses", "href": "/courses" }
+        "primaryCTA": {
+          "text": "Browse courses",
+          "href": "/courses"
+        }
       }
     },
     "minimal": {
       "description": "A title alone, on the gradient.",
-      "props": { "title": "About us", "variant": "gradient" }
+      "props": {
+        "title": "About us",
+        "variant": "gradient"
+      }
     },
     "split": {
       "description": "The showcase hero: badge, split layout and a labelled media region.",
@@ -137,14 +149,23 @@
         "variant": "showcase",
         "layout": "split",
         "mediaLabel": "Product demo",
-        "primaryCTA": { "text": "Try it", "href": "/try" }
+        "primaryCTA": {
+          "text": "Try it",
+          "href": "/try"
+        }
       },
-      "slots": { "media": "<img src='/demo.png' alt='The dashboard'>" }
+      "slots": {
+        "media": "<img src='/demo.png' alt='The dashboard'>"
+      }
     },
     "stacked-media": {
       "description": "Media below the text, unlabelled.",
-      "props": { "title": "Our work" },
-      "slots": { "media": "<img src='/work.png' alt=''>" }
+      "props": {
+        "title": "Our work"
+      },
+      "slots": {
+        "media": "<img src='/work.png' alt=''>"
+      }
     }
   },
   "accessibility": {
@@ -165,15 +186,15 @@
     {
       "part": "call to action",
       "select": "[data-slot=\"button\"]",
-      "fine": 48,
-      "coarse": 48
+      "fine": 36,
+      "coarse": 49
     },
     {
       "part": "call to action (centred)",
       "state": "centered",
       "select": "[data-slot=\"button\"]",
-      "fine": 48,
-      "coarse": 48
+      "fine": 36,
+      "coarse": 49
     }
   ],
   "theming": {
@@ -202,7 +223,7 @@
     "Split: one column below lg (text first), two columns from lg.",
     "The calls to action wrap onto new lines on a narrow screen."
   ],
-  "contract": "contract\n  slot is \"hero\"\n  class contains \"bg-canvas\"\n  when centered class contains \"bg-secondary\"\n  when minimal class contains \"gradient-hero\"\n  when split class contains \"gradient-showcase\"\n  when default shows h1 \"Infrastructure for African builders\"\n  when default shows p \"Nyuchi Africa\"\n  when split shows p \"Beta\"\n  a \"Get started\" min_height 48\n  a \"Read the docs\" min_height 48\n  uses button\nend",
+  "contract": "contract\n  slot is \"hero\"\n  class contains \"bg-canvas\"\n  when centered class contains \"bg-secondary\"\n  when minimal class contains \"gradient-hero\"\n  when split class contains \"gradient-showcase\"\n  when default shows h1 \"Infrastructure for African builders\"\n  when default shows p \"Nyuchi Africa\"\n  when split shows p \"Beta\"\n  a \"Get started\" min_height 44\n  a \"Read the docs\" min_height 44\n  uses button\nend",
   "checks": [
     {
       "say": "One h1.",
@@ -228,17 +249,25 @@
     {
       "say": "The primary call to action stays in the tab.",
       "select": "a[href=\"/start\"]",
-      "attr": { "target": false, "rel": false }
+      "attr": {
+        "target": false,
+        "rel": false
+      }
     },
     {
       "say": "An external call to action opens a new tab safely.",
       "select": "a[href=\"https://docs.example.org\"]",
-      "attr": { "target": "_blank", "rel": "noopener noreferrer" }
+      "attr": {
+        "target": "_blank",
+        "rel": "noopener noreferrer"
+      }
     },
     {
       "say": "The secondary call to action's arrow is decorative.",
       "select": "a[href=\"https://docs.example.org\"] svg",
-      "attr": { "aria-hidden": "true" }
+      "attr": {
+        "aria-hidden": "true"
+      }
     },
     {
       "say": "A title alone renders no calls to action.",
@@ -250,7 +279,9 @@
       "say": "Split is marked on the root.",
       "state": "split",
       "select": "[data-slot=\"hero\"]",
-      "attr": { "data-layout": "split" }
+      "attr": {
+        "data-layout": "split"
+      }
     },
     {
       "say": "The badge renders above the title.",
@@ -263,13 +294,18 @@
       "say": "The badge dot is decorative.",
       "state": "split",
       "select": "[data-slot=\"hero-badge\"] span",
-      "attr": { "aria-hidden": "true" }
+      "attr": {
+        "aria-hidden": "true"
+      }
     },
     {
       "say": "A labelled media region is a named group.",
       "state": "split",
       "select": "[data-slot=\"hero-media\"]",
-      "attr": { "role": "group", "aria-label": "Product demo" }
+      "attr": {
+        "role": "group",
+        "aria-label": "Product demo"
+      }
     },
     {
       "say": "The media slot is rendered in the media region.",
@@ -281,13 +317,18 @@
       "say": "Stacked media is marked on the root.",
       "state": "stacked-media",
       "select": "[data-slot=\"hero\"]",
-      "attr": { "data-layout": "stack" }
+      "attr": {
+        "data-layout": "stack"
+      }
     },
     {
       "say": "An unlabelled media region has no role.",
       "state": "stacked-media",
       "select": "[data-slot=\"hero-media\"]",
-      "attr": { "role": false, "aria-label": false }
+      "attr": {
+        "role": false,
+        "aria-label": false
+      }
     },
     {
       "say": "No media slot, no media region.",

@@ -52,9 +52,9 @@ function SubscriptionCard({
       )}
       {...props}
     >
-      <div className="flex flex-col gap-1">
+      <div className="flex flex-col gap-2">
         <h3 className="text-lg font-semibold text-foreground">{name}</h3>
-        <div className="flex items-baseline gap-1">
+        <div className="flex items-baseline gap-2">
           <span className="text-3xl font-bold text-foreground">{price}</span>
           <span className="text-sm text-muted-foreground">/{period}</span>
         </div>

@@ -97,7 +97,7 @@ function RecurrencePicker({
           </div>
 
           {frequency === "weekly" && (
-            <div className="flex gap-1">
+            <div className="flex gap-2">
               {DAYS.map((day, i) => (
                 <button
                   key={i}
@@ -137,7 +137,7 @@ function RecurrencePicker({
               />
             )}
             {endType === "count" && (
-              <div className="flex items-center gap-1">
+              <div className="flex items-center gap-2">
                 <input
                   type="number"
                   min={1}

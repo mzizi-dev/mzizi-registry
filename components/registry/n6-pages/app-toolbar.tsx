@@ -76,7 +76,7 @@ function Toolbar({
       </form>
       {hasFilters && (
         <div
-          className="flex flex-wrap items-center gap-1 sm:border-l sm:border-border sm:pl-1"
+          className="flex flex-wrap items-center gap-2 sm:border-l sm:border-border sm:pl-1"
           data-slot="toolbar-filters"
         >
           {filters}

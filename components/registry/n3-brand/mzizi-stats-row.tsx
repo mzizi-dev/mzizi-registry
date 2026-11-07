@@ -94,7 +94,7 @@ function MziziStatsRow({
         className="flex animate-pulse gap-4"
       >
         {Array.from({ length: 3 }).map((_, i) => (
-          <div key={i} className="flex-1 space-y-1.5 rounded-[var(--radius-md,12px)] bg-muted p-3">
+          <div key={i} className="flex-1 space-y-2 rounded-[var(--radius-md,12px)] bg-muted p-3">
             <div className="h-2.5 w-1/2 rounded bg-foreground/5" />
             <div className="h-5 w-2/3 rounded bg-foreground/5" />
           </div>
@@ -136,7 +136,7 @@ function MziziStatsRow({
                 {stat.trend && (
                   <span
                     className={cn(
-                      "text-[11px] font-medium",
+                      "text-sm font-medium",
                       isPositiveTrend && "text-emerald-400",
                       isNegativeTrend && "text-red-400",
                       !isPositiveTrend && !isNegativeTrend && "text-muted-foreground"
@@ -162,13 +162,13 @@ function MziziStatsRow({
               <Icon className="size-4" style={{ color: iconColor }} />
             </div>
             <div className="min-w-0">
-              <div className="text-[10px] text-muted-foreground">{stat.label}</div>
-              <div className="flex items-baseline gap-1.5">
-                <span className="text-[13px] font-semibold text-foreground">{stat.value}</span>
+              <div className="text-sm text-muted-foreground">{stat.label}</div>
+              <div className="flex items-baseline gap-2">
+                <span className="text-sm font-semibold text-foreground">{stat.value}</span>
                 {stat.trend && (
                   <span
                     className={cn(
-                      "text-[10px] font-medium",
+                      "text-sm font-medium",
                       isPositiveTrend && "text-emerald-400",
                       isNegativeTrend && "text-red-400"
                     )}

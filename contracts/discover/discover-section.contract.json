@@ -13,7 +13,10 @@
       "export": "@bundu/ui/discover/DiscoverSection.astro",
       "since": "0.3.0"
     },
-    "tsx": { "registry": "discover-section", "identity": "contract" },
+    "tsx": {
+      "registry": "discover-section",
+      "identity": "contract"
+    },
     "rs": null,
     "related": ["section", "section-header"]
   },
@@ -142,8 +145,8 @@
     {
       "part": "see all",
       "select": "a",
-      "fine": 48,
-      "coarse": 48
+      "fine": 32,
+      "coarse": 49
     }
   ],
   "theming": {
@@ -165,7 +168,7 @@
   "responsive": [
     "The heading block and \"See all\" share a row and wrap below it when narrow; padding grows from 48rem."
   ],
-  "contract": "contract\n  slot is \"discover-section\"\n  when default shows h2 \"Circles worth joining\"\n  when default shows a \"See every circle\"\n  when muted shows h3 \"Find circles by what you love\"\n  when muted class contains \"bg-secondary\"\n  a \"See every circle\" min_height 48\n  when empty class contains \"data-[state=empty]:hidden\"\nend",
+  "contract": "contract\n  slot is \"discover-section\"\n  when default shows h2 \"Circles worth joining\"\n  when default shows a \"See every circle\"\n  when muted shows h3 \"Find circles by what you love\"\n  when muted class contains \"bg-secondary\"\n  a \"See every circle\" min_height 44\n  when empty class contains \"data-[state=empty]:hidden\"\nend",
   "checks": [
     {
       "say": "Labelled by its heading.",

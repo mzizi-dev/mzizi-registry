@@ -107,7 +107,7 @@ export function MziziContentComposer({
 
           <div className="flex items-center justify-between">
             {showToolbar && (
-              <div className="flex items-center gap-1">
+              <div className="flex items-center gap-2">
                 {onAttachMedia && (
                   <button
                     onClick={onAttachMedia}
@@ -133,7 +133,7 @@ export function MziziContentComposer({
               onClick={handleSubmit}
               disabled={!text.trim() || submitting}
               className={cn(
-                "h-10 rounded-full px-5 text-[13px] font-medium transition-opacity",
+                "h-10 rounded-full px-5 text-sm font-medium transition-opacity",
                 text.trim() && !submitting
                   ? "bg-[var(--brand-accent,var(--color-malachite,#64FFDA))] text-[var(--brand-accent-foreground,#0A0A0A)] hover:opacity-80"
                   : "cursor-not-allowed bg-muted text-muted-foreground"

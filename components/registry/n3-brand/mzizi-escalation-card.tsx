@@ -65,7 +65,7 @@ export function MziziEscalationCard({
         className
       )}
     >
-      <header className="mb-4 space-y-1">
+      <header className="mb-4 space-y-2">
         <h2 className="text-base font-semibold tracking-tight">{title}</h2>
         {prompt && <p className="text-sm text-[var(--muted-foreground)]">{prompt}</p>}
       </header>

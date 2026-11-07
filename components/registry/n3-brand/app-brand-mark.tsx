@@ -98,7 +98,7 @@ function BrandMark({ brand = "nyuchi", size = 28, wordmark = false, suffix, tagl
       <img src={src(mark.dark)} alt={alt} width={size} height={size} loading={loading} decoding="async" className="brand-mark-dark hidden shrink-0" />
       {wordmark && !tagline && word}
       {wordmark && tagline && (
-        <span data-slot="brand-lockup" className="flex min-w-0 flex-col gap-0.5 leading-none">
+        <span data-slot="brand-lockup" className="flex min-w-0 flex-col gap-2 leading-none">
           {word}
           <span data-slot="brand-tagline" className="truncate text-caption tracking-wide text-muted-foreground">
             {tagline}

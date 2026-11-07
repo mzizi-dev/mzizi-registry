@@ -38,10 +38,10 @@ const modeLabels: Record<TransportMode, string> = {
 }
 
 const modeColors: Record<TransportMode, string> = {
-  bus: "bg-[var(--color-cobalt,#00B0FF)]/15 text-[var(--color-cobalt,#00B0FF)]",
-  kombi: "bg-[var(--color-gold,#FFD740)]/15 text-[var(--color-gold,#FFD740)]",
-  train: "bg-[var(--color-malachite,#64FFDA)]/15 text-[var(--color-malachite,#64FFDA)]",
-  taxi: "bg-[var(--color-terracotta)]/15 text-[var(--color-terracotta)]",
+  bus: "bg-[var(--color-cobalt,#00B0FF)]/15 text-[var(--color-cobalt-text,#00B0FF)]",
+  kombi: "bg-[var(--color-gold,#FFD740)]/15 text-[var(--color-gold-text,#FFD740)]",
+  train: "bg-[var(--color-malachite,#64FFDA)]/15 text-[var(--color-malachite-text,#64FFDA)]",
+  taxi: "bg-[var(--color-terracotta)]/15 text-terracotta-text",
   walk: "bg-muted text-muted-foreground",
 }
 
@@ -74,11 +74,11 @@ function RouteCard({
       {...props}
     >
       {/* Mode badge */}
-      <div className="flex flex-col items-center gap-1">
-        <span className={cn("rounded-full px-2 py-0.5 text-[10px] font-bold", modeColors[mode])}>
+      <div className="flex flex-col items-center gap-2">
+        <span className={cn("rounded-full px-2 py-0.5 text-sm font-bold", modeColors[mode])}>
           {modeLabels[mode]}
         </span>
-        <span className="text-[10px] font-medium text-muted-foreground">{routeName}</span>
+        <span className="text-sm font-medium text-muted-foreground">{routeName}</span>
       </div>
 
       {/* Route details */}
@@ -89,10 +89,10 @@ function RouteCard({
             <div className="truncate text-sm font-medium">{from.name}</div>
           </div>
           <div className="flex flex-col items-center px-2">
-            <div className="text-[10px] text-muted-foreground">{durationStr}</div>
+            <div className="text-sm text-muted-foreground">{durationStr}</div>
             <div className="my-0.5 h-px w-12 bg-border" />
             {stopCount && (
-              <div className="text-[10px] text-muted-foreground">{stopCount} stops</div>
+              <div className="text-sm text-muted-foreground">{stopCount} stops</div>
             )}
           </div>
           <div className="flex-1 text-right">

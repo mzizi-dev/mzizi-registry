@@ -150,7 +150,7 @@ function MziziRegistrationCard({
         </span>
         <div className="min-w-0">
           <div className="text-[16px] leading-none font-semibold text-foreground">{label}</div>
-          {helper && <div className="mt-1 text-[13px] text-muted-foreground">{helper}</div>}
+          {helper && <div className="mt-1 text-sm text-muted-foreground">{helper}</div>}
         </div>
       </div>
 
@@ -194,7 +194,7 @@ function MziziRegistrationCard({
                   )}
                 </span>
                 {sub && (
-                  <span className="mt-0.5 block truncate text-[13px] text-muted-foreground">
+                  <span className="mt-0.5 block truncate text-sm text-muted-foreground">
                     {sub}
                   </span>
                 )}
@@ -212,8 +212,8 @@ function MziziRegistrationCard({
 
       {/* Quantity stepper */}
       <div className="flex items-center justify-between">
-        <span className="text-[13px] font-medium text-muted-foreground">Quantity</span>
-        <div className="flex items-center gap-1">
+        <span className="text-sm font-medium text-muted-foreground">Quantity</span>
+        <div className="flex items-center gap-2">
           <button
             type="button"
             aria-label="Decrease quantity"

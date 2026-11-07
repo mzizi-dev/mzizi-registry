@@ -110,8 +110,8 @@ pub fn entrance_style(prefers_reduced_motion: bool) -> &'static str {
     }
 }
 
-const PRIMARY: &str = "h-12 rounded-full bg-[var(--brand-accent,var(--color-malachite,#64FFDA))] px-6 text-[13px] font-medium text-[var(--brand-accent-foreground,#0A0A0A)] transition-opacity hover:opacity-80 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--color-primary,#00B0FF)]";
-const SECONDARY: &str = "h-12 rounded-full border border-border bg-muted px-6 text-[13px] font-medium text-foreground transition-opacity hover:opacity-80 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--color-primary,#00B0FF)]";
+const PRIMARY: &str = "h-12 rounded-full bg-[var(--brand-accent,var(--color-malachite,#64FFDA))] px-6 text-sm font-medium text-[var(--brand-accent-foreground,#0A0A0A)] transition-opacity hover:opacity-80 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--color-primary,#00B0FF)]";
+const SECONDARY: &str = "h-12 rounded-full border border-border bg-muted px-6 text-sm font-medium text-foreground transition-opacity hover:opacity-80 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--color-primary,#00B0FF)]";
 
 /// Props for [`MziziEmptyState`].
 #[derive(Props, Clone, PartialEq)]

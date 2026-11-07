@@ -45,7 +45,7 @@ function AuthorBioCard({
           )}
         </div>
         <div className="min-w-0 flex-1">
-          <div className="flex items-center gap-1.5">
+          <div className="flex items-center gap-2">
             <span
               className="text-sm font-semibold"
               style={{ fontFamily: "var(--font-serif, serif)" }}
@@ -57,7 +57,7 @@ function AuthorBioCard({
                 Tier > 0 means verified, matching `user-management-row`. */}
             {(verified || (verificationTier !== undefined && verificationTier > 0)) && (
               <span
-                className="text-xs text-[var(--color-gold,#FFD740)]"
+                className="text-xs text-[var(--color-gold-text,#FFD740)]"
                 title={verificationTier ? `Verification tier ${verificationTier}` : "Verified"}
               >
                 ✓
@@ -71,7 +71,7 @@ function AuthorBioCard({
               <span>{subscriberCount.toLocaleString()} subscribers</span>
             )}
             {revenueSharePct !== undefined && (
-              <span className="text-[var(--color-malachite,#64FFDA)]">
+              <span className="text-[var(--color-malachite-text,#64FFDA)]">
                 {revenueSharePct}% revenue share
               </span>
             )}
