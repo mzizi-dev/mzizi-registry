@@ -19193,6 +19193,496 @@
     {
       "author": "Mzizi, operated by Nyuchi Africa (Pvt) Ltd — https://mzizi.dev",
       "categories": ["primitives"],
+      "dependencies": ["class-variance-authority"],
+      "description": "The @bundu/ui React alert: a role=\"alert\" box with Alert, AlertTitle and AlertDescription, on the container tokens (variants name the role, not the colour). Dependency-light and SSR-safe; the React build @bundu/ui/ui/alert ships from this item.",
+      "docs": "Use it for: Inline notices and errors in a page or form.\nVariants: default, info, success, warning, destructive.\nIncludes: role=\"alert\", Alert, AlertTitle, AlertDescription, data-slot attribute.\nAccessibility: role=\"alert\" announces it.\nInstall: npx shadcn@latest add https://api.mzizi.dev/v1/ui/react-alert",
+      "files": [
+        {
+          "path": "components/registry/n2-primitives/react-alert.tsx",
+          "target": "components/ui/react-alert.tsx",
+          "type": "registry:ui"
+        }
+      ],
+      "meta": {
+        "a11y": ["role=\"alert\" announces it"],
+        "collection": "primitives",
+        "features": [
+          "role=\"alert\"",
+          "Alert, AlertTitle, AlertDescription",
+          "data-slot attribute"
+        ],
+        "hasDemo": false,
+        "owner": "mzizi",
+        "targets": ["tsx"],
+        "useCases": ["Inline notices and errors in a page or form"],
+        "variants": ["default", "info", "success", "warning", "destructive"]
+      },
+      "name": "react-alert",
+      "registryDependencies": [
+        "https://api.mzizi.dev/v1/ui/ui-utils",
+        "https://api.mzizi.dev/v1/ui/ui-variants"
+      ],
+      "title": "React Alert",
+      "type": "registry:ui"
+    },
+    {
+      "author": "Mzizi, operated by Nyuchi Africa (Pvt) Ltd — https://mzizi.dev",
+      "categories": ["primitives"],
+      "dependencies": ["class-variance-authority"],
+      "description": "The @bundu/ui React avatar: an image with an initials fallback, three sizes, no Radix. The React build @bundu/ui/ui/avatar ships from this item.",
+      "docs": "Use it for: A person or organisation in a header, list or comment.\nVariants: sm, md, lg.\nIncludes: Image with initials fallback, data-slot attribute.\nAccessibility: role=\"img\" with an accessible label.\nInstall: npx shadcn@latest add https://api.mzizi.dev/v1/ui/react-avatar",
+      "files": [
+        {
+          "path": "components/registry/n2-primitives/react-avatar.tsx",
+          "target": "components/ui/react-avatar.tsx",
+          "type": "registry:ui"
+        }
+      ],
+      "meta": {
+        "a11y": ["role=\"img\" with an accessible label"],
+        "collection": "primitives",
+        "features": ["Image with initials fallback", "data-slot attribute"],
+        "hasDemo": false,
+        "owner": "mzizi",
+        "targets": ["tsx"],
+        "useCases": ["A person or organisation in a header, list or comment"],
+        "variants": ["sm", "md", "lg"]
+      },
+      "name": "react-avatar",
+      "registryDependencies": ["https://api.mzizi.dev/v1/ui/ui-utils"],
+      "title": "React Avatar",
+      "type": "registry:ui"
+    },
+    {
+      "author": "Mzizi, operated by Nyuchi Africa (Pvt) Ltd — https://mzizi.dev",
+      "categories": ["primitives"],
+      "dependencies": ["class-variance-authority"],
+      "description": "The @bundu/ui React badge: a rounded label chip whose variants name the semantic role (default, primary, success, warning, info, accent, premium, outline), 14px of inline inset. The React build @bundu/ui/ui/badge ships from this item.",
+      "docs": "Use it for: Status and category labels.\nVariants: default, primary, success, warning, info, accent, premium, outline.\nIncludes: Variants name the role, not the colour, data-slot attribute.\nAccessibility: Text label; colour is never the only signal.\nInstall: npx shadcn@latest add https://api.mzizi.dev/v1/ui/react-badge",
+      "files": [
+        {
+          "path": "components/registry/n2-primitives/react-badge.tsx",
+          "target": "components/ui/react-badge.tsx",
+          "type": "registry:ui"
+        }
+      ],
+      "meta": {
+        "a11y": ["Text label; colour is never the only signal"],
+        "collection": "primitives",
+        "features": [
+          "Variants name the role, not the colour",
+          "data-slot attribute"
+        ],
+        "hasDemo": false,
+        "owner": "mzizi",
+        "targets": ["tsx"],
+        "useCases": ["Status and category labels"],
+        "variants": [
+          "default",
+          "primary",
+          "success",
+          "warning",
+          "info",
+          "accent",
+          "premium",
+          "outline"
+        ]
+      },
+      "name": "react-badge",
+      "registryDependencies": ["https://api.mzizi.dev/v1/ui/ui-utils"],
+      "title": "React Badge",
+      "type": "registry:ui"
+    },
+    {
+      "author": "Mzizi, operated by Nyuchi Africa (Pvt) Ltd — https://mzizi.dev",
+      "categories": ["primitives"],
+      "dependencies": ["class-variance-authority"],
+      "description": "The @bundu/ui React button: the marketing pill button. An <a> when href is set, otherwise a <button>; optional trailing arrow. Its class recipe is ui-variants' buttonVariants, shared with the Astro build. The React build @bundu/ui/ui/button ships from this item.",
+      "docs": "Use it for: Calls to action and form actions on marketing pages.\nVariants: primary, secondary, outline, ghost, destructive.\nIncludes: Link or button by href, Shared class recipe with Button.astro, data-slot attribute.\nAccessibility: Native button and link semantics.\nInstall: npx shadcn@latest add https://api.mzizi.dev/v1/ui/react-button",
+      "files": [
+        {
+          "path": "components/registry/n2-primitives/react-button.tsx",
+          "target": "components/ui/react-button.tsx",
+          "type": "registry:ui"
+        }
+      ],
+      "meta": {
+        "a11y": ["Native button and link semantics"],
+        "collection": "primitives",
+        "features": [
+          "Link or button by href",
+          "Shared class recipe with Button.astro",
+          "data-slot attribute"
+        ],
+        "hasDemo": false,
+        "owner": "mzizi",
+        "targets": ["tsx"],
+        "useCases": ["Calls to action and form actions on marketing pages"],
+        "variants": ["primary", "secondary", "outline", "ghost", "destructive"]
+      },
+      "name": "react-button",
+      "registryDependencies": [
+        "https://api.mzizi.dev/v1/ui/ui-utils",
+        "https://api.mzizi.dev/v1/ui/ui-variants"
+      ],
+      "title": "React Button",
+      "type": "registry:ui"
+    },
+    {
+      "author": "Mzizi, operated by Nyuchi Africa (Pvt) Ltd — https://mzizi.dev",
+      "categories": ["primitives"],
+      "dependencies": ["class-variance-authority"],
+      "description": "The @bundu/ui React card: a surface that becomes a whole-card <a> when href is set, with padding and hover variants from ui-variants' cardVariants. The React build @bundu/ui/ui/card ships from this item.",
+      "docs": "Use it for: Content surfaces and whole-card links.\nVariants: padding, hover.\nIncludes: Link or div by href, Shared class recipe with Card.astro, data-slot attribute.\nAccessibility: Native link semantics when href is set.\nInstall: npx shadcn@latest add https://api.mzizi.dev/v1/ui/react-card",
+      "files": [
+        {
+          "path": "components/registry/n2-primitives/react-card.tsx",
+          "target": "components/ui/react-card.tsx",
+          "type": "registry:ui"
+        }
+      ],
+      "meta": {
+        "a11y": ["Native link semantics when href is set"],
+        "collection": "primitives",
+        "features": [
+          "Link or div by href",
+          "Shared class recipe with Card.astro",
+          "data-slot attribute"
+        ],
+        "hasDemo": false,
+        "owner": "mzizi",
+        "targets": ["tsx"],
+        "useCases": ["Content surfaces and whole-card links"],
+        "variants": ["padding", "hover"]
+      },
+      "name": "react-card",
+      "registryDependencies": [
+        "https://api.mzizi.dev/v1/ui/ui-utils",
+        "https://api.mzizi.dev/v1/ui/ui-variants"
+      ],
+      "title": "React Card",
+      "type": "registry:ui"
+    },
+    {
+      "author": "Mzizi, operated by Nyuchi Africa (Pvt) Ltd — https://mzizi.dev",
+      "categories": ["primitives"],
+      "dependencies": [],
+      "description": "The @bundu/ui React checkbox: a native <input type=\"checkbox\"> tinted by the brand --primary through accent-color; form-native, no JavaScript, no Radix. The React build @bundu/ui/ui/checkbox ships from this item.",
+      "docs": "Use it for: Form options and consent.\nVariants: default.\nIncludes: Native input, accent-color, data-slot attribute.\nAccessibility: Native checkbox semantics and keyboard.\nInstall: npx shadcn@latest add https://api.mzizi.dev/v1/ui/react-checkbox",
+      "files": [
+        {
+          "path": "components/registry/n2-primitives/react-checkbox.tsx",
+          "target": "components/ui/react-checkbox.tsx",
+          "type": "registry:ui"
+        }
+      ],
+      "meta": {
+        "a11y": ["Native checkbox semantics and keyboard"],
+        "collection": "primitives",
+        "features": ["Native input, accent-color", "data-slot attribute"],
+        "hasDemo": false,
+        "owner": "mzizi",
+        "targets": ["tsx"],
+        "useCases": ["Form options and consent"],
+        "variants": ["default"]
+      },
+      "name": "react-checkbox",
+      "registryDependencies": ["https://api.mzizi.dev/v1/ui/ui-utils"],
+      "title": "React Checkbox",
+      "type": "registry:ui"
+    },
+    {
+      "author": "Mzizi, operated by Nyuchi Africa (Pvt) Ltd — https://mzizi.dev",
+      "categories": ["primitives"],
+      "dependencies": [],
+      "description": "The @bundu/ui React input: a native <input> on ui-variants' inputClasses (a 49px field), forwarding every attribute. The React build @bundu/ui/ui/input ships from this item.",
+      "docs": "Use it for: Text fields in forms.\nVariants: default.\nIncludes: Native input, Shared class recipe with Input.astro, data-slot attribute.\nAccessibility: Native input semantics; the caller labels it.\nInstall: npx shadcn@latest add https://api.mzizi.dev/v1/ui/react-input",
+      "files": [
+        {
+          "path": "components/registry/n2-primitives/react-input.tsx",
+          "target": "components/ui/react-input.tsx",
+          "type": "registry:ui"
+        }
+      ],
+      "meta": {
+        "a11y": ["Native input semantics; the caller labels it"],
+        "collection": "primitives",
+        "features": [
+          "Native input",
+          "Shared class recipe with Input.astro",
+          "data-slot attribute"
+        ],
+        "hasDemo": false,
+        "owner": "mzizi",
+        "targets": ["tsx"],
+        "useCases": ["Text fields in forms"],
+        "variants": ["default"]
+      },
+      "name": "react-input",
+      "registryDependencies": [
+        "https://api.mzizi.dev/v1/ui/ui-utils",
+        "https://api.mzizi.dev/v1/ui/ui-variants"
+      ],
+      "title": "React Input",
+      "type": "registry:ui"
+    },
+    {
+      "author": "Mzizi, operated by Nyuchi Africa (Pvt) Ltd — https://mzizi.dev",
+      "categories": ["primitives"],
+      "dependencies": [],
+      "description": "The @bundu/ui React label: a native <label> on ui-variants' labelClasses; accepts for and htmlFor. The React build @bundu/ui/ui/label ships from this item.",
+      "docs": "Use it for: Labelling a form control.\nVariants: default.\nIncludes: Native label, Shared class recipe with Label.astro, data-slot attribute.\nAccessibility: Native label association.\nInstall: npx shadcn@latest add https://api.mzizi.dev/v1/ui/react-label",
+      "files": [
+        {
+          "path": "components/registry/n2-primitives/react-label.tsx",
+          "target": "components/ui/react-label.tsx",
+          "type": "registry:ui"
+        }
+      ],
+      "meta": {
+        "a11y": ["Native label association"],
+        "collection": "primitives",
+        "features": [
+          "Native label",
+          "Shared class recipe with Label.astro",
+          "data-slot attribute"
+        ],
+        "hasDemo": false,
+        "owner": "mzizi",
+        "targets": ["tsx"],
+        "useCases": ["Labelling a form control"],
+        "variants": ["default"]
+      },
+      "name": "react-label",
+      "registryDependencies": [
+        "https://api.mzizi.dev/v1/ui/ui-utils",
+        "https://api.mzizi.dev/v1/ui/ui-variants"
+      ],
+      "title": "React Label",
+      "type": "registry:ui"
+    },
+    {
+      "author": "Mzizi, operated by Nyuchi Africa (Pvt) Ltd — https://mzizi.dev",
+      "categories": ["primitives"],
+      "dependencies": [],
+      "description": "The @bundu/ui React select: a native <select> that renders its <option> children as given; no Radix, no JavaScript. The React build @bundu/ui/ui/select ships from this item. The registry's select item is the Radix build.",
+      "docs": "Use it for: Choosing one option in a form.\nVariants: default.\nIncludes: Native select, data-slot attribute.\nAccessibility: Native select semantics and keyboard.\nInstall: npx shadcn@latest add https://api.mzizi.dev/v1/ui/react-select",
+      "files": [
+        {
+          "path": "components/registry/n2-primitives/react-select.tsx",
+          "target": "components/ui/react-select.tsx",
+          "type": "registry:ui"
+        }
+      ],
+      "meta": {
+        "a11y": ["Native select semantics and keyboard"],
+        "collection": "primitives",
+        "features": ["Native select", "data-slot attribute"],
+        "hasDemo": false,
+        "owner": "mzizi",
+        "targets": ["tsx"],
+        "useCases": ["Choosing one option in a form"],
+        "variants": ["default"]
+      },
+      "name": "react-select",
+      "registryDependencies": ["https://api.mzizi.dev/v1/ui/ui-utils"],
+      "title": "React Select",
+      "type": "registry:ui"
+    },
+    {
+      "author": "Mzizi, operated by Nyuchi Africa (Pvt) Ltd — https://mzizi.dev",
+      "categories": ["primitives"],
+      "dependencies": [],
+      "description": "The @bundu/ui React separator: a thin rule on the border token, decorative by default, role=\"separator\" with aria-orientation when decorative is false. No Radix. The React build @bundu/ui/ui/separator ships from this item.",
+      "docs": "Use it for: Dividing content.\nVariants: horizontal, vertical.\nIncludes: Decorative by default, data-slot attribute.\nAccessibility: role=\"separator\" with aria-orientation when not decorative.\nInstall: npx shadcn@latest add https://api.mzizi.dev/v1/ui/react-separator",
+      "files": [
+        {
+          "path": "components/registry/n2-primitives/react-separator.tsx",
+          "target": "components/ui/react-separator.tsx",
+          "type": "registry:ui"
+        }
+      ],
+      "meta": {
+        "a11y": [
+          "role=\"separator\" with aria-orientation when not decorative"
+        ],
+        "collection": "primitives",
+        "features": ["Decorative by default", "data-slot attribute"],
+        "hasDemo": false,
+        "owner": "mzizi",
+        "targets": ["tsx"],
+        "useCases": ["Dividing content"],
+        "variants": ["horizontal", "vertical"]
+      },
+      "name": "react-separator",
+      "registryDependencies": ["https://api.mzizi.dev/v1/ui/ui-utils"],
+      "title": "React Separator",
+      "type": "registry:ui"
+    },
+    {
+      "author": "Mzizi, operated by Nyuchi Africa (Pvt) Ltd — https://mzizi.dev",
+      "categories": ["primitives"],
+      "dependencies": [],
+      "description": "The @bundu/ui React skeleton: a loading placeholder on the muted token, sized by class, class recipe from ui-variants. The React build @bundu/ui/ui/skeleton ships from this item.",
+      "docs": "Use it for: Loading placeholders.\nVariants: default.\nIncludes: Sized by class, Shared class recipe with Skeleton.astro, data-slot attribute.\nAccessibility: aria-hidden placeholder.\nInstall: npx shadcn@latest add https://api.mzizi.dev/v1/ui/react-skeleton",
+      "files": [
+        {
+          "path": "components/registry/n2-primitives/react-skeleton.tsx",
+          "target": "components/ui/react-skeleton.tsx",
+          "type": "registry:ui"
+        }
+      ],
+      "meta": {
+        "a11y": ["aria-hidden placeholder"],
+        "collection": "primitives",
+        "features": [
+          "Sized by class",
+          "Shared class recipe with Skeleton.astro",
+          "data-slot attribute"
+        ],
+        "hasDemo": false,
+        "owner": "mzizi",
+        "targets": ["tsx"],
+        "useCases": ["Loading placeholders"],
+        "variants": ["default"]
+      },
+      "name": "react-skeleton",
+      "registryDependencies": [
+        "https://api.mzizi.dev/v1/ui/ui-utils",
+        "https://api.mzizi.dev/v1/ui/ui-variants"
+      ],
+      "title": "React Skeleton",
+      "type": "registry:ui"
+    },
+    {
+      "author": "Mzizi, operated by Nyuchi Africa (Pvt) Ltd — https://mzizi.dev",
+      "categories": ["primitives"],
+      "dependencies": [],
+      "description": "The @bundu/ui React switch: a <button role=\"switch\"> with aria-checked, controlled or uncontrolled, a hidden checkbox when named so it submits in a form. No Radix. A client component. The React build @bundu/ui/ui/switch ships from this item.",
+      "docs": "Use it for: On/off settings.\nVariants: default.\nIncludes: Controlled or uncontrolled, Form-submitting when named, data-slot attribute.\nAccessibility: role=\"switch\" with aria-checked; keyboard operable.\nInstall: npx shadcn@latest add https://api.mzizi.dev/v1/ui/react-switch",
+      "files": [
+        {
+          "path": "components/registry/n2-primitives/react-switch.tsx",
+          "target": "components/ui/react-switch.tsx",
+          "type": "registry:ui"
+        }
+      ],
+      "meta": {
+        "a11y": ["role=\"switch\" with aria-checked; keyboard operable"],
+        "collection": "primitives",
+        "features": [
+          "Controlled or uncontrolled",
+          "Form-submitting when named",
+          "data-slot attribute"
+        ],
+        "hasDemo": false,
+        "owner": "mzizi",
+        "targets": ["tsx"],
+        "useCases": ["On/off settings"],
+        "variants": ["default"]
+      },
+      "name": "react-switch",
+      "registryDependencies": ["https://api.mzizi.dev/v1/ui/ui-utils"],
+      "title": "React Switch",
+      "type": "registry:ui"
+    },
+    {
+      "author": "Mzizi, operated by Nyuchi Africa (Pvt) Ltd — https://mzizi.dev",
+      "categories": ["primitives"],
+      "dependencies": [],
+      "description": "The @bundu/ui React tabs: Tabs, TabsList, TabsTrigger and TabsContent with the WAI-ARIA tabs pattern and Left/Right/Home/End keys, controlled or uncontrolled; forceMount keeps every panel in the HTML for static pages. No Radix. A client component. The React build @bundu/ui/ui/tabs ships from this item.",
+      "docs": "Use it for: Switching between related panels.\nVariants: default.\nIncludes: WAI-ARIA tabs pattern, Arrow, Home and End keys, data-slot attribute.\nAccessibility: role=\"tablist\", \"tab\" and \"tabpanel\" with roving tabindex.\nInstall: npx shadcn@latest add https://api.mzizi.dev/v1/ui/react-tabs",
+      "files": [
+        {
+          "path": "components/registry/n2-primitives/react-tabs.tsx",
+          "target": "components/ui/react-tabs.tsx",
+          "type": "registry:ui"
+        }
+      ],
+      "meta": {
+        "a11y": [
+          "role=\"tablist\", \"tab\" and \"tabpanel\" with roving tabindex"
+        ],
+        "collection": "primitives",
+        "features": [
+          "WAI-ARIA tabs pattern",
+          "Arrow, Home and End keys",
+          "data-slot attribute"
+        ],
+        "hasDemo": false,
+        "owner": "mzizi",
+        "targets": ["tsx"],
+        "useCases": ["Switching between related panels"],
+        "variants": ["default"]
+      },
+      "name": "react-tabs",
+      "registryDependencies": ["https://api.mzizi.dev/v1/ui/ui-utils"],
+      "title": "React Tabs",
+      "type": "registry:ui"
+    },
+    {
+      "author": "Mzizi, operated by Nyuchi Africa (Pvt) Ltd — https://mzizi.dev",
+      "categories": ["primitives"],
+      "dependencies": [],
+      "description": "The @bundu/ui React textarea: a native <textarea> that forwards every attribute. The React build @bundu/ui/ui/textarea ships from this item.",
+      "docs": "Use it for: Multi-line text in forms.\nVariants: default.\nIncludes: Native textarea, data-slot attribute.\nAccessibility: Native textarea semantics; the caller labels it.\nInstall: npx shadcn@latest add https://api.mzizi.dev/v1/ui/react-textarea",
+      "files": [
+        {
+          "path": "components/registry/n2-primitives/react-textarea.tsx",
+          "target": "components/ui/react-textarea.tsx",
+          "type": "registry:ui"
+        }
+      ],
+      "meta": {
+        "a11y": ["Native textarea semantics; the caller labels it"],
+        "collection": "primitives",
+        "features": ["Native textarea", "data-slot attribute"],
+        "hasDemo": false,
+        "owner": "mzizi",
+        "targets": ["tsx"],
+        "useCases": ["Multi-line text in forms"],
+        "variants": ["default"]
+      },
+      "name": "react-textarea",
+      "registryDependencies": ["https://api.mzizi.dev/v1/ui/ui-utils"],
+      "title": "React Textarea",
+      "type": "registry:ui"
+    },
+    {
+      "author": "Mzizi, operated by Nyuchi Africa (Pvt) Ltd — https://mzizi.dev",
+      "categories": ["primitives"],
+      "dependencies": [],
+      "description": "The @bundu/ui React tooltip: shows its content on hover and on keyboard focus, wires aria-describedby, role=\"tooltip\", Escape dismisses; CSS positioning by side. No Radix, no floating-ui. A client component. The React build @bundu/ui/ui/tooltip ships from this item.",
+      "docs": "Use it for: Short help for a focusable control.\nVariants: top, bottom, left, right.\nIncludes: Hover and focus, Escape dismisses, data-slot attribute.\nAccessibility: role=\"tooltip\" with aria-describedby; not hover-only.\nInstall: npx shadcn@latest add https://api.mzizi.dev/v1/ui/react-tooltip",
+      "files": [
+        {
+          "path": "components/registry/n2-primitives/react-tooltip.tsx",
+          "target": "components/ui/react-tooltip.tsx",
+          "type": "registry:ui"
+        }
+      ],
+      "meta": {
+        "a11y": ["role=\"tooltip\" with aria-describedby; not hover-only"],
+        "collection": "primitives",
+        "features": [
+          "Hover and focus",
+          "Escape dismisses",
+          "data-slot attribute"
+        ],
+        "hasDemo": false,
+        "owner": "mzizi",
+        "targets": ["tsx"],
+        "useCases": ["Short help for a focusable control"],
+        "variants": ["top", "bottom", "left", "right"]
+      },
+      "name": "react-tooltip",
+      "registryDependencies": ["https://api.mzizi.dev/v1/ui/ui-utils"],
+      "title": "React Tooltip",
+      "type": "registry:ui"
+    },
+    {
+      "author": "Mzizi, operated by Nyuchi Africa (Pvt) Ltd — https://mzizi.dev",
+      "categories": ["primitives"],
       "dependencies": [],
       "description": "Emoji reaction selector popover with counts.",
       "docs": "Use it for: Emoji reactions on chat messages, Content reactions on social posts, Quick sentiment feedback on articles, Engagement signals in community discussions, Approval reactions on proposals and decisions.\nVariants: default, sm, lg.\nIncludes: cn() for className composition, data-slot attribute.\nAccessibility: ARIA attributes, Keyboard accessible.\nInstall: npx shadcn@latest add https://api.mzizi.dev/v1/ui/reaction-picker",
