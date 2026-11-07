@@ -53,20 +53,20 @@ const good = hasTrend && trend !== 0 ? (trend > 0) === upIsGood : null;
 const tone = good === null ? "text-muted-foreground" : good ? "text-malachite-on-container bg-malachite-container" : "text-terracotta-on-container bg-terracotta-container";
 ---
 
-<div class="flex min-w-0 flex-col gap-1 rounded-md border border-border bg-card px-4 py-3.5" data-slot="stat-tile">
-  <dt class="flex items-center gap-1 text-body-sm text-muted-foreground">
+<div class="flex min-w-0 flex-col gap-2 rounded-md border border-border bg-card px-4 py-3.5" data-slot="stat-tile">
+  <dt class="flex items-center gap-2 text-body-sm text-muted-foreground">
     {href ? <a href={href} class="underline-offset-4 hover:text-foreground hover:underline">{label}</a> : label}
     {info && <InfoTip text={info} about={label} id={infoId} />}
   </dt>
-  <dd class="flex flex-col gap-1.5">
+  <dd class="flex flex-col gap-2">
     <span class="text-h4 font-semibold tracking-tight tabular-nums">
       {shown ?? <span class="text-body text-muted-foreground">Not available</span>}
     </span>
     {
       trendText && (
-        <span class="flex flex-wrap items-baseline gap-x-1.5 text-caption" data-slot="stat-trend">
+        <span class="flex flex-wrap items-baseline gap-x-2 text-caption" data-slot="stat-trend">
           <span class="sr-only">{trendText}</span>
-          <span aria-hidden="true" class={`w-fit shrink-0 rounded-sm px-1.5 py-px font-medium whitespace-nowrap tabular-nums ${good === null ? "bg-muted" : tone}`}>
+          <span aria-hidden="true" class={`w-fit shrink-0 rounded-sm px-3.5 py-px font-medium whitespace-nowrap tabular-nums ${good === null ? "bg-muted" : tone}`}>
             {shortTrend}
           </span>
           {versus && trend !== 0 && <span aria-hidden="true" class="text-muted-foreground">vs {versus}</span>}

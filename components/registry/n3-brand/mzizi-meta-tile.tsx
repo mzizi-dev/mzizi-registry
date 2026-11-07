@@ -57,7 +57,7 @@ export function MziziMetaTile({
       >
         {date ? (
           <>
-            <span className="text-[10px] leading-none font-semibold tracking-wide text-muted-foreground uppercase">
+            <span className="text-sm leading-none font-semibold tracking-wide text-muted-foreground uppercase">
               {date.month.slice(0, 3)}
             </span>
             <span className="mt-0.5 text-xl leading-none font-bold" style={{ color: tint }}>
@@ -73,7 +73,7 @@ export function MziziMetaTile({
 
       <div className="min-w-0 flex-1">
         {caption && (
-          <div className="text-[13px] leading-none font-medium text-muted-foreground">
+          <div className="text-sm leading-none font-medium text-muted-foreground">
             {caption}
           </div>
         )}
@@ -86,7 +86,7 @@ export function MziziMetaTile({
           {primary}
         </div>
         {secondary && (
-          <div className="mt-0.5 truncate text-[13px] text-muted-foreground">{secondary}</div>
+          <div className="mt-0.5 truncate text-sm text-muted-foreground">{secondary}</div>
         )}
       </div>
 

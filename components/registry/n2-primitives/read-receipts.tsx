@@ -36,7 +36,7 @@ function ReadReceipts({
       data-slot="read-receipts"
       data-portal="https://mzizi.dev/components/read-receipts"
       aria-label={`Read by ${readers.length} ${readers.length === 1 ? "person" : "people"}`}
-      className={cn("flex items-center gap-1", className)}
+      className={cn("flex items-center gap-2", className)}
       {...props}
     >
       {/* Avatar stack */}
@@ -44,7 +44,7 @@ function ReadReceipts({
         {visible.map((reader) => (
           <div
             key={reader.id}
-            className="flex size-5 items-center justify-center rounded-full bg-muted text-[8px] font-medium ring-2 ring-background"
+            className="flex h-6 min-w-6 px-1 items-center justify-center rounded-full bg-muted text-sm font-medium ring-2 ring-background leading-none"
             title={`${reader.name}`}
           >
             {reader.avatar ? (
@@ -59,9 +59,9 @@ function ReadReceipts({
           </div>
         ))}
       </div>
-      {overflow > 0 && <span className="text-[10px] text-muted-foreground">+{overflow}</span>}
+      {overflow > 0 && <span className="text-sm text-muted-foreground">+{overflow}</span>}
       {variant === "inline" && (
-        <span className="text-[10px] text-muted-foreground">
+        <span className="text-sm text-muted-foreground">
           {readers.length === 1 ? "Read" : `Read by ${readers.length}`}
         </span>
       )}

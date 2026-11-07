@@ -53,7 +53,7 @@ function NotificationBell({
         >
           <Bell className="size-4" />
           {unreadCount > 0 && (
-            <span className="absolute -top-0.5 -right-0.5 flex size-4 items-center justify-center rounded-full bg-destructive text-[10px] font-medium text-destructive-foreground">
+            <span className="absolute -top-0.5 -right-0.5 flex h-6 min-w-6 px-1 items-center justify-center rounded-full bg-destructive text-sm font-medium text-destructive-foreground leading-none">
               {unreadCount > 9 ? "9+" : unreadCount}
             </span>
           )}
@@ -91,7 +91,7 @@ function NotificationBell({
                   )}
                 >
                   {notification.icon && <div className="mt-0.5 shrink-0">{notification.icon}</div>}
-                  <div className="flex-1 space-y-1">
+                  <div className="flex-1 space-y-2">
                     <div className="flex items-start justify-between gap-2">
                       <p
                         className={cn("text-sm leading-tight", !notification.read && "font-medium")}

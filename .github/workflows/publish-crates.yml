@@ -64,6 +64,9 @@ jobs:
       # job. Only the tag step below gets RELEASE_BUMP_TOKEN.
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
+          # Full history and tags: the release notes diff CHANGELOG.md against
+          # the previous crates tag.
+          fetch-depth: 0
           persist-credentials: false
 
       - uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7.1.0
@@ -84,13 +87,32 @@ jobs:
           echo "version=$version" >> "$GITHUB_OUTPUT"
 
       - name: Check the crates version against the versioning policy
-        uses: nyuchi/.github/.github/actions/next-version@32eabdb685947bd040ad8141b5fa3d8cc2e83725  # main, 2026-10-19
+        uses: nyuchi/.github/.github/actions/next-version@c2e2506a4eadf67fbf824b41720aa220c539fc21  # main, 2026-10-19
         with:
           channel: main
           bump: ${{ inputs.bump || '' }}
           manual: ${{ github.event_name == 'workflow_dispatch' }}
           proposed: ${{ steps.crates.outputs.version }}
           tag-prefix: mzizi-rs-v
+
+      # Owner, 2026-11-04: every release carries notes built from the changelog.
+      # A crates version with no CHANGELOG.md entry since the previous crates
+      # tag must not reach crates.io (a published crate cannot be unpublished),
+      # so this fails before anything is built or uploaded.
+      - name: Require changelog notes for this version
+        if: ${{ !(github.event_name == 'workflow_dispatch' && inputs.dry_run) }}
+        env:
+          VERSION: ${{ steps.crates.outputs.version }}
+        run: |
+          set -euo pipefail
+          tag="mzizi-rs-v${VERSION}"
+          if git rev-parse --verify --quiet "refs/tags/${tag}" >/dev/null; then
+            echo "$tag is already tagged; its release notes were made then."
+            exit 0
+          fi
+          prev="$(git tag -l 'mzizi-rs-v*' | sort -V | tail -n 1)"
+          # Exits 1 when no CHANGELOG.md entry was added since the previous crates tag.
+          python3 .github/scripts/release_notes.py "$prev" HEAD >/dev/null
 
       - name: Install the Rust toolchain
         run: rustup toolchain install stable --profile minimal --component clippy,rustfmt
@@ -207,18 +229,33 @@ jobs:
           version=$(cargo metadata --manifest-path mzizi-rs/Cargo.toml --no-deps --format-version 1 \
             | jq -r '.packages[] | select(.name == "mzizi-roots") | .version')
           tag="mzizi-rs-v$version"
+          # A tag that exists from a run that died before its release was made
+          # keeps the tag and still gets its release (publish-release.sh is
+          # idempotent); one with a published release has nothing to do.
           if git ls-remote --tags --refs origin "refs/tags/$tag" | grep -q .; then
-            echo "$tag already exists; nothing to tag."
-            exit 0
+            if gh release view "$tag" --repo "$GITHUB_REPOSITORY" >/dev/null 2>&1; then
+              echo "$tag is already tagged and released; nothing to do."
+              exit 0
+            fi
+            tag_exists=true
+            ref="$tag"
+          else
+            tag_exists=false
+            ref=HEAD
           fi
           if [ -z "${GH_TOKEN:-}" ]; then
             echo "::error::RELEASE_BUMP_TOKEN is not visible to this repository; cannot tag $tag."
             exit 1
           fi
-          git config user.name "github-actions[bot]"
-          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git tag -a "$tag" -m "Mzizi Roots crates $version"
-          git push "https://x-access-token:${GH_TOKEN}@github.com/${GITHUB_REPOSITORY}.git" "refs/tags/$tag"
+          # Notes first, so a release with no changelog entries fails before the
+          # tag is pushed: the crates list, the CHANGELOG.md entries added since
+          # the previous crates tag, and a compare link.
+          prev="$(git tag -l 'mzizi-rs-v*' | sort -V | grep -Fvx "$tag" | tail -n 1 || true)"
+          if [ -n "$prev" ]; then
+            compare="https://github.com/${GITHUB_REPOSITORY}/compare/${prev}...${tag}"
+          else
+            compare="https://github.com/${GITHUB_REPOSITORY}/commits/${tag}"
+          fi
           {
             echo "The Mzizi Roots crates at $version on crates.io:"
             echo
@@ -228,6 +265,14 @@ jobs:
               echo "- [\`$crate\` $version](https://crates.io/crates/$crate/$version)"
             done
             echo
-            echo "Changes are in [CHANGELOG.md](https://github.com/$GITHUB_REPOSITORY/blob/$tag/CHANGELOG.md)."
+            CHANGELOG_URL="https://github.com/${GITHUB_REPOSITORY}/blob/${tag}/CHANGELOG.md" COMPARE_URL="$compare" \
+              python3 .github/scripts/release_notes.py "$prev" "$ref"
           } > notes.md
-          gh release create "$tag" --verify-tag --title "Mzizi Roots crates $version" --notes-file notes.md --latest=false
+          if [ "$tag_exists" = false ]; then
+            git config user.name "github-actions[bot]"
+            git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+            git tag -a "$tag" -m "Mzizi Roots crates $version"
+            git push "https://x-access-token:${GH_TOKEN}@github.com/${GITHUB_REPOSITORY}.git" "refs/tags/$tag"
+          fi
+          # Draft with the notes, then published once; never edited afterwards.
+          GH_REPO="$GITHUB_REPOSITORY" bash .github/scripts/publish-release.sh "$tag" "Mzizi Roots crates $version" notes.md plain

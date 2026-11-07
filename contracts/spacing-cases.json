@@ -1,0 +1,140 @@
+{
+  "$comment": "The spacing floor's rules (owner, 2026-11-04, #617), as cases both evaluators must answer identically: contracts/runner.ts (spacingViolations) and mzizi-rs/contract-eval (spacing_violations). `violations` is how many sentences each returns for the first element of `html`. Pinned by __tests__/spacing-floor.test.ts and mzizi-ui's tests/contracts_json.rs.",
+  "cases": [
+    {
+      "name": "a gap of 8px between two children holds",
+      "html": "<div class=\"flex gap-2\"><span>a</span><span>b</span></div>",
+      "violations": 0
+    },
+    {
+      "name": "a gap of 4px between two children is under the 7px floor",
+      "html": "<div class=\"flex gap-1\"><span>a</span><span>b</span></div>",
+      "violations": 1
+    },
+    {
+      "name": "a gap-0 on a container with one child shows no gap",
+      "html": "<div class=\"flex gap-0\"><span>a</span></div>",
+      "violations": 0
+    },
+    {
+      "name": "a variant gap under the floor still counts",
+      "html": "<div class=\"flex sm:gap-0\"><span>a</span><span>b</span></div>",
+      "violations": 1
+    },
+    {
+      "name": "space-y-1 under the floor counts",
+      "html": "<ul class=\"space-y-1\"><li>a</li><li>b</li></ul>",
+      "violations": 1
+    },
+    {
+      "name": "a 7px arbitrary gap holds",
+      "html": "<div class=\"grid gap-[7px]\"><b>a</b><b>b</b></div>",
+      "violations": 0
+    },
+    {
+      "name": "a gap read from a var cannot be read and holds",
+      "html": "<div class=\"flex gap-[var(--x)]\"><i>a</i><i>b</i></div>",
+      "violations": 0
+    },
+    {
+      "name": "a button with 12px inline padding is under the 14px inset",
+      "html": "<button class=\"px-3 border\">Save</button>",
+      "violations": 1
+    },
+    {
+      "name": "a button with 14px inline padding holds",
+      "html": "<button class=\"px-3.5 border\">Save</button>",
+      "violations": 0
+    },
+    {
+      "name": "a button's block axis is held by its height, not its padding",
+      "html": "<button class=\"h-9 px-4 py-1 border\">Save</button>",
+      "violations": 0
+    },
+    {
+      "name": "a card with text and 8px padding on both axes is under the inset",
+      "html": "<div class=\"rounded border p-2\">Hello</div>",
+      "violations": 1
+    },
+    {
+      "name": "padding on an element with no edge of its own is not an inset",
+      "html": "<div class=\"px-2\">Hello</div>",
+      "violations": 0
+    },
+    {
+      "name": "padding on an element with no text of its own is not an inset",
+      "html": "<div class=\"border px-2\"><p>Hello</p></div>",
+      "violations": 0
+    },
+    {
+      "name": "a pill's block axis is its line height",
+      "html": "<span class=\"rounded-full border px-3.5 py-0.5\">New</span>",
+      "violations": 0
+    },
+    {
+      "name": "a chip with 8px inline padding is under the inset",
+      "html": "<span class=\"rounded-full border px-2\">New</span>",
+      "violations": 1
+    },
+    {
+      "name": "a hero status pill with 14px inline inset and a line-height block axis holds",
+      "html": "<p class=\"flex w-fit items-center gap-2 rounded-full border bg-card px-3.5 py-1\">Phase 0</p>",
+      "violations": 0
+    },
+    {
+      "name": "a hero status pill with 12px inline inset is under the inset",
+      "html": "<p class=\"flex w-fit items-center gap-2 rounded-full border bg-card px-3 py-1\">Phase 0</p>",
+      "violations": 1
+    },
+    {
+      "name": "a badge of fixed height with 14px inline inset holds",
+      "html": "<span class=\"inline-flex h-6 items-center rounded-md border px-3.5 py-0.5\">Beta</span>",
+      "violations": 0
+    },
+    {
+      "name": "a badge of fixed height with 8px inline inset is under the inset",
+      "html": "<span class=\"inline-flex h-6 items-center rounded-md border px-2 py-0.5\">Beta</span>",
+      "violations": 1
+    },
+    {
+      "name": "a negative margin on a text container pulls the text past its edge",
+      "html": "<div class=\"-mx-2 border\">Hello</div>",
+      "violations": 1
+    },
+    {
+      "name": "a table cell with 8px block padding is under the inset",
+      "html": "<td class=\"border px-3.5 py-2\">a</td>",
+      "violations": 1
+    },
+    {
+      "name": "leading-none on a paragraph is under the 1.5 floor",
+      "html": "<p class=\"leading-none\">Body</p>",
+      "violations": 1
+    },
+    {
+      "name": "leading-normal on a paragraph holds",
+      "html": "<p class=\"leading-normal\">Body</p>",
+      "violations": 0
+    },
+    {
+      "name": "leading-none on a span (a chip's label) is not body copy",
+      "html": "<span class=\"leading-none\">9</span>",
+      "violations": 0
+    },
+    {
+      "name": "a numeric leading under the floor on a list item counts",
+      "html": "<li class=\"leading-[1.2]\">a</li>",
+      "violations": 1
+    },
+    {
+      "name": "a trailing important marker is read through",
+      "html": "<div class=\"flex gap-1!\"><i>a</i><i>b</i></div>",
+      "violations": 1
+    },
+    {
+      "name": "a malformed arbitrary leading is not read",
+      "html": "<p class=\"leading-[1.]\">a</p>",
+      "violations": 0
+    }
+  ]
+}

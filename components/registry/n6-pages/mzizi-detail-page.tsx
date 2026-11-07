@@ -143,7 +143,7 @@ export function MziziDetailPage({
             {secondaryAction && secondaryLabel && (
               <button
                 onClick={secondaryAction}
-                className="h-14 rounded-full border border-border bg-muted px-6 text-[13px] font-medium text-foreground transition-opacity hover:opacity-80"
+                className="h-14 rounded-full border border-border bg-muted px-6 text-sm font-medium text-foreground transition-opacity hover:opacity-80"
               >
                 {secondaryLabel}
               </button>

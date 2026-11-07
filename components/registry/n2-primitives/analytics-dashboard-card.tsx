@@ -51,14 +51,14 @@ function AnalyticsDashboardCard({
           reports direction directly — rendered no change indicator at all. It
           now draws the arrow, and colours the row when `changePct` is absent. */}
       {(changePct !== undefined || changeLabel || trend) && (
-        <div className="mt-1 flex items-center gap-1.5 text-xs">
+        <div className="mt-1 flex items-center gap-2 text-xs">
           {trend && (
             <span
               aria-hidden="true"
               className={cn(
                 "font-medium",
                 trend === "up"
-                  ? "text-[var(--color-malachite,#64FFDA)]"
+                  ? "text-[var(--color-malachite-text,#64FFDA)]"
                   : trend === "down"
                     ? "text-destructive"
                     : "text-muted-foreground"
@@ -72,7 +72,7 @@ function AnalyticsDashboardCard({
               className={cn(
                 "font-medium",
                 changePct > 0
-                  ? "text-[var(--color-malachite,#64FFDA)]"
+                  ? "text-[var(--color-malachite-text,#64FFDA)]"
                   : changePct < 0
                     ? "text-destructive"
                     : "text-muted-foreground"

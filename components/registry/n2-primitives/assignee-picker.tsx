@@ -63,7 +63,7 @@ function AssigneePicker({
             {selectedAssignees.slice(0, 3).map((a) => (
               <div
                 key={a.id}
-                className="flex size-6 items-center justify-center rounded-full bg-muted text-[9px] font-medium ring-2 ring-background"
+                className="flex size-6 items-center justify-center rounded-full bg-muted text-sm font-medium ring-2 ring-background"
               >
                 {a.avatar ? (
                   <img
@@ -108,7 +108,7 @@ function AssigneePicker({
                   selected.includes(a.id) && "bg-primary/5"
                 )}
               >
-                <div className="flex size-7 items-center justify-center rounded-full bg-muted text-[10px] font-medium">
+                <div className="flex size-7 items-center justify-center rounded-full bg-muted text-sm font-medium">
                   {a.avatar ? (
                     <img src={a.avatar} alt="" className="size-full rounded-full object-cover" />
                   ) : (

@@ -16,7 +16,7 @@ function Toolbar({
       data-slot="toolbar"
       data-portal="https://mzizi.dev/components/toolbar"
       className={cn(
-        "flex items-center gap-1 rounded-lg border bg-background p-1 shadow-sm data-[orientation=vertical]:flex-col",
+        "flex items-center gap-2 rounded-lg border bg-background p-1 shadow-sm data-[orientation=vertical]:flex-col",
         className
       )}
       {...props}
@@ -76,7 +76,7 @@ function ToolbarToggleGroup({
   return (
     <ToolbarPrimitive.ToggleGroup
       data-slot="toolbar-toggle-group"
-      className={cn("flex items-center gap-0.5", className)}
+      className={cn("flex items-center gap-2", className)}
       {...props}
     />
   )

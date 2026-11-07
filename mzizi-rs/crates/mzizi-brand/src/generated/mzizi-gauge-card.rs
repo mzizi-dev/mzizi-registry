@@ -245,7 +245,7 @@ pub fn MziziGaugeCard(props: MziziGaugeCardProps) -> Element {
                 }
             }
             div { class: "min-w-0",
-                div { class: "flex items-center justify-center gap-1.5",
+                div { class: "flex items-center justify-center gap-2",
                     if let Some(icon) = &props.icon {
                         span { class: "text-muted-foreground", "aria-hidden": "true", {icon} }
                     }

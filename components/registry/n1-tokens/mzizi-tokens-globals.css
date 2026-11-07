@@ -352,34 +352,42 @@
   /* ── ROLES — size and radius ─────────────────────────────────────────────── */
   --spacing-touch: max(
     var(--size-touch),
-    3rem
-  ); /* never under the touch floor */
-  --spacing-touch-min: 3rem; /* a literal: the touch floor no brand can lower */
+    var(--control-floor)
+  ); /* never under the control floor: 49px, or 28px drawn at desktop density */
+  --spacing-touch-min: var(
+    --target-floor
+  ); /* the hit-area floor: 49px on every device; no brand can lower it */
+  --spacing-inset-floor: var(
+    --inset-floor
+  ); /* the inset floor: 14px; no brand can lower it */
+  --spacing-gap-floor: var(
+    --gap-floor
+  ); /* the gap floor: 7px; no brand can lower it */
   --spacing-control: max(
     var(--size-control),
-    3rem
-  ); /* never under the touch floor */
+    var(--control-floor)
+  ); /* never under the control floor: 49px, or 28px drawn at desktop density */
   --spacing-control-sm: max(
     var(--size-control-sm),
-    3rem
-  ); /* never under the touch floor */
+    var(--control-floor)
+  ); /* never under the control floor: 49px, or 28px drawn at desktop density */
   --spacing-control-lg: max(
     var(--size-control-lg),
-    3rem
-  ); /* never under the touch floor */
+    var(--control-floor)
+  ); /* never under the control floor: 49px, or 28px drawn at desktop density */
   --spacing-control-icon: max(
     var(--size-control-icon),
-    3rem
-  ); /* never under the touch floor */
+    var(--control-floor)
+  ); /* never under the control floor: 49px, or 28px drawn at desktop density */
   --spacing-control-dense: var(--size-control-dense);
   --spacing-field: max(
     var(--size-field),
-    3rem
-  ); /* never under the touch floor */
+    var(--control-floor)
+  ); /* never under the control floor: 49px, or 28px drawn at desktop density */
   --spacing-field-sm: max(
     var(--size-field-sm),
-    3rem
-  ); /* never under the touch floor */
+    var(--control-floor)
+  ); /* never under the control floor: 49px, or 28px drawn at desktop density */
   --radius-control: var(--r-control);
   --radius-field: var(--r-field);
   --radius-badge: var(--r-badge);
@@ -426,6 +434,16 @@
   --text-caption: var(--fs-caption);
   --text-code: var(--fs-code);
   --text-body-sm: var(--fs-small);
+  --text-xs: var(
+    --fs-caption
+  ); /* Tailwind default 12px, raised to the 14px caption floor */
+  --text-xs--line-height: var(--lh-small);
+  --text-sm: var(--fs-small); /* 14px */
+  --text-sm--line-height: var(--lh-small);
+  --text-base: var(
+    --fs-body
+  ); /* Tailwind default 16px, raised to the 17px body floor */
+  --text-base--line-height: var(--lh-body);
   --shadow-none: var(--elevation-none);
   --shadow-xs: var(--elevation-xs);
   --shadow-sm: var(--elevation-sm);
@@ -493,7 +511,7 @@
   --mineral-terracotta-container: #f5e6d3;
   --mineral-terracotta-on-container: #5d2906; /* APCA Lc 82.9 on the container */
   --mineral-terracotta-aa: #a0522d; /* canonical value already clears the bar */
-  --mineral-terracotta-text: #8e4928; /* APCA Lc 75.4 on --base. #A0522D measures 70.4 as text on #F3F3F1; derived — canon lightHex toward #000000 */
+  --mineral-terracotta-text: #7b3f23; /* APCA Lc 80.6 on --base. #A0522D measures 70.4 as text on #F3F3F1; derived — canon lightHex toward #000000 */
   --mineral-terracotta-light: #a0522d; /* terracotta's light-mode value, fixed across themes */
   /* sodalite — Intelligence. Intelligence, depth, reasoning */
   --mineral-sodalite: #283593;
@@ -507,7 +525,7 @@
   --mineral-copper-container: #fbe4da;
   --mineral-copper-on-container: #5c2410; /* APCA Lc 84 on the container */
   --mineral-copper-aa: #b4532f; /* #BF5A36 measures 4.44 — WCAG 2.2 AA on #FFFFFF. bundu-labs/marketing/apps/bundu/src/styles/global.css:11 */
-  --mineral-copper-text: #93452a; /* APCA Lc 75.4 on --base. #BF5A36 measures 63 as text on #F3F3F1; derived — canon lightHex toward #000000 */
+  --mineral-copper-text: #7e3b24; /* APCA Lc 80.9 on --base. #BF5A36 measures 63 as text on #F3F3F1; derived — canon lightHex toward #000000 */
   --mineral-copper-light: #bf5a36; /* copper's light-mode value, fixed across themes */
 
   /* ── SEVEN HERITAGE TONES ────────────────────────────────────────────────── */
@@ -516,22 +534,22 @@
   --heritage-indigo-text: #4527a0; /* APCA Lc 85.7 on --base — canonical value already clears the bar */
   --heritage-savanna: #8d6e1a; /* Sun-dried grass, open land, the dry season */
   --heritage-savanna-aa: #8d6e1a; /* canonical value already clears the bar */
-  --heritage-savanna-text: #725915; /* APCA Lc 75.5 on --base. #8D6E1A measures 65.9 as text on #F3F3F1; derived — canon lightHex toward #000000 */
+  --heritage-savanna-text: #614c12; /* APCA Lc 81.1 on --base. #8D6E1A measures 65.9 as text on #F3F3F1; derived — canon lightHex toward #000000 */
   --heritage-baobab: #4e342e; /* The tree of life, age, shelter */
   --heritage-baobab-aa: #4e342e; /* canonical value already clears the bar */
   --heritage-baobab-text: #4e342e; /* APCA Lc 88.8 on --base — canonical value already clears the bar */
   --heritage-sunset: #d84315; /* Day's end, warmth, the gathering hour */
   --heritage-sunset-aa: #d64215; /* #D84315 measures 4.44 — WCAG 2.2 AA on #FFFFFF. derived — canon lightHex toward #000000 */
-  --heritage-sunset-text: #a43310; /* APCA Lc 75.4 on --base. #D84315 measures 62.3 as text on #F3F3F1; derived — canon lightHex toward #000000 */
+  --heritage-sunset-text: #8f2c0e; /* APCA Lc 80.3 on --base. #D84315 measures 62.3 as text on #F3F3F1; derived — canon lightHex toward #000000 */
   --heritage-river: #006064; /* Flow, life, the journey */
   --heritage-river-aa: #006064; /* canonical value already clears the bar */
-  --heritage-river-text: #006064; /* APCA Lc 77.8 on --base — canonical value already clears the bar */
+  --heritage-river-text: #00585c; /* APCA Lc 80.7 on --base. #006064 measures 77.8 as text on #F3F3F1; derived — canon lightHex toward #000000 */
   --heritage-hematite: #546e7a; /* Foundation, endurance, the substrate */
   --heritage-hematite-aa: #546e7a; /* canonical value already clears the bar */
-  --heritage-hematite-text: #4a616b; /* APCA Lc 75.1 on --base. #546E7A measures 69.7 as text on #F3F3F1; derived — canon lightHex toward #000000 */
+  --heritage-hematite-text: #3e515a; /* APCA Lc 81.4 on --base. #546E7A measures 69.7 as text on #F3F3F1; derived — canon lightHex toward #000000 */
   --heritage-kalahari: #c9b589; /* Openness, space, the light pole */
   --heritage-kalahari-aa: #817458; /* #C9B589 measures 2.01 — WCAG 2.2 AA on #FFFFFF. derived — canon lightHex toward #000000 */
-  --heritage-kalahari-text: #675c46; /* APCA Lc 75.3 on --base. #C9B589 measures 31.7 as text on #F3F3F1; derived — canon lightHex toward #000000 */
+  --heritage-kalahari-text: #564e3b; /* APCA Lc 81.2 on --base. #C9B589 measures 31.7 as text on #F3F3F1; derived — canon lightHex toward #000000 */
 
   /* ── SEVEN EXPERIMENTAL — the computed heptagon ──────────────────────────── */
   /* ember — heptagon index 0 */
@@ -540,49 +558,49 @@
   --exp-ember-on-container: #7a3115;
   --exp-ember-ui: #cd5f33;
   --exp-ember-aa: #843d20; /* canonical value already clears the bar */
-  --exp-ember-text: #843d20; /* APCA Lc 79.6 on --base — canonical value already clears the bar */
+  --exp-ember-text: #803b1f; /* APCA Lc 80.6 on --base. #843D20 measures 79.6 as text on #F3F3F1; derived — canon lightHex toward #000000 */
   /* acacia — heptagon index 1 */
   --exp-acacia: #4d5615;
   --exp-acacia-container: #e9ebdb;
   --exp-acacia-on-container: #48510e;
   --exp-acacia-ui: #7e8c22;
   --exp-acacia-aa: #4d5615; /* canonical value already clears the bar */
-  --exp-acacia-text: #4d5615; /* APCA Lc 80.1 on --base — canonical value already clears the bar */
+  --exp-acacia-text: #4b5415; /* APCA Lc 80.9 on --base. #4D5615 measures 80.1 as text on #F3F3F1; derived — canon lightHex toward #000000 */
   /* fern — heptagon index 2 */
   --exp-fern: #175e17;
   --exp-fern-container: #dbebdb;
   --exp-fern-on-container: #0f570f;
   --exp-fern-ui: #259725;
   --exp-fern-aa: #175e17; /* canonical value already clears the bar */
-  --exp-fern-text: #175e17; /* APCA Lc 79.8 on --base — canonical value already clears the bar */
+  --exp-fern-text: #175c17; /* APCA Lc 80.5 on --base. #175E17 measures 79.8 as text on #F3F3F1; derived — canon lightHex toward #000000 */
   /* lagoon — heptagon index 3 */
   --exp-lagoon: #165b51;
   --exp-lagoon-container: #dbebe9;
   --exp-lagoon-on-container: #0e554b;
   --exp-lagoon-ui: #249383;
   --exp-lagoon-aa: #165b51; /* canonical value already clears the bar */
-  --exp-lagoon-text: #165b51; /* APCA Lc 80 on --base — canonical value already clears the bar */
+  --exp-lagoon-text: #16594f; /* APCA Lc 80.7 on --base. #165B51 measures 80 as text on #F3F3F1; derived — canon lightHex toward #000000 */
   /* storm — heptagon index 4 */
   --exp-storm: #284ca6;
   --exp-storm-container: #dbe0eb;
   --exp-storm-on-container: #1a409b;
   --exp-storm-ui: #577bd6;
   --exp-storm-aa: #284ca6; /* canonical value already clears the bar */
-  --exp-storm-text: #284ca6; /* APCA Lc 79.6 on --base — canonical value already clears the bar */
+  --exp-storm-text: #274aa1; /* APCA Lc 80.5 on --base. #284CA6 measures 79.6 as text on #F3F3F1; derived — canon lightHex toward #000000 */
   /* dusk — heptagon index 5 */
   --exp-dusk: #742aad;
   --exp-dusk-container: #e4dbeb;
   --exp-dusk-on-container: #661b9e;
   --exp-dusk-ui: #a35dd8;
   --exp-dusk-aa: #742aad; /* canonical value already clears the bar */
-  --exp-dusk-text: #742aad; /* APCA Lc 79 on --base — canonical value already clears the bar */
+  --exp-dusk-text: #6f28a6; /* APCA Lc 80.5 on --base. #742AAD measures 79 as text on #F3F3F1; derived — canon lightHex toward #000000 */
   /* protea — heptagon index 6 */
   --exp-protea: #932464;
   --exp-protea-container: #ebdbe4;
   --exp-protea-on-container: #841656;
   --exp-protea-ui: #d34998;
   --exp-protea-aa: #932464; /* canonical value already clears the bar */
-  --exp-protea-text: #932464; /* APCA Lc 78.9 on --base — canonical value already clears the bar */
+  --exp-protea-text: #8f2361; /* APCA Lc 79.8 on --base. #932464 measures 78.9 as text on #F3F3F1; derived — canon lightHex toward #000000 */
 
   /* ── SURFACE LADDER — nine steps, deepest to highest ─────────────────────── */
   --pitch: #fafafa; /* Deepest surface — media wells, splash (prime step P2) */
@@ -602,7 +620,7 @@
 
   /* ── TEXT RAMP — three tiers, APCA-measured on --base ────────────────────── */
   --text-primary: #373635; /* APCA Lc 90.4 on --base, 87.4 on --surface */
-  --text-secondary: #575655; /* APCA Lc 78.2 on --base, 75.3 on --surface */
+  --text-secondary: #504f4e; /* APCA Lc 81.1 on --base, 78.1 on --surface */
   --text-tertiary: #6b6a69; /* APCA Lc 69.7 on --base, 66.8 on --surface; WCAG 4.86:1 and 4.65:1 */
   --hero-text: #ffffff; /* Text over photography — pair with --hero-text-shadow, never bare */
   --hero-text-shadow:
@@ -682,7 +700,7 @@
   --status-danger: var(--mineral-terracotta);
   --status-danger-container: var(--mineral-terracotta-container);
   --status-danger-on-container: var(--mineral-terracotta-on-container);
-  --status-danger-text: #844425; /* derived: #8E4928 measures Lc 72.5 against base / surface; walked toward #000000 to Lc 75 */
+  --status-danger-text: var(--mineral-terracotta-text);
   --status-premium: var(--mineral-tanzanite);
   --status-premium-container: var(--mineral-tanzanite-container);
   --status-premium-on-container: #2e004d; /* var(--mineral-tanzanite-on-container), measured; a literal because the dark theme is derived (see ALIAS CHAINS in the header) */
@@ -730,7 +748,7 @@
   --attestation-community: var(--mineral-terracotta);
   --attestation-community-container: var(--mineral-terracotta-container);
   --attestation-community-on-container: var(--mineral-terracotta-on-container);
-  --attestation-community-text: #844425; /* derived: #8E4928 measures Lc 72.5 against base / surface; walked toward #000000 to Lc 75 */
+  --attestation-community-text: var(--mineral-terracotta-text);
   --attestation-business: var(--mineral-malachite);
   --attestation-business-container: var(--mineral-malachite-container);
   --attestation-business-on-container: var(--mineral-malachite-on-container);
@@ -738,7 +756,7 @@
   --attestation-domain: var(--mineral-copper);
   --attestation-domain-container: var(--mineral-copper-container);
   --attestation-domain-on-container: var(--mineral-copper-on-container);
-  --attestation-domain-text: #894027; /* derived: #93452A measures Lc 72.5 against base / surface; walked toward #000000 to Lc 75 */
+  --attestation-domain-text: var(--mineral-copper-text);
   --tier-unverified: var(--assurance-none);
   --tier-unverified-container: var(--assurance-none-container);
   --tier-unverified-on-container: var(--assurance-none-on-container);
@@ -766,7 +784,7 @@
   --category-5: var(--mineral-terracotta);
   --category-6: var(--mineral-sodalite);
   --category-7: var(--mineral-copper);
-  --destructive-text: #9f221b; /* derived: #B3261E measures Lc 70.6 against base / surface; walked toward #000000 to Lc 75 */
+  --destructive-text: #98201a; /* derived: #B3261E measures Lc 70.6 against base / surface; walked toward #000000 to Lc 75 and 7:1 */
   --status-error: var(--destructive);
   --border-control: #787774; /* derived: #E7E5E0 measures Lc 0.0 against pitch / void / base / surface / container / overlay / raised / muted / wash / background / card / popover / sidebar; walked toward #000000 to Lc 30 and 3:1 */
 
@@ -855,18 +873,18 @@
   --font-family-sans: "Noto Sans", ui-sans-serif, system-ui, sans-serif;
   --font-family-serif: "Noto Serif", ui-serif, Georgia, serif;
   --font-family-mono: "JetBrains Mono", ui-monospace, Menlo, monospace;
-  --fs-display: 4.5rem; /* 72 — serif 700, line-height 1.1 */
-  --fs-display-sm: 3.75rem; /* 60 — serif 700, line-height 1.1 */
-  --fs-h1: 3rem; /* 48 — serif 700, line-height 1.15 */
-  --fs-h2: 2.25rem; /* 36 — serif 600, line-height 1.2 */
-  --fs-h3: 1.875rem; /* 30 — serif 600, line-height 1.25 */
-  --fs-h4: 1.5rem; /* 24 — sans 600, line-height 1.3 */
-  --fs-h5: 1.25rem; /* 20 — sans 600, line-height 1.4 */
-  --fs-h6: 1rem; /* 16 — sans 600, line-height 1.4 */
+  --fs-display: 2.5rem; /* 40 — serif 700, line-height 1.1 */
+  --fs-display-sm: 2.125rem; /* 34 — serif 700, line-height 1.1 */
+  --fs-h1: 2.125rem; /* 34 — serif 700, line-height 1.15 */
+  --fs-h2: 1.75rem; /* 28 — serif 600, line-height 1.2 */
+  --fs-h3: 1.375rem; /* 22 — serif 600, line-height 1.25 */
+  --fs-h4: 1.25rem; /* 20 — sans 600, line-height 1.3 */
+  --fs-h5: 1.0625rem; /* 17 — sans 600, line-height 1.4 */
+  --fs-h6: 1.0625rem; /* 17 — sans 600, line-height 1.4 */
   --fs-body-lg: 1.125rem; /* 18 — sans 400, line-height 1.6 */
-  --fs-body: 1rem; /* 16 — sans 400, line-height 1.6 */
+  --fs-body: 1.0625rem; /* 17 — sans 400, line-height 1.6 */
   --fs-small: 0.875rem; /* 14 — sans 400, line-height 1.5 */
-  --fs-caption: 0.75rem; /* 12 — sans 400, line-height 1.5 */
+  --fs-caption: 0.875rem; /* 14 — sans 400, line-height 1.5 */
   --fs-code: 0.875rem; /* 14 — mono 400, line-height 1.6 */
   --lh-display: 1.1;
   --lh-h1: 1.15;
@@ -928,24 +946,32 @@
   --elevation-focus-ring: 0 0 0 2px var(--background), 0 0 0 4px var(--ring);
 
   /* ── TOUCH TARGETS AND CONTROL HEIGHTS ───────────────────────────────────── */
-  --touch-target-lg: 56px; /* Default touch target — /v1/brand defaultTouchTarget */
-  --touch-target: 48px; /* Minimum touch target — /v1/brand minTouchTarget */
-  --touch-target-sm: 40px; /* Dense secondary actions; below the 48px floor, so not for primary controls */
-  --h-button-default: 3.5rem; /* 56px — componentSpecs.button.heights.default */
-  --h-button-sm: 3rem; /* 48px — componentSpecs.button.heights.sm */
-  --h-input: 3.5rem; /* 56px — inputs match the default button */
+  --touch-target-lg: 49px; /* Default touch target — /v1/brand defaultTouchTarget */
+  --touch-target: 49px; /* Minimum touch target — /v1/brand minTouchTarget */
+  --touch-target-sm: 40px; /* Dense secondary actions: drawn at 40px, the 49px hit region kept by the hit-area pseudo-element; not for primary controls */
+  --h-button-default: 3.0625rem; /* 49px — componentSpecs.button.heights.default */
+  --h-button-sm: 3.0625rem; /* 49px — componentSpecs.button.heights.sm */
+  --h-input: 3.0625rem; /* 49px — inputs match the default button */
+  --target-floor: 3.0625rem; /* 49px — the Bundu hit region (7 x 7), on every device. Density never lowers it. */
+  --inset-floor: 0.875rem; /* 14px — the least padding between text and the edge of its container (2 x 7). Density never lowers it. */
+  --gap-floor: 0.4375rem; /* 7px — the least gap between adjacent controls, a label and its field, and sibling items (the 7px unit). */
+  --leading-floor: 1.5; /* body line height, never tighter (WCAG 1.4.12). */
+  --control-floor: 3.0625rem; /* 49px: the smallest a floored control is drawn; desktop density lowers it to 28px. */
   /* Size roles (#484) — `h-touch`, `min-h-touch-min`, `h-control`… The touch floor is
-     fixed in @theme; moving --size-touch-min does not lower min-h-touch-min, and every
-     floored role (touch, control, field) is clamped there to max(var(--size-*), 3rem). */
-  --size-touch: 3.5rem; /* 56px — The default touch target (`h-touch`, `min-h-touch`). brandMeta.accessibility.defaultTouchTarget. */
-  --size-touch-min: 3rem; /* 48px — The touch floor (`min-h-touch-min`): 48px, fixed — no pack can lower it (owner decision 2026-10-07). */
-  --size-control: 3.5rem; /* 56px — Default control height. componentSpecs.button.heights.default. */
-  --size-control-sm: 3rem; /* 48px — Small control height. componentSpecs.button.heights.sm. */
+     --target-floor, set here and by the density layer only; moving --size-touch-min does not
+     lower min-h-touch-min, and every floored role (touch, control, field) is clamped in
+     @theme to max(var(--size-*), var(--target-floor)). */
+  --size-touch: 3.0625rem; /* 49px — The default touch target (`h-touch`, `min-h-touch`). brandMeta.accessibility.defaultTouchTarget. */
+  --size-touch-min: 3.0625rem; /* 49px — The hit-area floor (`min-h-touch-min`): 49px (`BUNDU_FLOOR.hitAreaPx`, 7 x 7, above Apple HIG Buttons' 44x44 pt) on every device, desktop included, registered as `--target-floor`. Density never lowers it: a desktop control may be drawn smaller but keeps this hit region (owner ruling 2026-11-02, replacing the 24px desktop floor of 2026-11-01 and the 44px of 2026-11-01). No brand pack can move it. */
+  --size-inset-floor: 0.875rem; /* 14px — The inset floor (`p-inset-floor`, `px-inset-floor`): 14px (`BUNDU_FLOOR.spacing.insetPx`, 2 x 7), the least padding between text and the edge of its container, registered as `--inset-floor`. No component, density layer or brand pack can lower it (owner 2026-11-04, #617). */
+  --size-gap-floor: 0.4375rem; /* 7px — The gap floor (`gap-gap-floor`, `p-gap-floor`): 7px (`BUNDU_FLOOR.spacing.controlGapPx`, the unit), the least gap between adjacent controls, a label and its field, and sibling items, registered as `--gap-floor`. No component, density layer or brand pack can lower it (owner 2026-11-04, #617). */
+  --size-control: 3.0625rem; /* 49px — Default control height. componentSpecs.button.heights.default. */
+  --size-control-sm: 3.0625rem; /* 49px — Small control height. componentSpecs.button.heights.sm. */
   --size-control-lg: 3.5rem; /* 56px — Large control height. componentSpecs.button.heights.lg. */
-  --size-control-icon: 3rem; /* 48px — Icon-button size. componentSpecs.button.heights.icon. */
-  --size-control-dense: 2rem; /* 32px — Dense control height for a fine pointer only (`pointer-fine:h-control-dense`); below the touch floor on purpose (#484 §2a). */
-  --size-field: 3.5rem; /* 56px — Input height. componentSpecs.input.heights.default. */
-  --size-field-sm: 3rem; /* 48px — Small input height. componentSpecs.input.heights.sm. */
+  --size-control-icon: 3.0625rem; /* 49px — Icon-button size. componentSpecs.button.heights.icon. */
+  --size-control-dense: 2rem; /* 32px — Dense control height for a fine pointer only (`pointer-fine:h-control-dense`); drawn below the hit-area floor on purpose (#484 §2a), its 49px hit region kept by the `hit-area` pseudo-element; 28px under desktop density. */
+  --size-field: 3.0625rem; /* 49px — Input height. componentSpecs.input.heights.default. */
+  --size-field-sm: 3.0625rem; /* 49px — Small input height. componentSpecs.input.heights.sm. */
 
   /* ── Z-INDEX ─────────────────────────────────────────────────────────────── */
   --z-base: 0;
@@ -1152,7 +1178,7 @@
   --popover-foreground: var(--text-primary);
   --secondary: var(--container);
   --secondary-foreground: var(--text-primary);
-  --destructive: #f3bdba; /* derived: destructive-foreground measures Lc 72.9 on #F2B8B5; fill walked toward #FFFFFF to Lc 75 */
+  --destructive: #f3bdba; /* derived: destructive-foreground measures Lc 72.9 on #F2B8B5; fill walked toward #FFFFFF to Lc 75 and 4.5:1 */
   --destructive-foreground: #0e0d0c;
   --overlay-foreground: var(--text-primary);
   --accent-foreground: var(--text-primary);
@@ -1185,10 +1211,10 @@
   --status-danger: var(--mineral-terracotta);
   --status-danger-container: var(--mineral-terracotta-container);
   --status-danger-on-container: var(--mineral-terracotta-on-container);
-  --status-danger-text: #ebcca3; /* var(--mineral-terracotta-text), measured; a literal because the light theme is derived (see ALIAS CHAINS in the header) */
+  --status-danger-text: var(--mineral-terracotta-text);
   --status-premium: var(--mineral-tanzanite);
   --status-premium-container: var(--mineral-tanzanite-container);
-  --status-premium-on-container: #e3c2e8; /* derived: #E1BEE7 measures Lc 73.3 against status-premium-container; walked toward #FFFFFF to Lc 75 */
+  --status-premium-on-container: #e3c2e8; /* derived: #E1BEE7 measures Lc 73.3 against status-premium-container; walked toward #FFFFFF to Lc 75 and 7:1 */
   --status-premium-text: var(--mineral-tanzanite-text);
   --status-neutral: var(--neutral);
   --status-neutral-container: var(--container);
@@ -1218,9 +1244,9 @@
   --assurance-otp-container: var(--mineral-cobalt-container);
   --assurance-otp-on-container: var(--mineral-cobalt-on-container);
   --assurance-otp-text: var(--mineral-cobalt-text);
-  --assurance-documented: #4b66fe; /* derived: #3D5AFE measures Lc 26.6 against base / surface; walked toward #FFFFFF to Lc 30 */
+  --assurance-documented: #4b66fe; /* derived: #3D5AFE measures Lc 26.6 against base / surface; walked toward #FFFFFF to Lc 30 and 3:1 */
   --assurance-documented-container: var(--mineral-sodalite-container);
-  --assurance-documented-on-container: #c7ccea; /* derived: #C5CAE9 measures Lc 73.9 against assurance-documented-container; walked toward #FFFFFF to Lc 75 */
+  --assurance-documented-on-container: #c7ccea; /* derived: #C5CAE9 measures Lc 73.9 against assurance-documented-container; walked toward #FFFFFF to Lc 75 and 7:1 */
   --assurance-documented-text: var(--mineral-sodalite-text);
   --assurance-government: var(--mineral-gold);
   --assurance-government-container: var(--mineral-gold-container);
@@ -1228,12 +1254,12 @@
   --assurance-government-text: var(--mineral-gold-text);
   --assurance-licensed: var(--mineral-tanzanite);
   --assurance-licensed-container: var(--mineral-tanzanite-container);
-  --assurance-licensed-on-container: #e3c2e8; /* derived: #E1BEE7 measures Lc 73.3 against assurance-licensed-container; walked toward #FFFFFF to Lc 75 */
+  --assurance-licensed-on-container: #e3c2e8; /* derived: #E1BEE7 measures Lc 73.3 against assurance-licensed-container; walked toward #FFFFFF to Lc 75 and 7:1 */
   --assurance-licensed-text: var(--mineral-tanzanite-text);
   --attestation-community: var(--mineral-terracotta);
   --attestation-community-container: var(--mineral-terracotta-container);
   --attestation-community-on-container: var(--mineral-terracotta-on-container);
-  --attestation-community-text: #ebcca3; /* var(--mineral-terracotta-text), measured; a literal because the light theme is derived (see ALIAS CHAINS in the header) */
+  --attestation-community-text: var(--mineral-terracotta-text);
   --attestation-business: var(--mineral-malachite);
   --attestation-business-container: var(--mineral-malachite-container);
   --attestation-business-on-container: var(--mineral-malachite-on-container);
@@ -1241,7 +1267,7 @@
   --attestation-domain: var(--mineral-copper);
   --attestation-domain-container: var(--mineral-copper-container);
   --attestation-domain-on-container: var(--mineral-copper-on-container);
-  --attestation-domain-text: #ffc3b0; /* var(--mineral-copper-text), measured; a literal because the light theme is derived (see ALIAS CHAINS in the header) */
+  --attestation-domain-text: var(--mineral-copper-text);
   --tier-unverified: var(--assurance-none);
   --tier-unverified-container: var(--assurance-none-container);
   --tier-unverified-on-container: var(--assurance-none-on-container);
@@ -1269,7 +1295,7 @@
   --category-5: var(--mineral-terracotta);
   --category-6: var(--mineral-sodalite);
   --category-7: var(--mineral-copper);
-  --destructive-text: #f3c0bd; /* derived: #F2B8B5 measures Lc 71.6 against base / surface; walked toward #FFFFFF to Lc 75 */
+  --destructive-text: #f3c0bd; /* derived: #F2B8B5 measures Lc 71.6 against base / surface; walked toward #FFFFFF to Lc 75 and 7:1 */
   --status-error: var(--destructive);
   --border-control: #818180; /* derived: #2A2927 measures Lc 0.0 against pitch / void / base / surface / container / overlay / raised / muted / wash / background / card / popover / sidebar; walked toward #FFFFFF to Lc 30 and 3:1 */
 
@@ -1322,6 +1348,211 @@
   @variant sm {
     padding-inline: var(--space-xl);
   }
+}
+
+/* ════════════════════════════════════════════════════════════════════════════
+ * DENSITY — sizes step down as screens grow (2026-11-01). See densityLayer().
+ * ════════════════════════════════════════════════════════════════════════════ */
+/* The 49px hit region (BUNDU_FLOOR.hitAreaPx): a transparent pseudo-element grows the click and
+   touch region of a button-like control to the floor, so a control drawn at 28px on a
+   desktop is still 49px to hit. It is in the base layer, so a utility on the element (absolute,
+   inset-*) wins, and it is a no-op where the control is already drawn at the floor or larger.
+   It steps aside, by design, for:
+   - an element that draws its own after: pseudo-element (checkbox, switch, radio, the tabs line): it keeps its
+     own, because a utility only overrides the properties it sets and the rest of this rule would mix in;
+   - composite widgets, where a 49px overlay on a row 28 to 36px tall would
+     overlap its neighbours and the later sibling would steal the click: menu and listbox rows take
+     min-height instead (below), and a calendar day ([data-day]) is a grid cell, left as drawn;
+   - an element that clips its overflow (overflow-hidden), which would clip the pseudo-element too: add
+     the wrapper-level hit-area, or size it at the floor.
+   Inline links in running text are exempt, as in WCAG 2.5.8; add `hit-area` to any other target. */
+@layer base {
+  :where(
+    button,
+    [role="button"],
+    [role="tab"],
+    [role="switch"],
+    summary,
+    .hit-area
+  ):not([class*="after:"], [data-day]) {
+    position: relative;
+  }
+  :where(
+      button,
+      [role="button"],
+      [role="tab"],
+      [role="switch"],
+      summary,
+      .hit-area
+    ):not([class*="after:"], [data-day])::after {
+    content: "";
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: max(100%, var(--target-floor));
+    height: max(100%, var(--target-floor));
+    transform: translate(-50%, -50%);
+  }
+  :where(
+    [role="menuitem"],
+    [role="menuitemcheckbox"],
+    [role="menuitemradio"],
+    [role="option"]
+  ) {
+    min-height: var(--target-floor);
+  }
+}
+
+/* ════════════════════════════════════════════════════════════════════════════
+ * THE SPACING FLOOR (owner, 2026-11-04, #617; `BUNDU_FLOOR.spacing`): minimums that nothing can go under, even a
+ * component that sets no padding at all. Inset 14px, gaps 7px, body leading 1.5.
+ * These are DEFAULTS in the base layer, like the hit-area rule above: a bare element gets the floor, and a utility
+ * on it (`p-6`, `gap-2`) is the author's own value, which `__tests__/spacing-floor.test.ts` holds to the floor
+ * for every registry component. They step aside, by design, for:
+ *   - controls with no text to inset: an icon-only button (`> svg:only-child`), an empty one, an `svg` (a spinner with `role="status"`), a fixed square
+ *     (`size-*`), a calendar day (`[data-day]`), and the native checkbox, radio, range, colour and file inputs;
+ *   - a surface whose padding lives on its structured children (a card with `card-header` / `card-content`
+ *     slots): padding the root as well would pad twice. The children carry the inset, and the test holds them to it.
+ * A control's BLOCK axis is not inset here: its height floors (the 28px drawn minimum, the 49px hit
+ * region) already decide it, and 14px of block padding does not fit a 28px control.
+ * The legacy opt-out (data-mzizi-sizes="legacy", last in this file) sets the three variables to 0, 0 and 1: every rule below becomes a no-op.
+ * ════════════════════════════════════════════════════════════════════════════ */
+@layer base {
+  body {
+    line-height: max(var(--lh-body), var(--leading-floor));
+  }
+  :is(
+    button,
+    [role="button"],
+    [role="tab"],
+    [role="menuitem"],
+    [role="menuitemcheckbox"],
+    [role="menuitemradio"],
+    [role="option"],
+    select,
+    textarea,
+    input:not(
+      [type="checkbox"],
+      [type="radio"],
+      [type="range"],
+      [type="hidden"],
+      [type="file"],
+      [type="color"],
+      [type="image"]
+    )
+  ):not(
+    :has(> svg:only-child, > img:only-child),
+    :empty,
+    [class^="size-"],
+    [class*=" size-"],
+    [data-day]
+  ) {
+    padding-inline: var(--inset-floor);
+  }
+  :where(
+    dialog,
+    [popover],
+    [role="alertdialog"],
+    [role="tooltip"],
+    [data-slot="card"],
+    [data-slot="alert"]
+  ):not(
+    :has(
+      > [data-slot*="header"],
+      > [data-slot*="content"],
+      > [data-slot*="footer"],
+      > [data-slot*="title"],
+      > [data-slot*="description"]
+    ),
+    svg,
+    :empty,
+    [class^="size-"],
+    [class*=" size-"]
+  ) {
+    padding: var(--inset-floor);
+  }
+  :where(
+    [role="toolbar"],
+    [role="tablist"],
+    [role="radiogroup"],
+    [role="group"],
+    [role="menu"],
+    [role="listbox"],
+    [role="list"],
+    ul,
+    ol,
+    menu,
+    fieldset
+  ) {
+    gap: var(--gap-floor);
+  }
+}
+
+@media (min-width: 48rem) {
+  :root {
+    --fs-display: 3rem; /* 48px */
+    --fs-display-sm: 2.5rem; /* 40px */
+  }
+}
+
+@media (min-width: 64rem) and (pointer: fine) and (hover: hover) and (not (any-pointer: coarse)) {
+  :root {
+    --control-floor: 1.75rem; /* 28px: the smallest a control is DRAWN. --target-floor (the 49px hit region) is not lowered. */
+    --touch-target-lg: 36px;
+    --touch-target: 32px;
+    --h-button-default: 2.25rem; /* 36px */
+    --h-button-sm: 2rem; /* 32px */
+    --h-input: 3.0625rem; /* 49px */
+    --size-touch: 2.25rem; /* 36px */
+    --size-control: 2.25rem; /* 36px */
+    --size-control-sm: 2rem; /* 32px */
+    --size-control-lg: 2.5rem; /* 40px */
+    --size-control-icon: 2.25rem; /* 36px */
+    --size-control-dense: 1.75rem; /* 28px */
+    --size-field: 3.0625rem; /* 49px */
+    --size-field-sm: 3.0625rem; /* 49px */
+    --fs-display: 3rem; /* 48px */
+    --fs-display-sm: 2.5rem; /* 40px */
+    --fs-h1: 2rem; /* 32px */
+    --fs-h2: 1.5rem; /* 24px */
+    --fs-h3: 1.25rem; /* 20px */
+    --fs-h4: 1.125rem; /* 18px */
+  }
+}
+
+/* Opt out until you have migrated: the sizes consumers pinned before 2026-11-01. It restores the old sizes (and so
+   steps OUT of the Bundu floor: 16px body, 12px captions, 48px targets); remove it to take the floor. */
+:root[data-mzizi-sizes="legacy"] {
+  --target-floor: 3rem; /* 48px */
+  --inset-floor: 0px; /* no spacing floor (steps out of #617) */
+  --gap-floor: 0px;
+  --leading-floor: 1;
+  --control-floor: 3rem; /* 48px */
+  --touch-target-lg: 56px;
+  --touch-target: 48px;
+  --h-button-default: 3.5rem; /* 56px */
+  --h-button-sm: 3rem; /* 48px */
+  --h-input: 3.5rem; /* 56px */
+  --size-touch: 3.5rem; /* 56px */
+  --size-control: 3.5rem; /* 56px */
+  --size-control-sm: 3rem; /* 48px */
+  --size-control-lg: 3.5rem; /* 56px */
+  --size-control-icon: 3rem; /* 48px */
+  --size-control-dense: 2rem; /* 32px */
+  --size-field: 3.5rem; /* 56px */
+  --size-field-sm: 3rem; /* 48px */
+  --fs-display: 4.5rem; /* 72px */
+  --fs-display-sm: 3.75rem; /* 60px */
+  --fs-h1: 3rem; /* 48px */
+  --fs-h2: 2.25rem; /* 36px */
+  --fs-h3: 1.875rem; /* 30px */
+  --fs-h4: 1.5rem; /* 24px */
+  --fs-h5: 1.25rem; /* 20px */
+  --fs-h6: 1rem; /* 16px */
+  --fs-body-lg: 1.125rem; /* 18px */
+  --fs-body: 1rem; /* 16px */
+  --fs-small: 0.875rem; /* 14px */
+  --fs-caption: 0.75rem; /* 12px */
 }
 
 /* ════════════════════════════════════════════════════════════════════════════

@@ -88,14 +88,14 @@ function ContentCalendar({
             >
               <div
                 className={cn(
-                  "mb-1 text-center text-[10px] font-medium",
-                  isToday ? "text-[var(--color-malachite,#64FFDA)]" : "text-muted-foreground"
+                  "mb-1 text-center text-sm font-medium",
+                  isToday ? "text-[var(--color-malachite-text,#64FFDA)]" : "text-muted-foreground"
                 )}
               >
                 {showWeekday && day.toLocaleDateString(undefined, { weekday: "short" })}
                 <div className={cn("text-sm", isToday && "font-bold")}>{day.getDate()}</div>
               </div>
-              <div className="space-y-1">
+              <div className="space-y-2">
                 {dayItems.map((item) => (
                   <button
                     key={item.id}
@@ -104,7 +104,7 @@ function ContentCalendar({
                       onItemClick?.(item.id)
                     }}
                     className={cn(
-                      "w-full rounded-[var(--radius-sm,7px)] border px-1.5 py-1 text-left text-[9px]",
+                      "w-full rounded-[var(--radius-sm,7px)] border px-1.5 py-1 text-left text-sm",
                       statusStyles[item.status]
                     )}
                   >

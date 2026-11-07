@@ -21,7 +21,7 @@ interface PaginationProps {
 }
 
 const link =
-  "inline-flex h-8 min-w-8 items-center justify-center rounded-sm px-2.5 text-body-sm font-medium pointer-coarse:h-11 pointer-coarse:min-w-11";
+  "inline-flex h-8 min-w-8 items-center justify-center rounded-sm px-3.5 text-body-sm font-medium pointer-coarse:h-11 pointer-coarse:min-w-11";
 
 function Pagination({
   url: rawUrl,
@@ -48,7 +48,7 @@ function Pagination({
       </p>
       {pageCount > 1 && (
         <nav aria-label="Pagination">
-          <ul className="flex flex-wrap items-center gap-1">
+          <ul className="flex flex-wrap items-center gap-2">
             <li>
               {page > 1 ? (
                 <a

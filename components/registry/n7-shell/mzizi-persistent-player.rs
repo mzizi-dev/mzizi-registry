@@ -98,7 +98,7 @@ pub fn MziziPersistentPlayer(props: MziziPersistentPlayerProps) -> Element {
                         p { class: "truncate text-xs text-muted-foreground", "{artist}" }
                     }
                 }
-                div { class: "flex shrink-0 items-center gap-1",
+                div { class: "flex shrink-0 items-center gap-2",
                     button {
                         "aria-label": if props.is_playing { "Pause" } else { "Play" },
                         class: "flex size-10 min-h-[48px] min-w-[48px] items-center justify-center rounded-full transition-colors hover:bg-muted focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary",

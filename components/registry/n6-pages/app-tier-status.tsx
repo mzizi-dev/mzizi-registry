@@ -225,7 +225,7 @@ function TierStatus({
             <ul
               data-slot="tier-attested"
               aria-label={words.attested}
-              className="mt-2 flex flex-wrap gap-1.5"
+              className="mt-2 flex flex-wrap gap-2"
             >
               {chips.map((r) => {
                 const t = r.type;
@@ -238,7 +238,7 @@ function TierStatus({
                     data-source={p?.source}
                     data-checked-at={p?.checkedAt}
                     className={cn(
-                      "inline-flex min-h-7 items-center gap-1.5 rounded-full px-2.5 text-caption font-medium",
+                      "inline-flex min-h-7 items-center gap-2 rounded-full px-3.5 text-caption font-medium",
                       p && "py-1",
                       a.classes.container,
                       a.classes.onContainer,
@@ -274,7 +274,7 @@ function TierStatus({
       <ol
         data-slot="tier-ladder"
         aria-label={words.ladder}
-        className="mt-4 grid gap-0.5"
+        className="mt-4 grid gap-2"
       >
         {ASSURANCE_ORDER.map((l) => {
           const rung = ASSURANCE_DATA[l];
@@ -327,7 +327,7 @@ function TierStatus({
         {attestations.length === 0 ? (
           <p className="text-body-sm text-muted-foreground">{words.none}</p>
         ) : (
-          <ul className="grid gap-1.5">
+          <ul className="grid gap-2">
             {attestations.map((a) => (
               <li key={a.label} className="flex items-start gap-2 text-body-sm">
                 <Icon
@@ -358,7 +358,7 @@ function TierStatus({
               {`${words.next} ${nameOf(next.level)}`}
             </Sub>
             {requirements.length > 0 && (
-              <ul className="grid list-disc gap-1 ps-5 text-body-sm text-muted-foreground">
+              <ul className="grid list-disc gap-2 ps-5 text-body-sm text-muted-foreground">
                 {requirements.map((r) => (
                   <li key={r}>{r}</li>
                 ))}

@@ -114,7 +114,7 @@ export function MziziFeedPage<T>({
               </div>
             )}
             {filters && filters.length > 0 && (
-              <div className="flex scrollbar-none gap-1.5 overflow-x-auto pb-1">
+              <div className="flex scrollbar-none gap-2 overflow-x-auto pb-1">
                 {filters.map((f) => (
                   <select
                     key={f.key}
@@ -174,7 +174,7 @@ export function MziziFeedPage<T>({
             {onCreateAction && (
               <button
                 onClick={onCreateAction}
-                className="mt-6 h-12 rounded-full bg-[var(--brand-accent,var(--status-success,var(--color-malachite,#64FFDA)))] px-6 text-[13px] font-medium text-[var(--brand-accent-foreground,#0A0A0A)] transition-opacity hover:opacity-80"
+                className="mt-6 h-12 rounded-full bg-[var(--brand-accent,var(--status-success,var(--color-malachite,#64FFDA)))] px-6 text-sm font-medium text-[var(--brand-accent-foreground,#0A0A0A)] transition-opacity hover:opacity-80"
               >
                 {createLabel}
               </button>

@@ -108,7 +108,7 @@ function MziziMissionCard({
           )}
         >
           {isCompleted ? (
-            <Check className="size-6 text-[var(--color-malachite)]" strokeWidth={2.5} />
+            <Check className="size-6 text-malachite-text" strokeWidth={2.5} />
           ) : isLocked ? (
             <Target className="size-6 text-muted-foreground" />
           ) : (
@@ -126,7 +126,7 @@ function MziziMissionCard({
               {title}
             </h4>
             <span
-              className="rounded-full px-1.5 py-0.5 text-[8px] font-bold tracking-wider uppercase"
+              className="rounded-full px-1.5 py-0.5 text-sm font-bold tracking-wider uppercase"
               style={{
                 backgroundColor: `color-mix(in srgb, ${dc.color} 15%, transparent)`,
                 color: dc.color,
@@ -139,15 +139,15 @@ function MziziMissionCard({
           {/* Rewards */}
           <div className="mt-2 flex items-center gap-3 text-xs">
             <span
-              className="flex items-center gap-1 font-medium"
+              className="flex items-center gap-2 font-medium"
               style={{ color: "var(--color-gold, var(--color-gold,#FFD740))" }}
             >
               <Star className="size-3" />
               {pointsReward} pts
             </span>
             {badgeName && (
-              <span className="flex items-center gap-1 text-muted-foreground">
-                <Award className="size-3 text-[var(--color-tanzanite)]" />
+              <span className="flex items-center gap-2 text-muted-foreground">
+                <Award className="size-3 text-tanzanite-text" />
                 {badgeName}
               </span>
             )}
@@ -160,7 +160,7 @@ function MziziMissionCard({
       {/* Progress bar */}
       {status === "in_progress" && progressPercent > 0 && (
         <div className="mt-3">
-          <div className="mb-1 flex items-center justify-between text-[10px] text-muted-foreground">
+          <div className="mb-1 flex items-center justify-between text-sm text-muted-foreground">
             <span>Progress</span>
             <span>
               {completedSteps != null && totalSteps

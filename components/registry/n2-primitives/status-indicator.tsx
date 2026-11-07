@@ -51,7 +51,7 @@ function StatusIndicator({
     <div
       data-slot="status-indicator"
       data-portal="https://mzizi.dev/components/status-indicator"
-      className={cn("inline-flex items-center gap-1.5", className)}
+      className={cn("inline-flex items-center gap-2", className)}
     >
       <span className="relative flex">
         <span className={cn("rounded-full", SIZE_STYLES[size], STATUS_STYLES[status])} />

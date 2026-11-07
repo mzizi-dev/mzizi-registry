@@ -135,7 +135,7 @@ export function MziziGaugeCard({
       </div>
       {/* Label */}
       <div className="min-w-0">
-        <div className="flex items-center justify-center gap-1.5">
+        <div className="flex items-center justify-center gap-2">
           {icon && (
             <span className="text-muted-foreground" aria-hidden="true">
               {icon}

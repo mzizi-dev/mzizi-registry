@@ -17,6 +17,8 @@
  *
  * THE CONTRAST GATE (owner rule, #484 §2b) runs on every `pnpm tokens:sync` and
  * `pnpm tokens:verify`, and fails the build on a violation:
+ *   - MINIMUMS (owner decision 2026-11-02, #399), enforced as well as the APCA bars, from `WCAG_BODY`,
+ *     `WCAG_NON_BODY` and `WCAG_UI` below: body text >= WCAG 7:1, `nonBody` text >= 4.5:1, ui >= 3:1
  *   - `kind: text` roles: |APCA Lc| >= 75 on `base` and `surface`, both themes
  *   - a `kind: text` role whose rule names `nonBody` (text that is never body copy:
  *     captions, timestamps, metadata): >= 60, APCA's minimum for non-body text; `nonBody`
@@ -30,7 +32,8 @@
  *     sit on (owner decision 2026-10-20, #484). `input`, the edge controls draw today, is
  *     pending until slice 4 moves them
  * The bars are `BODY`, `NON_BODY` and `UI` below; the gate reads them from here.
- *   - every size marked `floor` >= `spacing-touch-min` (48px, a floor no pack can lower)
+ *   - every size marked `floor` >= `spacing-touch-min` (the 49px Bundu hit area, a floor no pack can lower), and the
+ *     smallest size a desktop density layer draws >= `BUNDU_FLOOR.visibleControlMinPx` (28px)
  *   - a `derive` that no walk can satisfy is a violation naming the roles, never #000/#FFF
  * A rule may carry `pending` instead of passing only where the shortfall is a
  * design decision the owner has not made; the gate prints those, and
@@ -44,7 +47,10 @@
  *
  * WHAT IS NOT A ROLE: icon sizes, the numeric spacing scale, layout widths and
  * grid templates, z-index, the focus-ring width and border widths. Those are
- * structural, not brand decisions.
+ * structural, not brand decisions. The scale itself stays structural; its MINIMUMS are not: the spacing floor
+ * (`BUNDU_FLOOR.spacing`: inset 14px, gaps 7px, body leading 1.5) is an invariant no pack can lower, registered
+ * as `--inset-floor`, `--gap-floor` and `--leading-floor` and as the fixed size roles `spacing-inset-floor` and
+ * `spacing-gap-floor` (#617).
  *
  * Values are READ from `brand.source.ts` and `palette.source.ts`, never retyped:
  * this file replaced the second copies of the status colours, the radius ladder
@@ -99,6 +105,12 @@ interface MeasuredBase {
   wcag?: number
   /** Set only where the default misses its bar and the fix is an owner decision. */
   pending?: string
+  /**
+   * A named, listed exception to the WCAG text minimum (`wcagFloor()`), never silent: this rule's WCAG bar is
+   * `min` instead, for `reason`. The APCA bar still applies in full. The gate prints every one and
+   * `__tests__/tokens-wcag-minimums.test.ts` pins the exact set, so it cannot grow quietly.
+   */
+  wcagException?: { min: number; reason: string }
 }
 
 /** A rule that measures the role. `contrastMin()` reads its bar. */
@@ -191,12 +203,62 @@ export interface Role {
   block: RoleBlock
 }
 
+/**
+ * THE BUNDU FLOOR (owner rulings, 2026-11-02): the hard minimums Bundu stands behind, as high as possible, because
+ * Bundu sets the standard for outdoor reading and for people who find technology hard (older users, African and
+ * emerging markets). ONE definition: the token generators, the contract runner, the Rust evaluator and every
+ * test read these numbers, and `__tests__/bundu-floor.test.ts` fails when any default breaks one.
+ *
+ * Where each number comes from (The Bundu Order draws on biblical mathematical patterns and prime numbers;
+ * owner, 2026-11-02):
+ *   - `unitPx` 7: the radius unit (`brand.source.ts`, `--radius-unit`); the radii are 4/7/12/14/17 and a pill.
+ *   - `bodyPx` 17: body text on every device, desktop included. It is Apple's iOS default body size, and a prime.
+ *   - `captionPx` 14: captions, metadata and secondary labels; 2 x 7. Nothing readable is smaller.
+ *   - `hitAreaPx` 49: every interactive control keeps a hit region this size on every device, desktop included;
+ *     7 x 7, above Apple's 44 pt. A desktop control may DRAW smaller (`visibleControlMinPx` and up) but keeps the
+ *     hit region through padding or the `hit-area` pseudo-element (see `densityLayer()`).
+ *   - `visibleControlMinPx` 28: the smallest a control is DRAWN, at desktop density; 4 x 7 (Apple macOS default 28 pt).
+ *   - `spacing`: the SPACING FLOOR (owner, 2026-11-04, #617): minimums nothing can go under, even a component that
+ *     sets no padding at all. All on the 7px unit. `insetPx` 14 (2 x 7): padding between text and the edge of its
+ *     container (a control's label on the inline axis; a card, panel, dialog, alert or popover on both axes; a
+ *     control's block axis is held by its height floors instead; a one-line label chip or pill, such as a badge or a hero
+ *     status pill, is held by the 14px inline inset and its block axis is its line height or fixed height, owner,
+ *     2026-11-04, #625). `controlGapPx` 7: the gap between adjacent
+ *     interactive controls, visible edge to visible edge (hit regions may touch, never overlap).
+ *     `labelGapPx` 7: a label and its field. `itemGapPx` 7: sibling items of a list, grid, stack or toolbar.
+ *     `leadingBody` 1.5: body line height (WCAG 1.4.12). Enforced as defaults in the base layer of the stylesheet
+ *     (`--inset-floor`, `--gap-floor`, `--leading-floor`) and as tests on every explicit value.
+ *   - `contrast`: WCAG 2 ratios (#610, owner 2026-11-02): body text 7:1, non-body text 4.5:1, UI parts 3:1.
+ *   - `apca`: the APCA Lc bars that stand beside them.
+ */
+export const BUNDU_FLOOR = {
+  unitPx: 7,
+  bodyPx: 17,
+  captionPx: 14,
+  hitAreaPx: 49,
+  visibleControlMinPx: 28,
+  spacing: { insetPx: 14, controlGapPx: 7, labelGapPx: 7, itemGapPx: 7, leadingBody: 1.5 },
+  contrast: { body: 7, nonBody: 4.5, ui: 3 },
+  apca: { body: 75, nonBody: 60, ui: 30 },
+} as const
+
 /** APCA Lc 75: body text, and a foreground on its fill. The gate's text floor. */
-export const BODY = 75
+export const BODY = BUNDU_FLOOR.apca.body
 /** APCA's minimum for non-body text: captions, timestamps, metadata (owner decision 2026-10-20, #484). */
-export const NON_BODY = 60
+export const NON_BODY = BUNDU_FLOOR.apca.nonBody
 /** APCA Lc 30: the parts of a control or focus indicator a user has to see. The gate's ui floor. */
-export const UI = 30
+export const UI = BUNDU_FLOOR.apca.ui
+/**
+ * WCAG 2 contrast MINIMUMS, enforced next to the APCA bars (owner decision 2026-11-02, #399: "adopt a WCAG 7:1
+ * floor for body text. We should have minimums set"). One definition; the gate, `textRamp()`, the derive walks
+ * and the tests all read these.
+ */
+/** WCAG 2 ratio 7:1 (the AAA level of 1.4.6): body text, and a foreground on its fill. */
+export const WCAG_BODY = BUNDU_FLOOR.contrast.body
+/** WCAG 2 ratio 4.5:1 (1.4.3): non-body text, the `nonBody` rule: captions, timestamps, metadata. */
+export const WCAG_NON_BODY = BUNDU_FLOOR.contrast.nonBody
+/** WCAG 2 ratio 3:1 (1.4.11, non-text contrast): the `UI` rule, focus rings and control edges. */
+export const WCAG_UI = BUNDU_FLOOR.contrast.ui
 const ON_PAGE = ["base", "surface"] as const
 
 /**
@@ -228,6 +290,18 @@ export function contrastFloor(kind: RoleKind, rule?: ContrastRule): number {
   return kind === "ui" ? UI : 0
 }
 
+/** The WCAG 2 ratio floor the gate holds a kind to: 7 for body text, 4.5 for `nonBody` text, 3 for ui, none otherwise. */
+export function wcagFloor(kind: RoleKind, rule?: ContrastRule): number {
+  if (kind === "text") return rule && "against" in rule && rule.nonBody ? WCAG_NON_BODY : WCAG_BODY
+  return kind === "ui" ? WCAG_UI : 0
+}
+
+/** The WCAG ratio a measured rule asks for: its own `wcag` where that is higher, else the kind's floor. 0 = none. */
+export function wcagMin(kind: RoleKind, rule: MeasuredRule): number {
+  if (rule.wcagException) return Math.max(rule.wcag ?? 0, rule.wcagException.min)
+  return Math.max(rule.wcag ?? 0, wcagFloor(kind, rule))
+}
+
 /** The |Lc| a measured rule asks for: its `min`, or for `nonBody` text, `NON_BODY`. */
 export function contrastMin(kind: RoleKind, rule: MeasuredRule): number {
   return rule.min ?? contrastFloor(kind, rule)
@@ -250,8 +324,27 @@ function spec(name: string): { heights: Record<string, number>; borderRadius: nu
 function access(key: "minTouchTarget" | "defaultTouchTarget"): number {
   const v = brandMeta.accessibility[key]
   if (typeof v !== "number") throw new Error(`brand.source.ts accessibility.${key} is not a number`)
+  // canon (`/v1/brand`) carries the number too; the Bundu floor is the one source and canon must agree.
+  if (v !== BUNDU_FLOOR.hitAreaPx) {
+    throw new Error(`brand.source.ts accessibility.${key} is ${v}px, but BUNDU_FLOOR.hitAreaPx is ${BUNDU_FLOOR.hitAreaPx}px`)
+  }
   return v
 }
+
+/** Canon (`/v1/brand`) carries the spacing floor too; `BUNDU_FLOOR.spacing` is the one source and canon must agree. */
+function spacingFloorInCanon(): void {
+  const a = brandMeta.accessibility
+  const want: Record<string, number> = {
+    minInset: BUNDU_FLOOR.spacing.insetPx,
+    minControlGap: BUNDU_FLOOR.spacing.controlGapPx,
+    minLabelGap: BUNDU_FLOOR.spacing.labelGapPx,
+    minItemGap: BUNDU_FLOOR.spacing.itemGapPx,
+    minBodyLeading: BUNDU_FLOOR.spacing.leadingBody,
+  }
+  for (const [k, v] of Object.entries(want))
+    if (a[k] !== v) throw new Error(`brand.source.ts accessibility.${k} is ${String(a[k])}, but BUNDU_FLOOR.spacing says ${v}`)
+}
+spacingFloorInCanon()
 
 /**
  * A radius role's default: the rung of the radius ladder it follows, so a
@@ -273,6 +366,19 @@ function fontFamily(name: "sans" | "serif" | "mono"): string {
   const row = typography.find((t) => t.entryType === "font" && t.name === name)
   if (!row?.family) throw new Error(`brand.source.ts typography has no font "${name}"`)
   return row.family
+}
+
+/**
+ * Canon's type scale (`/v1/brand` typography, `design-system/tokens.json`) is held to the Bundu floor at load, like
+ * `access()` holds the hit area: Body and every heading and display step >= `bodyPx`, Body Small, Caption and Code
+ * >= `captionPx`. A canon row under its floor fails the build rather than serving a stale size.
+ */
+for (const t of typography) {
+  if (t.entryType !== "scale" || typeof t.sizePx !== "number") continue
+  const floor = ["Body Small", "Caption", "Code"].includes(t.name) ? BUNDU_FLOOR.captionPx : BUNDU_FLOOR.bodyPx
+  if (t.sizePx < floor) {
+    throw new Error(`brand.source.ts typography "${t.name}" is ${t.sizePx}px, under the Bundu floor of ${floor}px`)
+  }
 }
 
 /** The mzizi row's family: hematite, by owner decision (2026-09-30). */
@@ -616,6 +722,32 @@ function background(name: string) {
 }
 
 const fg = (against: string): ContrastRule => ({ against: [against], min: BODY })
+
+/**
+ * The label on a brand's solid action fill (`primary` and what follows it) holds WCAG 4.5:1 (1.4.3), not the 7:1 body
+ * minimum. These are button labels, not body copy, and the fill is per-brand: `--primary` resolves through each
+ * `[data-brand]` block to that family's `-aa` tier, which is by definition the 4.5:1 fill under white, so 7:1 would
+ * darken the action colour of all seven brands, a brand decision the owner has not made. APCA Lc 75 still applies.
+ * `destructive-foreground` joins them (pending owner confirmation, 2026-11-02): the destructive fill stays canon #B3261E, whose
+ * white label measures 6.54:1 (Lc 86), so one semantic keeps one red.
+ */
+const ON_BRAND_FILL_EXCEPTION = {
+  min: 4.5,
+  reason:
+    "a label on the brand's solid action fill, not body copy; the fill is each brand's -aa tier (4.5:1 under white) " +
+    "and 7:1 would darken every brand's action colour, an owner decision",
+} as const
+const fgOnBrandFill = (against: string): ContrastRule => ({
+  against: [against],
+  min: BODY,
+  wcagException: ON_BRAND_FILL_EXCEPTION,
+})
+const DESTRUCTIVE_FILL_EXCEPTION = {
+  min: 4.5,
+  reason:
+    "a label on the destructive action fill, not body copy; the fill is canon error #B3261E (6.54:1 under white, Lc 86), " +
+    "and 7:1 would move it to #AA241D, a second red beside canon error; pending owner confirmation, 2026-11-02",
+} as const
 const onWhiteOrInk: ThemedValue = { light: { literal: "#FFFFFF" }, dark: { literal: "#0E0D0C" } }
 
 export const ROLES: readonly Role[] = [
@@ -635,7 +767,7 @@ export const ROLES: readonly Role[] = [
     kind: "text",
     required: true,
     description: "Text and icons on `primary`.",
-    contrast: fg("primary"),
+    contrast: fgOnBrandFill("primary"),
     default: onWhiteOrInk,
     block: "shadcn",
   },
@@ -664,7 +796,7 @@ export const ROLES: readonly Role[] = [
     kind: "text",
     required: true,
     description: "Text and icons on `brand-accent`.",
-    contrast: fg("brand-accent"),
+    contrast: fgOnBrandFill("brand-accent"),
     default: onWhiteOrInk,
     block: "shadcn",
   },
@@ -683,7 +815,7 @@ export const ROLES: readonly Role[] = [
     kind: "text",
     required: true,
     description: "Text and icons on `app-accent`.",
-    contrast: fg("app-accent"),
+    contrast: fgOnBrandFill("app-accent"),
     default: { role: "brand-accent-foreground" },
     block: "roles",
   },
@@ -899,7 +1031,7 @@ export const ROLES: readonly Role[] = [
     kind: "text",
     required: true,
     description: "Text and icons on `destructive`.",
-    contrast: fg("destructive"),
+    contrast: { against: ["destructive"], min: BODY, wcagException: DESTRUCTIVE_FILL_EXCEPTION },
     default: onWhiteOrInk,
     block: "shadcn",
   },
@@ -1002,7 +1134,7 @@ export const ROLES: readonly Role[] = [
   { name: "sidebar", group: "sidebar", kind: "surface", required: true, description: "Sidebar surface.", default: { role: "surface" }, block: "sidebar" },
   { name: "sidebar-foreground", group: "sidebar", kind: "text", required: true, description: "Text on `sidebar`.", contrast: fg("sidebar"), default: { role: "text-primary" }, block: "sidebar" },
   { name: "sidebar-primary", group: "sidebar", kind: "fill", required: true, description: "The sidebar's active item fill.", default: { role: "primary" }, block: "sidebar" },
-  { name: "sidebar-primary-foreground", group: "sidebar", kind: "text", required: true, description: "Text on `sidebar-primary`.", contrast: fg("sidebar-primary"), default: { role: "primary-foreground" }, block: "sidebar" },
+  { name: "sidebar-primary-foreground", group: "sidebar", kind: "text", required: true, description: "Text on `sidebar-primary`.", contrast: fgOnBrandFill("sidebar-primary"), default: { role: "primary-foreground" }, block: "sidebar" },
   { name: "sidebar-accent", group: "sidebar", kind: "surface", required: true, description: "The sidebar's hover fill.", default: { role: "container" }, block: "sidebar" },
   { name: "sidebar-accent-foreground", group: "sidebar", kind: "text", required: true, description: "Text on `sidebar-accent`.", contrast: fg("sidebar-accent"), default: { role: "text-primary" }, block: "sidebar" },
   {
@@ -1037,8 +1169,28 @@ export const ROLES: readonly Role[] = [
     group: "size",
     kind: "size",
     required: true,
-    description: "The touch floor (`min-h-touch-min`): 48px, fixed — no pack can lower it (owner decision 2026-10-07).",
+    description: "The hit-area floor (`min-h-touch-min`): 49px (`BUNDU_FLOOR.hitAreaPx`, 7 x 7, above Apple HIG Buttons' 44x44 pt) on every device, desktop included, registered as `--target-floor`. Density never lowers it: a desktop control may be drawn smaller but keeps this hit region (owner ruling 2026-11-02, replacing the 24px desktop floor of 2026-11-01 and the 44px of 2026-11-01). No brand pack can move it.",
     default: { px: access("minTouchTarget") },
+    fixed: true,
+    block: "invariant",
+  },
+  {
+    name: "spacing-inset-floor",
+    group: "size",
+    kind: "size",
+    required: true,
+    description: "The inset floor (`p-inset-floor`, `px-inset-floor`): 14px (`BUNDU_FLOOR.spacing.insetPx`, 2 x 7), the least padding between text and the edge of its container, registered as `--inset-floor`. No component, density layer or brand pack can lower it (owner 2026-11-04, #617).",
+    default: { px: BUNDU_FLOOR.spacing.insetPx },
+    fixed: true,
+    block: "invariant",
+  },
+  {
+    name: "spacing-gap-floor",
+    group: "size",
+    kind: "size",
+    required: true,
+    description: "The gap floor (`gap-gap-floor`, `p-gap-floor`): 7px (`BUNDU_FLOOR.spacing.controlGapPx`, the unit), the least gap between adjacent controls, a label and its field, and sibling items, registered as `--gap-floor`. No component, density layer or brand pack can lower it (owner 2026-11-04, #617).",
+    default: { px: BUNDU_FLOOR.spacing.controlGapPx },
     fixed: true,
     block: "invariant",
   },
@@ -1051,7 +1203,7 @@ export const ROLES: readonly Role[] = [
     group: "size",
     kind: "size",
     required: true,
-    description: "Dense control height for a fine pointer only (`pointer-fine:h-control-dense`); below the touch floor on purpose (#484 §2a).",
+    description: "Dense control height for a fine pointer only (`pointer-fine:h-control-dense`); drawn below the hit-area floor on purpose (#484 §2a), its 49px hit region kept by the `hit-area` pseudo-element; 28px under desktop density.",
     default: { px: 32 },
     block: "invariant",
   },
@@ -1128,12 +1280,12 @@ const rem = (px: number) => `${px / 16}rem`
 /**
  * Touch targets and control heights, under the names the stylesheet has always
  * declared, from `brandMeta`. `touch-target-sm` (40px) is the one value canon
- * does not hold: a dense secondary action below the floor, never a primary control.
+ * does not hold: a dense secondary action drawn below the floor, never a primary control.
  */
 export const SIZING: ReadonlyArray<readonly [string, string, string]> = [
   ["touch-target-lg", `${access("defaultTouchTarget")}px`, "Default touch target — /v1/brand defaultTouchTarget"],
   ["touch-target", `${access("minTouchTarget")}px`, "Minimum touch target — /v1/brand minTouchTarget"],
-  ["touch-target-sm", "40px", "Dense secondary actions; below the 48px floor, so not for primary controls"],
+  ["touch-target-sm", "40px", "Dense secondary actions: drawn at 40px, the 49px hit region kept by the hit-area pseudo-element; not for primary controls"],
   ["h-button-default", rem(spec("button").heights.default), `${spec("button").heights.default}px — componentSpecs.button.heights.default`],
   ["h-button-sm", rem(spec("button").heights.sm), `${spec("button").heights.sm}px — componentSpecs.button.heights.sm`],
   ["h-input", rem(spec("input").heights.default), `${spec("input").heights.default}px — inputs match the default button`],
@@ -1141,3 +1293,68 @@ export const SIZING: ReadonlyArray<readonly [string, string, string]> = [
 
 /** The font stacks, by Tailwind alias, for the platform files. */
 export const FONTS = { sans: fontFamily("sans"), serif: fontFamily("serif"), mono: fontFamily("mono") } as const
+
+
+// ─── Density (owner decision 2026-11-01) ─────────────────────────────────────
+//
+// ONE place for "sizes step down as screens grow". Components never branch on
+// screen size; `scripts/render-globals-css.ts` emits these as media queries on
+// the size variables, and `__tests__/density.test.ts` holds them to the floors.
+//
+// Density is about VISUAL SIZE only. It is never read as a network-quality
+// guess: laptops and iPads are usually on wifi.
+
+/**
+ * The hit region every interactive control keeps, on every device including desktop (the Bundu floor, owner ruling
+ * 2026-11-02): `BUNDU_FLOOR.hitAreaPx`, 49px. It replaces Apple HIG Buttons' 44 pt on a coarse pointer AND the
+ * 24px WCAG 2.2 SC 2.5.8 floor registry 4.21.0 set for a fine pointer. Kept under the old name for importers.
+ */
+export const FLOOR_COARSE_PX = BUNDU_FLOOR.hitAreaPx
+/** The smallest a control is DRAWN under desktop density, px. Its hit region is still FLOOR_COARSE_PX. */
+export const FLOOR_VISIBLE_FINE_PX = BUNDU_FLOOR.visibleControlMinPx
+/** The type steps that are secondary text (floor `captionPx`, 14px); every other step is body or a heading (floor `bodyPx`, 17px). */
+export const CAPTION_STEPS: readonly string[] = ["small", "caption", "code"]
+/** Body text never below this on any device, px (17: Apple's iOS default body size). */
+export const BODY_FLOOR_PX = BUNDU_FLOOR.bodyPx
+/** Captions, metadata and secondary labels never below this, px. */
+export const CAPTION_FLOOR_PX = BUNDU_FLOOR.captionPx
+
+/** The fine-pointer, hover-capable, wide-viewport media query. Tablets (coarse pointer) never match, nor does a touchscreen laptop, which also has a coarse pointer (`any-pointer: coarse`). */
+export const DENSITY_DESKTOP_QUERY = "(min-width: 64rem) and (pointer: fine) and (hover: hover) and (not (any-pointer: coarse))"
+/** Type steps down at tablet width on any pointer. */
+export const DENSITY_TABLET_QUERY = "(min-width: 48rem)"
+
+/**
+ * Size roles under desktop density, in px: what a control is DRAWN at. Every one must be >= FLOOR_VISIBLE_FINE_PX,
+ * and every control keeps a FLOOR_COARSE_PX hit region through the `hit-area` rule (`densityLayer()`). The field
+ * roles do not step down: a native input or select cannot carry a pseudo-element, so its box IS its hit region.
+ */
+export const DESKTOP_SIZES: Readonly<Record<string, number>> = {
+  "spacing-touch": 36,
+  "spacing-control": 36,
+  "spacing-control-sm": 32,
+  "spacing-control-lg": 40,
+  "spacing-control-icon": 36,
+  "spacing-control-dense": 28,
+  "spacing-field": 49,
+  "spacing-field-sm": 49,
+}
+
+/**
+ * The sizes consumers pinned before 2026-11-01, restored by
+ * `:root[data-mzizi-sizes="legacy"]`. The migration table in the docs is generated from this.
+ */
+export const LEGACY_SIZES: Readonly<Record<string, number>> = {
+  "spacing-touch": 56,
+  "spacing-control": 56,
+  "spacing-control-sm": 48,
+  "spacing-control-lg": 56,
+  "spacing-control-icon": 48,
+  "spacing-control-dense": 32,
+  "spacing-field": 56,
+  "spacing-field-sm": 48,
+}
+/** Size roles whose box is their hit region (native form fields: no pseudo-element): they keep the hit area drawn. */
+export const NATIVE_HIT_ROLES: readonly string[] = ["spacing-field", "spacing-field-sm"]
+/** The legacy touch floor, px. */
+export const LEGACY_FLOOR_PX = 48

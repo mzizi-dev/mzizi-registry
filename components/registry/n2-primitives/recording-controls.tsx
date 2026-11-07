@@ -55,7 +55,7 @@ function RecordingControls({
         </div>
       )}
       {state === "paused" && (
-        <span className="font-mono text-sm font-medium text-[var(--color-gold,#FFD740)] tabular-nums">
+        <span className="font-mono text-sm font-medium text-[var(--color-gold-text,#FFD740)] tabular-nums">
           {formatTime(elapsed)} (Paused)
         </span>
       )}

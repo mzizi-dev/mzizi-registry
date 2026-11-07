@@ -41,7 +41,7 @@ export function ChartBarLabel({ loading = false }: { loading?: boolean } = {}) {
             <XAxis dataKey="city" tickLine={false} axisLine={false} tickMargin={8} />
             <ChartTooltip content={<ChartTooltipContent />} />
             <Bar dataKey="users" fill="var(--color-users)" radius={4}>
-              <LabelList dataKey="users" position="top" className="fill-foreground" fontSize={12} />
+              <LabelList dataKey="users" position="top" className="fill-foreground" fontSize={14} />
             </Bar>
           </BarChart>
         </ChartContainer>

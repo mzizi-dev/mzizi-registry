@@ -45,7 +45,7 @@ function Poll({
     >
       <div className="text-sm font-medium">{question}</div>
       {creatorName && (
-        <div className="mt-0.5 text-[10px] text-muted-foreground">
+        <div className="mt-0.5 text-sm text-muted-foreground">
           by {creatorName}
           {multiSelect ? " · Select multiple" : ""}
         </div>
@@ -83,7 +83,7 @@ function Poll({
           )
         })}
       </div>
-      <div className="mt-2 text-[10px] text-muted-foreground">
+      <div className="mt-2 text-sm text-muted-foreground">
         {totalVotes} vote{totalVotes !== 1 ? "s" : ""}
         {closed ? " · Closed" : ""}
       </div>

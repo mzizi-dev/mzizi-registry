@@ -108,7 +108,7 @@ function MziziRSVPButton({
     <div
       data-slot="mzizi-rsvp-button"
       data-portal="https://mzizi.dev/components/mzizi-rsvp-button"
-      className={cn("flex flex-col gap-1.5", full && "w-full", className)}
+      className={cn("flex flex-col gap-2", full && "w-full", className)}
       style={animStyle}
     >
       <button
@@ -128,7 +128,7 @@ function MziziRSVPButton({
         {label}
       </button>
       {spotsRemaining != null && status === "none" && (
-        <span className="text-center text-[11px] text-muted-foreground">
+        <span className="text-center text-sm text-muted-foreground">
           {spotsRemaining} spots remaining
         </span>
       )}

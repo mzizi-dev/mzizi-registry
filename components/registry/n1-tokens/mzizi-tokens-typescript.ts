@@ -466,14 +466,18 @@ export const primitives = {
   // Type scale (Nyuchi Design canonical)
   fontSize: {
     caption: {
-      value: "12px",
-      description: "0.75rem — Labels, metadata, timestamps",
+      value: "14px",
+      description:
+        "0.875rem — Labels, metadata, timestamps: the Bundu caption floor",
     },
     bodySmall: {
       value: "14px",
       description: "0.875rem — Secondary text, descriptions",
     },
-    body: { value: "16px", description: "1rem — Default body text" },
+    body: {
+      value: "17px",
+      description: "1.0625rem — Default body text: the Bundu body floor",
+    },
     bodyLarge: { value: "18px", description: "1.125rem — Lead paragraphs" },
     h5: {
       value: "20px",
@@ -507,10 +511,13 @@ export const primitives = {
   // APCA 3.0 AAA accessibility standard
   touchTarget: {
     default: {
-      value: "56px",
-      description: "Default interactive element height",
+      value: "49px",
+      description: "Default interactive element height: the Bundu hit area",
     },
-    sm: { value: "48px", description: "Minimum — NEVER below this" },
+    sm: {
+      value: "49px",
+      description: "Minimum hit region on every device — NEVER below this",
+    },
   },
 
   // ─── MOTION (Nyuchi Design canonical) ─────────────────────
@@ -1002,9 +1009,9 @@ export const componentTokens = {
   bottomNav: { height: "80px", fabSize: "52px", fabRise: "24px" },
   sidebar: { width: "256px", collapsedWidth: "64px" },
   avatar: { sm: "32px", md: "40px", lg: "64px", xl: "80px", xxl: "120px" },
-  badge: { height: "20px", padding: "0 8px", fontSize: "10px" },
-  input: { height: "48px" },
-  button: { height: "56px", heightSm: "48px", heightLg: "56px" },
+  badge: { height: "24px", padding: "0 8px", fontSize: "14px" },
+  input: { height: "49px" },
+  button: { height: "49px", heightSm: "49px", heightLg: "56px" },
   card: { padding: "16px", gap: "14px" },
   page: { maxWidth: "1280px", margin: "20px" },
   focusRing: { width: "2px", offset: "2px", color: "var(--ring)" },
@@ -1924,7 +1931,7 @@ export const roles = {
   "text-secondary": {
     kind: "text",
     cssVar: "--text-secondary",
-    light: "#575655",
+    light: "#504F4E",
     dark: "#CCCCCA",
   },
   "text-tertiary": {
@@ -1942,7 +1949,7 @@ export const roles = {
   "muted-foreground": {
     kind: "text",
     cssVar: "--muted-foreground",
-    light: "#575655",
+    light: "#504F4E",
     dark: "#CCCCCA",
   },
   success: {
@@ -2076,7 +2083,7 @@ export const roles = {
   "status-danger-text": {
     kind: "text",
     cssVar: "--status-danger-text",
-    light: "#844425",
+    light: "#7B3F23",
     dark: "#EBCCA3",
   },
   "status-premium": {
@@ -2124,7 +2131,7 @@ export const roles = {
   "status-neutral-text": {
     kind: "text",
     cssVar: "--status-neutral-text",
-    light: "#575655",
+    light: "#504F4E",
     dark: "#CCCCCA",
   },
   "status-stable": {
@@ -2220,7 +2227,7 @@ export const roles = {
   "status-deprecated-text": {
     kind: "text",
     cssVar: "--status-deprecated-text",
-    light: "#844425",
+    light: "#7B3F23",
     dark: "#EBCCA3",
   },
   "assurance-none": {
@@ -2244,7 +2251,7 @@ export const roles = {
   "assurance-none-text": {
     kind: "text",
     cssVar: "--assurance-none-text",
-    light: "#575655",
+    light: "#504F4E",
     dark: "#CCCCCA",
   },
   "assurance-otp": {
@@ -2364,7 +2371,7 @@ export const roles = {
   "attestation-community-text": {
     kind: "text",
     cssVar: "--attestation-community-text",
-    light: "#844425",
+    light: "#7B3F23",
     dark: "#EBCCA3",
   },
   "attestation-business": {
@@ -2412,7 +2419,7 @@ export const roles = {
   "attestation-domain-text": {
     kind: "text",
     cssVar: "--attestation-domain-text",
-    light: "#894027",
+    light: "#7E3B24",
     dark: "#FFC3B0",
   },
   "tier-unverified": {
@@ -2436,7 +2443,7 @@ export const roles = {
   "tier-unverified-text": {
     kind: "text",
     cssVar: "--tier-unverified-text",
-    light: "#575655",
+    light: "#504F4E",
     dark: "#CCCCCA",
   },
   "tier-community": {
@@ -2460,7 +2467,7 @@ export const roles = {
   "tier-community-text": {
     kind: "text",
     cssVar: "--tier-community-text",
-    light: "#844425",
+    light: "#7B3F23",
     dark: "#EBCCA3",
   },
   "tier-otp": {
@@ -2700,7 +2707,7 @@ export const roles = {
   "destructive-text": {
     kind: "text",
     cssVar: "--destructive-text",
-    light: "#9F221B",
+    light: "#98201A",
     dark: "#F3C0BD",
   },
   "status-error": {
@@ -2791,26 +2798,38 @@ export const roles = {
   "spacing-touch": {
     kind: "size",
     cssVar: "--size-touch",
-    light: "56px",
-    dark: "56px",
+    light: "49px",
+    dark: "49px",
   },
   "spacing-touch-min": {
     kind: "size",
     cssVar: "--size-touch-min",
-    light: "48px",
-    dark: "48px",
+    light: "49px",
+    dark: "49px",
+  },
+  "spacing-inset-floor": {
+    kind: "size",
+    cssVar: "--size-inset-floor",
+    light: "14px",
+    dark: "14px",
+  },
+  "spacing-gap-floor": {
+    kind: "size",
+    cssVar: "--size-gap-floor",
+    light: "7px",
+    dark: "7px",
   },
   "spacing-control": {
     kind: "size",
     cssVar: "--size-control",
-    light: "56px",
-    dark: "56px",
+    light: "49px",
+    dark: "49px",
   },
   "spacing-control-sm": {
     kind: "size",
     cssVar: "--size-control-sm",
-    light: "48px",
-    dark: "48px",
+    light: "49px",
+    dark: "49px",
   },
   "spacing-control-lg": {
     kind: "size",
@@ -2821,8 +2840,8 @@ export const roles = {
   "spacing-control-icon": {
     kind: "size",
     cssVar: "--size-control-icon",
-    light: "48px",
-    dark: "48px",
+    light: "49px",
+    dark: "49px",
   },
   "spacing-control-dense": {
     kind: "size",
@@ -2833,14 +2852,14 @@ export const roles = {
   "spacing-field": {
     kind: "size",
     cssVar: "--size-field",
-    light: "56px",
-    dark: "56px",
+    light: "49px",
+    dark: "49px",
   },
   "spacing-field-sm": {
     kind: "size",
     cssVar: "--size-field-sm",
-    light: "48px",
-    dark: "48px",
+    light: "49px",
+    dark: "49px",
   },
   "radius-control": {
     kind: "radius",

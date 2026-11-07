@@ -25,7 +25,7 @@ function Sidebar01() {
         <span className="font-serif text-lg font-semibold text-foreground">mukoko</span>
       </div>
       <Separator />
-      <nav className="flex-1 space-y-1 p-3">
+      <nav className="flex-1 space-y-2 p-3">
         {navItems.map((item) => (
           <Button
             key={item.label}

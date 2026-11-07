@@ -82,7 +82,7 @@ export function MziziForecastCard({
         </div>
         <div className="flex justify-between border-t border-border px-2 py-3">
           {Array.from({ length: 5 }).map((_, i) => (
-            <div key={i} className="flex flex-1 flex-col items-center gap-1">
+            <div key={i} className="flex flex-1 flex-col items-center gap-2">
               <div className="h-2 w-6 rounded bg-muted" />
               <div className="size-6 rounded bg-muted" />
               <div className="h-2 w-4 rounded bg-muted" />
@@ -108,12 +108,12 @@ export function MziziForecastCard({
       <div className="space-y-2 bg-gradient-to-br from-[var(--color-cobalt,#00B0FF)]/10 to-transparent p-4">
         <div className="flex items-start justify-between">
           <div>
-            <p className="text-[11px] text-muted-foreground">📍 {location}</p>
+            <p className="text-sm text-muted-foreground">📍 {location}</p>
             <p className="mt-1 text-4xl font-bold text-foreground">
               {temperature}°{unit}
             </p>
             {feelsLike != null && (
-              <p className="text-[11px] text-muted-foreground">
+              <p className="text-sm text-muted-foreground">
                 Feels like {feelsLike}°{unit}
               </p>
             )}
@@ -123,7 +123,7 @@ export function MziziForecastCard({
             <p className="mt-1 text-xs text-foreground">{condition}</p>
           </div>
         </div>
-        <div className="flex items-center gap-3 text-[11px] text-muted-foreground">
+        <div className="flex items-center gap-3 text-sm text-muted-foreground">
           {humidity != null && <span>💧 {humidity}%</span>}
           {windSpeed && <span>💨 {windSpeed}</span>}
         </div>
@@ -131,18 +131,18 @@ export function MziziForecastCard({
       {forecast.length > 0 && (
         <div className="flex justify-between border-t border-border px-2 py-3">
           {forecast.slice(0, 5).map((d, i) => (
-            <div key={i} className="flex-1 space-y-1 text-center">
-              <p className="text-[10px] text-muted-foreground">{d.day}</p>
+            <div key={i} className="flex-1 space-y-2 text-center">
+              <p className="text-sm text-muted-foreground">{d.day}</p>
               <p className="text-sm">{d.icon}</p>
-              <p className="text-[10px] font-medium text-foreground">{d.high}°</p>
-              <p className="text-[10px] text-muted-foreground">{d.low}°</p>
+              <p className="text-sm font-medium text-foreground">{d.high}°</p>
+              <p className="text-sm text-muted-foreground">{d.low}°</p>
             </div>
           ))}
         </div>
       )}
       {farmingAdvice && (
         <div className="border-t border-border px-4 py-3">
-          <p className="mb-1 text-[10px] font-semibold text-[var(--color-malachite,#64FFDA)]">
+          <p className="mb-1 text-sm font-semibold text-[var(--color-malachite-text,#64FFDA)]">
             🌾 Farming Advisory
           </p>
           <p className="text-xs leading-relaxed text-muted-foreground">{farmingAdvice}</p>
@@ -150,7 +150,7 @@ export function MziziForecastCard({
       )}
       {lastUpdated && (
         <div className="px-4 pb-3">
-          <p className="text-[9px] text-muted-foreground/60">Updated {lastUpdated}</p>
+          <p className="text-sm text-muted-foreground/60">Updated {lastUpdated}</p>
         </div>
       )}
     </div>

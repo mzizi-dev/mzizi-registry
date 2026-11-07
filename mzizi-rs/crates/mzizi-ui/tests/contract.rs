@@ -285,8 +285,10 @@ fn input_classes_match_the_typescript() {
         "input is not pill-shaped"
     );
     assert!(
-        input_variants("").split_whitespace().any(|c| c == "h-12"),
-        "input is not at the 48px touch-target floor"
+        input_variants("")
+            .split_whitespace()
+            .any(|c| c == "h-field"),
+        "input does not take its height from the size role (h-field: 44px touch, 36px desktop)"
     );
 }
 

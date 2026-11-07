@@ -167,7 +167,7 @@ function BarChart({
           {data.map((d, i) => (
             <li
               key={`${i}-${d.label}`}
-              className="grid gap-1 sm:grid-cols-[minmax(0,12rem)_minmax(0,1fr)] sm:items-center sm:gap-4"
+              className="grid gap-2 sm:grid-cols-[minmax(0,12rem)_minmax(0,1fr)] sm:items-center sm:gap-4"
             >
               <span className="truncate text-body-sm">{d.label}</span>
               <span className="flex items-center gap-3">

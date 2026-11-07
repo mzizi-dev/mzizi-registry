@@ -51,7 +51,7 @@ function MusicSelector({
           className="h-10 w-full rounded-full border border-input bg-input/30 px-4 text-sm outline-none placeholder:text-muted-foreground focus:border-ring"
         />
       )}
-      <div className="max-h-60 space-y-0.5 overflow-y-auto">
+      <div className="max-h-60 space-y-2 overflow-y-auto">
         {filtered.map((track) => (
           <button
             key={track.id}
@@ -76,7 +76,7 @@ function MusicSelector({
               <div className="truncate text-sm font-medium">{track.title}</div>
               <div className="truncate text-xs text-muted-foreground">{track.artist}</div>
             </div>
-            <span className="font-mono text-[10px] text-muted-foreground tabular-nums">
+            <span className="font-mono text-sm text-muted-foreground tabular-nums">
               {track.duration}
             </span>
             {selectedId === track.id && <span className="text-primary">✓</span>}

@@ -12,7 +12,7 @@ import { cn } from "@/lib/utils"
 
 const SEGMENT_SIZE = {
   default: "min-h-12 px-4 text-body-sm",
-  sm: "min-h-10 px-3 text-body-sm",
+  sm: "min-h-10 px-3.5 text-body-sm",
 } as const
 
 const SEGMENT =
@@ -50,7 +50,7 @@ function SegmentedControl({
       >
         {legend}
       </legend>
-      <div className="inline-flex max-w-full flex-wrap gap-1 rounded-full border border-border bg-muted p-1">
+      <div className="inline-flex max-w-full flex-wrap gap-2 rounded-full border border-border bg-muted p-1">
         {options.map(([v, label]) => (
           <label key={v} className="relative cursor-pointer">
             <input

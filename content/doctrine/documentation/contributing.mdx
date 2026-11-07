@@ -51,7 +51,7 @@ github.com/mzizi-dev/mzizi-registry. Its `CONTRIBUTING.md` and `AGENTS.md` are t
 
 ## Source code lives in the repository
 
-Every component's source is a file in the registry, `components/registry/n<N>-<node>/<name>.<ext>`, with one sibling file per build: `.astro` (the default), `.rs` (Mzizi Roots, Dioxus) and `.tsx` (React). There is no database copy. `registry.json` indexes the files, and api.mzizi.dev serves them from a pinned registry commit. To add or change a component, change its files and open a pull request.
+Every component's source is a file in the registry, `components/registry/n<N>-<node>/<name>.<ext>`, with one sibling file per build: `.astro` (the default), `.rs` (Mzizi Roots) and `.tsx` (React). There is no database copy. `registry.json` indexes the files, and api.mzizi.dev serves them from a pinned registry commit. To add or change a component, change its files and open a pull request.
 
 ## Adding a New Component
 
@@ -74,7 +74,7 @@ Every component's source is a file in the registry, `components/registry/n<N>-<n
 - [ ] cn() for className composition
 - [ ] Zero raw Tailwind colors
 - [ ] Import icons from @/lib/icons
-- [ ] Touch targets 56px by default, 48px minimum
+- [ ] Touch targets from the size roles (`h-control`…): 49px on touch, drawn at 36px at desktop density with the 49px hit region kept; never a hard-coded `h-12`/`h-14`
 - [ ] If pill-shaped category (button, input, avatar, badge, toggle), use borderRadius 9999
 
 ### N3 (Brand)
@@ -85,7 +85,7 @@ Every component's source is a file in the registry, `components/registry/n<N>-<n
 - [ ] ARIA role or aria-label
 - [ ] data-slot and data-portal attributes
 - [ ] focus-visible ring on interactive elements
-- [ ] Touch targets on buttons at least 48px (`min-h-[48px]`), 56px by default
+- [ ] Touch targets on buttons a 49px hit region on every device (`min-h-touch-min`, the Bundu floor), desktop included
 - [ ] I18N (Intl formatters for dates, numbers, currency)
 - [ ] Semantic tokens for status-bearing colors
 

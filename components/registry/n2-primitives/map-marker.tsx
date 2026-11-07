@@ -30,7 +30,7 @@ const mineralValues: Record<MineralColor, string> = {
   terracotta: "var(--color-terracotta)",
 }
 
-const sizes = { sm: "size-6 text-[9px]", md: "size-8 text-xs", lg: "size-10 text-sm" }
+const sizes = { sm: "size-6 text-sm", md: "size-8 text-xs", lg: "size-10 text-sm" }
 
 function MapMarker({
   color = "malachite",
@@ -81,7 +81,7 @@ function MapMarker({
 
       {/* Label */}
       {label && (
-        <span className="mt-0.5 max-w-[80px] truncate text-center text-[9px] font-medium whitespace-nowrap text-foreground drop-shadow-sm">
+        <span className="mt-0.5 max-w-[80px] truncate text-center text-sm font-medium whitespace-nowrap text-foreground drop-shadow-sm">
           {label}
         </span>
       )}

@@ -1,0 +1,56 @@
+{
+  "$comment": "The rendered geometry guard for the spacing floor (owner, 2026-11-04, #617), as data a browser audit reads (mzizi-site's scripts/audit-ui.mjs --guard, the CLI's check). This registry has no browser harness of its own (scripts/kitesurf.ts is a remote text probe), so the guard is specified here once and run where a browser exists. Numbers equal BUNDU_FLOOR.spacing (pinned by __tests__/spacing-floor.test.ts).",
+  "floor": {
+    "insetPx": 14,
+    "controlGapPx": 7,
+    "labelGapPx": 7,
+    "itemGapPx": 7,
+    "leadingBody": 1.5
+  },
+  "measure": [
+    {
+      "id": "control-gap",
+      "say": "Neighbouring interactive controls keep 7px between their VISIBLE edges. Hit regions (the ::after of the hit-area rule) may touch but must not overlap a sibling's visible box.",
+      "select": "button, [role=button], [role=tab], a[href], input:not([type=hidden]), select, textarea, summary",
+      "rule": "for each pair of controls that share a parent, distance(visibleRect(a), visibleRect(b)) >= controlGapPx unless they are one joined group ([role=group] / [role=toolbar] with data-joined)",
+      "min": "controlGapPx"
+    },
+    {
+      "id": "label-gap",
+      "say": "A label and its field keep 7px.",
+      "select": "label",
+      "rule": "distance(rect(label), rect(label.control)) >= labelGapPx unless the control is inside the label",
+      "min": "labelGapPx"
+    },
+    {
+      "id": "item-gap",
+      "say": "Sibling items of a list, grid, stack or toolbar keep 7px.",
+      "select": "ul, ol, [role=list], [role=toolbar], [role=tablist], [role=radiogroup], [role=menu], [role=listbox]",
+      "rule": "distance between consecutive children's rects >= itemGapPx, unless the container sets data-spacing-exception",
+      "min": "itemGapPx"
+    },
+    {
+      "id": "text-inset",
+      "say": "Text keeps 14px from the edge of its container: inline for a control's label, both axes for a card, panel, dialog, alert or popover.",
+      "select": "button, [role=button], [role=tab], input, select, textarea, [data-slot=card], dialog, [popover], [role=alert], [role=dialog], [role=tooltip]",
+      "rule": "min distance from the text range's rect to the content-box edge of the nearest ancestor that draws an edge (background, border, ring or shadow) >= insetPx, inline axis only for a control",
+      "min": "insetPx"
+    },
+    {
+      "id": "body-leading",
+      "say": "Body text sets no line height tighter than 1.5.",
+      "select": "p, li, dd, blockquote, figcaption, td, th",
+      "rule": "computedStyle.lineHeight / computedStyle.fontSize >= leadingBody",
+      "min": "leadingBody"
+    }
+  ],
+  "stress": {
+    "$comment": "WCAG 1.4.12 Text Spacing: apply this, then assert nothing is clipped (scrollWidth <= clientWidth and scrollHeight <= clientHeight on every element with overflow hidden/clip) and nothing overflows its container, and that the measure rules above still hold.",
+    "css": "*{line-height:1.5 !important;letter-spacing:0.12em !important;word-spacing:0.16em !important}p{margin-bottom:2em !important}",
+    "lineHeight": 1.5,
+    "paragraphSpacingEm": 2,
+    "letterSpacingEm": 0.12,
+    "wordSpacingEm": 0.16
+  },
+  "breakpoints": [360, 768, 1280]
+}

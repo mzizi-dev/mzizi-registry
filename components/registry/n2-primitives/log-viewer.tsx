@@ -70,7 +70,7 @@ function LogViewer({ className, entries, maxHeight = "400px", ...props }: LogVie
       {...props}
     >
       {/* Filter bar */}
-      <div className="flex items-center gap-1 border-b border-border px-3 py-2">
+      <div className="flex items-center gap-2 border-b border-border px-3 py-2">
         {levels.map((level) => (
           <button
             key={level}
@@ -105,7 +105,7 @@ function LogViewer({ className, entries, maxHeight = "400px", ...props }: LogVie
             </span>
             <span
               className={cn(
-                "shrink-0 rounded px-1.5 py-0.5 text-[10px] font-medium uppercase",
+                "shrink-0 rounded px-1.5 py-0.5 text-sm font-medium uppercase",
                 LEVEL_BADGE_STYLES[entry.level]
               )}
             >

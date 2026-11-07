@@ -180,7 +180,7 @@ export function DocsEngine({
 
               {/* Related ecosystem nodes */}
               {currentPage.relatedNodes && currentPage.relatedNodes.length > 0 && (
-                <div className="mt-3 flex flex-wrap gap-1.5" aria-label="Related ecosystem nodes">
+                <div className="mt-3 flex flex-wrap gap-2" aria-label="Related ecosystem nodes">
                   {currentPage.relatedNodes.map((n) => (
                     <span
                       key={n}

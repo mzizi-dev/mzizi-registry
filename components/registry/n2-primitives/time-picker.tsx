@@ -44,8 +44,8 @@ function TimePicker({ value = "12:00", onChange, use12Hour = false, className }:
         className
       )}
     >
-      <div className="flex flex-col items-center gap-1">
-        <span className="text-[10px] font-medium text-muted-foreground">Hour</span>
+      <div className="flex flex-col items-center gap-2">
+        <span className="text-sm font-medium text-muted-foreground">Hour</span>
         <select
           value={displayHour}
           onChange={(e) => update(Number(e.target.value), minute)}
@@ -60,8 +60,8 @@ function TimePicker({ value = "12:00", onChange, use12Hour = false, className }:
         </select>
       </div>
       <span className="mt-4 text-lg font-semibold text-muted-foreground">:</span>
-      <div className="flex flex-col items-center gap-1">
-        <span className="text-[10px] font-medium text-muted-foreground">Min</span>
+      <div className="flex flex-col items-center gap-2">
+        <span className="text-sm font-medium text-muted-foreground">Min</span>
         <select
           value={minute}
           onChange={(e) => update(use12Hour ? displayHour : hour, Number(e.target.value))}
@@ -76,7 +76,7 @@ function TimePicker({ value = "12:00", onChange, use12Hour = false, className }:
         </select>
       </div>
       {use12Hour && (
-        <div className="mt-4 flex flex-col gap-0.5">
+        <div className="mt-4 flex flex-col gap-2">
           {(["AM", "PM"] as const).map((p) => (
             <Button
               key={p}

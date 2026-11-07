@@ -31,7 +31,7 @@ function ChapterList({
       data-slot="chapter-list"
       data-portal="https://mzizi.dev/components/chapter-list"
       aria-label="Table of contents"
-      className={cn("space-y-1", className)}
+      className={cn("space-y-2", className)}
       {...props}
     >
       {chapters.map((ch) => (
@@ -53,11 +53,11 @@ function ChapterList({
             {ch.number}
           </span>
           <span className="flex-1 truncate">{ch.title}</span>
-          <div className="flex items-center gap-2 text-[10px] text-muted-foreground">
+          <div className="flex items-center gap-2 text-sm text-muted-foreground">
             {ch.wordCount && <span>{(ch.wordCount / 1000).toFixed(1)}k</span>}
-            {ch.locked && <span className="text-[var(--color-gold,#FFD740)]">🔒</span>}
+            {ch.locked && <span className="text-[var(--color-gold-text,#FFD740)]">🔒</span>}
             {ch.read && !ch.locked && (
-              <span className="text-[var(--color-malachite,#64FFDA)]">✓</span>
+              <span className="text-[var(--color-malachite-text,#64FFDA)]">✓</span>
             )}
           </div>
         </button>

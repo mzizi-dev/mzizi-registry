@@ -110,7 +110,7 @@ function FileUpload({
         <div className="flex size-10 items-center justify-center rounded-[var(--radius-lg,14px)] bg-muted">
           <Upload className="size-5 text-muted-foreground" />
         </div>
-        <div className="space-y-1">
+        <div className="space-y-2">
           <p className="text-sm font-medium">
             {isDragging ? "Drop files here" : "Click to upload or drag and drop"}
           </p>

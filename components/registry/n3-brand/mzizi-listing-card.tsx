@@ -30,11 +30,11 @@ const mineralAccents = {
 } as const
 
 const mineralBadgeBg = {
-  cobalt: "bg-[var(--color-cobalt)]/15 text-[var(--color-cobalt)]",
-  tanzanite: "bg-[var(--color-tanzanite)]/15 text-[var(--color-tanzanite)]",
-  malachite: "bg-[var(--color-malachite)]/15 text-[var(--color-malachite)]",
-  gold: "bg-[var(--color-gold)]/15 text-[var(--color-gold)]",
-  terracotta: "bg-[var(--color-terracotta)]/15 text-[var(--color-terracotta)]",
+  cobalt: "bg-[var(--color-cobalt)]/15 text-cobalt-text",
+  tanzanite: "bg-[var(--color-tanzanite)]/15 text-tanzanite-text",
+  malachite: "bg-[var(--color-malachite)]/15 text-malachite-text",
+  gold: "bg-[var(--color-gold)]/15 text-gold-text",
+  terracotta: "bg-[var(--color-terracotta)]/15 text-terracotta-text",
 } as const
 
 const listingCardVariants = cva(
@@ -123,7 +123,7 @@ function MziziListingCard({
         ) : variant === "compact" ? (
           <div className="flex items-center gap-3 p-3">
             <div className="size-10 shrink-0 rounded-[var(--radius-sm,7px)] bg-muted" />
-            <div className="flex-1 space-y-1.5">
+            <div className="flex-1 space-y-2">
               <div className="h-3.5 w-2/3 rounded bg-muted" />
               <div className="h-2.5 w-1/3 rounded bg-muted" />
             </div>
@@ -209,7 +209,7 @@ function MziziListingCard({
 
       <div
         className={cn(
-          "relative flex min-w-0 flex-1 flex-col gap-1.5",
+          "relative flex min-w-0 flex-1 flex-col gap-2",
           isCompact && "p-4",
           isHero && "z-10"
         )}
@@ -217,7 +217,7 @@ function MziziListingCard({
         {category && (
           <span
             className={cn(
-              "inline-flex w-fit items-center rounded-full px-2 py-0.5 text-[10px] font-semibold tracking-wider uppercase",
+              "inline-flex w-fit items-center rounded-full px-2 py-0.5 text-sm font-semibold tracking-wider uppercase",
               isHero ? "bg-white/20 text-white" : mineralBadgeBg[mineral]
             )}
           >
@@ -246,12 +246,12 @@ function MziziListingCard({
         {meta && meta.length > 0 && (
           <div
             className={cn(
-              "flex flex-wrap items-center gap-x-3 gap-y-1 text-xs",
+              "flex flex-wrap items-center gap-x-3 gap-y-2 text-xs",
               isHero ? "text-white/65" : "text-muted-foreground"
             )}
           >
             {meta.map((m) => (
-              <span key={m.label} className="inline-flex items-center gap-1">
+              <span key={m.label} className="inline-flex items-center gap-2">
                 {m.icon && <m.icon className="size-3" />}
                 {m.value}
               </span>
@@ -267,7 +267,7 @@ function MziziListingCard({
               className={cn(
                 "text-sm font-semibold",
                 formattedPrice === "Free" || price === 0
-                  ? "text-[var(--color-malachite)]"
+                  ? "text-malachite-text"
                   : "text-foreground"
               )}
             >

@@ -84,7 +84,7 @@ function SearchBar({
         placeholder={placeholder}
         className="pr-20 pl-9"
       />
-      <div className="absolute top-1/2 right-2 flex -translate-y-1/2 items-center gap-1">
+      <div className="absolute top-1/2 right-2 flex -translate-y-1/2 items-center gap-2">
         {showClear && value && (
           <Button
             variant="ghost"
@@ -98,7 +98,7 @@ function SearchBar({
             <X className="size-3" />
           </Button>
         )}
-        {showShortcut && !value && <Kbd className="text-[10px]">⌘{shortcutKey.toUpperCase()}</Kbd>}
+        {showShortcut && !value && <Kbd className="text-sm">⌘{shortcutKey.toUpperCase()}</Kbd>}
       </div>
     </div>
   )
