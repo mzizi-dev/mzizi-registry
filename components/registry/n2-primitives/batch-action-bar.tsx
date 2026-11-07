@@ -44,7 +44,7 @@ function BatchActionBar({
         {totalCount ? `/${totalCount}` : ""} selected
       </span>
       <div className="h-4 w-px bg-border" />
-      <div className="flex gap-1.5">
+      <div className="flex gap-2">
         {actions.map((action, i) => (
           <button
             key={i}

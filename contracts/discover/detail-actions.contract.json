@@ -13,7 +13,10 @@
       "export": "@bundu/ui/discover/DetailActions.astro",
       "since": "0.3.0"
     },
-    "tsx": { "registry": "discover-detail-actions", "identity": "contract" },
+    "tsx": {
+      "registry": "discover-detail-actions",
+      "identity": "contract"
+    },
     "rs": null,
     "related": ["discover-open-in-app"]
   },
@@ -102,7 +105,10 @@
         "service": "events",
         "id": "jacaranda-2026",
         "links": [
-          { "label": "Add to calendar", "href": "/jacaranda-2026.ics" }
+          {
+            "label": "Add to calendar",
+            "href": "/jacaranda-2026.ics"
+          }
         ],
         "share": [
           {
@@ -167,14 +173,14 @@
     {
       "part": "secondary action",
       "select": "[data-slot=\"detail-actions-link\"]",
-      "fine": 48,
-      "coarse": 48
+      "fine": 36,
+      "coarse": 49
     },
     {
       "part": "share link",
       "select": "[data-slot=\"detail-actions-share\"] a",
-      "fine": 48,
-      "coarse": 48
+      "fine": 32,
+      "coarse": 49
     }
   ],
   "theming": {
@@ -196,7 +202,7 @@
   "responsive": [
     "The row wraps: \"Open in Mukoko\" first, the others after it; the hint and the share links wrap under the row."
   ],
-  "contract": "contract\n  slot is \"detail-actions\"\n  uses open-in-app\n  uses detail-actions-share\n  a \"Open in Mukoko\" min_height 48\n  a \"Add to calendar\" min_height 48\n  a \"WhatsApp\" min_height 48\n  a \"Join in Mukoko\" min_height 48\n  when default shows p \"Opens in the Mukoko app, or on the web if you don't have it.\"\n  when circle shows a \"Start your own circle\"\n  when article shows a \"Read at The Herald\"\nend",
+  "contract": "contract\n  slot is \"detail-actions\"\n  uses open-in-app\n  uses detail-actions-share\n  a \"Open in Mukoko\" min_height 44\n  a \"Add to calendar\" min_height 44\n  a \"WhatsApp\" min_height 44\n  a \"Join in Mukoko\" min_height 44\n  when default shows p \"Opens in the Mukoko app, or on the web if you don't have it.\"\n  when circle shows a \"Start your own circle\"\n  when article shows a \"Read at The Herald\"\nend",
   "checks": [
     {
       "say": "\"Open in Mukoko\" is the canonical universal link, primary.",
@@ -227,7 +233,9 @@
       "say": "An external share link is marked.",
       "select": "a[href^=\"https://wa.me/\"]",
       "count": 1,
-      "attr": { "rel": "external noopener" }
+      "attr": {
+        "rel": "external noopener"
+      }
     },
     {
       "say": "Never a bare custom scheme, never a button that needs a script.",
@@ -245,7 +253,9 @@
       "say": "The circle's canonical link.",
       "state": "circle",
       "select": "a[data-variant=\"primary\"]",
-      "attr": { "href": "https://mukoko.com/open/circles/harare-runners" }
+      "attr": {
+        "href": "https://mukoko.com/open/circles/harare-runners"
+      }
     },
     {
       "say": "No share links, no share list.",
@@ -273,7 +283,9 @@
       "say": "An explicit href wins.",
       "state": "override",
       "select": "a[data-variant=\"primary\"]",
-      "attr": { "href": "https://circles.mukoko.com/c/harare-runners/join" }
+      "attr": {
+        "href": "https://circles.mukoko.com/c/harare-runners/join"
+      }
     }
   ]
 }

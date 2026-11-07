@@ -55,7 +55,7 @@ function MziziAvatarStack({
   const count = total ?? people.length
   const overflow = count - shown.length
   const summary = label ? `${count} ${label}` : `${count}`
-  const avatarSize = size === "sm" ? "size-6 text-[10px]" : "size-8 text-[11px]"
+  const avatarSize = size === "sm" ? "size-6 text-sm" : "size-8 text-sm"
   const bubble = cn(
     "inline-flex items-center justify-center rounded-full bg-muted font-semibold text-muted-foreground ring-2 ring-card",
     avatarSize
@@ -87,7 +87,7 @@ function MziziAvatarStack({
         {overflow > 0 && <span className={bubble}>+{overflow}</span>}
       </div>
       {label && (
-        <span className="text-[13px] text-muted-foreground" aria-hidden>
+        <span className="text-sm text-muted-foreground" aria-hidden>
           {summary}
         </span>
       )}

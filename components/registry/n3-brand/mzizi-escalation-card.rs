@@ -123,7 +123,7 @@ pub fn MziziEscalationCard(props: MziziEscalationCardProps) -> Element {
             "aria-busy": if disabled { "true" } else { "false" },
             style: entrance_style(props.prefers_reduced_motion),
             class: "{root}",
-            header { class: "mb-4 space-y-1",
+            header { class: "mb-4 space-y-2",
                 h2 { class: "text-base font-semibold tracking-tight", "{props.title}" }
                 if let Some(prompt) = &props.prompt {
                     p { class: "text-sm text-[var(--muted-foreground)]", "{prompt}" }

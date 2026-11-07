@@ -73,11 +73,11 @@ export function DetailActions({
         {children}
       </OpenInApp>
       {share.length > 0 && (
-        <div className="flex flex-wrap items-center gap-x-3 gap-y-1" data-slot="detail-actions-share">
+        <div className="flex flex-wrap items-center gap-x-3 gap-y-2" data-slot="detail-actions-share">
           <p className="text-body-sm font-semibold text-muted-foreground" aria-hidden="true">
             {shareLabel}
           </p>
-          <ul aria-label={shareLabel} className="flex flex-wrap items-center gap-1">
+          <ul aria-label={shareLabel} className="flex flex-wrap items-center gap-2">
             {share.map((a, i) => (
               <li key={`${i}|${a.href}`}>
                 <a href={a.href} rel={rel(a)} className={buttonVariants({ variant: "ghost", size: "sm" })}>

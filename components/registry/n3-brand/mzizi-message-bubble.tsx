@@ -65,7 +65,7 @@ function MziziMessageBubble({
         data-portal="https://mzizi.dev/components/mzizi-message-bubble"
         data-loading
         role="article"
-        className="max-w-[75%] animate-pulse space-y-1.5 rounded-2xl bg-muted p-3"
+        className="max-w-[75%] animate-pulse space-y-2 rounded-2xl bg-muted p-3"
       >
         <div className="h-3 w-full rounded bg-foreground/5" />
         <div className="h-3 w-2/3 rounded bg-foreground/5" />
@@ -104,7 +104,7 @@ function MziziMessageBubble({
       <div className={cn("max-w-[75%]", isSent && "items-end", !isSent && "items-start")}>
         {/* Sender name */}
         {!isSent && isFirstInGroup && senderName && (
-          <span className="mb-0.5 ml-1 text-[10px] font-medium text-muted-foreground">
+          <span className="mb-0.5 ml-1 text-sm font-medium text-muted-foreground">
             {senderName}
           </span>
         )}
@@ -122,24 +122,24 @@ function MziziMessageBubble({
         {/* Timestamp + delivery status */}
         <div
           className={cn(
-            "mt-0.5 flex items-center gap-1 px-1",
+            "mt-0.5 flex items-center gap-2 px-1",
             isSent ? "justify-end" : "justify-start"
           )}
         >
-          {timestamp && <span className="text-[10px] text-muted-foreground/50">{timestamp}</span>}
+          {timestamp && <span className="text-sm text-muted-foreground/50">{timestamp}</span>}
           {isSent && <StatusIcon className="size-3" style={{ color: ds.color }} />}
         </div>
         {/* Reactions */}
         {reactions && reactions.length > 0 && (
-          <div className={cn("mt-1 flex gap-1", isSent ? "justify-end" : "justify-start")}>
+          <div className={cn("mt-1 flex gap-2", isSent ? "justify-end" : "justify-start")}>
             {reactions.map((r, i) => (
               <span
                 key={i}
-                className="inline-flex items-center gap-0.5 rounded-full bg-card px-1.5 py-0.5 text-xs ring-1 ring-foreground/10"
+                className="inline-flex items-center gap-2 rounded-full bg-card px-1.5 py-0.5 text-xs ring-1 ring-foreground/10"
               >
                 {r.emoji}
                 {r.count > 1 && (
-                  <span className="text-[10px] text-muted-foreground">{r.count}</span>
+                  <span className="text-sm text-muted-foreground">{r.count}</span>
                 )}
               </span>
             ))}

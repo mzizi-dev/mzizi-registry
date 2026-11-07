@@ -13,11 +13,11 @@ interface NftCardProps extends React.ComponentProps<"div"> {
 }
 
 const typeColors: Record<NftType, string> = {
-  ticket: "bg-[var(--color-malachite,#64FFDA)]/15 text-[var(--color-malachite,#64FFDA)]",
-  badge: "bg-[var(--color-gold,#FFD740)]/15 text-[var(--color-gold,#FFD740)]",
-  chapter: "bg-[var(--color-tanzanite,#B388FF)]/15 text-[var(--color-tanzanite,#B388FF)]",
-  artwork: "bg-[var(--color-cobalt,#00B0FF)]/15 text-[var(--color-cobalt,#00B0FF)]",
-  collectible: "bg-[var(--color-terracotta)]/15 text-[var(--color-terracotta)]",
+  ticket: "bg-[var(--color-malachite,#64FFDA)]/15 text-[var(--color-malachite-text,#64FFDA)]",
+  badge: "bg-[var(--color-gold,#FFD740)]/15 text-[var(--color-gold-text,#FFD740)]",
+  chapter: "bg-[var(--color-tanzanite,#B388FF)]/15 text-[var(--color-tanzanite-text,#B388FF)]",
+  artwork: "bg-[var(--color-cobalt,#00B0FF)]/15 text-[var(--color-cobalt-text,#00B0FF)]",
+  collectible: "bg-[var(--color-terracotta)]/15 text-terracotta-text",
 }
 
 function NftCard({
@@ -58,12 +58,12 @@ function NftCard({
         )}
       </div>
       <div className="p-3">
-        <div className="flex items-start justify-between gap-1">
+        <div className="flex items-start justify-between gap-2">
           <div className="line-clamp-1 text-sm font-medium">{name}</div>
           {type && (
             <span
               className={cn(
-                "shrink-0 rounded-full px-1.5 py-0.5 text-[9px] font-bold uppercase",
+                "shrink-0 rounded-full px-1.5 py-0.5 text-sm font-bold uppercase",
                 typeColors[type]
               )}
             >
@@ -75,7 +75,7 @@ function NftCard({
           <div className="mt-0.5 truncate text-xs text-muted-foreground">{collection}</div>
         )}
         {tokenId && (
-          <div className="mt-1 font-mono text-[10px] text-muted-foreground">#{tokenId}</div>
+          <div className="mt-1 font-mono text-sm text-muted-foreground">#{tokenId}</div>
         )}
       </div>
     </div>

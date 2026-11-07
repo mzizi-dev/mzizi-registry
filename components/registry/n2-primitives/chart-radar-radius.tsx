@@ -44,7 +44,7 @@ export function ChartRadarRadius({ loading = false }: { loading?: boolean } = {}
             <ChartTooltip content={<ChartTooltipContent />} />
             <PolarAngleAxis dataKey="skill" />
             <PolarGrid />
-            <PolarRadiusAxis angle={30} domain={[0, 100]} tick={{ fontSize: 10 }} />
+            <PolarRadiusAxis angle={30} domain={[0, 100]} tick={{ fontSize: 14 }} />
             <Radar
               dataKey="score"
               fill="var(--color-score)"

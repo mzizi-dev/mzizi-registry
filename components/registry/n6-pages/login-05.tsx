@@ -76,7 +76,7 @@ function Login05() {
             ))}
           </div>
         </div>
-        <div className="flex gap-1.5">
+        <div className="flex gap-2">
           <span className="size-2 rounded-full bg-cobalt" />
           <span className="size-2 rounded-full bg-tanzanite" />
           <span className="size-2 rounded-full bg-malachite" />

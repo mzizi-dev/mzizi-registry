@@ -80,7 +80,7 @@ export function LogsPage({
             <button
               onClick={onToggleStream}
               className={cn(
-                "flex min-h-[44px] items-center gap-1 rounded-full px-2 py-0.5 text-xs font-medium",
+                "flex min-h-[44px] items-center gap-2 rounded-full px-2 py-0.5 text-xs font-medium",
                 isStreaming
                   ? "bg-[var(--status-success,var(--color-malachite,#64FFDA))]/15 text-[var(--status-success,var(--color-malachite,#64FFDA))]"
                   : "bg-muted text-muted-foreground"
@@ -103,7 +103,7 @@ export function LogsPage({
           {timeRange}
         </div>
       </header>
-      <nav className="flex items-center gap-1 border-b border-border px-4 py-2">
+      <nav className="flex items-center gap-2 border-b border-border px-4 py-2">
         <button
           onClick={() => onLevelChange?.("all")}
           className={cn(

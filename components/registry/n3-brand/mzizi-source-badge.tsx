@@ -66,7 +66,7 @@ function MziziSourceBadge({
         data-portal="https://mzizi.dev/components/mzizi-source-badge"
         data-loading
         role="status"
-        className="inline-flex animate-pulse items-center gap-1.5"
+        className="inline-flex animate-pulse items-center gap-2"
       >
         <div className="size-4 rounded-full bg-muted" />
         <div className="h-2.5 w-12 rounded bg-muted" />
@@ -79,14 +79,14 @@ function MziziSourceBadge({
     <span
       data-slot="mzizi-source-badge"
       role="status"
-      className={cn("inline-flex items-center gap-1.5 text-xs", className)}
+      className={cn("inline-flex items-center gap-2 text-xs", className)}
       title={config.label}
     >
       <Newspaper className="size-3 text-muted-foreground" />
       <span className="font-medium text-foreground">{sourceName}</span>
       <Icon className="size-3" style={{ color: config.color }} />
       {showLabel && (
-        <span className="text-[10px]" style={{ color: config.color }}>
+        <span className="text-sm" style={{ color: config.color }}>
           {config.label}
         </span>
       )}

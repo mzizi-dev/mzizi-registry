@@ -85,7 +85,7 @@ function GroupInfoCard({
           <p className="mt-2 line-clamp-3 text-xs text-muted-foreground">{description}</p>
         )}
         {adminNames && adminNames.length > 0 && (
-          <div className="mt-3 text-[10px] text-muted-foreground">
+          <div className="mt-3 text-sm text-muted-foreground">
             Admins: {adminNames.join(", ")}
           </div>
         )}
@@ -94,8 +94,8 @@ function GroupInfoCard({
             and the card dropped them silently. */}
         {rules && rules.length > 0 && (
           <div className="mt-3">
-            <p className="text-[10px] font-medium text-muted-foreground">Group rules</p>
-            <ol className="mt-1 list-decimal space-y-0.5 pl-4 text-[10px] text-muted-foreground">
+            <p className="text-sm font-medium text-muted-foreground">Group rules</p>
+            <ol className="mt-1 list-decimal space-y-2 pl-4 text-sm text-muted-foreground">
               {rules.map((rule, i) => (
                 <li key={i}>{rule}</li>
               ))}

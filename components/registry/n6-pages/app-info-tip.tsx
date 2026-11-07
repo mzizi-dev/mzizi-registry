@@ -33,7 +33,7 @@ function InfoTip({ text, about, id }: InfoTipProps) {
       <span
         role="tooltip"
         id={id}
-        className="pointer-events-none invisible absolute bottom-full left-1/2 z-50 mb-1.5 w-max max-w-64 -translate-x-1/2 rounded-sm bg-foreground px-2.5 py-1.5 text-caption leading-snug font-normal text-background opacity-0 shadow-md transition-opacity peer-hover:visible peer-hover:opacity-100 peer-focus-visible:visible peer-focus-visible:opacity-100"
+        className="pointer-events-none invisible absolute bottom-full left-1/2 z-50 mb-1.5 w-max max-w-64 -translate-x-1/2 rounded-sm bg-foreground px-3.5 py-1.5 text-caption leading-snug font-normal text-background opacity-0 shadow-md transition-opacity peer-hover:visible peer-hover:opacity-100 peer-focus-visible:visible peer-focus-visible:opacity-100"
         data-slot="info-tip-text"
       >
         {text}

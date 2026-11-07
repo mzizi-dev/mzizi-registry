@@ -309,7 +309,7 @@ class MziziSectionBoundary extends React.Component<MziziSectionProps, SectionSta
           {fallback || (
             <div className="flex flex-col items-center rounded-[var(--radius-card,14px)] bg-card px-6 py-6 text-center ring-1 ring-foreground/10">
               <div className="mb-3 flex size-10 items-center justify-center rounded-full bg-[var(--color-terracotta)]/10">
-                <span className="text-lg text-[var(--color-terracotta)]">!</span>
+                <span className="text-lg text-terracotta-text">!</span>
               </div>
               <p className="text-sm font-medium text-foreground">{name} could not load</p>
               <p className="mt-1 text-xs text-muted-foreground">
@@ -471,7 +471,7 @@ export function MziziHealthPanel({ className }: MziziHealthPanelProps) {
       <div className="mb-3 flex items-center justify-between">
         <span className="text-sm font-medium text-foreground">System Health</span>
         <span
-          className="flex items-center gap-1.5 rounded-full px-2 py-0.5 text-[10px] font-semibold uppercase"
+          className="flex items-center gap-2 rounded-full px-2 py-0.5 text-sm font-semibold uppercase"
           style={{
             backgroundColor: `color-mix(in srgb, ${healthColors[systemHealth]} 15%, transparent)`,
             color: healthColors[systemHealth],
@@ -486,7 +486,7 @@ export function MziziHealthPanel({ className }: MziziHealthPanelProps) {
       </div>
 
       {/* Section list */}
-      <div className="flex flex-col gap-1.5">
+      <div className="flex flex-col gap-2">
         {entries.map(([name, report]) => (
           <div
             key={name}
@@ -504,12 +504,12 @@ export function MziziHealthPanel({ className }: MziziHealthPanelProps) {
               {report.avgRenderMs > 0 ? `${report.avgRenderMs}ms` : "—"}
             </span>
             {report.errorCount > 0 && (
-              <span className="rounded bg-[var(--color-error,#F87171)]/10 px-1.5 py-0.5 text-[10px] font-medium text-[var(--color-error,#F87171)]">
+              <span className="rounded bg-[var(--color-error,#F87171)]/10 px-1.5 py-0.5 text-sm font-medium text-[var(--color-error,#F87171)]">
                 {report.errorCount} errors
               </span>
             )}
             {report.dataSource && report.dataSource !== "cloud" && (
-              <span className="rounded bg-[var(--color-warning,#FBBF24)]/10 px-1.5 py-0.5 text-[10px] font-medium text-[var(--color-warning,#FBBF24)]">
+              <span className="rounded bg-[var(--color-warning,#FBBF24)]/10 px-1.5 py-0.5 text-sm font-medium text-[var(--color-warning,#FBBF24)]">
                 {report.dataSource}
               </span>
             )}

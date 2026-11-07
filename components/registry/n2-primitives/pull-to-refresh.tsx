@@ -70,7 +70,7 @@ function PullToRefresh({
           <Loader2 className="size-5 animate-spin text-[var(--color-primary,var(--color-cobalt,#00B0FF))]" />
         ) : (
           <div
-            className="flex flex-col items-center gap-1 transition-opacity"
+            className="flex flex-col items-center gap-2 transition-opacity"
             style={{ opacity: progress }}
           >
             <Loader2

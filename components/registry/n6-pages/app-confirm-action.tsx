@@ -131,7 +131,7 @@ function ConfirmAction({
         <p
           id={`${id}-warning`}
           data-slot="confirm-warning"
-          className="mt-3 flex items-start gap-2 rounded-sm border border-destructive/40 bg-card px-3 py-2 text-body-sm text-destructive"
+          className="mt-3 flex items-start gap-2 rounded-sm border border-destructive/40 bg-card px-3.5 py-2 text-body-sm text-destructive"
         >
           <Icon name="warning" className="mt-0.5 h-4 w-4 shrink-0" />
           <span>
@@ -143,7 +143,7 @@ function ConfirmAction({
             <input key={k} type="hidden" name={k} value={v} />
           ))}
           {confirmText ? (
-            <div className="grid gap-1.5" data-slot="confirm-step">
+            <div className="grid gap-2" data-slot="confirm-step">
               <label htmlFor={`${id}-confirm`} className={labelClasses}>
                 {confirmPrompt ?? (
                   <>

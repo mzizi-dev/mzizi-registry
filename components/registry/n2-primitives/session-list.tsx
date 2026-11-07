@@ -51,19 +51,19 @@ function SessionList({
             <div className="flex size-10 shrink-0 items-center justify-center rounded-[var(--radius-lg,14px)] bg-muted">
               <DeviceIcon className="size-5 text-muted-foreground" />
             </div>
-            <div className="flex min-w-0 flex-1 flex-col gap-0.5">
+            <div className="flex min-w-0 flex-1 flex-col gap-2">
               <div className="flex items-center gap-2">
                 <span className="truncate text-sm font-medium text-foreground">
                   {session.device}
                 </span>
                 {session.current && (
-                  <span className="rounded-full bg-[var(--status-success,var(--color-malachite,#64FFDA))]/15 px-2 py-0.5 text-[10px] font-medium text-[var(--status-success,var(--color-malachite,#64FFDA))]">
+                  <span className="rounded-full bg-[var(--status-success,var(--color-malachite,#64FFDA))]/15 px-2 py-0.5 text-sm font-medium text-[var(--status-success,var(--color-malachite,#64FFDA))]">
                     Current
                   </span>
                 )}
               </div>
               <div className="flex items-center gap-2 text-xs text-muted-foreground">
-                <span className="inline-flex items-center gap-1">
+                <span className="inline-flex items-center gap-2">
                   <Globe className="size-3" />
                   {session.location}
                 </span>

@@ -78,10 +78,10 @@ function StatTile({
 
   return (
     <div
-      className="flex min-w-0 flex-col gap-1 rounded-md border border-border bg-card px-4 py-3.5"
+      className="flex min-w-0 flex-col gap-2 rounded-md border border-border bg-card px-4 py-3.5"
       data-slot="stat-tile"
     >
-      <dt className="flex items-center gap-1 text-body-sm text-muted-foreground">
+      <dt className="flex items-center gap-2 text-body-sm text-muted-foreground">
         {href ? (
           <a
             href={String(href)}
@@ -94,7 +94,7 @@ function StatTile({
         )}
         {info && <InfoTip text={info} about={label} id={infoId} />}
       </dt>
-      <dd className="flex flex-col gap-1.5">
+      <dd className="flex flex-col gap-2">
         <span className="text-h4 font-semibold tracking-tight tabular-nums">
           {shown ?? (
             <span className="text-body text-muted-foreground">
@@ -104,13 +104,13 @@ function StatTile({
         </span>
         {trendText && (
           <span
-            className="flex flex-wrap items-baseline gap-x-1.5 text-caption"
+            className="flex flex-wrap items-baseline gap-x-2 text-caption"
             data-slot="stat-trend"
           >
             <span className="sr-only">{trendText}</span>
             <span
               aria-hidden="true"
-              className={`w-fit shrink-0 rounded-sm px-1.5 py-px font-medium whitespace-nowrap tabular-nums ${good === null ? "bg-muted" : tone}`}
+              className={`w-fit shrink-0 rounded-sm px-3.5 py-px font-medium whitespace-nowrap tabular-nums ${good === null ? "bg-muted" : tone}`}
             >
               {shortTrend}
             </span>

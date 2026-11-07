@@ -73,7 +73,7 @@ function AddressInput({ value, onChange, className }: AddressInputProps) {
       data-portal="https://mzizi.dev/components/address-input"
       className={cn("flex flex-col gap-3", className)}
     >
-      <div className="flex flex-col gap-1.5">
+      <div className="flex flex-col gap-2">
         <label className="text-sm font-medium">Street address</label>
         <Input
           value={address.street}
@@ -82,7 +82,7 @@ function AddressInput({ value, onChange, className }: AddressInputProps) {
         />
       </div>
       <div className="grid grid-cols-2 gap-3">
-        <div className="flex flex-col gap-1.5">
+        <div className="flex flex-col gap-2">
           <label className="text-sm font-medium">City</label>
           <Input
             value={address.city}
@@ -90,7 +90,7 @@ function AddressInput({ value, onChange, className }: AddressInputProps) {
             placeholder="Harare"
           />
         </div>
-        <div className="flex flex-col gap-1.5">
+        <div className="flex flex-col gap-2">
           <label className="text-sm font-medium">State / Province</label>
           <Input
             value={address.state}
@@ -100,7 +100,7 @@ function AddressInput({ value, onChange, className }: AddressInputProps) {
         </div>
       </div>
       <div className="grid grid-cols-2 gap-3">
-        <div className="flex flex-col gap-1.5">
+        <div className="flex flex-col gap-2">
           <label className="text-sm font-medium">Postal code</label>
           <Input
             value={address.postalCode}
@@ -108,7 +108,7 @@ function AddressInput({ value, onChange, className }: AddressInputProps) {
             placeholder="00263"
           />
         </div>
-        <div className="flex flex-col gap-1.5">
+        <div className="flex flex-col gap-2">
           <label className="text-sm font-medium">Country</label>
           <select
             value={address.country}

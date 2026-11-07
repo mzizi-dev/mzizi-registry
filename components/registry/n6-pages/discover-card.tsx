@@ -170,7 +170,7 @@ export function DiscoverCard({
             {badge !== undefined && (
               <span
                 className={cn(
-                  "inline-flex shrink-0 items-center rounded-full px-3 py-1 text-caption font-medium empty:hidden",
+                  "inline-flex shrink-0 items-center rounded-full px-3.5 py-1 text-caption font-medium empty:hidden",
                   tones
                 )}
                 data-slot="discover-card-badge"
@@ -182,7 +182,7 @@ export function DiscoverCard({
           </div>
           {summary !== undefined && <p className="line-clamp-3 text-body-sm text-muted-foreground empty:hidden">{summary}</p>}
           {hasMeta && (
-            <ul className="mt-auto flex flex-wrap gap-x-3 gap-y-1 text-caption text-muted-foreground" data-slot="discover-card-meta">
+            <ul className="mt-auto flex flex-wrap gap-x-3 gap-y-2 text-caption text-muted-foreground" data-slot="discover-card-meta">
               {place !== undefined && <li className="empty:hidden">{place}</li>}
               {meta.map((m, i) => (
                 <li key={`${i}|${m}`} className="empty:hidden">

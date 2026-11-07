@@ -72,11 +72,11 @@ function NoteEditor({
 
       {/* Tags + status bar */}
       <div className="flex items-center gap-2 border-t border-border px-4 py-2">
-        <div className="flex flex-1 flex-wrap items-center gap-1">
+        <div className="flex flex-1 flex-wrap items-center gap-2">
           {tags.map((tag) => (
             <span
               key={tag}
-              className="inline-flex items-center gap-1 rounded-full bg-muted px-2 py-0.5 text-[10px] font-medium"
+              className="inline-flex items-center gap-2 rounded-full bg-muted px-2 py-0.5 text-sm font-medium"
             >
               {tag}
               <button
@@ -99,11 +99,11 @@ function NoteEditor({
               }
             }}
             placeholder={tags.length === 0 ? "Add tags…" : "+"}
-            className="h-6 w-16 bg-transparent text-[10px] outline-none placeholder:text-muted-foreground"
+            className="h-6 w-16 bg-transparent text-sm outline-none placeholder:text-muted-foreground"
           />
         </div>
         {autoSave && (
-          <span className="text-[9px] text-muted-foreground">
+          <span className="text-sm text-muted-foreground">
             {lastSaved ? `Saved ${lastSaved}` : "Auto-save on"}
           </span>
         )}

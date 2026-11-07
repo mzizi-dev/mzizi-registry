@@ -45,14 +45,14 @@ export function ChartBarLabelCustom({ loading = false }: { loading?: boolean } =
                 position="insideLeft"
                 offset={8}
                 className="fill-[--color-label]"
-                fontSize={12}
+                fontSize={14}
               />
               <LabelList
                 dataKey="users"
                 position="right"
                 offset={8}
                 className="fill-foreground"
-                fontSize={12}
+                fontSize={14}
               />
             </Bar>
           </BarChart>

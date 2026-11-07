@@ -56,15 +56,15 @@ function VehicleCard({
             </div>
           </div>
           {rating !== undefined && (
-            <span className="text-xs font-medium text-[var(--color-gold,#FFD740)]">
+            <span className="text-xs font-medium text-[var(--color-gold-text,#FFD740)]">
               ★ {rating.toFixed(1)}
             </span>
           )}
         </div>
         {driverName && (
-          <div className="mt-2 flex items-center gap-1 text-xs text-muted-foreground">
+          <div className="mt-2 flex items-center gap-2 text-xs text-muted-foreground">
             <span>{driverName}</span>
-            {verified && <span className="text-[var(--color-gold,#FFD740)]">✓</span>}
+            {verified && <span className="text-[var(--color-gold-text,#FFD740)]">✓</span>}
           </div>
         )}
         <div className="mt-3 flex items-center justify-between">

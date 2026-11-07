@@ -75,7 +75,7 @@ function CoverThemePicker({
         className
       )}
     >
-      <span className="mb-2 block text-[11px] font-semibold tracking-wider text-muted-foreground uppercase">
+      <span className="mb-2 block text-sm font-semibold tracking-wider text-muted-foreground uppercase">
         Cover Theme
       </span>
 
@@ -104,7 +104,7 @@ function CoverThemePicker({
         ) : (
           <div className="relative flex flex-col items-center gap-2">
             <Image className="size-7 text-white/40" />
-            <p className="text-[13px] text-white/60">Tap to add cover image</p>
+            <p className="text-sm text-white/60">Tap to add cover image</p>
           </div>
         )}
       </div>
@@ -292,7 +292,7 @@ function CreateHeader({ title, onCancel, actions, className }: CreateHeaderProps
     >
       <button
         onClick={onCancel}
-        className="flex items-center gap-1.5 text-[15px] text-muted-foreground"
+        className="flex items-center gap-2 text-[15px] text-muted-foreground"
       >
         <X className="size-5" />
         Cancel

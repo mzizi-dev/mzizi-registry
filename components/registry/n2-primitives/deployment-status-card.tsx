@@ -50,7 +50,7 @@ function DeploymentStatusCard({
           <div className="size-2 rounded-full" style={{ backgroundColor: cfg.color }} />
           <span className="text-sm font-medium">{serviceName}</span>
         </div>
-        <span className="text-[10px] font-medium" style={{ color: cfg.color }}>
+        <span className="text-sm font-medium" style={{ color: cfg.color }}>
           {cfg.label}
         </span>
       </div>
@@ -58,19 +58,19 @@ function DeploymentStatusCard({
         {uptimePct !== undefined && (
           <div>
             <div className="text-xs font-bold tabular-nums">{uptimePct.toFixed(2)}%</div>
-            <div className="text-[9px] text-muted-foreground">Uptime</div>
+            <div className="text-sm text-muted-foreground">Uptime</div>
           </div>
         )}
         {errorRate !== undefined && (
           <div>
             <div className="text-xs font-bold tabular-nums">{errorRate.toFixed(2)}%</div>
-            <div className="text-[9px] text-muted-foreground">Error Rate</div>
+            <div className="text-sm text-muted-foreground">Error Rate</div>
           </div>
         )}
         {p50ms !== undefined && (
           <div>
             <div className="text-xs font-bold tabular-nums">{p50ms}ms</div>
-            <div className="text-[9px] text-muted-foreground">p50</div>
+            <div className="text-sm text-muted-foreground">p50</div>
           </div>
         )}
         {/* `p95ms` and `p99ms` were destructured and never rendered. On a
@@ -79,18 +79,18 @@ function DeploymentStatusCard({
         {p95ms !== undefined && (
           <div>
             <div className="text-xs font-bold tabular-nums">{p95ms}ms</div>
-            <div className="text-[9px] text-muted-foreground">p95</div>
+            <div className="text-sm text-muted-foreground">p95</div>
           </div>
         )}
         {p99ms !== undefined && (
           <div>
             <div className="text-xs font-bold tabular-nums">{p99ms}ms</div>
-            <div className="text-[9px] text-muted-foreground">p99</div>
+            <div className="text-sm text-muted-foreground">p99</div>
           </div>
         )}
       </div>
       {(lastDeploy || version) && (
-        <div className="mt-3 flex items-center gap-2 text-[10px] text-muted-foreground">
+        <div className="mt-3 flex items-center gap-2 text-sm text-muted-foreground">
           {version && <span className="font-mono">v{version}</span>}
           {lastDeploy && <span>Deployed {lastDeploy}</span>}
         </div>

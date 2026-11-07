@@ -1,0 +1,55 @@
+name: Release notes
+
+# Owner, 2026-11-04: "Every release should have release notes too with a
+# changelog." The release workflows build their notes from CHANGELOG.md with
+# .github/scripts/release_notes.py and publish them with
+# .github/scripts/publish-release.sh (both identical in the Mzizi repositories
+# that carry them). This workflow checks both scripts, and checks a release
+# pull request (staging to main, from a `release/*` branch) BEFORE it merges: the
+# release it makes must have changelog content, and the notes are printed in the
+# run summary so they can be pasted into the pull request body.
+
+on:
+  pull_request:
+    branches: [main, staging]
+    paths:
+      - .github/scripts/**
+      - .github/workflows/release-notes.yml
+      - CHANGELOG.md
+
+permissions:
+  contents: read
+
+jobs:
+  scripts:
+    name: release notes / scripts
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+      - run: python3 .github/scripts/test_release_notes.py
+      - run: bash .github/scripts/test-publish-release.sh
+  release-pr:
+    name: release notes / release PR
+    if: >-
+      github.event_name == 'pull_request' && github.base_ref == 'main' &&
+      startsWith(github.head_ref, 'release/')
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          fetch-depth: 0
+          persist-credentials: false
+      - name: The release must have changelog content
+        env:
+          REPO: ${{ github.repository }}
+        run: |
+          set -euo pipefail
+          prev="$(git tag -l 'v*.*.0' --merged origin/main --sort=-v:refname | head -n 1 || true)"
+          # Exits 1 when no CHANGELOG.md entry was added since the last release,
+          # the same failure the release job would hit after the merge.
+          CHANGELOG_URL="https://github.com/${REPO}/blob/main/CHANGELOG.md" \
+            python3 .github/scripts/release_notes.py "$prev" HEAD | tee -a "$GITHUB_STEP_SUMMARY"

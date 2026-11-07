@@ -61,25 +61,25 @@ function UserManagementRow({
         />
       </div>
       <div className="min-w-0 flex-1">
-        <div className="flex items-center gap-1.5">
+        <div className="flex items-center gap-2">
           <span className="truncate text-sm font-medium">{name}</span>
           {verificationTier !== undefined && verificationTier > 0 && (
-            <span className="text-[10px] text-[var(--color-gold,#FFD740)]">✓</span>
+            <span className="text-sm text-[var(--color-gold-text,#FFD740)]">✓</span>
           )}
         </div>
         <div className="truncate text-xs text-muted-foreground">{email}</div>
       </div>
-      <span className="hidden rounded-full bg-muted px-2 py-0.5 text-[10px] font-medium text-muted-foreground capitalize sm:inline">
+      <span className="hidden rounded-full bg-muted px-2 py-0.5 text-sm font-medium text-muted-foreground capitalize sm:inline">
         {role}
       </span>
       {lastActive && (
-        <span className="hidden text-[10px] text-muted-foreground lg:inline">{lastActive}</span>
+        <span className="hidden text-sm text-muted-foreground lg:inline">{lastActive}</span>
       )}
-      <div className="flex gap-1">
+      <div className="flex gap-2">
         {onEditRole && (
           <button
             onClick={onEditRole}
-            className="h-7 rounded-full bg-muted px-2 text-[10px] font-medium transition-colors hover:bg-border"
+            className="h-7 rounded-full bg-muted px-2 text-sm font-medium transition-colors hover:bg-border"
           >
             Role
           </button>
@@ -87,7 +87,7 @@ function UserManagementRow({
         {onSuspend && (
           <button
             onClick={onSuspend}
-            className="h-7 rounded-full px-2 text-[10px] font-medium text-[var(--color-gold,#FFD740)] transition-colors hover:bg-[var(--color-gold,#FFD740)]/10"
+            className="h-7 rounded-full px-2 text-sm font-medium text-[var(--color-gold-text,#FFD740)] transition-colors hover:bg-[var(--color-gold,#FFD740)]/10"
           >
             {status === "suspended" ? "Unsuspend" : "Suspend"}
           </button>
@@ -97,7 +97,7 @@ function UserManagementRow({
         {onDelete && (
           <button
             onClick={onDelete}
-            className="h-7 rounded-full px-2 text-[10px] font-medium text-destructive transition-colors hover:bg-destructive/10"
+            className="h-7 rounded-full px-2 text-sm font-medium text-destructive transition-colors hover:bg-destructive/10"
           >
             Delete
           </button>

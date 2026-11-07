@@ -13,7 +13,10 @@
       "export": "@bundu/ui/discover/OpenInApp.astro",
       "since": "0.3.0"
     },
-    "tsx": { "registry": "discover-open-in-app", "identity": "contract" },
+    "tsx": {
+      "registry": "discover-open-in-app",
+      "identity": "contract"
+    },
     "rs": null,
     "related": []
   },
@@ -133,8 +136,8 @@
     {
       "part": "link",
       "select": "a",
-      "fine": 48,
-      "coarse": 48
+      "fine": 36,
+      "coarse": 49
     }
   ],
   "theming": {
@@ -153,7 +156,7 @@
     "without": "Everything: the component is server-rendered HTML with no script."
   },
   "responsive": ["The hint wraps under the button."],
-  "contract": "contract\n  slot is \"open-in-app\"\n  a \"Join in Mukoko\" min_height 48\n  a \"Open in Mukoko\" min_height 48\n  when default shows p \"Opens in the Mukoko app, or on the web if you don't have it.\"\n  when outline shows a \"Open in Mukoko\"\n  when actions shows a \"Start your own circle\"\n  when canonical shows a \"Open in Mukoko\"\nend",
+  "contract": "contract\n  slot is \"open-in-app\"\n  a \"Join in Mukoko\" min_height 44\n  a \"Open in Mukoko\" min_height 44\n  when default shows p \"Opens in the Mukoko app, or on the web if you don't have it.\"\n  when outline shows a \"Open in Mukoko\"\n  when actions shows a \"Start your own circle\"\n  when canonical shows a \"Open in Mukoko\"\nend",
   "checks": [
     {
       "say": "An https link.",

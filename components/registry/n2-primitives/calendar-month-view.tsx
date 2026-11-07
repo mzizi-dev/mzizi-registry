@@ -62,7 +62,7 @@ function CalendarMonthView({
           <div
             key={d}
             role="columnheader"
-            className="py-2 text-center text-[10px] font-medium text-muted-foreground"
+            className="py-2 text-center text-sm font-medium text-muted-foreground"
           >
             {d}
           </div>
@@ -84,15 +84,15 @@ function CalendarMonthView({
               aria-selected={isSelected}
               onClick={() => onDateSelect?.(key)}
               className={cn(
-                "flex flex-col items-center gap-0.5 rounded-[var(--radius-sm,7px)] py-1.5 text-sm transition-colors",
+                "flex flex-col items-center gap-2 rounded-[var(--radius-sm,7px)] py-1.5 text-sm transition-colors",
                 isSelected && "bg-primary text-primary-foreground",
-                isToday && !isSelected && "font-bold text-[var(--color-malachite,#64FFDA)]",
+                isToday && !isSelected && "font-bold text-[var(--color-malachite-text,#64FFDA)]",
                 !isSelected && !isToday && "hover:bg-muted"
               )}
             >
               <span className="tabular-nums">{day.getDate()}</span>
               {dayEvents.length > 0 && (
-                <div className="flex gap-0.5">
+                <div className="flex gap-2">
                   {dayEvents.slice(0, 3).map((e, i) => (
                     <div
                       key={i}

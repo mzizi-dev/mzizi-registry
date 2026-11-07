@@ -83,7 +83,7 @@ export function APIExplorerPage({
               )}
             >
               <span
-                className="shrink-0 rounded px-1 py-0.5 font-mono text-[10px] font-bold"
+                className="shrink-0 rounded px-1 py-0.5 font-mono text-sm font-bold"
                 style={{ color: METHOD_COLORS[ep.method] }}
               >
                 {ep.method}

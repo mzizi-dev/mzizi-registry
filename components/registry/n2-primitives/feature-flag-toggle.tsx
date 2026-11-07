@@ -51,7 +51,7 @@ function FeatureFlagToggle({
             onClick={() => onToggle?.(env, !enabled)}
             aria-label={`${env}: ${enabled ? "enabled" : "disabled"}`}
             className={cn(
-              "flex h-8 items-center gap-1.5 rounded-full px-2.5 text-[10px] font-medium transition-colors",
+              "flex h-8 items-center gap-2 rounded-full px-2.5 text-sm font-medium transition-colors",
               enabled ? "bg-card shadow-sm" : "text-muted-foreground/50"
             )}
             style={enabled ? { color: envColors[env] } : undefined}
@@ -65,7 +65,7 @@ function FeatureFlagToggle({
         ))}
       </div>
       {rolloutPct !== undefined && onRolloutChange && (
-        <div className="flex items-center gap-1.5 border-l border-border pl-3">
+        <div className="flex items-center gap-2 border-l border-border pl-3">
           <input
             type="range"
             min={0}
@@ -75,7 +75,7 @@ function FeatureFlagToggle({
             className="h-1 w-16 accent-[var(--color-malachite,#64FFDA)]"
             aria-label="Rollout percentage"
           />
-          <span className="w-8 text-right font-mono text-[10px] tabular-nums">{rolloutPct}%</span>
+          <span className="w-8 text-right font-mono text-sm tabular-nums">{rolloutPct}%</span>
         </div>
       )}
     </div>

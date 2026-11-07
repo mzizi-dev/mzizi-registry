@@ -42,7 +42,7 @@ function ChatListItem({
         {Array.from({ length: 5 }).map((_, i) => (
           <div key={i} className="flex items-center gap-3 p-3">
             <div className="size-9 shrink-0 rounded-full bg-muted" />
-            <div className="flex-1 space-y-1.5">
+            <div className="flex-1 space-y-2">
               <div className="h-3.5 w-2/3 rounded bg-muted" />
               <div className="h-2.5 w-1/3 rounded bg-muted" />
             </div>
@@ -76,7 +76,7 @@ function ChatListItem({
         </AvatarFallback>
       </Avatar>
 
-      <div className="flex min-w-0 flex-1 flex-col gap-0.5">
+      <div className="flex min-w-0 flex-1 flex-col gap-2">
         <div className="flex items-center justify-between gap-2">
           <span
             className={cn(
@@ -95,7 +95,7 @@ function ChatListItem({
           {conversation.unreadCount != null && conversation.unreadCount > 0 && (
             <Badge
               variant="default"
-              className="size-5 shrink-0 justify-center rounded-full p-0 text-[10px]"
+              className="h-6 min-w-6 px-1 shrink-0 justify-center rounded-full p-0 text-sm leading-none"
             >
               {conversation.unreadCount > 99 ? "99+" : conversation.unreadCount}
             </Badge>
@@ -120,7 +120,7 @@ function ChatList({
         {Array.from({ length: 5 }).map((_, i) => (
           <div key={i} className="flex items-center gap-3 p-3">
             <div className="size-9 shrink-0 rounded-full bg-muted" />
-            <div className="flex-1 space-y-1.5">
+            <div className="flex-1 space-y-2">
               <div className="h-3.5 w-2/3 rounded bg-muted" />
               <div className="h-2.5 w-1/3 rounded bg-muted" />
             </div>
@@ -138,7 +138,7 @@ function ChatList({
       {...props}
     >
       <ScrollArea className="flex-1">
-        <div className="flex flex-col gap-0.5 p-2">
+        <div className="flex flex-col gap-2 p-2">
           {conversations.map((conversation) => (
             <ChatListItem
               key={conversation.id}

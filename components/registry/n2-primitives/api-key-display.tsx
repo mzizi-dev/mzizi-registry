@@ -29,7 +29,7 @@ function ApiKeyDisplay({
     <div
       data-slot="api-key-display"
       data-portal="https://mzizi.dev/components/api-key-display"
-      className={cn("flex flex-col gap-1.5", className)}
+      className={cn("flex flex-col gap-2", className)}
       {...props}
     >
       {label && <span className="text-sm font-medium text-muted-foreground">{label}</span>}

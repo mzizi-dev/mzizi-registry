@@ -106,7 +106,7 @@
         "required": ["name", "description"],
         "properties": {
           "name": {
-            "description": "`default` for the unnamed slot (React: children; Dioxus: children).",
+            "description": "`default` for the unnamed slot (React: children; Rust: children).",
             "type": "string"
           },
           "expects": {

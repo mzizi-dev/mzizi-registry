@@ -69,7 +69,7 @@ export function AddressSelector({
             defaultChecked={a.id === value}
             className="size-5 shrink-0 accent-primary outline-none"
           />
-          <span className="flex min-w-0 flex-1 flex-col gap-0.5">
+          <span className="flex min-w-0 flex-1 flex-col gap-2">
             <span className="flex items-center gap-2">
               <span className="truncate text-body-sm font-medium">{a.label}</span>
               {a.visibility && PRIVACY[a.visibility] && (
@@ -91,7 +91,7 @@ export function AddressSelector({
         <a
           href={addHref}
           data-slot="address-selector-add"
-          className="inline-flex min-h-11 items-center self-start rounded-full px-3 text-body-sm font-medium text-primary no-underline outline-none hover:bg-muted focus-visible:ring-[3px] focus-visible:ring-ring/50"
+          className="inline-flex min-h-11 items-center self-start rounded-full px-3.5 text-body-sm font-medium text-primary no-underline outline-none hover:bg-muted focus-visible:ring-[3px] focus-visible:ring-ring/50"
         >
           {addLabel}
         </a>

@@ -61,7 +61,7 @@ function TokenBalanceCard({
           <div key={token.symbol} className="flex items-center justify-between">
             <div className="flex items-center gap-2.5">
               <div
-                className="flex size-8 items-center justify-center rounded-full text-[10px] font-bold"
+                className="flex size-8 items-center justify-center rounded-full text-sm font-bold"
                 style={{
                   backgroundColor: `${tokenColors[token.symbol]}20`,
                   color: tokenColors[token.symbol],
@@ -71,7 +71,7 @@ function TokenBalanceCard({
               </div>
               <div>
                 <div className="text-sm font-medium">{token.symbol}</div>
-                <div className="text-[10px] text-muted-foreground">{token.name}</div>
+                <div className="text-sm text-muted-foreground">{token.name}</div>
               </div>
             </div>
             <div className="text-right">
@@ -79,13 +79,13 @@ function TokenBalanceCard({
                 {token.balance.toLocaleString()}
               </div>
               {token.fiatValue !== undefined && (
-                <div className="flex items-center gap-1 text-[10px] text-muted-foreground">
+                <div className="flex items-center gap-2 text-sm text-muted-foreground">
                   <span>{fiat(token.fiatValue)}</span>
                   {token.change24h !== undefined && (
                     <span
                       className={
                         token.change24h >= 0
-                          ? "text-[var(--color-malachite,#64FFDA)]"
+                          ? "text-[var(--color-malachite-text,#64FFDA)]"
                           : "text-destructive"
                       }
                     >

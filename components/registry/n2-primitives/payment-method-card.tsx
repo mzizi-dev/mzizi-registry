@@ -53,7 +53,7 @@ function PaymentMethodCard({
       <div className="flex size-10 items-center justify-center rounded-[var(--radius-lg,14px)] bg-muted">
         <CreditCard className="size-5 text-muted-foreground" />
       </div>
-      <div className="flex min-w-0 flex-1 flex-col gap-0.5">
+      <div className="flex min-w-0 flex-1 flex-col gap-2">
         <span className="text-sm font-medium text-foreground">{brand}</span>
         <span className="font-mono text-xs text-muted-foreground">
           {"•••• ".repeat(3)}

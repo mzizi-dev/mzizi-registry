@@ -19,8 +19,8 @@ interface VitalsDisplayProps extends React.ComponentProps<"div"> {
 }
 
 const statusColors: Record<VitalStatus, string> = {
-  normal: "text-[var(--color-malachite,#64FFDA)]",
-  warning: "text-[var(--color-gold,#FFD740)]",
+  normal: "text-[var(--color-malachite-text,#64FFDA)]",
+  warning: "text-[var(--color-gold-text,#FFD740)]",
   critical: "text-destructive",
 }
 const statusBg: Record<VitalStatus, string> = {
@@ -41,7 +41,7 @@ function VitalsDisplay({ vitals, lastUpdated, className, ...props }: VitalsDispl
       <div className="flex items-center justify-between">
         <span className="text-sm font-medium">Health Vitals</span>
         {lastUpdated && (
-          <span className="text-[10px] text-muted-foreground">Updated {lastUpdated}</span>
+          <span className="text-sm text-muted-foreground">Updated {lastUpdated}</span>
         )}
       </div>
       <div className="mt-4 grid grid-cols-2 gap-3">
@@ -49,7 +49,7 @@ function VitalsDisplay({ vitals, lastUpdated, className, ...props }: VitalsDispl
           const st = vital.status || "normal"
           return (
             <div key={i} className={cn("rounded-[var(--radius-md,12px)] p-3", statusBg[st])}>
-              <div className="text-[10px] font-medium text-muted-foreground">{vital.label}</div>
+              <div className="text-sm font-medium text-muted-foreground">{vital.label}</div>
               <div className={cn("mt-0.5 text-lg font-bold tabular-nums", statusColors[st])}>
                 {vital.value}{" "}
                 <span className="text-xs font-normal text-muted-foreground">{vital.unit}</span>

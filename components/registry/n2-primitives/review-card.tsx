@@ -45,7 +45,7 @@ function ReviewCard({
       )}
     >
       <div className="flex items-center justify-between">
-        <div className="flex items-center gap-1">
+        <div className="flex items-center gap-2">
           {Array.from({ length: 5 }, (_, i) => (
             <Star
               key={i}
