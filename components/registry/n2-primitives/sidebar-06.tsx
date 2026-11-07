@@ -24,7 +24,7 @@ function Sidebar06() {
         <Zap className="size-4 text-cobalt" />
       </div>
       <Separator className="my-2 w-8" />
-      <nav className="flex flex-1 flex-col items-center gap-1">
+      <nav className="flex flex-1 flex-col items-center gap-2">
         {navItems.map((item) => (
           <Button
             key={item.label}

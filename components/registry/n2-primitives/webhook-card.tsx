@@ -50,7 +50,7 @@ function WebhookCard({
         </div>
         <span
           className={cn(
-            "inline-flex items-center gap-1.5 rounded-full px-2 py-0.5 text-xs font-medium",
+            "inline-flex items-center gap-2 rounded-full px-2 py-0.5 text-xs font-medium",
             status === "active"
               ? "bg-[var(--status-success,var(--color-malachite,#64FFDA))]/15 text-[var(--status-success,var(--color-malachite,#64FFDA))]"
               : "bg-muted text-muted-foreground"
@@ -67,7 +67,7 @@ function WebhookCard({
           {status}
         </span>
       </div>
-      <div className="flex flex-wrap gap-1.5">
+      <div className="flex flex-wrap gap-2">
         {events.map((event) => (
           <span
             key={event}
@@ -78,7 +78,7 @@ function WebhookCard({
         ))}
       </div>
       {lastTriggered && (
-        <div className="flex items-center gap-1.5 text-xs text-muted-foreground">
+        <div className="flex items-center gap-2 text-xs text-muted-foreground">
           <Clock className="size-3" />
           <span>Last triggered {lastTriggered}</span>
         </div>

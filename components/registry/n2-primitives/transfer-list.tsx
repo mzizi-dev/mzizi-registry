@@ -128,7 +128,7 @@ function TransferList({ available, selected, onTransfer, className }: TransferLi
         search={leftSearch}
         onSearchChange={setLeftSearch}
       />
-      <div className="flex flex-col gap-1">
+      <div className="flex flex-col gap-2">
         <Button
           type="button"
           variant="outline"

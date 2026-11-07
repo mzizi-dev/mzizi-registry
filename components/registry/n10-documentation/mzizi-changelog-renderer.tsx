@@ -54,10 +54,10 @@ const NODE_AXIS: Record<number, "vertical" | "horizontal" | "depth" | "outlier">
 }
 
 const AXIS_COLOURS: Record<string, string> = {
-  horizontal: "bg-[var(--color-cobalt)]/10 text-[var(--color-cobalt)]",
-  vertical: "bg-[var(--color-tanzanite)]/10 text-[var(--color-tanzanite)]",
-  depth: "bg-[var(--color-malachite)]/10 text-[var(--color-malachite)]",
-  outlier: "bg-[var(--color-gold)]/10 text-[var(--color-gold)]",
+  horizontal: "bg-[var(--color-cobalt)]/10 text-cobalt-text",
+  vertical: "bg-[var(--color-tanzanite)]/10 text-tanzanite-text",
+  depth: "bg-[var(--color-malachite)]/10 text-malachite-text",
+  outlier: "bg-[var(--color-gold)]/10 text-gold-text",
 }
 
 export function ChangelogRenderer({ entries, className }: ChangelogRendererProps) {
@@ -85,7 +85,7 @@ export function ChangelogRenderer({ entries, className }: ChangelogRendererProps
 
           {/* Nodes affected badges */}
           {entry.nodesAffected && entry.nodesAffected.length > 0 && (
-            <div className="mt-2 flex flex-wrap gap-1" aria-label="Nodes affected">
+            <div className="mt-2 flex flex-wrap gap-2" aria-label="Nodes affected">
               {entry.nodesAffected.map((n) => (
                 <span
                   key={n}
@@ -103,7 +103,7 @@ export function ChangelogRenderer({ entries, className }: ChangelogRendererProps
 
           {/* Component changes */}
           {entry.componentsAdded && entry.componentsAdded.length > 0 && (
-            <div className="mt-2 flex flex-wrap gap-1" aria-label="Components added">
+            <div className="mt-2 flex flex-wrap gap-2" aria-label="Components added">
               {entry.componentsAdded.map((c) => (
                 <span
                   key={c}
@@ -116,11 +116,11 @@ export function ChangelogRenderer({ entries, className }: ChangelogRendererProps
           )}
 
           {entry.componentsModified && entry.componentsModified.length > 0 && (
-            <div className="mt-1 flex flex-wrap gap-1" aria-label="Components modified">
+            <div className="mt-1 flex flex-wrap gap-2" aria-label="Components modified">
               {entry.componentsModified.map((c) => (
                 <span
                   key={c}
-                  className="rounded bg-[var(--color-cobalt)]/10 px-1.5 py-0.5 text-xs text-[var(--color-cobalt)]"
+                  className="rounded bg-[var(--color-cobalt)]/10 px-1.5 py-0.5 text-xs text-cobalt-text"
                 >
                   ~{c}
                 </span>
@@ -129,7 +129,7 @@ export function ChangelogRenderer({ entries, className }: ChangelogRendererProps
           )}
 
           {entry.componentsDeprecated && entry.componentsDeprecated.length > 0 && (
-            <div className="mt-1 flex flex-wrap gap-1" aria-label="Components deprecated">
+            <div className="mt-1 flex flex-wrap gap-2" aria-label="Components deprecated">
               {entry.componentsDeprecated.map((c) => (
                 <span
                   key={c}

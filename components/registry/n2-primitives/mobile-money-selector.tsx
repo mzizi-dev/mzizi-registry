@@ -81,7 +81,7 @@ function MobileMoneySelector({
             )}
           >
             <div
-              className="flex size-8 items-center justify-center rounded-full text-[10px] font-bold text-white"
+              className="flex size-8 items-center justify-center rounded-full text-sm font-bold text-white"
               style={{ backgroundColor: provider.color }}
             >
               {provider.shortName}
@@ -89,7 +89,7 @@ function MobileMoneySelector({
             <div>
               <div className="text-xs font-medium">{provider.name}</div>
               {provider.ussdCode && (
-                <div className="font-mono text-[9px] text-muted-foreground">
+                <div className="font-mono text-sm text-muted-foreground">
                   {provider.ussdCode}
                 </div>
               )}

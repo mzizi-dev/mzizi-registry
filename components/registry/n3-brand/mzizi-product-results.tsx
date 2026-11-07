@@ -46,7 +46,7 @@ export function MziziProductResults({
       <h3 className="px-2 py-1 text-xs font-medium tracking-wide text-[var(--muted-foreground)] uppercase">
         {heading}
       </h3>
-      <ul className="grid gap-1">
+      <ul className="grid gap-2">
         {top.map((r) => (
           <li key={r.id}>
             <button

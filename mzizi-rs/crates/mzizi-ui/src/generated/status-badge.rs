@@ -94,7 +94,7 @@ pub const STATUS_BADGE_STATUSES: [StatusBadgeStatus; 4] = [
 ];
 
 /// The `Badge` base classes (from `badge.tsx`) every status badge carries.
-const BADGE_BASE: &str = "h-5 gap-1 rounded-md border border-transparent px-2 py-0.5 text-xs font-medium transition-all has-data-[icon=inline-end]:pr-1.5 has-data-[icon=inline-start]:pl-1.5 [&>svg]:size-3! inline-flex items-center justify-center w-fit whitespace-nowrap shrink-0 [&>svg]:pointer-events-none focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:ring-[3px] aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive overflow-hidden group/badge";
+const BADGE_BASE: &str = "h-6 gap-2 rounded-md border border-transparent px-3.5 py-0.5 text-xs font-medium transition-all has-data-[icon=inline-end]:pr-3.5 has-data-[icon=inline-start]:pl-3.5 [&>svg]:size-3! inline-flex items-center justify-center w-fit whitespace-nowrap shrink-0 [&>svg]:pointer-events-none focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:ring-[3px] aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive overflow-hidden group/badge";
 
 /// The `Badge` outline variant's classes.
 const BADGE_OUTLINE: &str =
@@ -102,7 +102,7 @@ const BADGE_OUTLINE: &str =
 
 /// The status badge's own classes: a pill in small mono capitals.
 const STATUS_BASE: &str =
-    "rounded-full border-transparent font-mono text-[10px] tracking-wide uppercase";
+    "rounded-full border-transparent font-mono text-sm tracking-wide uppercase";
 
 impl StatusBadgeStatus {
     /// The Tailwind classes for this status: its mineral at 10% behind the mineral.

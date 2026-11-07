@@ -44,12 +44,12 @@ function ApiUsageMeter({
       <div className="flex items-center justify-between">
         <span className="text-sm font-medium">{label}</span>
         {throttled && (
-          <span className="rounded-full bg-destructive/10 px-2 py-0.5 text-[10px] font-medium text-destructive">
+          <span className="rounded-full bg-destructive/10 px-2 py-0.5 text-sm font-medium text-destructive">
             Throttled
           </span>
         )}
       </div>
-      <div className="mt-2 flex items-baseline gap-1">
+      <div className="mt-2 flex items-baseline gap-2">
         <span className="text-lg font-bold tabular-nums">{current.toLocaleString()}</span>
         <span className="text-xs text-muted-foreground">
           / {limit.toLocaleString()} {unit}
@@ -61,7 +61,7 @@ function ApiUsageMeter({
           style={{ width: `${pct}%` }}
         />
       </div>
-      <div className="mt-1 text-[10px] text-muted-foreground">
+      <div className="mt-1 text-sm text-muted-foreground">
         {period} · {(100 - pct).toFixed(0)}% remaining
       </div>
     </div>

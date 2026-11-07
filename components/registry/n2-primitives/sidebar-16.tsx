@@ -135,7 +135,7 @@ function Sidebar16() {
               />
             </button>
             {!collapsed[group.label] && (
-              <div className="mt-0.5 space-y-0.5">
+              <div className="mt-0.5 space-y-2">
                 {group.items.map((item) => (
                   <Button
                     key={item.label}
@@ -157,7 +157,7 @@ function Sidebar16() {
       <Separator />
 
       {/* Theme + help */}
-      <div className="space-y-1 p-3">
+      <div className="space-y-2 p-3">
         <div className="flex items-center justify-between rounded-[var(--radius-lg,14px)] bg-muted px-3 py-1.5">
           <span className="text-xs text-muted-foreground">Theme</span>
           <button

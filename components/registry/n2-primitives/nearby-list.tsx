@@ -41,7 +41,7 @@ function NearbyList({
   return (
     <div
       data-slot="nearby-list"
-      className={cn("space-y-1", className)}
+      className={cn("space-y-2", className)}
       role="list"
       aria-label="Nearby results"
       {...props}
@@ -59,27 +59,27 @@ function NearbyList({
             </div>
           )}
           <div className="min-w-0 flex-1">
-            <div className="flex items-center gap-1">
+            <div className="flex items-center gap-2">
               <span className="truncate text-sm font-medium">{item.title}</span>
               {item.verified && (
-                <span className="text-[10px] text-[var(--color-gold,#FFD740)]">✓</span>
+                <span className="text-sm text-[var(--color-gold-text,#FFD740)]">✓</span>
               )}
             </div>
             {item.subtitle && (
               <div className="truncate text-xs text-muted-foreground">{item.subtitle}</div>
             )}
-            <div className="mt-0.5 flex items-center gap-2 text-[10px] text-muted-foreground">
+            <div className="mt-0.5 flex items-center gap-2 text-sm text-muted-foreground">
               {item.category && (
-                <span className="rounded-full bg-muted px-1.5 py-0.5 text-[9px]">
+                <span className="rounded-full bg-muted px-1.5 py-0.5 text-sm">
                   {item.category}
                 </span>
               )}
               {item.rating !== undefined && (
-                <span className="text-[var(--color-gold,#FFD740)]">★ {item.rating.toFixed(1)}</span>
+                <span className="text-[var(--color-gold-text,#FFD740)]">★ {item.rating.toFixed(1)}</span>
               )}
             </div>
           </div>
-          <span className="shrink-0 rounded-full bg-muted px-2 py-0.5 text-[10px] font-medium text-muted-foreground">
+          <span className="shrink-0 rounded-full bg-muted px-2 py-0.5 text-sm font-medium text-muted-foreground">
             {item.distance}
           </span>
         </button>

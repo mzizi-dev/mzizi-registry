@@ -69,7 +69,7 @@ function TimelineContent({ className, children, ...props }: TimelineContentProps
   return (
     <div
       data-slot="timeline-content"
-      className={cn("flex-1 space-y-1 pt-0 pb-2", className)}
+      className={cn("flex-1 space-y-2 pt-0 pb-2", className)}
       {...props}
     >
       {children}

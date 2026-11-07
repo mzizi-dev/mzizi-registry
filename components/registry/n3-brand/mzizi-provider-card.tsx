@@ -68,7 +68,7 @@ export function MziziProviderCard({
       >
         <div className="flex gap-3">
           <div className="size-12 shrink-0 rounded-full bg-muted" />
-          <div className="flex-1 space-y-1.5">
+          <div className="flex-1 space-y-2">
             <div className="h-3.5 w-1/2 rounded bg-muted" />
             <div className="h-2.5 w-1/3 rounded bg-muted" />
             <div className="h-2.5 w-1/4 rounded bg-muted" />
@@ -100,7 +100,7 @@ export function MziziProviderCard({
           {avatarUrl ? <img src={avatarUrl} alt={name} className="size-full object-cover" /> : "👨‍⚕️"}
         </div>
         <div className="min-w-0 flex-1">
-          <div className="flex items-center gap-1.5">
+          <div className="flex items-center gap-2">
             <h3 className="truncate text-sm font-semibold text-foreground">{name}</h3>
             {verified && (
               <span className="text-xs" style={{ color: tierMineral[verificationTier] }}>
@@ -108,8 +108,8 @@ export function MziziProviderCard({
               </span>
             )}
           </div>
-          <p className="text-[11px] text-muted-foreground">{specialty}</p>
-          <div className="mt-1 flex items-center gap-2 text-[10px] text-muted-foreground">
+          <p className="text-sm text-muted-foreground">{specialty}</p>
+          <div className="mt-1 flex items-center gap-2 text-sm text-muted-foreground">
             {rating && (
               <span className="font-medium" style={{ color: "var(--color-gold,#FFD740)" }}>
                 ★ {rating}
@@ -117,7 +117,7 @@ export function MziziProviderCard({
               </span>
             )}
             {telemedicine && (
-              <span className="rounded-full bg-[var(--color-cobalt,#00B0FF)]/10 px-1.5 py-0.5 text-[var(--color-cobalt,#00B0FF)]">
+              <span className="rounded-full bg-[var(--color-cobalt,#00B0FF)]/10 px-1.5 py-0.5 text-[var(--color-cobalt-text,#00B0FF)]">
                 📹 Tele
               </span>
             )}
@@ -128,7 +128,7 @@ export function MziziProviderCard({
       {(nextSlot || onBook) && (
         <div className="mt-3 flex items-center justify-between">
           {nextSlot && (
-            <p className="text-[11px] text-muted-foreground">
+            <p className="text-sm text-muted-foreground">
               Next: <span className="font-medium text-foreground">{nextSlot}</span>
             </p>
           )}
@@ -139,7 +139,7 @@ export function MziziProviderCard({
                 onBook()
               }}
               className={cn(
-                "h-10 rounded-full px-4 text-[12px] font-medium transition-opacity hover:opacity-80",
+                "h-10 rounded-full px-4 text-sm font-medium transition-opacity hover:opacity-80",
                 available
                   ? "bg-[var(--brand-accent,var(--color-malachite,#64FFDA))] text-[var(--brand-accent-foreground,#0A0A0A)]"
                   : "bg-muted text-muted-foreground"

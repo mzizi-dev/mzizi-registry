@@ -57,7 +57,7 @@ function SplitBill({
       </div>
 
       {/* Split type toggle */}
-      <div className="mt-3 flex gap-1 rounded-full bg-muted/30 p-0.5">
+      <div className="mt-3 flex gap-2 rounded-full bg-muted/30 p-0.5">
         {(["equal", "custom"] as const).map((type) => (
           <button
             key={type}
@@ -78,7 +78,7 @@ function SplitBill({
       {onTipChange && (
         <div className="mt-3 flex items-center justify-between text-sm">
           <span className="text-muted-foreground">Tip</span>
-          <div className="flex items-center gap-1">
+          <div className="flex items-center gap-2">
             <input
               type="text"
               inputMode="decimal"
@@ -104,7 +104,7 @@ function SplitBill({
               p.paid && "opacity-60"
             )}
           >
-            <div className="flex size-8 items-center justify-center rounded-full bg-muted text-[10px] font-medium">
+            <div className="flex size-8 items-center justify-center rounded-full bg-muted text-sm font-medium">
               {p.avatar ? (
                 <img src={p.avatar} alt="" className="size-full rounded-full object-cover" />
               ) : (
@@ -127,7 +127,7 @@ function SplitBill({
               <span className="text-sm font-medium tabular-nums">{equalShare.toFixed(2)}</span>
             )}
             {p.paid && (
-              <span className="text-[10px] text-[var(--color-malachite,#64FFDA)]">Paid</span>
+              <span className="text-sm text-[var(--color-malachite-text,#64FFDA)]">Paid</span>
             )}
           </div>
         ))}

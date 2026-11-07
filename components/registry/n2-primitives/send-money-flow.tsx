@@ -53,16 +53,16 @@ function SendMoneyFlow({
       {...props}
     >
       {/* Step indicator */}
-      <div className="flex items-center gap-1 border-b border-border px-5 py-3">
+      <div className="flex items-center gap-2 border-b border-border px-5 py-3">
         {(["recipient", "amount", "confirm", "receipt"] as FlowStep[]).map((s, i) => (
           <React.Fragment key={s}>
             <div
               className={cn(
-                "flex size-6 items-center justify-center rounded-full text-[10px] font-bold",
+                "flex size-6 items-center justify-center rounded-full text-sm font-bold",
                 step === s
                   ? "bg-primary text-primary-foreground"
                   : ["recipient", "amount", "confirm", "receipt"].indexOf(step) > i
-                    ? "bg-[var(--color-malachite,#64FFDA)]/20 text-[var(--color-malachite,#64FFDA)]"
+                    ? "bg-[var(--color-malachite,#64FFDA)]/20 text-[var(--color-malachite-text,#64FFDA)]"
                     : "bg-muted text-muted-foreground"
               )}
             >
@@ -85,7 +85,7 @@ function SendMoneyFlow({
             />
             {recentRecipients.length > 0 && (
               <div>
-                <div className="mb-1.5 text-[10px] font-medium text-muted-foreground">Recent</div>
+                <div className="mb-1.5 text-sm font-medium text-muted-foreground">Recent</div>
                 <div className="flex gap-3 overflow-x-auto pb-1">
                   {recentRecipients.map((r) => (
                     <button
@@ -94,7 +94,7 @@ function SendMoneyFlow({
                         onSelectRecipient?.(r)
                         onStepChange?.("amount")
                       }}
-                      className="flex flex-col items-center gap-1 text-center"
+                      className="flex flex-col items-center gap-2 text-center"
                     >
                       <div className="flex size-10 items-center justify-center rounded-full bg-muted text-xs font-medium">
                         {r.avatar ? (
@@ -107,7 +107,7 @@ function SendMoneyFlow({
                           r.name.charAt(0)
                         )}
                       </div>
-                      <span className="w-14 truncate text-[10px]">{r.name}</span>
+                      <span className="w-14 truncate text-sm">{r.name}</span>
                     </button>
                   ))}
                 </div>
@@ -123,7 +123,7 @@ function SendMoneyFlow({
               Sending to{" "}
               <span className="font-medium text-foreground">{selectedRecipient?.name}</span>
             </div>
-            <div className="flex items-baseline gap-1">
+            <div className="flex items-baseline gap-2">
               <span className="text-sm text-muted-foreground">{currency}</span>
               <input
                 type="text"
@@ -206,7 +206,7 @@ function SendMoneyFlow({
             </div>
             <div className="text-sm text-muted-foreground">to {selectedRecipient?.name}</div>
             {transactionId && (
-              <div className="font-mono text-[9px] text-muted-foreground">TX: {transactionId}</div>
+              <div className="font-mono text-sm text-muted-foreground">TX: {transactionId}</div>
             )}
           </div>
         )}

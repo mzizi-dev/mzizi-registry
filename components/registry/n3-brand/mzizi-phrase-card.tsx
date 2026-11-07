@@ -67,7 +67,7 @@ export function MziziPhraseCard({
       >
         <div className="h-5 w-1/2 rounded bg-muted" />
         <div className="h-3 w-2/3 rounded bg-muted" />
-        <div className="space-y-1.5 rounded-[var(--radius-sm,7px)] bg-muted p-3">
+        <div className="space-y-2 rounded-[var(--radius-sm,7px)] bg-muted p-3">
           <div className="h-2.5 w-full rounded bg-foreground/5" />
           <div className="h-2.5 w-1/2 rounded bg-foreground/5" />
         </div>
@@ -88,7 +88,7 @@ export function MziziPhraseCard({
     >
       <div className="space-y-3 p-4">
         <div className="flex items-start justify-between gap-2">
-          <div className="space-y-1">
+          <div className="space-y-2">
             <p
               className="text-lg font-bold text-foreground"
               style={{ fontFamily: "var(--font-serif)" }}
@@ -96,7 +96,7 @@ export function MziziPhraseCard({
               {phrase}
             </p>
             {pronunciation && (
-              <p className="text-xs text-[var(--color-cobalt,#00B0FF)] italic">/{pronunciation}/</p>
+              <p className="text-xs text-[var(--color-cobalt-text,#00B0FF)] italic">/{pronunciation}/</p>
             )}
           </div>
           {onPlayAudio && (
@@ -105,7 +105,7 @@ export function MziziPhraseCard({
                 e.stopPropagation()
                 onPlayAudio()
               }}
-              className="flex size-10 shrink-0 items-center justify-center rounded-full bg-[var(--color-cobalt,#00B0FF)]/10 text-[var(--color-cobalt,#00B0FF)] transition-colors hover:bg-[var(--color-cobalt,#00B0FF)]/20"
+              className="flex size-10 shrink-0 items-center justify-center rounded-full bg-[var(--color-cobalt,#00B0FF)]/10 text-[var(--color-cobalt-text,#00B0FF)] transition-colors hover:bg-[var(--color-cobalt,#00B0FF)]/20"
               aria-label="Play audio"
             >
               🔊
@@ -114,17 +114,17 @@ export function MziziPhraseCard({
         </div>
         <p className="text-sm text-muted-foreground">{translation}</p>
         {example && (
-          <div className="space-y-1 rounded-[var(--radius-sm,7px)] bg-muted p-3">
+          <div className="space-y-2 rounded-[var(--radius-sm,7px)] bg-muted p-3">
             <p className="text-xs text-foreground italic">&quot;{example}&quot;</p>
             {exampleTranslation && (
-              <p className="text-[11px] text-muted-foreground">&quot;{exampleTranslation}&quot;</p>
+              <p className="text-sm text-muted-foreground">&quot;{exampleTranslation}&quot;</p>
             )}
           </div>
         )}
         <div className="flex items-center justify-between">
-          <div className="flex items-center gap-2 text-[10px] text-muted-foreground">
+          <div className="flex items-center gap-2 text-sm text-muted-foreground">
             {category && (
-              <span className="rounded-full bg-[var(--color-cobalt,#00B0FF)]/10 px-1.5 py-0.5 text-[var(--color-cobalt,#00B0FF)]">
+              <span className="rounded-full bg-[var(--color-cobalt,#00B0FF)]/10 px-1.5 py-0.5 text-[var(--color-cobalt-text,#00B0FF)]">
                 {category}
               </span>
             )}
@@ -132,7 +132,7 @@ export function MziziPhraseCard({
               {language}
               {targetLanguage ? ` → ${targetLanguage}` : ""}
             </span>
-            {mastered && <span className="text-[var(--color-malachite,#64FFDA)]">✓ Mastered</span>}
+            {mastered && <span className="text-[var(--color-malachite-text,#64FFDA)]">✓ Mastered</span>}
           </div>
           {onPractice && (
             <button
@@ -140,7 +140,7 @@ export function MziziPhraseCard({
                 e.stopPropagation()
                 onPractice()
               }}
-              className="h-10 rounded-full bg-[var(--color-cobalt,#00B0FF)] px-4 text-[12px] font-medium text-[var(--brand-accent-foreground,#0A0A0A)] hover:opacity-80"
+              className="h-10 rounded-full bg-[var(--color-cobalt,#00B0FF)] px-4 text-sm font-medium text-[var(--brand-accent-foreground,#0A0A0A)] hover:opacity-80"
             >
               Practice
             </button>

@@ -13,7 +13,10 @@
       "export": "@bundu/ui/discover/RelatedRail.astro",
       "since": "0.3.0"
     },
-    "tsx": { "registry": "discover-related-rail", "identity": "contract" },
+    "tsx": {
+      "registry": "discover-related-rail",
+      "identity": "contract"
+    },
     "rs": null,
     "related": ["discover-section", "discover-result-grid"]
   },
@@ -142,8 +145,8 @@
       "part": "see all",
       "state": "seeall",
       "select": "[data-slot=\"related-rail\"] > div > div > a",
-      "fine": 48,
-      "coarse": 48
+      "fine": 32,
+      "coarse": 49
     }
   ],
   "theming": {
@@ -167,7 +170,7 @@
     "Under 48rem: one row of 18rem cards that scrolls inside itself with scroll-snap; the page never scrolls sideways.",
     "From 48rem: a grid, two columns; three from 64rem."
   ],
-  "contract": "contract\n  slot is \"related-rail\"\n  uses related-rail-list\n  uses discover-card\n  a \"See every running circle\" min_height 48\n  when default shows h2 \"More events in Harare\"\n  when default shows h3 \"Poetry at the Book Café\"\n  when seeall shows h3 \"Circles like this one\"\n  when seeall shows h4 \"Borrowdale Striders\"\nend",
+  "contract": "contract\n  slot is \"related-rail\"\n  uses related-rail-list\n  uses discover-card\n  a \"See every running circle\" min_height 44\n  when default shows h2 \"More events in Harare\"\n  when default shows h3 \"Poetry at the Book Café\"\n  when seeall shows h3 \"Circles like this one\"\n  when seeall shows h4 \"Borrowdale Striders\"\nend",
   "checks": [
     {
       "say": "A region labelled by its heading.",
@@ -193,7 +196,9 @@
       "say": "A scroll-snap rail on phones, keyboard-focusable.",
       "select": "[data-slot=\"related-rail-list\"].snap-x.overflow-x-auto",
       "count": 1,
-      "attr": { "tabindex": "0" }
+      "attr": {
+        "tabindex": "0"
+      }
     },
     {
       "say": "A grid from 48rem.",

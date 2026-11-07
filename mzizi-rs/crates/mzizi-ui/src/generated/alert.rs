@@ -19,7 +19,7 @@
 use dioxus::prelude::*;
 
 /// The classes every alert carries.
-const BASE: &str = "grid gap-0.5 rounded-[var(--radius-lg,14px)] border px-4 py-3 text-left text-sm has-data-[slot=alert-action]:relative has-data-[slot=alert-action]:pr-18 has-[>svg]:grid-cols-[auto_1fr] has-[>svg]:gap-x-2.5 *:[svg]:row-span-2 *:[svg]:translate-y-0.5 *:[svg]:text-current *:[svg:not([class*='size-'])]:size-4 w-full relative group/alert";
+const BASE: &str = "grid gap-2 rounded-[var(--radius-lg,14px)] border px-4 py-3 text-left text-sm has-data-[slot=alert-action]:relative has-data-[slot=alert-action]:pr-18 has-[>svg]:grid-cols-[auto_1fr] has-[>svg]:gap-x-2.5 *:[svg]:row-span-2 *:[svg]:translate-y-0.5 *:[svg]:text-current *:[svg:not([class*='size-'])]:size-4 w-full relative group/alert";
 
 /// The alert's variant.
 #[derive(Clone, Copy, Debug, Default, PartialEq, Eq)]

@@ -76,7 +76,7 @@ export function MziziRoutePlanner({
       >
         <div className="flex items-center gap-3">
           <div className="size-10 shrink-0 rounded-full bg-muted" />
-          <div className="flex-1 space-y-1.5">
+          <div className="flex-1 space-y-2">
             <div className="h-3.5 w-1/2 rounded bg-muted" />
             <div className="h-2.5 w-2/3 rounded bg-muted" />
           </div>
@@ -141,20 +141,20 @@ export function MziziRoutePlanner({
             {origin} → {destination}
           </p>
           {(duration || distance) && (
-            <p className="text-[11px] text-muted-foreground">
+            <p className="text-sm text-muted-foreground">
               {[duration, distance].filter(Boolean).join(" · ")}
             </p>
           )}
         </div>
         {fare && (
           <div className="text-right">
-            <p className="text-sm font-bold text-[var(--color-gold,#FFD740)]">
+            <p className="text-sm font-bold text-[var(--color-gold-text,#FFD740)]">
               {new Intl.NumberFormat(undefined, {
                 style: "currency",
                 currency: currency || "USD",
               }).format(Number(fare) || 0)}
             </p>
-            <p className="text-[10px] text-muted-foreground">est. fare</p>
+            <p className="text-sm text-muted-foreground">est. fare</p>
           </div>
         )}
       </div>
@@ -186,14 +186,14 @@ export function MziziRoutePlanner({
                 >
                   {stop.name}
                 </p>
-                {stop.time && <p className="text-[10px] text-muted-foreground">{stop.time}</p>}
+                {stop.time && <p className="text-sm text-muted-foreground">{stop.time}</p>}
               </div>
             </div>
           ))}
         </div>
       )}
       {(departureTime || arrivalTime) && (
-        <div className="flex justify-between border-t border-border px-4 py-2 text-[11px] text-muted-foreground">
+        <div className="flex justify-between border-t border-border px-4 py-2 text-sm text-muted-foreground">
           <span>Depart: {departureTime || "—"}</span>
           <span>Arrive: {arrivalTime || "—"}</span>
         </div>
@@ -206,7 +206,7 @@ export function MziziRoutePlanner({
                 e.stopPropagation()
                 onBook()
               }}
-              className="h-12 flex-1 rounded-full bg-[var(--color-gold,#FFD740)] text-[13px] font-medium text-[var(--brand-accent-foreground,#0A0A0A)] transition-opacity hover:opacity-80 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--color-primary,#00B0FF)]"
+              className="h-12 flex-1 rounded-full bg-[var(--color-gold,#FFD740)] text-sm font-medium text-[var(--brand-accent-foreground,#0A0A0A)] transition-opacity hover:opacity-80 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--color-primary,#00B0FF)]"
             >
               Book Ride
             </button>
@@ -217,7 +217,7 @@ export function MziziRoutePlanner({
                 e.stopPropagation()
                 onSave()
               }}
-              className="h-12 rounded-full border border-border bg-muted px-5 text-[13px] font-medium text-foreground transition-opacity hover:opacity-80 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--color-primary,#00B0FF)]"
+              className="h-12 rounded-full border border-border bg-muted px-5 text-sm font-medium text-foreground transition-opacity hover:opacity-80 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--color-primary,#00B0FF)]"
             >
               Save
             </button>

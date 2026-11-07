@@ -124,7 +124,7 @@ function MziziBalanceDisplay({
               <button
                 key={a.label}
                 onClick={a.action}
-                className="flex min-h-[48px] flex-1 flex-col items-center gap-1.5 rounded-[var(--radius-inner,7px)] py-3 transition-colors hover:bg-foreground/[0.03] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--color-primary,#00B0FF)]"
+                className="flex min-h-[48px] flex-1 flex-col items-center gap-2 rounded-[var(--radius-inner,7px)] py-3 transition-colors hover:bg-foreground/[0.03] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--color-primary,#00B0FF)]"
               >
                 <div
                   className="flex size-10 items-center justify-center rounded-full"

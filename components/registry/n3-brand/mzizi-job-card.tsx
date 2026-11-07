@@ -110,21 +110,21 @@ export function MziziJobCard({
           >
             {title}
           </h3>
-          <div className="flex items-center gap-1 text-[11px] text-muted-foreground">
+          <div className="flex items-center gap-2 text-sm text-muted-foreground">
             <span>{company}</span>
-            {companyVerified && <span className="text-[var(--color-gold,#FFD740)]">✓</span>}
+            {companyVerified && <span className="text-[var(--color-gold-text,#FFD740)]">✓</span>}
           </div>
         </div>
         {matchScore != null && (
-          <div className="shrink-0 rounded-full bg-[var(--color-gold,#FFD740)]/10 px-2 py-0.5 text-[10px] font-bold text-[var(--color-gold,#FFD740)]">
+          <div className="shrink-0 rounded-full bg-[var(--color-gold,#FFD740)]/10 px-2 py-0.5 text-sm font-bold text-[var(--color-gold-text,#FFD740)]">
             {matchScore}% match
           </div>
         )}
       </div>
-      <div className="flex flex-wrap items-center gap-2 text-[11px] text-muted-foreground">
+      <div className="flex flex-wrap items-center gap-2 text-sm text-muted-foreground">
         {location && <span>📍 {location}</span>}
         {remote && (
-          <span className="rounded-full bg-[var(--color-cobalt,#00B0FF)]/10 px-1.5 py-0.5 text-[var(--color-cobalt,#00B0FF)]">
+          <span className="rounded-full bg-[var(--color-cobalt,#00B0FF)]/10 px-1.5 py-0.5 text-[var(--color-cobalt-text,#00B0FF)]">
             Remote
           </span>
         )}
@@ -139,11 +139,11 @@ export function MziziJobCard({
         )}
       </div>
       {skills.length > 0 && (
-        <div className="flex flex-wrap gap-1">
+        <div className="flex flex-wrap gap-2">
           {skills.slice(0, 4).map((s) => (
             <span
               key={s}
-              className="rounded-full bg-muted px-2 py-0.5 text-[10px] text-muted-foreground"
+              className="rounded-full bg-muted px-2 py-0.5 text-sm text-muted-foreground"
             >
               {s}
             </span>
@@ -151,7 +151,7 @@ export function MziziJobCard({
         </div>
       )}
       <div className="flex items-center justify-between pt-1">
-        {postedAt && <span className="text-[10px] text-muted-foreground">{postedAt}</span>}
+        {postedAt && <span className="text-sm text-muted-foreground">{postedAt}</span>}
         <div className="ml-auto flex gap-2">
           {onSave && (
             <button
@@ -159,7 +159,7 @@ export function MziziJobCard({
                 e.stopPropagation()
                 onSave()
               }}
-              className="h-10 rounded-full border border-border bg-muted px-4 text-[12px] font-medium text-foreground hover:opacity-80"
+              className="h-10 rounded-full border border-border bg-muted px-4 text-sm font-medium text-foreground hover:opacity-80"
             >
               Save
             </button>
@@ -170,7 +170,7 @@ export function MziziJobCard({
                 e.stopPropagation()
                 onApply()
               }}
-              className="h-10 rounded-full bg-[var(--color-gold,#FFD740)] px-4 text-[12px] font-medium text-[var(--brand-accent-foreground,#0A0A0A)] hover:opacity-80"
+              className="h-10 rounded-full bg-[var(--color-gold,#FFD740)] px-4 text-sm font-medium text-[var(--brand-accent-foreground,#0A0A0A)] hover:opacity-80"
             >
               Apply
             </button>

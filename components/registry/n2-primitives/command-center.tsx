@@ -77,7 +77,7 @@ function CommandCenter() {
       >
         <Search className="size-4" />
         <span className="flex-1 text-left">Search mukoko...</span>
-        <kbd className="pointer-events-none hidden rounded border border-border bg-muted px-1.5 py-0.5 text-[10px] font-medium text-muted-foreground sm:inline-block">
+        <kbd className="pointer-events-none hidden rounded border border-border bg-muted px-1.5 py-0.5 text-sm font-medium text-muted-foreground sm:inline-block">
           ⌘K
         </kbd>
       </button>
@@ -136,17 +136,17 @@ function CommandCenter() {
         </CommandList>
 
         {/* Keyboard hints footer */}
-        <div className="flex items-center justify-between border-t border-border px-3 py-2 text-[10px] text-muted-foreground">
+        <div className="flex items-center justify-between border-t border-border px-3 py-2 text-sm text-muted-foreground">
           <div className="flex items-center gap-3">
-            <span className="flex items-center gap-1">
+            <span className="flex items-center gap-2">
               <kbd className="rounded border border-border bg-muted px-1 py-0.5">↑↓</kbd>
               Navigate
             </span>
-            <span className="flex items-center gap-1">
+            <span className="flex items-center gap-2">
               <kbd className="rounded border border-border bg-muted px-1 py-0.5">↵</kbd>
               Select
             </span>
-            <span className="flex items-center gap-1">
+            <span className="flex items-center gap-2">
               <kbd className="rounded border border-border bg-muted px-1 py-0.5">Esc</kbd>
               Close
             </span>

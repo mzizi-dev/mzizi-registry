@@ -100,10 +100,10 @@ export function MziziWeatherAlert({
         <p className="text-xs leading-relaxed text-muted-foreground">{description}</p>
       )}
       {areas && areas.length > 0 && (
-        <p className="text-[11px] text-muted-foreground">Areas: {areas.join(", ")}</p>
+        <p className="text-sm text-muted-foreground">Areas: {areas.join(", ")}</p>
       )}
       {(validFrom || validUntil) && (
-        <p className="text-[10px] text-muted-foreground">
+        <p className="text-sm text-muted-foreground">
           {validFrom && `From ${validFrom}`}
           {validUntil && ` until ${validUntil}`}
         </p>
@@ -116,7 +116,7 @@ export function MziziWeatherAlert({
       {onDetails && (
         <button
           onClick={onDetails}
-          className="h-10 rounded-full px-4 text-[12px] font-medium transition-opacity hover:opacity-80"
+          className="h-10 rounded-full px-4 text-sm font-medium transition-opacity hover:opacity-80"
           style={{ backgroundColor: config.mineral, color: "var(--foreground, #0A0A0A)" }}
         >
           View Details

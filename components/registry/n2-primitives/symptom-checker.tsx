@@ -66,12 +66,12 @@ function SymptomChecker({
       {...props}
     >
       <div className="text-sm font-medium">Describe your symptoms</div>
-      <div className="text-[10px] text-muted-foreground">
+      <div className="text-sm text-muted-foreground">
         This is not a diagnostic tool. Your summary will be shared with your healthcare provider.
       </div>
 
       {/* Region selector */}
-      <div className="flex flex-wrap gap-1">
+      <div className="flex flex-wrap gap-2">
         {regions.map((r) => (
           <button
             key={r.key}
@@ -134,7 +134,7 @@ function SymptomChecker({
 
       {/* Current symptoms */}
       {symptoms.length > 0 && (
-        <div className="space-y-1.5">
+        <div className="space-y-2">
           <div className="text-xs font-medium text-muted-foreground">Reported symptoms</div>
           {symptoms.map((s, i) => (
             <div

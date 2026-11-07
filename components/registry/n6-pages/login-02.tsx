@@ -53,7 +53,7 @@ function Login02() {
             The pan-African platform connecting communities through technology, culture, and shared
             purpose.
           </p>
-          <div className="flex justify-center gap-1.5 pt-2">
+          <div className="flex justify-center gap-2 pt-2">
             <span className="size-2 rounded-full bg-cobalt" />
             <span className="size-2 rounded-full bg-tanzanite" />
             <span className="size-2 rounded-full bg-malachite" />

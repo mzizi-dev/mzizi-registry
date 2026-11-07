@@ -64,7 +64,7 @@ function ReminderCard({
           </div>
           {description && <div className="mt-1 text-xs text-muted-foreground">{description}</div>}
           {recurring && (
-            <div className="mt-1 text-[10px] text-[var(--color-cobalt,#00B0FF)]">
+            <div className="mt-1 text-sm text-[var(--color-cobalt-text,#00B0FF)]">
               🔁 {recurrenceLabel || "Recurring"}
             </div>
           )}
