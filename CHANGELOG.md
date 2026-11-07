@@ -10,6 +10,16 @@ From 2026-10-04 releases follow the org versioning policy ([nyuchi/.github#80](h
 
 ## [Unreleased]
 
+### Added — `app/bar-chart` 1.2.0: nullable values for withheld counts (2026-10-06, #457)
+
+BarChart drew every point as a number, so an app that withholds small counts (k-anonymity: a day with fewer than 5 is returned as `null`) had to draw it as 0 or drop the day, and the total then read as exact. Mukoko Events admin's Insights page needs both to be honest (nyuchi/api-gateway#268). The change is in the `.astro` and `.tsx` builds, with the same markup, and is backwards compatible.
+
+- `data[].value` is now `number | null`. A new optional prop, `missingLabel` (default `"Not available"`), is what a null reads as, e.g. `"Fewer than 5"`.
+- A null draws no bar. In `columns` it leaves a small muted baseline tick (`fill-muted-foreground`) on a column marked `data-missing`, whose title reads `<label>: <missingLabel>`. In `rows` the bar is empty and the value is the `missingLabel` in muted text.
+- The figures table shows the `missingLabel` (muted) for a null. The total sums the known values and reads `At least <n>` when any value is null.
+- Every value null: "No figure in this range can be shown: <missingLabel, lower-cased> for every point." No data, or every value 0 with none null, still reads "Nothing to chart in this range."
+- The contract adds the `suppressed`, `suppressed-rows` and `suppressed-all` states and their checks, which both builds pass.
+
 ## [4.27.0] - 2026-11-05
 
 Releases `staging` to `main` as the next minor above v4.26.0 ([nyuchi/.github#80](https://github.com/nyuchi/.github/issues/80)). `package.json`, `README.md` and `content/changelog/releases.json` (and `lib/changelog.generated.ts`) carry 4.27.0. Mineral accents are no longer painted as text ([#634](https://github.com/mzizi-dev/mzizi-registry/pull/634)); Dioxus leaves the live prose, the served doctrine and the plugin keywords ([#636](https://github.com/mzizi-dev/mzizi-registry/pull/636), **Breaking** for callers that match `"dioxus"` in `rust.descriptors`); seven controls take the 14px inline inset ([#631](https://github.com/mzizi-dev/mzizi-registry/pull/631)); the `bundu` row states four pillars ([#632](https://github.com/mzizi-dev/mzizi-registry/pull/632)); the `Mzizi components` job gates `Build` ([#630](https://github.com/mzizi-dev/mzizi-registry/pull/630)); and the README counts are current ([#633](https://github.com/mzizi-dev/mzizi-registry/pull/633)).
