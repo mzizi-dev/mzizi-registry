@@ -181,7 +181,7 @@ export function Hero({
           {badge && (
             <p
               className={list(
-                "mb-5 flex w-fit items-center gap-2 rounded-full border border-border bg-card px-3 py-1 text-caption font-medium text-foreground",
+                "mb-5 flex w-fit items-center gap-2 rounded-full border border-border bg-card px-3.5 py-1 text-caption font-medium text-foreground",
                 align === "center" && "mx-auto",
               )}
               data-slot="hero-badge"

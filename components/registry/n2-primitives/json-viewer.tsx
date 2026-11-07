@@ -90,7 +90,7 @@ function JsonNode({
     return (
       <div>
         <span
-          className="inline-flex cursor-pointer items-center gap-0.5 rounded-[var(--radius-sm,7px)] hover:bg-muted/50"
+          className="inline-flex cursor-pointer items-center gap-2 rounded-[var(--radius-sm,7px)] hover:bg-muted/50"
           onClick={() => setExpanded(!expanded)}
         >
           <ChevronRight
@@ -133,7 +133,7 @@ function JsonNode({
     return (
       <div>
         <span
-          className="inline-flex cursor-pointer items-center gap-0.5 rounded-[var(--radius-sm,7px)] hover:bg-muted/50"
+          className="inline-flex cursor-pointer items-center gap-2 rounded-[var(--radius-sm,7px)] hover:bg-muted/50"
           onClick={() => setExpanded(!expanded)}
         >
           <ChevronRight

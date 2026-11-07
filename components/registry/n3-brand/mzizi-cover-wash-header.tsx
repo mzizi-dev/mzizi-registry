@@ -165,7 +165,7 @@ function MziziCoverWashHeader({
           <div className="min-w-0">
             {kicker && (
               <div
-                className="mb-1 text-[13px] leading-none font-semibold tracking-wide uppercase"
+                className="mb-1 text-sm leading-none font-semibold tracking-wide uppercase"
                 style={{ color: "color-mix(in srgb, var(--event-primary) 65%, white)" }}
               >
                 {kicker}
@@ -185,21 +185,21 @@ function MziziCoverWashHeader({
           {(hasMeta || children) && (
             <div className="flex flex-wrap items-center justify-between gap-3">
               {hasMeta && (
-                <div className="flex flex-wrap items-center gap-x-4 gap-y-1 text-[13px] text-white/85">
+                <div className="flex flex-wrap items-center gap-x-4 gap-y-2 text-sm text-white/85">
                   {date && (
-                    <span className="inline-flex items-center gap-1.5">
+                    <span className="inline-flex items-center gap-2">
                       <Calendar className="size-4 shrink-0" aria-hidden />
                       {date}
                     </span>
                   )}
                   {location && (
-                    <span className="inline-flex items-center gap-1.5">
+                    <span className="inline-flex items-center gap-2">
                       <MapPin className="size-4 shrink-0" aria-hidden />
                       {location}
                     </span>
                   )}
                   {host && (
-                    <span className="inline-flex items-center gap-1.5">
+                    <span className="inline-flex items-center gap-2">
                       <Users className="size-4 shrink-0" aria-hidden />
                       {host}
                     </span>

@@ -120,7 +120,7 @@ function MziziBadgeDisplay({
           <div
             key={b.id}
             className={cn(
-              "flex flex-col items-center gap-1.5 rounded-[var(--radius-card,14px)] bg-card p-3 text-center ring-1 ring-foreground/10",
+              "flex flex-col items-center gap-2 rounded-[var(--radius-card,14px)] bg-card p-3 text-center ring-1 ring-foreground/10",
               b.locked && "opacity-30"
             )}
           >
@@ -134,9 +134,9 @@ function MziziBadgeDisplay({
                 <Award className="size-5" style={{ color }} />
               )}
             </div>
-            <span className="line-clamp-1 text-[10px] font-medium text-foreground">{b.name}</span>
+            <span className="line-clamp-1 text-sm font-medium text-foreground">{b.name}</span>
             {b.rarity && !b.locked && (
-              <span className="text-[8px] font-semibold tracking-wider uppercase" style={{ color }}>
+              <span className="text-sm font-semibold tracking-wider uppercase" style={{ color }}>
                 {b.rarity}
               </span>
             )}

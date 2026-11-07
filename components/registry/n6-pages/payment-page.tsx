@@ -64,7 +64,7 @@ export function PaymentPage({
     >
       {/* Progress */}
       {step !== "processing" && step !== "complete" && (
-        <nav aria-label="Payment steps" className="flex gap-1">
+        <nav aria-label="Payment steps" className="flex gap-2">
           {STEPS.map((s, i) => (
             <div
               key={s}

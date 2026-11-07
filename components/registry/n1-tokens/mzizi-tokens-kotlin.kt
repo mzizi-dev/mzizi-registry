@@ -111,10 +111,10 @@ object MziziRoles {
         val surfaceQr = Color(0xFFFFFFFF)
         val onSurfaceQr = Color(0xFF0E0D0C)
         val textPrimary = Color(0xFF373635)
-        val textSecondary = Color(0xFF575655)
+        val textSecondary = Color(0xFF504F4E)
         val textTertiary = Color(0xFF6B6A69)
         val heroText = Color(0xFFFFFFFF)
-        val mutedForeground = Color(0xFF575655)
+        val mutedForeground = Color(0xFF504F4E)
         val success = Color(0xFF004D40)
         val warning = Color(0xFF7A5C00)
         val error = Color(0xFFB3261E)
@@ -138,7 +138,7 @@ object MziziRoles {
         val statusDanger = Color(0xFFA0522D)
         val statusDangerContainer = Color(0xFFF5E6D3)
         val statusDangerOnContainer = Color(0xFF5D2906)
-        val statusDangerText = Color(0xFF844425)
+        val statusDangerText = Color(0xFF7B3F23)
         val statusPremium = Color(0xFF4B0082)
         val statusPremiumContainer = Color(0xFFF3E5F5)
         val statusPremiumOnContainer = Color(0xFF2E004D)
@@ -146,7 +146,7 @@ object MziziRoles {
         val statusNeutral = Color(0xFF55514B)
         val statusNeutralContainer = Color(0xFFE5E4E1)
         val statusNeutralOnContainer = Color(0xFF373635)
-        val statusNeutralText = Color(0xFF575655)
+        val statusNeutralText = Color(0xFF504F4E)
         val statusStable = Color(0xFF004D40)
         val statusStableContainer = Color(0xFFE0F2F1)
         val statusStableOnContainer = Color(0xFF00332B)
@@ -162,11 +162,11 @@ object MziziRoles {
         val statusDeprecated = Color(0xFFA0522D)
         val statusDeprecatedContainer = Color(0xFFF5E6D3)
         val statusDeprecatedOnContainer = Color(0xFF5D2906)
-        val statusDeprecatedText = Color(0xFF844425)
+        val statusDeprecatedText = Color(0xFF7B3F23)
         val assuranceNone = Color(0xFF55514B)
         val assuranceNoneContainer = Color(0xFFE5E4E1)
         val assuranceNoneOnContainer = Color(0xFF373635)
-        val assuranceNoneText = Color(0xFF575655)
+        val assuranceNoneText = Color(0xFF504F4E)
         val assuranceOtp = Color(0xFF0047AB)
         val assuranceOtpContainer = Color(0xFFE3F2FD)
         val assuranceOtpOnContainer = Color(0xFF002966)
@@ -186,7 +186,7 @@ object MziziRoles {
         val attestationCommunity = Color(0xFFA0522D)
         val attestationCommunityContainer = Color(0xFFF5E6D3)
         val attestationCommunityOnContainer = Color(0xFF5D2906)
-        val attestationCommunityText = Color(0xFF844425)
+        val attestationCommunityText = Color(0xFF7B3F23)
         val attestationBusiness = Color(0xFF004D40)
         val attestationBusinessContainer = Color(0xFFE0F2F1)
         val attestationBusinessOnContainer = Color(0xFF00332B)
@@ -194,15 +194,15 @@ object MziziRoles {
         val attestationDomain = Color(0xFFBF5A36)
         val attestationDomainContainer = Color(0xFFFBE4DA)
         val attestationDomainOnContainer = Color(0xFF5C2410)
-        val attestationDomainText = Color(0xFF894027)
+        val attestationDomainText = Color(0xFF7E3B24)
         val tierUnverified = Color(0xFF55514B)
         val tierUnverifiedContainer = Color(0xFFE5E4E1)
         val tierUnverifiedOnContainer = Color(0xFF373635)
-        val tierUnverifiedText = Color(0xFF575655)
+        val tierUnverifiedText = Color(0xFF504F4E)
         val tierCommunity = Color(0xFFA0522D)
         val tierCommunityContainer = Color(0xFFF5E6D3)
         val tierCommunityOnContainer = Color(0xFF5D2906)
-        val tierCommunityText = Color(0xFF844425)
+        val tierCommunityText = Color(0xFF7B3F23)
         val tierOtp = Color(0xFF0047AB)
         val tierOtpContainer = Color(0xFFE3F2FD)
         val tierOtpOnContainer = Color(0xFF002966)
@@ -242,7 +242,7 @@ object MziziRoles {
         val secondaryForeground = Color(0xFF373635)
         val destructive = Color(0xFFB3261E)
         val destructiveForeground = Color(0xFFFFFFFF)
-        val destructiveText = Color(0xFF9F221B)
+        val destructiveText = Color(0xFF98201A)
         val statusError = Color(0xFFB3261E)
         val overlayForeground = Color(0xFF373635)
         val accent = Color(0xFFDFE2E2)
@@ -430,15 +430,17 @@ object MziziRoles {
         val sidebarRing = Color(0xFF86DCFF)
     }
 
-    val spacingTouch = 56.dp
-    val spacingTouchMin = 48.dp
-    val spacingControl = 56.dp
-    val spacingControlSm = 48.dp
+    val spacingTouch = 49.dp
+    val spacingTouchMin = 49.dp
+    val spacingInsetFloor = 14.dp
+    val spacingGapFloor = 7.dp
+    val spacingControl = 49.dp
+    val spacingControlSm = 49.dp
     val spacingControlLg = 56.dp
-    val spacingControlIcon = 48.dp
+    val spacingControlIcon = 49.dp
     val spacingControlDense = 32.dp
-    val spacingField = 56.dp
-    val spacingFieldSm = 48.dp
+    val spacingField = 49.dp
+    val spacingFieldSm = 49.dp
     val radiusControl = 9999.dp
     val radiusField = 9999.dp
     val radiusBadge = 9999.dp

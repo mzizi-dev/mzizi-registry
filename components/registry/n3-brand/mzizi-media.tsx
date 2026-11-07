@@ -147,12 +147,12 @@ export function MziziImageGallery({
         role="group"
         aria-label="Image gallery"
         className={cn(
-          "grid animate-pulse gap-1 overflow-hidden rounded-[var(--radius-lg,14px)]",
+          "grid animate-pulse gap-2 overflow-hidden rounded-[var(--radius-lg,14px)]",
           className
         )}
       >
         <div className="aspect-video bg-muted" />
-        <div className="grid grid-cols-3 gap-1">
+        <div className="grid grid-cols-3 gap-2">
           <div className="aspect-square bg-muted" />
           <div className="aspect-square bg-muted" />
           <div className="aspect-square bg-muted" />
@@ -179,7 +179,7 @@ export function MziziImageGallery({
       role="group"
       aria-label="Image gallery"
       className={cn(
-        "grid gap-1 overflow-hidden rounded-[var(--radius-card,14px)]",
+        "grid gap-2 overflow-hidden rounded-[var(--radius-card,14px)]",
         gridClass,
         className
       )}
@@ -264,7 +264,7 @@ export function MziziReaderMode({
         </button>
         <div className="flex items-center gap-2">
           {estimatedReadTime && (
-            <span className="flex items-center gap-1 text-xs opacity-60">
+            <span className="flex items-center gap-2 text-xs opacity-60">
               <BookOpen className="size-3" />
               {estimatedReadTime}
             </span>
@@ -296,7 +296,7 @@ export function MziziReaderMode({
               <Plus className="size-4" />
             </button>
           </div>
-          <div className="flex gap-1">
+          <div className="flex gap-2">
             {(["dark", "light", "sepia"] as ReaderTheme[]).map((t) => (
               <button
                 key={t}
@@ -404,7 +404,7 @@ export function MziziMediaMessage({
           </div>
         </div>
         {duration && (
-          <span className="absolute right-2 bottom-2 rounded bg-black/60 px-1.5 py-0.5 text-[10px] text-white">
+          <span className="absolute right-2 bottom-2 rounded bg-black/60 px-1.5 py-0.5 text-sm text-white">
             {duration}
           </span>
         )}
@@ -446,7 +446,7 @@ export function MziziMediaMessage({
       )}
     >
       <div className="flex size-10 shrink-0 items-center justify-center rounded-[var(--radius-inner,7px)] bg-[var(--color-cobalt)]/10">
-        <Icon className="size-5 text-[var(--color-cobalt)]" />
+        <Icon className="size-5 text-cobalt-text" />
       </div>
       <div className="min-w-0 flex-1">
         <div className="truncate text-sm font-medium text-foreground">
@@ -489,7 +489,7 @@ export function MziziStoryRing({
     <button
       data-slot="mzizi-story-ring"
       onClick={onClick}
-      className={cn("flex flex-col items-center gap-1.5", className)}
+      className={cn("flex flex-col items-center gap-2", className)}
     >
       <div
         className="rounded-full p-[3px]"
@@ -511,7 +511,7 @@ export function MziziStoryRing({
           </div>
         </div>
       </div>
-      <span className="max-w-[64px] truncate text-[10px] text-muted-foreground">
+      <span className="max-w-[64px] truncate text-sm text-muted-foreground">
         {name.split(" ")[0]}
       </span>
     </button>

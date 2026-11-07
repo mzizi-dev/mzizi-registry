@@ -47,7 +47,7 @@ function LanguageSwitcher({
       <div
         data-slot="language-switcher"
         data-portal="https://mzizi.dev/components/language-switcher"
-        className={cn("flex flex-wrap gap-1", className)}
+        className={cn("flex flex-wrap gap-2", className)}
         role="radiogroup"
         aria-label="Language"
         {...props}

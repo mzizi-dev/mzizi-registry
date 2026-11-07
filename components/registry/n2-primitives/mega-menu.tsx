@@ -31,7 +31,7 @@ function MegaMenu({ trigger = "Menu", sections, className }: MegaMenuProps) {
           data-slot="mega-menu"
           data-portal="https://mzizi.dev/components/mega-menu"
           variant="ghost"
-          className={cn("gap-1", className)}
+          className={cn("gap-2", className)}
         >
           {trigger}
           <ChevronDownIcon className="size-3.5 text-muted-foreground transition-transform group-data-[state=open]:rotate-180" />
@@ -53,7 +53,7 @@ function MegaMenu({ trigger = "Menu", sections, className }: MegaMenuProps) {
               <span className="mb-3 text-xs font-medium tracking-wider text-muted-foreground uppercase">
                 {section.title}
               </span>
-              <div className="flex flex-col gap-0.5">
+              <div className="flex flex-col gap-2">
                 {section.items.map((item) => (
                   <a
                     key={item.href}

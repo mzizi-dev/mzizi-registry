@@ -65,7 +65,7 @@ const privacy = { private: "Private", link: "Link only", public: undefined } as 
         class="flex min-h-14 cursor-pointer items-center gap-3 rounded-lg border border-border bg-card px-4 py-3 text-foreground transition-colors hover:bg-muted has-[:checked]:border-primary has-[:focus-visible]:ring-[3px] has-[:focus-visible]:ring-ring/50"
       >
         <input type="radio" name={name} value={a.id} checked={a.id === value} class="size-5 shrink-0 accent-primary outline-none" />
-        <span class="flex min-w-0 flex-1 flex-col gap-0.5">
+        <span class="flex min-w-0 flex-1 flex-col gap-2">
           <span class="flex items-center gap-2">
             <span class="truncate text-body-sm font-medium">{a.label}</span>
             {a.visibility && privacy[a.visibility] && <span data-slot="address-option-privacy" class="shrink-0 text-caption text-muted-foreground">{privacy[a.visibility]}</span>}
@@ -81,7 +81,7 @@ const privacy = { private: "Private", link: "Link only", public: undefined } as 
       <a
         href={addHref}
         data-slot="address-selector-add"
-        class="inline-flex min-h-11 items-center self-start rounded-full px-3 text-body-sm font-medium text-primary no-underline outline-none hover:bg-muted focus-visible:ring-[3px] focus-visible:ring-ring/50"
+        class="inline-flex min-h-11 items-center self-start rounded-full px-3.5 text-body-sm font-medium text-primary no-underline outline-none hover:bg-muted focus-visible:ring-[3px] focus-visible:ring-ring/50"
       >
         {addLabel}
       </a>

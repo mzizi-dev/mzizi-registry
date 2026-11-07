@@ -18,9 +18,9 @@ interface AppointmentCardProps extends React.ComponentProps<"div"> {
 }
 
 const statusStyles: Record<string, string> = {
-  scheduled: "bg-[var(--color-cobalt,#00B0FF)]/10 text-[var(--color-cobalt,#00B0FF)]",
-  confirmed: "bg-[var(--color-malachite,#64FFDA)]/10 text-[var(--color-malachite,#64FFDA)]",
-  "in-progress": "bg-[var(--color-gold,#FFD740)]/10 text-[var(--color-gold,#FFD740)]",
+  scheduled: "bg-[var(--color-cobalt,#00B0FF)]/10 text-[var(--color-cobalt-text,#00B0FF)]",
+  confirmed: "bg-[var(--color-malachite,#64FFDA)]/10 text-[var(--color-malachite-text,#64FFDA)]",
+  "in-progress": "bg-[var(--color-gold,#FFD740)]/10 text-[var(--color-gold-text,#FFD740)]",
   completed: "bg-muted text-muted-foreground",
   cancelled: "bg-destructive/10 text-destructive",
 }
@@ -76,17 +76,17 @@ function AppointmentCard({
             {specialty && <div className="text-xs text-muted-foreground">{specialty}</div>}
           </div>
           <span
-            className={cn("rounded-full px-2 py-0.5 text-[10px] font-medium", statusStyles[status])}
+            className={cn("rounded-full px-2 py-0.5 text-sm font-medium", statusStyles[status])}
           >
             {status}
           </span>
         </div>
-        <div className="mt-2 flex flex-wrap items-center gap-x-3 gap-y-1 text-xs text-muted-foreground">
+        <div className="mt-2 flex flex-wrap items-center gap-x-3 gap-y-2 text-xs text-muted-foreground">
           <span>{dateStr}</span>
           {time && <span>{time}</span>}
           {location && <span>{location}</span>}
           {type === "telemedicine" && (
-            <span className="text-[var(--color-cobalt,#00B0FF)]">Video call</span>
+            <span className="text-[var(--color-cobalt-text,#00B0FF)]">Video call</span>
           )}
         </div>
         {(onJoin || onCancel || onReschedule) && (

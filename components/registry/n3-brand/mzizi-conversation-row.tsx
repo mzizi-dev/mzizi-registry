@@ -52,7 +52,7 @@ function MziziConversationRow({
         className="flex animate-pulse items-center gap-3 px-4 py-3"
       >
         <div className="size-12 shrink-0 rounded-full bg-muted" />
-        <div className="flex-1 space-y-1.5">
+        <div className="flex-1 space-y-2">
           <div className="h-3.5 w-1/3 rounded bg-muted" />
           <div className="h-2.5 w-2/3 rounded bg-muted" />
         </div>
@@ -107,8 +107,8 @@ function MziziConversationRow({
           {lastMessageTime && (
             <span
               className={cn(
-                "shrink-0 text-[10px]",
-                hasUnread ? "font-semibold text-[var(--color-malachite)]" : "text-muted-foreground"
+                "shrink-0 text-sm",
+                hasUnread ? "font-semibold text-malachite-text" : "text-muted-foreground"
               )}
             >
               {lastMessageTime}
@@ -126,7 +126,7 @@ function MziziConversationRow({
               {lastMessage}
             </span>
             {hasUnread && (
-              <span className="flex size-5 shrink-0 items-center justify-center rounded-full bg-[var(--color-malachite)] text-[10px] font-bold text-background">
+              <span className="flex h-6 min-w-6 px-1 shrink-0 items-center justify-center rounded-full bg-[var(--color-malachite)] text-sm font-bold text-background leading-none">
                 {unreadCount > 99 ? "99+" : unreadCount}
               </span>
             )}

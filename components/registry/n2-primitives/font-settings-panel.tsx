@@ -76,7 +76,7 @@ function FontSettingsPanel({ settings, onChange, className, ...props }: FontSett
       {/* Font family */}
       <div>
         <label className="text-xs font-medium text-muted-foreground">Font</label>
-        <div className="mt-1.5 flex gap-1.5">
+        <div className="mt-1.5 flex gap-2">
           {[
             { key: "serif" as const, label: "Serif", family: "var(--font-serif, serif)" },
             { key: "sans" as const, label: "Sans", family: "var(--font-sans, sans-serif)" },
@@ -103,7 +103,7 @@ function FontSettingsPanel({ settings, onChange, className, ...props }: FontSett
       {/* Reader theme */}
       <div>
         <label className="text-xs font-medium text-muted-foreground">Theme</label>
-        <div className="mt-1.5 flex gap-1.5">
+        <div className="mt-1.5 flex gap-2">
           {themes.map((t) => (
             <button
               key={t.key}

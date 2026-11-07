@@ -19,7 +19,7 @@ function TypingIndicator({
       {...props}
     >
       {name && <span className="font-medium text-foreground">{name}</span>}
-      <span className="flex items-center gap-0.5">
+      <span className="flex items-center gap-2">
         <span className="typing-dot size-1.5 rounded-full bg-muted-foreground" />
         <span className="typing-dot size-1.5 rounded-full bg-muted-foreground [animation-delay:150ms]" />
         <span className="typing-dot size-1.5 rounded-full bg-muted-foreground [animation-delay:300ms]" />

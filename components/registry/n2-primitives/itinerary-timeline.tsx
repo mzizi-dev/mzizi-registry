@@ -58,7 +58,7 @@ function ItineraryTimeline({ legs, totalDuration, className, ...props }: Itinera
             </div>
             <div className="mt-1 flex items-center gap-2 text-xs text-muted-foreground">
               <span
-                className="rounded-full px-1.5 py-0.5 text-[9px] font-bold capitalize"
+                className="rounded-full px-1.5 py-0.5 text-sm font-bold capitalize"
                 style={{
                   backgroundColor: `${modeColors[leg.mode]}20`,
                   color: modeColors[leg.mode],

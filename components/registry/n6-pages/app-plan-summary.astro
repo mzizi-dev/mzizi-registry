@@ -91,7 +91,7 @@ const none = status === "none";
       <H id={`${id}-title`} class="text-body font-semibold text-foreground">{name}</H>
       {
         !none && price && (
-          <p data-slot="plan-price" class="mt-1 flex flex-wrap items-baseline gap-x-1.5">
+          <p data-slot="plan-price" class="mt-1 flex flex-wrap items-baseline gap-x-2">
             <Money amountMinor={price.amountMinor} currency={price.currency} locale={locale} class="text-h3 font-semibold text-foreground" />
             {interval && <span class="text-body-sm text-muted-foreground">{copy.per?.[interval] ?? PER[interval]}</span>}
           </p>
@@ -111,7 +111,7 @@ const none = status === "none";
   }
   {
     !none && features.length > 0 && (
-      <ul data-slot="plan-features" aria-label={copy.features ?? "Included"} class="mt-4 grid gap-1.5">
+      <ul data-slot="plan-features" aria-label={copy.features ?? "Included"} class="mt-4 grid gap-2">
         {features.map((f) => (
           <li class="flex items-start gap-2 text-body-sm">
             <Icon name="check" class="mt-0.5 h-4 w-4 shrink-0 text-muted-foreground" />

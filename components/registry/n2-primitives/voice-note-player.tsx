@@ -108,13 +108,13 @@ function VoiceNotePlayer({
           })}
         </div>
       </div>
-      <div className="flex flex-col items-end gap-0.5">
-        <span className="font-mono text-[10px] text-muted-foreground tabular-nums">
+      <div className="flex flex-col items-end gap-2">
+        <span className="font-mono text-sm text-muted-foreground tabular-nums">
           {formatDuration(duration * (1 - progress))}
         </span>
         <button
           onClick={cycleSpeed}
-          className="rounded-full bg-muted px-1.5 py-0.5 text-[9px] font-bold text-muted-foreground"
+          className="rounded-full bg-muted px-1.5 py-0.5 text-sm font-bold text-muted-foreground"
         >
           {speed}×
         </button>

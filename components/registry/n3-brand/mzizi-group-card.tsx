@@ -74,7 +74,7 @@ export function MziziGroupCard({
         <div className="space-y-2 p-4">
           <div className="h-4 w-1/2 rounded bg-muted" />
           <div className="h-2.5 w-2/3 rounded bg-muted" />
-          <div className="mt-2 flex gap-1">
+          <div className="mt-2 flex gap-2">
             {Array.from({ length: 4 }).map((_, i) => (
               <div key={i} className="size-6 rounded-full bg-muted" />
             ))}
@@ -106,7 +106,7 @@ export function MziziGroupCard({
             : undefined
         }
       >
-        <span className="absolute top-3 right-3 rounded-full bg-background/80 px-2 py-0.5 text-[10px] font-medium text-muted-foreground backdrop-blur-sm">
+        <span className="absolute top-3 right-3 rounded-full bg-background/80 px-2 py-0.5 text-sm font-medium text-muted-foreground backdrop-blur-sm">
           {privacy === "secret" ? "🔒 Secret" : privacy === "closed" ? "🔐 Closed" : "🌍 Open"}
         </span>
       </div>
@@ -118,7 +118,7 @@ export function MziziGroupCard({
           >
             {name}
           </h3>
-          <div className="mt-0.5 flex items-center gap-1.5 text-[11px] text-muted-foreground">
+          <div className="mt-0.5 flex items-center gap-2 text-sm text-muted-foreground">
             <span className={cn("size-1.5 rounded-full", activityDot[activity])} />
             <span>{activity}</span>
             <span>·</span>
@@ -135,7 +135,7 @@ export function MziziGroupCard({
             {members.slice(0, 5).map((m, i) => (
               <div
                 key={i}
-                className="flex size-7 items-center justify-center overflow-hidden rounded-full border-2 border-card bg-muted text-[9px] font-bold text-muted-foreground"
+                className="flex size-7 items-center justify-center overflow-hidden rounded-full border-2 border-card bg-muted text-sm font-bold text-muted-foreground"
               >
                 {m.avatarUrl ? (
                   <img src={m.avatarUrl} alt={m.name} className="size-full object-cover" />
@@ -145,18 +145,18 @@ export function MziziGroupCard({
               </div>
             ))}
             {memberCount > 5 && (
-              <div className="flex size-7 items-center justify-center rounded-full border-2 border-card bg-muted text-[9px] font-medium text-muted-foreground">
+              <div className="flex size-7 items-center justify-center rounded-full border-2 border-card bg-muted text-sm font-medium text-muted-foreground">
                 +{Math.min(memberCount - 5, 99)}
               </div>
             )}
           </div>
         )}
         {topics.length > 0 && (
-          <div className="flex flex-wrap gap-1">
+          <div className="flex flex-wrap gap-2">
             {topics.slice(0, 3).map((t) => (
               <span
                 key={t}
-                className="rounded-full bg-[var(--brand-accent,var(--color-terracotta))]/10 px-2 py-0.5 text-[10px] font-medium text-[var(--brand-accent,var(--color-terracotta))]"
+                className="rounded-full bg-[var(--brand-accent,var(--color-terracotta))]/10 px-2 py-0.5 text-sm font-medium text-[var(--brand-accent,var(--color-terracotta))]"
               >
                 {t}
               </span>
@@ -170,7 +170,7 @@ export function MziziGroupCard({
               onJoin()
             }}
             className={cn(
-              "flex h-12 w-full items-center justify-center rounded-full text-[13px] font-medium transition-opacity hover:opacity-80",
+              "flex h-12 w-full items-center justify-center rounded-full text-sm font-medium transition-opacity hover:opacity-80",
               joined
                 ? "border border-border bg-muted text-foreground"
                 : "bg-[var(--brand-accent,var(--color-terracotta))] text-[var(--brand-accent-foreground,#0A0A0A)]"

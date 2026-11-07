@@ -52,7 +52,7 @@ export function ChartLineLabelCustom({ loading = false }: { loading?: boolean } 
                 position="top"
                 offset={12}
                 className="fill-foreground"
-                fontSize={11}
+                fontSize={14}
                 formatter={(value) => `${value}\u00B0C`}
               />
             </Line>

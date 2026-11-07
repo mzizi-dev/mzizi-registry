@@ -68,7 +68,7 @@ export function MziziSidebarNav({
       {Object.entries(sections).map(([section, sectionItems]) => (
         <div key={section} className="mb-2">
           {section !== "_default" && (
-            <p className="mb-1 px-2 pt-2 text-[10px] font-medium tracking-wider text-muted-foreground/60 uppercase">
+            <p className="mb-1 px-2 pt-2 text-sm font-medium tracking-wider text-muted-foreground/60 uppercase">
               {section}
             </p>
           )}
@@ -88,7 +88,7 @@ export function MziziSidebarNav({
                 <span>{item.label}</span>
               </div>
               {item.badge != null && item.badge > 0 && (
-                <span className="rounded-full bg-primary px-1.5 py-0.5 text-[10px] font-bold text-primary-foreground">
+                <span className="rounded-full bg-primary px-1.5 py-0.5 text-sm font-bold text-primary-foreground">
                   {item.badge}
                 </span>
               )}

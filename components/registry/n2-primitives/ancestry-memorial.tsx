@@ -54,7 +54,7 @@ function AncestryMemorial({
           </div>
           <div className="text-xs text-muted-foreground">Age {fixedAge} · Ancestral</div>
           {communityRole && (
-            <div className="text-[10px] text-[var(--color-terracotta)]">
+            <div className="text-sm text-terracotta-text">
               {communityRole}
             </div>
           )}
@@ -74,7 +74,7 @@ function AncestryMemorial({
           <span>{heritageContributions.toLocaleString()} heritage contributions</span>
         )}
       </div>
-      <div className="mt-2 text-[10px] text-muted-foreground italic">
+      <div className="mt-2 text-sm text-muted-foreground italic">
         "Their wisdom lives in the archive alongside every ancestor's, building a digital heritage
         for the continent."
       </div>

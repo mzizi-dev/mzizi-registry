@@ -121,12 +121,12 @@ function MziziCalendar({
       >
         <div className="flex justify-between">
           <div className="h-4 w-24 rounded bg-muted" />
-          <div className="flex gap-1">
+          <div className="flex gap-2">
             <div className="size-8 rounded bg-muted" />
             <div className="size-8 rounded bg-muted" />
           </div>
         </div>
-        <div className="grid grid-cols-7 gap-1">
+        <div className="grid grid-cols-7 gap-2">
           {Array.from({ length: 35 }).map((_, i) => (
             <div key={i} className="aspect-square rounded bg-muted" />
           ))}
@@ -198,11 +198,11 @@ function MziziCalendar({
       </div>
 
       {/* Day headers */}
-      <div className="grid grid-cols-7 gap-1">
+      <div className="grid grid-cols-7 gap-2">
         {DAY_LABELS.map((d) => (
           <div
             key={d}
-            className="text-center text-[11px] font-medium text-muted-foreground uppercase"
+            className="text-center text-sm font-medium text-muted-foreground uppercase"
           >
             {d}
           </div>
@@ -255,7 +255,7 @@ function MziziCalendar({
                   className={cn(
                     "text-sm",
                     isSelected && "font-semibold text-background",
-                    isToday && !isSelected && "font-semibold text-[var(--color-malachite)]",
+                    isToday && !isSelected && "font-semibold text-malachite-text",
                     !isToday && !isSelected && "text-foreground"
                   )}
                 >
