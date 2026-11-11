@@ -188,8 +188,8 @@ applies.
 - **Rust first, Astro for the UI.** Astro is the default web UI. Underneath, the code is Rust
   first and TypeScript second, and Mzizi's own surfaces have no third UI framework. Components
   are Mzizi Roots (Rust) where a Rust build exists and the React build otherwise, with React
-  deprioritised. No Dioxus, Leptos or Yew in new work. The Roots crates still depend on Dioxus
-  until the move to Mzizi's own `render(props)` finishes.
+  deprioritised. No third-party UI framework in new work. The one the Roots UI crates were first built on was removed across every Mzizi
+  repository on 2026-11-04 (mzizi-registry#635); the Roots rendering target is the registry's decision.
 - **Cloudflare Workers** run the services: `api.mzizi.dev` (`mzizi-dev/mzizi-api`, a Hono
   Worker), `mcp.mzizi.dev` (`mzizi-mcp`) and fundi. Containers and bare metal are decided as
   further targets and are not built. The `mzizi-backend` skill has the patterns.

@@ -1,6 +1,6 @@
 ---
 name: ship-release
-description: Use this skill whenever you release a Mzizi repo, meaning staging goes to main and the change goes live (npm, Cloudflare Workers, docs.mzizi.dev, mzizi.dev). It is the runbook: cut the release branch off origin/main with staging's exact tree in one commit and prove the tree hashes are equal, the PR title and the issue line in its body, the version rule (next minor above npm, a CHANGELOG section per bumped version, majors need the owner), the main-gate failure about commits that staging may not have and its owner-only forward-ported label (never --admin), merge queue methods (GraphQL is blocked in cloud sessions, use the REST route), stale checks, a publish that npm lists late, immutable releases, and verifying LIVE with commands. Ships verify-live.sh, which only reads. A release is live when the live commands say so, never when it merges.
+description: Use this skill whenever you release a Mzizi repo, meaning staging goes to main and the change goes live (npm, Cloudflare Workers, docs.mzizi.dev, mzizi.dev). It is the runbook: cut the release branch off origin/main with staging's exact tree in one commit and prove the tree hashes are equal, the PR title and the issue line in its body, the version rule (next minor above npm, a CHANGELOG entry per bumped version in the repo's own heading style, majors need the owner), the main-gate failure about commits that staging may not have and its owner-only forward-ported label (never --admin), the merge queue (the repo convention `gh pr merge N --squash --auto`, the REST route as the fallback where GraphQL is blocked, and which method each queue really uses), stale checks, a publish that npm lists late, immutable releases, and verifying LIVE with commands. Ships verify-live.sh, which only reads. A release is live when the live commands say so, never when it merges.
 ---
 
 # Ship a release: staging to main, then prove it is live
@@ -31,12 +31,16 @@ merged PR into `staging` and say so in "Needs you:".
 | The public `mzizi` plugin       | `skills/ship-release/verify-live.sh` in the plugin                                                                         |
 | Only the MCP                    | `curl -fsSL https://unpkg.com/@nyuchi/mzizi-skills/skills/ship-release/verify-live.sh -o "${TMPDIR:-/tmp}/verify-live.sh"` |
 
+Run it as `bash "$V" ...`. It is committed executable (like `hygiene.sh` and `progress.sh`), but
+npm packs every file as mode 644, so the copy from npm or unpkg has no execute bit: `bash` works
+everywhere, `./verify-live.sh` only from a git checkout. `bash "$V" --help` prints the usage.
+
 ```bash
 V="${TMPDIR:-/tmp}/verify-live.sh"   # or one of the paths above
-bash "$V" npm @nyuchi/mzizi-skills @nyuchi/mzizi-skills@0.18.0   # latest, and is 0.18.0 listed yet
+bash "$V" npm @nyuchi/mzizi-skills @nyuchi/mzizi-skills@0.19.0   # latest, and is 0.19.0 listed yet
 bash "$V" api                                                     # status and X-Mzizi-Source of /v1/brand
 bash "$V" mcp                                                     # catalogue version, registry commit, evil-origin probe
-bash "$V" release mzizi-dev/agent-tools '@nyuchi/mzizi-skills@0.18.0'   # tag and release exist (a draft shows draft=true), notes length
+bash "$V" release mzizi-dev/agent-tools '@nyuchi/mzizi-skills@0.19.0'   # tag and release exist (a draft shows draft=true), notes length
 bash "$V" http https://docs.mzizi.dev/ https://mzizi.dev/         # status per page
 ```
 
@@ -49,7 +53,7 @@ A release PR is `main` plus `staging`'s exact tree in **one commit**. Work in yo
 git fetch origin main staging
 git checkout -B release/2026-11-04-skills origin/main     # release/<date>-<name>
 git read-tree --reset -u origin/staging                    # the index and working tree become staging's
-git commit -m "chore(release): staging to main, 2026-11-04 (@nyuchi/mzizi-skills 0.18.0)"
+git commit -m "chore(release): staging to main, 2026-11-04 (@nyuchi/mzizi-skills 0.19.0)"
 test "$(git rev-parse 'HEAD^{tree}')" = "$(git rev-parse 'origin/staging^{tree}')" && echo "trees equal"
 git push -u origin release/2026-11-04-skills
 ```
@@ -71,9 +75,23 @@ git push -u origin release/2026-11-04-skills
   x.(y+1).0. Read npm, not the file: `npm view <package> version` (for a list,
   `npm view <package> versions --json`). The release job refuses anything else.
 - **Majors need the owner**, and go only through a manual workflow run with `bump: major`.
-- `CHANGELOG.md` needs a section for **each bumped version** (a `### <package> <version>`
-  heading under the release); the release notes are built from it, and a version with no
-  section fails the job before `npm publish`.
+- `CHANGELOG.md` needs an entry for **each bumped version**, and **the heading style is the
+  repo's own**: read its `AGENTS.md` (and `CLAUDE.md`) and copy the newest entry. Do not carry
+  one repo's heading into another. Read on 4 November 2026:
+
+  | Repo                                    | Heading                                                                         | Where                                              |
+  | --------------------------------------- | ------------------------------------------------------------------------------- | -------------------------------------------------- |
+  | `packages-npm`                          | `## [@bundu/ui 0.12.0] - 2026-11-04`                                            | a dated section per version (its `CLAUDE.md`)      |
+  | `agent-tools`                           | `### mzizi-skills 0.19.0 — what changed (2026-11-04, [#343](<issue URL>))`      | under `## [Unreleased]`, one `###` per package     |
+  | `mzizi-registry`                        | `### Changed — what changed (2026-11-04, #PR)`, then `## [4.25.0] - 2026-11-04` | entries under Unreleased; a release dates them     |
+  | `mzizi-api`, `mzizi-docs`, `mzizi-site` | `### Changed — what changed (2026-11-04, [#n](<issue URL>))`                    | under `## [Unreleased]`; no version in the heading |
+
+  In `agent-tools` the publish job builds the release notes from the `###` headings that name
+  the package and version, and a version without one fails before `npm publish`. In
+  `packages-npm` the release job needs the `## [<name> <version>]` section. For the others, read the
+  "Release notes" section of the repo's `AGENTS.md`. Whatever the style, the heading must be unique under
+  `## [Unreleased]` (markdownlint MD024).
+
 - If `package.json` was already bumped for a version that has since reached npm, bump again
   before the release PR, or the job has nothing valid to publish.
 - Do not bump a version a repo's rules leave to tags (a staging patch tag is the workflow's
@@ -87,10 +105,13 @@ The org's main gate (`release-version-check`, which runs `main-gate.sh`) can fai
 'main' has 1 commit(s) since the last release that staging may not have; this release would delete them
 ```
 
-It fails because `main`'s own squash or merge commits from earlier releases are never
-ancestors of `staging`, so git counts them as commits `staging` may lack. When the trees are
-equal, nothing would be deleted; the documented lane for that is the **`forward-ported`
-label** on the release PR.
+It fails when `main` holds commits that `staging`'s history does not. The repos' `AGENTS.md`
+name the usual cause, commits that exist only on `main` and that `staging` lacks (forward-port them first). A
+release itself also leaves commits on `main` that `staging` never contains (see part 4), and the
+gate has been seen to fire after one. Which commits it counts is defined in `main-gate.sh` in
+the org's `.github` repository, which a session often cannot read: read the failing job's log
+rather than assuming. When the trees are equal, nothing would be deleted; the documented lane
+for that is the **`forward-ported` label** on the release PR.
 
 **That label is an owner decision, made per release.** Add it only when the owner has said so
 for this release, and only after you have checked both of these:
@@ -114,23 +135,41 @@ gh api -X POST repos/OWNER/REPO/actions/runs/RUN_ID/rerun-failed-jobs
 - **Never `--admin`**, never skip or disable the gate, never merge past a red check. Org admins
   can bypass rulesets; agents never do.
 - If any other check fails, fix that first. The label does not cover it.
-- Prevention: forward-port `main`-only commits into `staging` before cutting, and keep bots
-  pointed at `staging`. After the release, sync `main` back into `staging` as the repo's
+- Prevention: forward-port `main`-only commits into `staging` before cutting, and open
+  every pin bump into `staging` (see `registry-propagation`). After the release, sync `main` back into `staging` as the repo's
   `AGENTS.md` says, so the trees match before more work lands. Compare trees, not
   ahead/behind counts.
 
 ## 4. Merge queues
 
-- `staging` takes **squash**; `main` takes the method its queue is set to (the owner's note says merge; some repos' `AGENTS.md` say
-  squash: read the repo's, and compare trees, not ancestry, afterwards). Do not
-  choose a method by hand: enqueue and let the queue use its own.
-- GraphQL is blocked in cloud sessions, so `gh pr merge --auto` fails there. Use the GitHub
-  MCP `enable_pr_auto_merge` tool, or the REST route (it is the one the cloud session's own GraphQL error names):
+- **The two queues use different methods.** In all six repos (read from the rulesets on
+  4 November 2026: `gh api repos/OWNER/REPO/rulesets`, then `.../rulesets/ID`, field
+  `rules[].parameters.merge_method` of the `merge_queue` rule), `merge-queue-staging` is
+  **SQUASH** and `merge-queue-main` is **MERGE**. The `AGENTS.md` files agree once read closely:
+  "squash merges through the queue" is the `staging` rule, and they say `merge-queue-main` stays
+  MERGE. Where they say a release "lands as one squash commit", they mean the **release branch**
+  is one commit (part 1). The queue then lands it on `main` as a **merge commit** with two
+  parents (mzizi-registry `main` `c3e6e87`, "Merge pull request #623", is one; its second parent
+  is the one-commit release branch). Neither commit is in `staging`'s history, so after a
+  release the trees match and the ancestry does not: compare trees, never ahead/behind counts,
+  and sync `main` back into `staging` (the repo's `AGENTS.md`). Do not choose a method by hand;
+  enqueue and let the queue use its own. Ruleset reads can be refused for an agent: say so
+  rather than guessing.
+- **The repo convention is `gh pr merge <n> --squash --auto`** (every repo's `AGENTS.md`, "Merge
+  convention"): it adds the PR to the queue, and the queue applies its own method. Never
+  `--admin`.
+- **The fallback, where GraphQL is blocked.** Cloud sessions block GraphQL, so
+  `gh pr merge --auto` fails there. Then enable auto-merge with the GitHub MCP
+  `enable_pr_auto_merge` tool or the REST route that session's own GraphQL error
+  names. It does the same job, and it is the fallback, not the convention:
 
 ```bash
-gh api -X PUT repos/OWNER/REPO/pulls/N/ccr/auto_merge
-gh api -X DELETE repos/OWNER/REPO/pulls/N/ccr/auto_merge    # to take it back
+gh api -X PUT repos/OWNER/REPO/pulls/N/ccr/auto_merge -f merge_method=squash   # a staging PR
+gh api -X DELETE repos/OWNER/REPO/pulls/N/ccr/auto_merge                       # to take it back
 ```
+
+For a release PR into `main`, do not argue with the queue: its method is MERGE, and release
+PRs there have landed as merge commits (mzizi-registry #623, agent-tools #358).
 
 - Enqueue only past the merge gate: the work is complete, CI is green, it is verified at
   runtime, and `/code-review` has run with its findings resolved.
@@ -175,7 +214,7 @@ the release claims, by its own value:
 
 ```bash
 npm view @nyuchi/mzizi-skills version                  # npm has the version
-bash "$V" release mzizi-dev/agent-tools '@nyuchi/mzizi-skills@0.18.0'   # tag, release (draft=false) and notes
+bash "$V" release mzizi-dev/agent-tools '@nyuchi/mzizi-skills@0.19.0'   # tag, release (draft=false) and notes
 curl -sI https://api.mzizi.dev/v1/brand | grep -i x-mzizi-source        # registry=<sha> the API serves
 curl -s https://mcp.mzizi.dev/catalogue.json | head -c 400              # version, source.registry
 curl -s -o /dev/null -w '%{http_code}\n' -X POST -H 'Origin: https://evil.example' \
@@ -212,6 +251,6 @@ still waiting (a queued deploy, a bot PR, a registry pin). Use the status format
 - [ ] Title is `chore(release): staging to main, <date> (<package versions>)`; the body has an issue line at the start of its own line.
 - [ ] Each bumped version is the next minor above npm and has a CHANGELOG section; no major without the owner.
 - [ ] If the main gate is the only failure and the owner said so: `forward-ported` added, failed jobs re-run, label still there after any re-cut.
-- [ ] Enqueued through the REST route or the MCP tool, past the merge gate; no `--admin`.
+- [ ] Enqueued with `gh pr merge <n> --squash --auto` (or, where GraphQL is blocked, the MCP tool or the REST route), past the merge gate; no `--admin`.
 - [ ] Publish confirmed on npm before the one workflow re-run; no release edited.
 - [ ] Verified live with the commands above, a minute or two after the deploy; each product reported with the value read.

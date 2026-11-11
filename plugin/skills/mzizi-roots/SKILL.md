@@ -1,14 +1,14 @@
 ---
 name: mzizi-roots
-description: Use this skill for anything involving Mzizi's components: using them, starting an app on them, or contributing one. Mzizi Roots is Mzizi's own components in Rust (UI on Dioxus today, moving to Mzizi's own render(props); server components) from mzizi-dev/mzizi-registry. Covers `cargo add mzizi-roots` / `mzizi-roots-server`, what mzizi_get_component returns (Rust first), the node-to-crate map, `pub const CONTRACT`, the contracts in the registry's contracts/ for the Dashboard Standard (app/, 35 components) and the Discover Standard (discover/, 16 components; no script, server-filled shells): read one before building or changing a @bundu/ui component. Also no-JS fallback, density and floors (49px hit region, 17px body, 14px inset, 7px gaps) and brand-overlay rules, the frontend paths (pure .astro via `mzizi add --target astro`, Astro with Roots, pure Rust; Next.js adopts the .tsx), reuse before build, and adding a component (node, .rs, .tsx, registry.json, the gates). Files are the data layer: no database.
+description: Use this skill for anything involving Mzizi's components: using them, starting an app on them, or contributing one. Mzizi Roots is Mzizi's own components in Rust (UI and server components) from mzizi-dev/mzizi-registry. Covers `cargo add mzizi-roots` / `mzizi-roots-server`, what mzizi_get_component returns (Rust first), the node-to-crate map, `pub const CONTRACT`, the contracts in the registry's contracts/ for the Dashboard Standard (app/, 35 components) and the Discover Standard (discover/, 16 components; no script, server-filled shells): read one before building or changing a @bundu/ui component. Also no-JS fallback, density and floors (49px hit region, 17px body, 14px inset, 7px gaps) and brand-overlay rules, the frontend paths (pure .astro via `mzizi add --type astro`, Astro with Roots, pure Rust; Next.js adopts the .tsx), reuse before build, and adding a component (node, .rs, .tsx, registry.json, the gates). Files are the data layer: no database.
 ---
 
 # Mzizi Roots — the Rust build of Mzizi's components
 
 **Mzizi Roots** is Mzizi's own components in Rust: UI components, and server components as
-host-agnostic Rust. The UI crates are built on Dioxus 0.7 today and are moving to Mzizi's own
-Rust renderer (a pure `render(props) -> String`, with behaviour attached in the browser through
-`web-sys`). Do not write new Dioxus code for a Roots component. They are built to support the Mzizi language (the
+host-agnostic Rust. Write no new code against a third-party UI framework (owner, 2026-11-04,
+mzizi-registry#635). What renders a Roots UI component is the
+registry's decision, so this skill names no rendering target. They are built to support the Mzizi language (the
 `mzizi-language` skill) as its component model, the way React is JavaScript's; they are not
 the language. They live in
 [`mzizi-dev/mzizi-registry`](https://github.com/mzizi-dev/mzizi-registry) and are compiled by
@@ -57,11 +57,10 @@ cargo add mzizi-roots --git https://github.com/mzizi-dev/mzizi-registry
 mzizi-brand = { git = "https://github.com/mzizi-dev/mzizi-registry", rev = "<commit>" }
 ```
 
-A single node crate works too (`cargo add mzizi-ui`). The crates depend on `dioxus` with
-`macro`, `signals`, `hooks` and `html` only, so the app that mounts them chooses web, desktop,
-mobile or server rendering.
+A single node crate works too (`cargo add mzizi-ui`). Read a crate's own `Cargo.toml` at the
+commit you pin for what it depends on; this skill does not restate it.
 
-`mzizi add <name> --target rust` (`@nyuchi/mzizi-cli`) records the crate and prints the
+`mzizi add <name> --type mzizi` (`@nyuchi/mzizi-cli` 0.9.0 or later; `--target rust` on 0.8.0) records the crate and prints the
 `cargo add` rather than copying a `.rs` file into your project: a copied component is a fork
 of a crate module.
 
@@ -100,7 +99,7 @@ One crate per registry node that has Rust. The map is `mzizi-rs/crate-for-node.j
 | `n7-shell`          | `mzizi-shell`     | `mzizi-roots` (`shell`)            | bottom nav, command palette, connectivity bar, deep-link handler, footer, mini-app runtime, notification center, persistent player, route guard, theme provider, toast provider, update prompt |
 | `n8-assurance`      | `mzizi-assurance` | `mzizi-roots-server` (`assurance`) | probes, telemetry, the OTLP exporter, a11y and RTL conformity checks, alert and incident engines                                                                                               |
 | `n9-fundi`          | `mzizi-fundi`     | `mzizi-roots-server` (`fundi`)     | the Fundi reporter and learning loop (client side)                                                                                                                                             |
-| `n10-documentation` | `mzizi-docs`      | `mzizi-roots-server` (`docs`)      | the docs API and routing, AI context, the changelog and docs renderers (brings in `dioxus`)                                                                                                    |
+| `n10-documentation` | `mzizi-docs`      | `mzizi-roots-server` (`docs`)      | the docs API and routing, AI context, the changelog and docs renderers                                                                                                                         |
 | `n11-discovery`     | `mzizi-discovery` | `mzizi-roots-server` (`discovery`) | page metadata and Schema.org JSON-LD                                                                                                                                                           |
 
 N5 resilience has a crate since 0.7.0: `mzizi-resilience` (circuit breaker, retry backoff,
@@ -120,56 +119,34 @@ moves past the map it names `mzizi-ui` for every component. Trust the map, or th
 
 ## The renderer
 
-Mzizi components are built in-house in Rust, not borrowed from another framework.
+Mzizi components are built in-house, not borrowed from another framework. The owner removed the
+framework the Roots UI crates were first built on (2026-11-04, across every Mzizi repository,
+[mzizi-registry#635](https://github.com/mzizi-dev/mzizi-registry/issues/635)).
 
 - **Built so far.** Seven components render with Mzizi's own `render(props) -> String`: the
   skeleton and six static primitives, merged in `mzizi-dev/mzizi-registry`
   ([#506](https://github.com/mzizi-dev/mzizi-registry/pull/506) and
   [#510](https://github.com/mzizi-dev/mzizi-registry/pull/510)).
-- **Not yet.** Dioxus is still a dependency of `mzizi-ui`, `mzizi-brand`, `mzizi-shell`,
-  `mzizi-docs` and `mzizi-roots` until the migration in the registry's `RFC-roots-renderer`
-  finishes. The examples in this skill use Dioxus because the published crates need it today.
-- **Direction.** No Dioxus, Leptos or Yew in new work. Astro renders HTML on the server, static
+- **Not yet.** Some published crate versions still depend on a framework that is being
+  removed; the registry tracks that migration in #635. The rendering target that replaces it is
+  not decided, and this skill does not name one.
+- **Direction.** No third-party UI framework in new work. Astro renders HTML on the server, static
   components ship zero WASM, there is at most one WASM module per page, and Tokio runs
   server-side only.
+- **The order components are served in** (owner, 2026-11-04): Mzizi first, TypeScript second,
+  native (Swift, Kotlin) where the registry has them. `mzizi add` serves every type.
 
 ## Using a UI component
 
-This compiles against `mzizi-roots` 0.7.0 from crates.io and renders the component to a static
-HTML fragment with `dioxus-ssr`:
+Ask the registry for the component and read what it returns: `mzizi_get_component` gives the
+crate, the `cargo add` line, the contract and the `.rs` source, and `mzizi add <name> --type mzizi`
+records the crate. How a host mounts or renders the component depends on the rendering target
+the registry has not yet decided, so there is no host example here: do not copy one from an
+older version of this skill.
 
-```toml
-[dependencies]
-mzizi-roots = { version = "0.7", default-features = false, features = ["brand"] }
-dioxus = { version = "0.7", default-features = false, features = ["macro", "signals", "hooks", "html"] }
-dioxus-ssr = "0.7"
-```
-
-```rust
-use dioxus::prelude::*;
-use mzizi_roots::brand::{AlertSeverity, MziziAlertBanner};
-
-fn banner() -> Element {
-    rsx! {
-        MziziAlertBanner {
-            r#type: "Thunderstorm",
-            severity: AlertSeverity::Severe,
-            headline: "Severe storms this afternoon",
-        }
-    }
-}
-
-fn main() {
-    let mut dom = VirtualDom::new(banner);
-    dom.rebuild_in_place();
-    let html = dioxus_ssr::render(&dom); // a static HTML fragment for Astro to place
-    println!("{html}");
-}
-```
-
-The output is a `<div data-slot="mzizi-alert-banner" data-portal="https://mzizi.dev/components/mzizi-alert-banner" role="alert" …>`
-with the same Tailwind classes and CSS custom properties as the React build, so one stylesheet
-styles both.
+The same component also exists as pure `.astro` (`mzizi add <name> --type astro`) and as the
+`.tsx`. Its Rust build and those carry the same `data-slot`, `data-portal` and classes, so one
+stylesheet styles all of them.
 
 What a Roots UI component looks like:
 
@@ -187,11 +164,12 @@ What a Roots UI component looks like:
 The frontend is either **Astro** (pure `.astro` components, or Roots rendered underneath) or
 **pure Rust end to end**.
 
-- **Pure Rust.** A Dioxus app depends on the crates and mounts the components on web (wasm),
-  desktop or mobile. Every component supports this today.
-- **Astro, static.** Render with `dioxus-ssr` at build time or in a Worker, and let Astro place
-  the fragment, as in the example above. It ships no JavaScript and suits display components.
-  The brand crate's contract suite does this for every component on every run.
+- **Pure Rust.** An app depends on the crates and mounts the components itself. The rendering
+  target is not decided (mzizi-registry#635), so this skill gives no mounting example.
+- **Astro, static.** Render the Roots component to HTML at build time or in a Worker, and let
+  Astro place the fragment. It ships no JavaScript and suits display components. The renderer
+  that produces the fragment is the registry's decision; use the pure `.astro` component
+  where you need a working path today.
 - **Astro, interactive islands.** Compile the behaviour to one wasm module per page and wrap it
   as a custom element. **Not packaged yet**: the wrapper crate (`mzizi-islands`) is proposed for
   batch 2 of the RFC.
@@ -201,7 +179,7 @@ The frontend is either **Astro** (pure `.astro` components, or Roots rendered un
   (and `.mz`, the Mzizi language, as it lands). A component's `.astro` sits beside its `.tsx`
   and `.rs` (`components/registry/n<N>-*/<name>.astro`), pure Astro with no React or
   Vue under it and no client JavaScript unless its contract allows one enhancement script.
-  Install with `mzizi add <name> --target astro` (inferred in an Astro project, even one with
+  Install with `mzizi add <name> --type astro` (inferred in an Astro project, even one with
   React islands): it reads `api.mzizi.dev/v1/astro/<name>` and writes the component,
   its flat-imported siblings (`./button.astro`, `./ui-utils`, `./server-table`) and any brand
   asset into `src/components/mzizi/`. A component with no `.astro` is refused by name, never
@@ -215,7 +193,7 @@ registry's own `.tsx`, which share only what their contract's `identity` says), 
 its contract ("The Dashboard and Discover Standards' contracts" below). `@bundu/ui`
 (`@bundu/ui/app/*`, `@bundu/ui/discover/*`) is BUILT from these files at a pinned registry
 commit, and its CI fails on drift; a Next.js app adopts the same design through the registry's
-`.tsx` (`mzizi add app-data-table --target tsx` or
+`.tsx` (`mzizi add app-data-table --type tsx` or
 `npx shadcn add` of `api.mzizi.dev/v1/ui/<name>`). Use them as they are: do not
 fork, restyle or wrap the shell or a component; fix it upstream in the registry (contract,
 `.astro` and `.tsx` together), in the same change.
@@ -265,11 +243,11 @@ cargo add mzizi-roots        # tokens, primitives, brand components, shell parts
 ```
 
 For Astro, a small Rust crate (a build step, or a `workers-rs` Worker for request-time
-rendering) renders each component to HTML with `dioxus-ssr`, and Astro places the fragment.
-The fragment carries the same Tailwind classes as the React build, so the stylesheet from step 2
-styles it, and it ships no JavaScript. Interactive islands (Roots compiled to wasm and wrapped
-as custom elements) are proposed and not packaged yet. "Using a UI component" above has a
-compiling example.
+rendering) renders each component to HTML, and Astro places the fragment. The fragment carries
+the same Tailwind classes as the React build, so the stylesheet from step 2 styles it, and it
+ships no JavaScript. Which renderer that crate calls is undecided (mzizi-registry#635), so use
+the pure `.astro` components for a working path. Interactive islands (Roots compiled to wasm
+and wrapped as custom elements) are proposed and not packaged yet.
 
 Never copy component source between apps. Depend on the crate, so every app inherits fixes.
 
@@ -336,7 +314,7 @@ and the page is readable with JavaScript off.
 If the app is already React, the React build installs with the CLI or shadcn, by absolute URL:
 
 ```bash
-pnpm add -D @nyuchi/mzizi-cli && pnpm exec mzizi add button    # infers the tsx target
+pnpm add -D @nyuchi/mzizi-cli && pnpm exec mzizi add button    # infers the type (tsx here)
 npx shadcn@latest add https://api.mzizi.dev/v1/ui/mzizi-theme-provider
 ```
 
@@ -356,8 +334,7 @@ wasm32 job yet.
 
 A host adapter mounts the core: a `workers-rs` adapter for Cloudflare Workers, an axum adapter
 for containers. Neither adapter crate exists yet. Until then the host writes the few lines that
-turn its request into the core's request (see the `mzizi-backend` skill). Dioxus
-`#[server]` functions are one more possible adapter, not the building block.
+turn its request into the core's request (see the `mzizi-backend` skill).
 
 ## Contracts
 
@@ -382,7 +359,12 @@ Every Roots component carries a contract, in two parts:
    end"#;
    ```
 
-   `mzizi-brand`'s contract suite renders each component with `dioxus-ssr` in named states and
+   `min_height 48` is that component's own clause, quoted as the registry has it: a minimum
+   **drawn** height. It is not the floor. The floor is the **49px hit region**
+   (`BUNDU_FLOOR.hitAreaPx`, `lib/tokens/roles.source.ts` in mzizi-registry), which a control keeps
+   however tall it is drawn.
+
+   `mzizi-brand`'s contract suite renders each component in named states and
    evaluates every clause against the markup it emits. **A clause it cannot evaluate fails.**
    `mzizi_roots::brand::CONTRACTS` lists every brand component with its contract.
 
@@ -455,8 +437,9 @@ Standard's; the Discover Standard's differ (below):
 - **Density.** Each row gives a part's height in px for a fine pointer and a coarse one
   (touch), read from the rendered classes (`h-N`, `min-h-N`, `size-N` = N×4;
   `pointer-coarse:` for touch). Dashboards are drawn dense on a mouse and at the floor on touch:
-  the app Button's `md` row reads 36px fine and 48 coarse with the small radius (a button is a
-  `hit-area` element, so its hit region is 49px; its `sm` link row is a pinned gap), and nav rows
+  the app Button's `md` row reads 36px fine and 48px coarse as the **drawn** height (its
+  `button.contract.json` density rows), with the small radius; a button is a `hit-area` element,
+  so its **hit region is 49px**, the floor, on both pointers, and its `sm` link row is a pinned gap, and nav rows
   are drawn 32 on a mouse. The registry primitives read the same density from the size roles
   (`h-control`: 49px coarse, 36px drawn at desktop density, hit region 49px either way), which the
   runner and `mzizi-rs/contract-eval` understand (`ROLE_HEIGHTS`). Since the Bundu floor (registry
@@ -648,7 +631,7 @@ and fails if that changes a committed file.
 
 | File                                          | What it is                                                        |
 | --------------------------------------------- | ----------------------------------------------------------------- |
-| `components/registry/n<N>-<label>/<name>.rs`  | the Roots component (Dioxus UI, or a sans-IO server core)         |
+| `components/registry/n<N>-<label>/<name>.rs`  | the Roots component (a UI component, or a sans-IO server core)    |
 | `components/registry/n<N>-<label>/<name>.tsx` | the React build of the same contract                              |
 | `registry.json`                               | the manifest `/v1/ui/<name>` and `npx shadcn add` resolve against |
 
@@ -790,7 +773,7 @@ Follow the criteria for the chosen node.
 #### Every node: the Rust file
 
 - `pub const CONTRACT: &str` with the clauses the rendered markup must meet (slot, role, touch
-  floors, variant tables), evaluated by the crate's `tests/contract.rs` on `dioxus-ssr` output
+  floors, variant tables), evaluated by the crate's `tests/contract.rs` on the rendered markup
 - The same `data-slot`, `data-portal` and variant values as the `.tsx`, asserted by the same
   suite; a deliberate divergence is asserted from both sides
 - `prefers_reduced_motion: bool` as a prop where the `.tsx` reads the harness's motion
