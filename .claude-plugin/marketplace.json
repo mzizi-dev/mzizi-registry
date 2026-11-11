@@ -12,7 +12,7 @@
     {
       "name": "mzizi",
       "source": "./plugin",
-      "description": "The twelve Mzizi agent skills (@nyuchi/mzizi-skills 0.18.0, with mukoko-design), /mzizi:component and /mzizi:scaffold, the fundi agent, the Mzizi house-rules hooks, and the Mzizi MCP at mcp.mzizi.dev, free with no account."
+      "description": "The twelve Mzizi agent skills (@nyuchi/mzizi-skills 0.19.0, with mukoko-design), /mzizi:component and /mzizi:scaffold, the fundi agent, the Mzizi house-rules hooks, and the Mzizi MCP at mcp.mzizi.dev, free with no account."
     }
   ]
 }

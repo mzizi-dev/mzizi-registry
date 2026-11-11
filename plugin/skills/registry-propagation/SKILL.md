@@ -1,6 +1,6 @@
 ---
 name: registry-propagation
-description: Use this skill when a change in mzizi-registry has to reach the products that read it, or when someone asks whether a registry change is live. It maps the chain: a registry release on main, then the pins on staging (mzizi-api scripts/registry-ref.json with build:data, parity and PIN_ entries in EXPECTED; mzizi-mcp registry.pin.json; @bundu/ui scripts/registry-ref.json with registry:sync, registry:check and contracts:check), docs (check-freshness.mjs), the site (builds from the API, so verify-rendered.py counts move), and the skills (agent-tools mzizi-skills, then the registry's skills:generate and plugin:skills). It gives the rules (pin a released registry main commit, bots open PRs against staging, parity non-strict into staging and strict into main), the order, what each product shows once live, and a live alignment table to fill with commands. Releasing each repo uses ship-release.
+description: Use this skill when a change in mzizi-registry has to reach the products that read it, or when someone asks whether a registry change is live. It maps the chain: a registry release on main, then the pins on staging (mzizi-api scripts/registry-ref.json with build:data, parity and PIN_ entries in EXPECTED; mzizi-mcp registry.pin.json; @bundu/ui scripts/registry-ref.json with registry:sync, registry:check and contracts:check), docs (check-freshness.mjs), the site (builds from the API, so verify-rendered.py counts move), and the skills (agent-tools mzizi-skills, then the registry's skills:generate and plugin:skills). It gives the rules (pin a released registry main commit, pins are bumped by PR into staging, parity non-strict into staging and strict into main), the order, what each product shows once live, and a live alignment table to fill with commands. Releasing each repo uses ship-release.
 ---
 
 # Registry propagation: from a registry release to every product, proven live
@@ -36,15 +36,18 @@ Each arrow is a PR on `staging` of the receiving repo, then a release of that re
 - **Pin a registry `main` commit that is released.** A pin is a full commit SHA. Read the
   latest release tag and the commit it points at; do not pin a branch tip that is not released,
   and do not pin a commit from a PR branch.
-- **Pin bots open PRs against `staging`**, not `main`, where the repo has moved them (mzizi-api
-  api#120 merged; the agent-tools workflow sets `PIN_BASE_BRANCH: staging` from the release that
-  carries it). Older copies of a repo's guide may still say `main`: read the base branch of the
-  bot's PR and `PIN_BASE_BRANCH` in its workflow, and report where the bump actually landed. Do not push to `bot/registry-pin`
-  unless you take the bump over (then it is yours, with a CHANGELOG entry).
-- **Parity is non-strict on PRs into `staging`** (the recorded `EXPECTED` differences are
-  honoured) and **strict on PRs into `main`** (`EXPECTED` is ignored, so every difference is
-  unexplained). A bump that passes on `staging` can still fail the release PR: prune or fix
-  `EXPECTED` before releasing, never edit the check to pass.
+- **In agent-tools the pin is moved by hand, in a PR into `staging`; there is no pin bot.** The
+  owner removed it on 4 November 2026 (steps in `mzizi-mcp/README.md`). Other repos may still
+  run one: read the repo's `AGENTS.md` and workflows on the branch you act on, read the base
+  branch of any bump PR, and report where the bump actually landed. A bump merged only on `main`
+  is a commit `staging` lacks and trips the main gate at the next release.
+- **Parity in mzizi-api is non-strict on PRs and merge queues into `staging`** (the recorded
+  `EXPECTED` differences are honoured, because `staging` is ahead of production; #126) and
+  **strict on PRs into `main`** (`EXPECTED` is ignored, so every difference is unexplained;
+  a PR that edits `scripts/parity.mjs` is also non-strict). Until a release carries #120 and #126
+  to `main`, `main`'s own workflow runs parity only on PRs into `main`. A bump that passes on
+  `staging` can still fail the release PR: prune or fix `EXPECTED` before releasing, never edit the
+  check to pass.
 - **Never skip a gate to land a pin.** A pin that fails a gate means a handler, a count or a
   contract moved: fix that, or stop and report.
 - **Pin first, then release, then verify.** Report a product as live only when the table below
@@ -157,7 +160,6 @@ is the proof that API deploy finished.
   `packages/bundu-ui` components, the plugin's `skills/`) by hand: change the source or the pin.
 - Do not loosen parity, a count or a contract check to pass; fix the cause or stop.
 - Do not claim a product is live from a merged PR. Read the header, the catalogue or npm.
-- Do not push to a pin bot's branch unless you are taking the bump over.
 
 ## Checklist
 
