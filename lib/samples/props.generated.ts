@@ -12197,6 +12197,152 @@ export const COMPONENT_PROPS: Record<string, PropInfo[]> = {
       "required": false
     }
   ],
+  "react-avatar": [
+    {
+      "name": "src",
+      "type": "string",
+      "required": false
+    },
+    {
+      "name": "alt",
+      "type": "string",
+      "required": false
+    },
+    {
+      "name": "fallback",
+      "type": "string",
+      "required": false
+    }
+  ],
+  "react-button": [
+    {
+      "name": "href",
+      "type": "string",
+      "required": false
+    },
+    {
+      "name": "external",
+      "type": "boolean",
+      "required": false
+    },
+    {
+      "name": "arrow",
+      "type": "boolean",
+      "required": false
+    },
+    {
+      "name": "type",
+      "type": "\"button\" | \"submit\" | \"reset\"",
+      "required": false
+    },
+    {
+      "name": "disabled",
+      "type": "boolean",
+      "required": false
+    }
+  ],
+  "react-card": [
+    {
+      "name": "href",
+      "type": "string",
+      "required": false
+    },
+    {
+      "name": "external",
+      "type": "boolean",
+      "required": false
+    }
+  ],
+  "react-label": [
+    {
+      "name": "for",
+      "type": "string",
+      "required": false
+    }
+  ],
+  "react-separator": [
+    {
+      "name": "orientation",
+      "type": "\"horizontal\" | \"vertical\"",
+      "required": false
+    },
+    {
+      "name": "decorative",
+      "type": "boolean",
+      "required": false
+    }
+  ],
+  "react-switch": [
+    {
+      "name": "checked",
+      "type": "boolean",
+      "required": false
+    },
+    {
+      "name": "defaultChecked",
+      "type": "boolean",
+      "required": false
+    },
+    {
+      "name": "onCheckedChange",
+      "type": "(checked: boolean) => void",
+      "required": false
+    },
+    {
+      "name": "disabled",
+      "type": "boolean",
+      "required": false
+    },
+    {
+      "name": "id",
+      "type": "string",
+      "required": false
+    },
+    {
+      "name": "name",
+      "type": "string",
+      "required": false
+    },
+    {
+      "name": "value",
+      "type": "string",
+      "required": false
+    }
+  ],
+  "react-tabs": [
+    {
+      "name": "value",
+      "type": "string",
+      "required": false
+    },
+    {
+      "name": "defaultValue",
+      "type": "string",
+      "required": false
+    },
+    {
+      "name": "onValueChange",
+      "type": "(value: string) => void",
+      "required": false
+    },
+    {
+      "name": "id",
+      "type": "string",
+      "required": false
+    }
+  ],
+  "react-tooltip": [
+    {
+      "name": "content",
+      "type": "React.ReactNode",
+      "required": true
+    },
+    {
+      "name": "side",
+      "type": "\"top\" | \"bottom\" | \"left\" | \"right\"",
+      "required": false
+    }
+  ],
   "reaction-picker": [
     {
       "name": "reactions",
