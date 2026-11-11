@@ -90,7 +90,7 @@ site generates its OG images **at build time**:
    hematite, a Heritage tone; see the constellation in `mzizi-design`).
 
 Keep the site's runtime dependency-light; satori and sharp are build-only. If the site renders
-Mzizi Roots components, they arrive as static HTML from `dioxus-ssr` and change nothing here.
+Mzizi Roots components, they arrive as static HTML and change nothing here.
 
 **Docs on Mintlify** (docs.mzizi.dev) get their preview images from Mintlify. Check them with a
 scraper like any other surface; do not hand-wire `og:image` there.
