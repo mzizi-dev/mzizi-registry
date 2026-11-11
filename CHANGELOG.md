@@ -10,6 +10,24 @@ From 2026-10-04 releases follow the org versioning policy ([nyuchi/.github#80](h
 
 ## [Unreleased]
 
+## [4.29.0] - 2026-11-11
+
+Releases `staging` to `main` as the next minor above v4.28.0 ([nyuchi/.github#80](https://github.com/nyuchi/.github/issues/80)). `package.json`, `README.md` and `content/changelog/releases.json` (and `lib/changelog.generated.ts`) carry 4.29.0. The registry takes `@nyuchi/mzizi-skills` 0.19.0 and the Claude Code plugin is 1.8.0; `/v1/skills` and `mzizi_get_skills` serve 0.19.0 once the `mzizi-api` and `mzizi-mcp` pins move to this release ([#645](https://github.com/mzizi-dev/mzizi-registry/pull/645)).
+
+### Changed — take @nyuchi/mzizi-skills 0.19.0 (12 skills), plugin 1.8.0 (2026-11-11)
+
+No issue: freshness update; no new skill. `@nyuchi/mzizi-skills` 0.19.0 corrects facts in the release skills and in two language and component skills: `ship-release` and `pr-gates` give the CHANGELOG heading per repo, the real merge-queue methods (staging SQUASH, main MERGE) and `gh pr merge N --squash --auto` as the convention with the REST route as the fallback; `registry-propagation` says where mzizi-api's pin bot and parity change has and has not reached `main`; `verify-live.sh` reads past the first 100 releases and prints its whole `--help`; `mzizi-language`'s badge example keeps the spacing floor; `mzizi-roots` separates the 48px drawn height from the 49px hit-region floor.
+
+- **Changed, `package.json` and `pnpm-lock.yaml`:** the floor is `>=0.19.0` and the lockfile resolves 0.19.0 (was 0.18.0).
+- **Changed, generated:** `lib/skills.generated.ts` (12 skills, v0.19.0) from `pnpm skills:generate`, and `plugin/skills/` (12 skills, 37 files) from `pnpm plugin:skills`. No generated file is edited by hand.
+- **Changed, plugin:** `plugin/.claude-plugin/plugin.json` is 1.8.0 (was 1.7.0); it and `.claude-plugin/marketplace.json` name 0.19.0.
+- **Changed, release records:** this branch also brings staging's `package.json`, `README.md`, `content/changelog/releases.json`, `lib/changelog.generated.ts` and `CHANGELOG.md` up to `main` at 4.28.0 (as #637 and #639 did for 4.26.0 and 4.27.0), and moves the `react-*` entry from Unreleased into the 4.28.0 section.
+- **Site/docs/skills impact:** `/v1/skills` and `mzizi_get_skills` on the API serve 0.19.0 (they serve 0.18.0 now) once a registry release reaches `main` and the `mzizi-api` pin moves; docs pages that say the API and the plugin carry 0.18.0 then go stale.
+
+## [4.28.0] - 2026-11-11
+
+Releases `staging` to `main` as the next minor above v4.27.0 ([nyuchi/.github#80](https://github.com/nyuchi/.github/issues/80)). `package.json`, `README.md` and `content/changelog/releases.json` (and `lib/changelog.generated.ts`) carry 4.28.0. The fifteen `@bundu/ui` React primitives are now registry items, `react-*` ([#640](https://github.com/mzizi-dev/mzizi-registry/pull/640)); `registry.json` goes from 675 to 690 items. Workflow action pins are bumped.
+
 ### Added — fifteen `react-*` primitives: the React builds `@bundu/ui` ships as `@bundu/ui/ui/*` now come from the registry (2026-11-07, [#640](https://github.com/mzizi-dev/mzizi-registry/pull/640))
 
 Owner decision, 2026-11-07 ("Yes go head with all the recommendations of the open decisions"; upstream first): the 15 hand-written React primitives in `@bundu/ui` (`mzizi-dev/packages-npm`, `packages/bundu-ui/src/ui/`) move into this registry, with the package's exports unchanged. The registry already had a shadcn item of every one of those names, and none of them is the same component (Radix `select` against a native `<select>`, `card` with `CardHeader` against a `Card` that becomes a link, `button` with `asChild` against `Button` with `href`, `arrow` and `external`). Replacing them would break every `npx shadcn add .../v1/ui/<name>` consumer and the `.rs` siblings checked against them, so the package's builds are **new items, `react-<name>`**; the existing items are untouched.
@@ -19,10 +37,6 @@ Owner decision, 2026-11-07 ("Yes go head with all the recommendations of the ope
 - **Not added:** a contract per item. A contract needs an Astro build or `astro: null`, and `@bundu/ui`'s contract test requires an `.astro` for every contract in the index; the contracts follow once the owner decides whether these become the `.tsx` of `ui/<name>`. They are held by the spacing-floor ratchet (`__tests__/spacing-floor.test.ts`) and `registry:validate` meanwhile.
 - **Counts:** `registry.json` 675 to 690 items (`registry:ui` 488 to 503). `README.md`'s count is updated.
 - **Site/docs/skills impact:** `/v1/ui` gains 15 components (`react-*`), so the component total on mzizi.dev and docs.mzizi.dev moves by 15 after the API's pin moves, and the rendered-content gate's expected totals with it.
-
-## [4.28.0] - 2026-11-11
-
-Releases `staging` to `main` as the next minor above v4.27.0 ([nyuchi/.github#80](https://github.com/nyuchi/.github/issues/80)). `package.json`, `README.md` and `content/changelog/releases.json` (and `lib/changelog.generated.ts`) carry 4.28.0. The fifteen `@bundu/ui` React primitives are now registry items, `react-*` ([#640](https://github.com/mzizi-dev/mzizi-registry/pull/640)); `registry.json` goes from 675 to 690 items. Workflow action pins are bumped.
 
 ## [4.27.0] - 2026-11-05
 

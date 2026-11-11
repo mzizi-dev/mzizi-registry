@@ -223,11 +223,11 @@ ready"; say it is designed to lower to Rust, and that only a service does so tod
   checked until modules exist.
 
 **Results, as they fell.** The first two Phase 0 pilots ran on 2026-09-27 and neither showed an
-advantage for Mzizi (two more ran on 2026-10-29, also with no advantage). On the frontier model the Mzizi and Dioxus arms tied, with Mzizi about 8%
+advantage for Mzizi (two more ran on 2026-10-29, also with no advantage). On the frontier model the Mzizi arm and the Rust UI-framework arm tied, with Mzizi about 8%
 fewer transcript tokens. On the ~7B open-weight model, the design target, Mzizi did worse on
 all three metrics. Neither pilot is the kill-criterion run (RFC-0009 §6), and that run has not
 happened. The pilots were tests inside Phase 0 on a few registry UI components against
-Dioxus, not its goal. "Designed for agents" and "aims to replace TypeScript, Python and C++"
+a Rust UI framework, not its goal. "Designed for agents" and "aims to replace TypeScript, Python and C++"
 are accurate; "faster" or "better" is not.
 
 ## Getting `mz`
@@ -352,10 +352,15 @@ One file holds one component, or one service (see "Services" below). There is on
 intent: if a construct is not shown here or in the RFCs, assume it does not exist. The order
 inside a component is doc lines, `use`, `enum` and `record`, `prop`, `view`, `fn`, `contract`.
 
-A complete primitive, `primitives/badge.mz`. Its `px-2 py-0.5` and `gap-1` are the corpus
-badge's, copied unchanged, and are below the spacing floor (14px inset, 7px gaps, 1.5 leading;
-the `mzizi-design` skill), so they are not a model for new code: a component you write keeps
-the floor, or carries a `mzizi-spacing-exempt: <reason>` comment:
+A complete primitive, after `components/registry/n2-primitives/badge.mz` in mzizi-registry (the
+`.mz` syntax and the `contract` are that file's, unchanged). The `class` string is **not** that
+file's: the registry's `badge.mz` still carries the older `h-5`, `px-2 py-0.5` and `gap-1`
+(checked on registry `main` and `staging`, 4 November 2026), which are under the spacing floor
+(14px inset, 7px gaps, 1.5 leading; the `mzizi-design` skill). Here the class uses the floor-clean
+values of the registry's `badge.tsx` on `main` (`h-6`, `gap-2`, `px-3.5`; `py-0.5` is unchanged from
+that file, and the registry holds a chip's block axis by its height), so the example is a model for new code. Do not copy the
+registry's `badge.mz` classes; a component you write keeps the floor, or carries a
+`mzizi-spacing-exempt: <reason>` comment:
 
 ```mz
 ## A small status label. Not interactive, so no touch floor applies.
@@ -379,7 +384,7 @@ component badge
       slot = "badge"
       portal = "https://mzizi.dev/components/badge"
       variant = variant
-      class = "inline-flex h-5 w-fit shrink-0 items-center justify-center gap-1 overflow-hidden rounded-md border border-transparent px-2 py-0.5 text-xs font-medium whitespace-nowrap transition-all {variant.class}"
+      class = "inline-flex h-6 w-fit shrink-0 items-center justify-center gap-2 overflow-hidden rounded-md border border-transparent px-3.5 py-0.5 text-xs font-medium whitespace-nowrap transition-all {variant.class}"
       text = label
     end
   end
