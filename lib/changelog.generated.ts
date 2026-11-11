@@ -16,6 +16,38 @@ import type { ChangelogRow } from "@/lib/db/types";
 
 export const CHANGELOG_RELEASES: readonly ChangelogRow[] = [
   {
+    version: "4.28.0",
+    title:
+      "v4.28.0 — the fifteen @bundu/ui React primitives are registry items (react-*)",
+    description:
+      "Releases staging to main as the next minor above v4.27.0 (nyuchi/.github#80). Added: 15 registry:ui items, react-alert, react-avatar, react-badge, react-button, react-card, react-checkbox, react-input, react-label, react-select, react-separator, react-skeleton, react-switch, react-tabs, react-textarea and react-tooltip, the React builds @bundu/ui ships as @bundu/ui/ui/*; registry.json 675 to 690 items (registry:ui 488 to 503). Existing shadcn items of the same names are untouched (#640). CHANGELOG.md section [4.28.0] is the narrative.",
+    line: "public",
+    line_rank: 1,
+    major: 4,
+    minor: 28,
+    patch: 0,
+    release_kind: "minor",
+    breaking: false,
+    released_at: "2026-11-11T12:00:00.000+00:00",
+    created_at: "2026-11-11T12:00:00.000+00:00",
+    nodes_affected: null,
+    components_added: null,
+    components_modified: null,
+    components_deprecated: null,
+    components_removed: null,
+    components_touched: null,
+    tools_added: null,
+    tools_modified: null,
+    tools_deprecated: null,
+    tools_removed: null,
+    linked_issues: null,
+    total_stable: null,
+    total_deprecated: null,
+    total_alpha: null,
+    changed_by: "claude-code",
+    entry_order: 0,
+  },
+  {
     version: "4.27.0",
     title:
       "v4.27.0 — mineral text uses the -text token, Dioxus out of live prose, seven controls at the 14px inline inset",
