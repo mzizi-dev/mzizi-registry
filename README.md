@@ -29,7 +29,7 @@ source of truth checked from both directions.
 npx shadcn@latest add https://api.mzizi.dev/v1/ui/button
 ```
 
-**675 registry items** (`registry.json`: 488 `registry:ui`, 105 `registry:block` and 82 libraries, hooks and other items) across 8 architectural nodes and 4 rungs, served from disk —
+**690 registry items** (`registry.json`: 503 `registry:ui`, 105 `registry:block` and 82 libraries, hooks and other items) across 8 architectural nodes and 4 rungs, served from disk —
 `registry.json` and the component files in this repo are the source of truth, not a
 database. **21 colour families.** **One MCP server** (served from `mzizi-dev/agent-tools`) any AI
 client can install against.
