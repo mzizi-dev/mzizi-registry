@@ -6,13 +6,18 @@
     "url": "https://mzizi.dev"
   },
   "metadata": {
-    "description": "The public Mzizi Claude Code marketplace: one plugin, `mzizi`, carrying the Mzizi agent skills and the Mzizi MCP."
+    "description": "The public Mzizi Claude Code marketplace: `mzizi`, the Mzizi agent skills and the Mzizi MCP (Markdown and an MCP connection only), and `mzizi-dev`, the dev workflow skills, their scripts and the house-rules hooks."
   },
   "plugins": [
     {
       "name": "mzizi",
       "source": "./plugin",
-      "description": "The twelve Mzizi agent skills (@nyuchi/mzizi-skills 0.19.0, with mukoko-design), /mzizi:component and /mzizi:scaffold, the fundi agent, the Mzizi house-rules hooks, and the Mzizi MCP at mcp.mzizi.dev, free with no account."
+      "description": "Seven Mzizi agent skills (@nyuchi/mzizi-skills 0.20.0, with mukoko-design), /mzizi:component and /mzizi:scaffold, the fundi agent, and the Mzizi MCP at mcp.mzizi.dev, free with no account. Markdown and an MCP connection only."
+    },
+    {
+      "name": "mzizi-dev",
+      "source": "./plugin-dev",
+      "description": "Mzizi's dev workflow: digital-hygiene, progress-report, ship-release, registry-propagation and pr-gates, with their shell scripts, and the Mzizi house-rules hooks."
     }
   ]
 }

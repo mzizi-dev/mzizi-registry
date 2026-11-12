@@ -1,6 +1,6 @@
 ---
 name: progress-report
-description: Use this skill whenever dev work starts, in any repo. All dev work runs on a 10-minute progress-report loop. When work starts, schedule a recurring report every 10 minutes (`/loop 10m` or CronCreate `*/10 * * * *`; the cron dies with the session; without cron, report at each checkpoint). Measure, don't guess: each report has 20-cell progress bars with a percentage and a one-line basis (plan steps, features, code migrated as lines, and an Overall bar labelled estimate when not exact) and per workstream open PRs, latest release, staging ahead of main, CI, and a live HTTP check for deployed sites. It ends with one 'Since last report:' line and a final 'Needs you:' line. A "what's blocking / what's live" status gives each product one line: live value, what waits, who acts. When nothing changed, report a single line. Ticks are read-only: never publish, release, merge, delete or deploy from a tick unless the owner approved that exact action. No secrets or PII. Ships progress.sh (bar, pct, repo, lines, http).
+description: "Use this skill whenever dev work starts, in any repo. All dev work runs on a 10-minute progress-report loop. When work starts, schedule a recurring report every 10 minutes (`/loop 10m` or CronCreate `*/10 * * * *`; the cron dies with the session; without cron, report at each checkpoint). Measure, don't guess: each report has 20-cell progress bars with a percentage and a one-line basis (plan steps, features, code migrated as lines, and an Overall bar labelled estimate when not exact) and per workstream open PRs, latest release, staging ahead of main, CI, and a live HTTP check for deployed sites. It ends with one 'Since last report:' line and a final 'Needs you:' line. A \"what's blocking / what's live\" status gives each product one line: live value, what waits, who acts. When nothing changed, report a single line. Ticks are read-only: never publish, release, merge, delete or deploy from a tick unless the owner approved that exact action. No secrets or PII. Ships progress.sh (bar, pct, repo, lines, http)."
 ---
 
 # Progress report: measured, every ten minutes
@@ -20,11 +20,11 @@ blocking / what's live" status**, **the rules for a tick**, and **stopping**. Th
 `progress.sh` is portable bash (3.2+) for macOS and Linux. It is **read-only**: it reads git,
 the GitHub API (through `gh`) and HTTP status codes, and never writes anything.
 
-| Where you are                   | Path                                                                                                                    |
-| ------------------------------- | ----------------------------------------------------------------------------------------------------------------------- |
-| `@nyuchi/mzizi-skills` from npm | `node_modules/@nyuchi/mzizi-skills/skills/progress-report/progress.sh`                                                  |
-| The public `mzizi` plugin       | `skills/progress-report/progress.sh` in the plugin                                                                      |
-| Only the MCP                    | `curl -fsSL https://unpkg.com/@nyuchi/mzizi-skills/skills/progress-report/progress.sh -o "${TMPDIR:-/tmp}/progress.sh"` |
+| Where you are                   | Path                                                                                       |
+| ------------------------------- | ------------------------------------------------------------------------------------------ |
+| `@nyuchi/mzizi-skills` from npm | `node_modules/@nyuchi/mzizi-skills/skills/progress-report/progress.sh`                     |
+| The `mzizi-dev` plugin          | `skills/progress-report/progress.sh` in the plugin                                         |
+| Only the MCP                    | Install the package, then use the first path: `npm install --no-save @nyuchi/mzizi-skills` |
 
 ```bash
 P="${TMPDIR:-/tmp}/progress.sh"   # or one of the paths above
