@@ -10,6 +10,22 @@ From 2026-10-04 releases follow the org versioning policy ([nyuchi/.github#80](h
 
 ## [Unreleased]
 
+## [4.35.0] - 2026-11-12
+
+Releases `staging` to `main` as the next minor above v4.34.0 ([nyuchi/.github#80](https://github.com/nyuchi/.github/issues/80)). `package.json`, `README.md` and `content/changelog/releases.json` (and `lib/changelog.generated.ts`) are bumped to 4.35.0.
+
+### Added — `mzizi-ui` render path with no Dioxus for `alert`, `card` and `markdown-renderer`, byte-identical to `dioxus-ssr` (2026-10-20, #511)
+
+- `alert` (with its title, description and action parts), `card` (with its seven slots and the loading skeleton) and `markdown-renderer` gain `RenderProps` and `render(&RenderProps) -> String`, beside their Dioxus components, which are unchanged. The second batch of `docs/roots/RFC-roots-renderer.md` §5; button, input, label and avatar wait for PR 2 and the RFC's `attach` path.
+- Their children are HTML the caller has already rendered, written as they are. A caller passes escaped text; `render` does not escape children.
+- Checked by `mzizi-ui/tests/render_parity.rs`, which now has 71 cases, each compared byte-for-byte with `dioxus-ssr`. The alert, card and markdown contract states are read from `contracts/ui/`; the rest are undeclared cases. 31 goldens are committed under `mzizi-ui/tests/goldens/`, captured from `dioxus-ssr`.
+- Follows `markdown-renderer` 1.2.x from staging: `render` writes each link's `title` (the address shown on hover) in the same attribute order as the Dioxus component, and an item's children may be lines after a nested list (`ListChild`), both byte-identical to `dioxus-ssr`; the contract's new `titles` state is a parity case.
+- Public API: the new `RenderProps` and `render` items, plus the part and slot functions, in `alert` and `card`. Additive, unreleased; nothing is published or version-bumped.
+
+### Changed — the agent guide states the owner's release rule (2026-11-12, [mzizi-dev/mzizi-registry#661](https://github.com/mzizi-dev/mzizi-registry/issues/661))
+
+- `AGENTS.md` state the owner's release rule: the owner approves major releases only; minor and patch releases (the `staging` → `main` release PR, its tag and the sync-back into `staging`) and merges of green PRs that have passed review are done by agents following the repo's playbook, without asking the owner (owner, 2026-11-02). The "Releases" bullet and the progress-report line (report ticks never publish, release, merge or deploy without the owner's approval) now state it. Merge method, the merge gate, auto-merge and the changelog rules are unchanged. Nothing served or published changes.
+
 ## [4.34.0] - 2026-11-12
 
 Releases `staging` to `main` as the next minor above v4.33.0 ([nyuchi/.github#80](https://github.com/nyuchi/.github/issues/80)). `package.json`, `README.md` and `content/changelog/releases.json` (and `lib/changelog.generated.ts`) are bumped to 4.34.0.
