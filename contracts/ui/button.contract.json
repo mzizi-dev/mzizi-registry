@@ -75,7 +75,7 @@
   ],
   "behaviour": [
     "data-variant and data-size carry the variant and size.",
-    "Never below a 49px hit region on any pointer, desktop included: below 49px drawn, the token layer's `hit-area` pseudo-element keeps it, and a button is never drawn under 28px."
+    "Never below the Bundu hit region: 49px on touch, 28px on a desktop with a fine pointer. Below 49px drawn on touch, the token layer's `hit-area` pseudo-element keeps it, and a button is never drawn under 28px."
   ],
   "states": {
     "default": {

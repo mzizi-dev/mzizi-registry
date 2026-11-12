@@ -89,7 +89,7 @@ IMPLEMENTATION RULES
 8. All status colors use semantic tokens (--status-success, --status-error, etc).
 9. Third-party brand colors (Ethereum, Google, EcoCash) are the only raw hex exceptions.
 10. Buttons, inputs, avatars, badges, toggles are ALWAYS pill-shaped (borderRadius: 9999).
-11. The Bundu floor (owner ruling 2026-11-02): every interactive control keeps a 49px hit region on every device, desktop included (a desktop control may be drawn at 28-40px; the token layer's `hit-area` rule keeps the 49px). Use the size roles (`h-control`, `h-field`, `min-h-touch-min`), never `h-12` or `h-14`. Body text is 17px and captions and secondary labels 14px on every device; nothing readable is smaller.
+11. The Bundu floor has two pointer tiers (owner rulings 2026-11-02 and 2026-11-12, #660). Touch: every interactive control keeps a 49px hit region and body text is 17px. Desktop (a fine pointer with hover): a 28px hit region, controls drawn at 28-40px (native fields 36px and 32px), body 15px and body-large 17px. Captions and secondary labels are 14px on every device; nothing readable is smaller. Use the size roles (`h-control`, `h-field`, `min-h-touch-min`), never `h-12` or `h-14`.
 12. Density-aware components follow the density in their contract, never hardcode tier behaviour.
 13. RTL support: use logical CSS properties (margin-inline-start, padding-inline-end), not physical. rtl-conformity-check N8 validates this at runtime.
 14. Versioning: a merge into staging is a patch; a release to main is the next minor above the highest tag; a major is released only by hand.

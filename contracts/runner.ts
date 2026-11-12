@@ -192,24 +192,27 @@ export function heightOf(classes: string, prefix = ""): number | null {
 export const ROLE_HEIGHTS: Readonly<Record<string, readonly [number, number]>> =
   {
     touch: [49, 36],
-    "touch-min": [49, 49],
+    "touch-min": [49, 28],
     control: [49, 36],
     "control-sm": [49, 32],
     "control-lg": [56, 40],
     "control-icon": [49, 36],
     "control-dense": [32, 28],
-    field: [49, 49],
-    "field-sm": [49, 49],
+    field: [49, 36],
+    "field-sm": [49, 32],
   };
 
 /**
  * THE BUNDU FLOOR, as the runner holds it (owner ruling 2026-11-02): a copy of `BUNDU_FLOOR` in
  * `lib/tokens/roles.source.ts`, kept here so this file stays free of imports; `__tests__/density.test.ts`
  * fails when the two disagree, and mzizi-rs/contract-eval holds the same numbers.
- * `HIT_AREA_PX` is the hit region every interactive control keeps on every device, desktop included;
- * `VISIBLE_FINE_MIN_PX` is the smallest a control is DRAWN at desktop density.
+ * The floor has two pointer tiers (owner ruling 2026-11-12, #660): `HIT_AREA_PX` is the hit region every
+ * interactive control keeps on touch (a coarse pointer); `HIT_AREA_FINE_PX` is the one it keeps on a desktop (a
+ * fine pointer with hover), where the drawn box is the hit region; `VISIBLE_FINE_MIN_PX` is the smallest a control
+ * is DRAWN at desktop density (equal to `HIT_AREA_FINE_PX`).
  */
 export const HIT_AREA_PX = 49;
+export const HIT_AREA_FINE_PX = 28;
 export const VISIBLE_FINE_MIN_PX = 28;
 
 /**
@@ -262,16 +265,20 @@ export function isInteractive(el: Element): boolean {
 }
 
 /**
- * The hit region, in px, an interactive control has at one pointer. It is the drawn height, raised to
- * HIT_AREA_PX only where the token layer's rule provably does it: a button-like control with no `after:` utility
+ * The hit region, in px, an interactive control has at one pointer. It is the drawn height, raised to `floor`
+ * (HIT_AREA_PX on touch, HIT_AREA_FINE_PX on a desktop) only where the token layer's rule provably does it: a button-like control with no `after:` utility
  * of its own and no overflow clipping (the pseudo-element), or a composite row with no `min-h-*` of its own
  * (`min-height`). The runner cannot see static positioning or a page without the stylesheet, so it assumes the
  * stylesheet is there; everything else is the drawn box.
  */
-export function hitRegion(el: Element, drawn: number): number {
+export function hitRegion(
+  el: Element,
+  drawn: number,
+  floor: number = HIT_AREA_PX,
+): number {
   if (isCompositeRow(el))
-    return ownMinHeight(el) ? drawn : Math.max(drawn, HIT_AREA_PX);
-  if (carriesHitArea(el) && !clips(el)) return Math.max(drawn, HIT_AREA_PX);
+    return ownMinHeight(el) ? drawn : Math.max(drawn, floor);
+  if (carriesHitArea(el) && !clips(el)) return Math.max(drawn, floor);
   return drawn;
 }
 
@@ -288,9 +295,9 @@ export function hitViolations(
   if (fine === null || !isInteractive(el)) return [];
   const at = coarse ?? fine;
   const under: string[] = [];
-  if (hitRegion(el, fine) < HIT_AREA_PX)
+  if (hitRegion(el, fine, HIT_AREA_FINE_PX) < HIT_AREA_FINE_PX)
     under.push(
-      `hit region is ${hitRegion(el, fine)}px on a fine pointer, below the ${HIT_AREA_PX}px Bundu floor`,
+      `hit region is ${hitRegion(el, fine, HIT_AREA_FINE_PX)}px on a fine pointer, below the ${HIT_AREA_FINE_PX}px Bundu floor`,
     );
   if (hitRegion(el, at) < HIT_AREA_PX)
     under.push(
@@ -685,10 +692,10 @@ export function evaluateDensity(
         failures.push(
           `density ${row.part}: coarse pointer is ${coarse}px, the contract says ${row.coarse}`,
         );
-      // The Bundu floor (owner ruling 2026-11-02): every interactive control keeps a HIT_AREA_PX hit
-      // region on every device, desktop included. A button-like control keeps it through the
-      // `hit-area` pseudo-element and may be drawn down to VISIBLE_FINE_MIN_PX; a native field or a
-      // link has only its box, so it is drawn at the floor.
+      // The Bundu floor (owner rulings 2026-11-02 and 2026-11-12, #660): every interactive control keeps a
+      // HIT_AREA_PX hit region on touch and a HIT_AREA_FINE_PX one on a desktop. A button-like control keeps
+      // it through the `hit-area` pseudo-element; a native field or a link has only its box, so it is drawn
+      // at the tier's floor (a desktop box is never drawn under VISIBLE_FINE_MIN_PX, which is that floor).
       const gap = HIT_AREA_GAPS.includes(`${contract.name}:${row.part}`);
       if (!gap)
         for (const u of hitViolations(el, fine, coarse))
@@ -758,11 +765,21 @@ const GAP_KINDS = new Set(["gap", "gap-x", "gap-y", "space-x", "space-y"]);
 const INLINE_PADDING = new Set(["p", "px", "pl", "pr", "ps", "pe"]);
 const BLOCK_PADDING = new Set(["p", "py", "pt", "pb"]);
 /** Body copy: the elements WCAG 1.4.12 line height applies to here. Headings and display type are not. */
-const BODY_COPY = new Set(["p", "li", "dd", "blockquote", "figcaption", "td", "th"]);
+const BODY_COPY = new Set([
+  "p",
+  "li",
+  "dd",
+  "blockquote",
+  "figcaption",
+  "td",
+  "th",
+]);
 
 /** Whether an element has text of its own, directly in it: a text container, in the sense of the inset floor. */
 function ownText(el: Element): boolean {
-  return el.children.some((c) => c.type === "text" && /\S/.test(textContent(c)));
+  return el.children.some(
+    (c) => c.type === "text" && /\S/.test(textContent(c)),
+  );
 }
 
 /** Whether an element draws an edge of its own: a fill, a border, a ring, a shadow or an outline. Padding is the inset from that edge. */
@@ -780,13 +797,28 @@ function fixesHeight(tokens: string[]): boolean {
 }
 
 /** Inline tags: their box is a run of text, so its line height, not block padding, decides the block axis. */
-const INLINE_TAGS = new Set(["span", "code", "kbd", "mark", "small", "a", "abbr", "b", "i", "em", "strong", "label"]);
+const INLINE_TAGS = new Set([
+  "span",
+  "code",
+  "kbd",
+  "mark",
+  "small",
+  "a",
+  "abbr",
+  "b",
+  "i",
+  "em",
+  "strong",
+  "label",
+]);
 /** Whether an element is inline-level or a pill: a chip, a tag, a badge, an eyebrow. */
 function inlineLevel(el: Element, tokens: string[]): boolean {
   return (
     INLINE_TAGS.has(el.name) ||
     tokens.some((t) =>
-      /^(?:inline|inline-flex|inline-block|inline-grid|w-fit|rounded-full)$/.test(utilityOf(t)),
+      /^(?:inline|inline-flex|inline-block|inline-grid|w-fit|rounded-full)$/.test(
+        utilityOf(t),
+      ),
     )
   );
 }
@@ -819,7 +851,8 @@ export function spacingViolations(el: Element): string[] {
   const tokens = classOf(el).split(/\s+/).filter(Boolean);
   const text = ownText(el);
   const edge = drawsEdge(tokens);
-  const control = isInteractive(el) || fixesHeight(tokens) || inlineLevel(el, tokens);
+  const control =
+    isInteractive(el) || fixesHeight(tokens) || inlineLevel(el, tokens);
   const siblings = hasSiblings(el);
   for (const t of tokens) {
     const u = utilityOf(t);
@@ -827,8 +860,16 @@ export function spacingViolations(el: Element): string[] {
     if (m) {
       const [, neg, kind, v] = m as unknown as [string, string, string, string];
       const px = spaceOf(v);
-      if (GAP_KINDS.has(kind) && !neg && px !== null && px < GAP_FLOOR_PX && siblings)
-        out.push(`\`${t}\` is a ${px}px gap, below the ${GAP_FLOOR_PX}px Bundu spacing floor`);
+      if (
+        GAP_KINDS.has(kind) &&
+        !neg &&
+        px !== null &&
+        px < GAP_FLOOR_PX &&
+        siblings
+      )
+        out.push(
+          `\`${t}\` is a ${px}px gap, below the ${GAP_FLOOR_PX}px Bundu spacing floor`,
+        );
       else if (text && neg && /^m/.test(kind) && px !== null && px > 0)
         out.push(`\`${t}\` is a negative margin on a text container`);
       else if (text && edge && !neg && px !== null) {
@@ -845,9 +886,17 @@ export function spacingViolations(el: Element): string[] {
       const l = /^leading-(none|tight|snug|\[(\d*\.?\d+)\])$/.exec(u);
       if (l) {
         const n =
-          l[1] === "none" ? 1 : l[1] === "tight" ? 1.25 : l[1] === "snug" ? 1.375 : Number(l[2]);
+          l[1] === "none"
+            ? 1
+            : l[1] === "tight"
+              ? 1.25
+              : l[1] === "snug"
+                ? 1.375
+                : Number(l[2]);
         if (n < LEADING_FLOOR)
-          out.push(`\`${t}\` is a ${n} line height on body copy, below the ${LEADING_FLOOR} Bundu floor`);
+          out.push(
+            `\`${t}\` is a ${n} line height on body copy, below the ${LEADING_FLOOR} Bundu floor`,
+          );
       }
     }
   }

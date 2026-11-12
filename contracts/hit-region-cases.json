@@ -1,5 +1,5 @@
 {
-  "$comment": "The Bundu floor's hit-region rules, as cases both evaluators must answer identically: contracts/runner.ts (hitViolations) and mzizi-rs/contract-eval (hit_violations). `fine` and `coarse` are the drawn heights in px (null: the runner could not read one); `violations` is how many sentences each returns. Pinned by __tests__/density.test.ts and mzizi-ui's tests/contracts_json.rs.",
+  "$comment": "The Bundu floor's hit-region rules, as cases both evaluators must answer identically: contracts/runner.ts (hitViolations) and mzizi-rs/contract-eval (hit_violations). The floor has two pointer tiers (owner ruling 2026-11-12, #660): 28px on a desktop (a fine pointer with hover), 49px on touch (a coarse pointer). `fine` and `coarse` are the drawn heights in px (null: the runner could not read one); `violations` is how many sentences each returns. Pinned by __tests__/density.test.ts and mzizi-ui's tests/contracts_json.rs.",
   "cases": [
     {
       "name": "a button drawn at 36px keeps its hit region through the pseudo-element",
@@ -16,10 +16,17 @@
       "violations": 1
     },
     {
-      "name": "a link has only its box",
+      "name": "a link drawn at 36px is its box: enough on a desktop",
       "html": "<a href=\"/\" class=\"h-9\">Home</a>",
       "fine": 36,
       "coarse": 49,
+      "violations": 0
+    },
+    {
+      "name": "a link drawn at 36px on touch has only its box, under 49px",
+      "html": "<a href=\"/\" class=\"h-9\">Home</a>",
+      "fine": 36,
+      "coarse": 36,
       "violations": 1
     },
     {
@@ -30,24 +37,38 @@
       "violations": 0
     },
     {
-      "name": "a native field drawn at 48px fails on both pointers",
+      "name": "a native field drawn at 48px fails on touch only",
       "html": "<input class=\"h-12\">",
       "fine": 48,
       "coarse": 48,
-      "violations": 2
+      "violations": 1
     },
     {
-      "name": "a button with its own after: utility keeps only its box",
-      "html": "<button class=\"h-9 relative after:absolute after:-inset-2\">x</button>",
+      "name": "a native field drawn at 36px on a desktop is fine (28px floor)",
+      "html": "<input class=\"h-field\">",
       "fine": 36,
+      "coarse": 49,
+      "violations": 0
+    },
+    {
+      "name": "a native field drawn at 24px on a desktop is under the 28px floor",
+      "html": "<input class=\"h-6\">",
+      "fine": 24,
       "coarse": 49,
       "violations": 1
     },
     {
-      "name": "a button that clips its overflow keeps only its box",
+      "name": "a button with its own after: utility keeps only its box, which fails on touch",
+      "html": "<button class=\"h-9 relative after:absolute after:-inset-2\">x</button>",
+      "fine": 36,
+      "coarse": 36,
+      "violations": 1
+    },
+    {
+      "name": "a button that clips its overflow keeps only its box, which fails on touch",
       "html": "<button class=\"h-9 overflow-hidden\">x</button>",
       "fine": 36,
-      "coarse": 49,
+      "coarse": 36,
       "violations": 1
     },
     {
@@ -58,10 +79,10 @@
       "violations": 0
     },
     {
-      "name": "a menu row with its own min-h-* is only its box",
+      "name": "a menu row with its own min-h-* is only its box, which fails on touch",
       "html": "<div role=\"menuitem\" class=\"min-h-8\">Edit</div>",
       "fine": 32,
-      "coarse": 49,
+      "coarse": 32,
       "violations": 1
     },
     {
@@ -76,7 +97,7 @@
       "html": "<button data-day=\"1\" class=\"h-9\">1</button>",
       "fine": 36,
       "coarse": 36,
-      "violations": 2
+      "violations": 1
     },
     {
       "name": "a row the runner cannot read is skipped",
