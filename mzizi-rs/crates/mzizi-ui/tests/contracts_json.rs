@@ -556,7 +556,7 @@ fn run_density(name: &str, case: &Case, row: &Value) {
         row["coarse"].as_u64(),
         "{name}: density `{part}` (coarse)"
     );
-    // The Bundu floor: every interactive control keeps a HIT_AREA_PX hit region on every device.
+    // The Bundu floor: every interactive control keeps a HIT_AREA_PX hit region on touch and a HIT_AREA_FINE_PX one on a desktop.
     if !HIT_AREA_GAPS.contains(&format!("{name}:{part}").as_str()) {
         let coarse = coarse_height(classes, fine);
         let under = hit_violations(hit, fine, coarse);
@@ -899,7 +899,8 @@ fn hit_region_cases_match_the_typescript_runner() {
     }
     // A `hit_region` of a covered button is raised to the floor; a link is its drawn box.
     let button = &parse("<button class=\"h-9\">x</button>")[0];
-    assert_eq!(hit_region(button, 36), 49);
+    assert_eq!(hit_region(button, 36, 49), 49);
+    assert_eq!(hit_region(button, 20, 28), 28);
     let link = &parse("<a href=\"/\" class=\"h-9\">x</a>")[0];
-    assert_eq!(hit_region(link, 36), 36);
+    assert_eq!(hit_region(link, 36, 49), 36);
 }
