@@ -2994,28 +2994,214 @@ mod tests {
         assert_eq!(blocks[4], Block::Rule);
     }
 
-    #[test]
-    fn pathological_input_stays_fast() {
-        // Unmatched markers inside a bold run, a line of `[`, a long backtick run, and
-        // rich text full of unclosed tags: each would be quadratic without the scan budget.
-        let inputs = [
-            "*a ".repeat(20_000) + &"[".repeat(20_000) + &"`".repeat(5_000),
-            "**".to_owned() + &"*x ".repeat(32_000) + "y**",
-            "**".to_owned() + &"_x ".repeat(32_000) + "y**",
-            "*".to_owned() + &"**x ".repeat(32_000) + "y*",
-            "[".to_owned() + &"*x ".repeat(32_000) + "](https://x.org)",
-        ];
-        for s in &inputs {
-            let started = std::time::Instant::now();
-            let _ = parse_inlines(s, MarkdownLinks::Safe);
-            assert!(
-                started.elapsed().as_secs() < 2,
-                "took {:?}",
-                started.elapsed()
-            );
-        }
+    /// A named input and the size it is timed from: (what it is, n, the input at a size).
+    type ScalingCase = (&'static str, usize, fn(usize) -> String);
+
+    /// Rounds per size for most checks; the largest inputs take three to stay in the budget.
+    const RUNS: usize = 5;
+
+    /// Linear time measured as scaling, not wall-clock, as `__tests__/helpers/linear-scaling.ts`
+    /// measures it and reports it. The inputs are built once at n and 4n, then timed in `runs`
+    /// rounds with the order of the sizes rotating. The median at 4n may cost at most 2.5 x 2.5
+    /// times the median at n (a quadratic costs 16 times). A busy host gets three attempts; a
+    /// quadratic fails all three. The only absolute number is the budget, 30 s for the whole
+    /// check, checked before each sample with its expected cost. A trip is returned with every
+    /// earlier attempt's violation, never instead of them.
+    fn linear_violations(
+        build: impl Fn(usize) -> String,
+        run: impl Fn(&str),
+        n: usize,
+        runs: usize,
+    ) -> Vec<String> {
+        const LIMIT: f64 = 2.5;
+        const SAMPLE: std::time::Duration = std::time::Duration::from_millis(15);
+        const SLACK_MS: f64 = 1.0;
+        const BUDGET: std::time::Duration = std::time::Duration::from_secs(30);
         let started = std::time::Instant::now();
-        let _ = rich_text_blocks(&"<a <b <p>x<!--".repeat(20_000), MarkdownLinks::Safe);
+        let sizes = [n, 4 * n];
+        let inputs: Vec<String> = sizes.iter().map(|&size| build(size)).collect();
+        let over = |next: std::time::Duration| started.elapsed() + next > BUDGET;
+        let mut failures = Vec::new();
+        'attempts: for attempt in 1..=3 {
+            let hang = |at: String| {
+                format!(
+                    "attempt {attempt}: hang guard: the budget would run out {at} (sizes {sizes:?})"
+                )
+            };
+            // Warm up each size once, smallest first. A run may cost up to the square of the size
+            // ratio times the one before it, so a quadratic stops before its big run.
+            let mut warm: Vec<std::time::Duration> = Vec::new();
+            for (i, input) in inputs.iter().enumerate() {
+                let next = warm.last().map_or(std::time::Duration::ZERO, |&d| d * 16);
+                if over(next) {
+                    failures.push(hang(format!("warming up n={}", sizes[i])));
+                    break 'attempts;
+                }
+                let t0 = std::time::Instant::now();
+                run(input);
+                warm.push(t0.elapsed());
+            }
+            let reps = (SAMPLE.as_secs_f64() / warm[0].as_secs_f64().max(1e-5))
+                .ceil()
+                .clamp(1.0, 1000.0) as u32;
+            let mut samples = [Vec::new(), Vec::new()];
+            for round in 0..runs {
+                for k in 0..sizes.len() {
+                    let i = (round + k) % sizes.len();
+                    if over(warm[i] * reps) {
+                        failures.push(hang(format!("in round {} at n={}", round + 1, sizes[i])));
+                        break 'attempts;
+                    }
+                    let t0 = std::time::Instant::now();
+                    for _ in 0..reps {
+                        run(&inputs[i]);
+                    }
+                    samples[i].push(t0.elapsed().as_secs_f64() * 1000.0);
+                }
+            }
+            let medians: Vec<f64> = samples
+                .iter_mut()
+                .map(|v| {
+                    v.sort_by(f64::total_cmp);
+                    v[v.len() / 2]
+                })
+                .collect();
+            if medians[1] <= LIMIT * LIMIT * medians[0] + SLACK_MS {
+                return Vec::new();
+            }
+            failures.push(format!(
+                "attempt {attempt}: cost x{:.2} per doubling: n={}: {:.1} ms, n={}: {:.1} ms [{reps} run(s) per sample]",
+                (medians[1] / medians[0].max(f64::EPSILON)).sqrt(),
+                sizes[0],
+                medians[0],
+                sizes[1],
+                medians[1]
+            ));
+        }
+        failures
+    }
+
+    #[test]
+    fn hostile_inlines_parse_in_linear_time() {
+        // Unmatched markers inside a bold run, a line of `[`, a long backtick run, and K markers
+        // before L closers: each would be quadratic without the scan budget.
+        let cases: [ScalingCase; 6] = [
+            ("markers, brackets and backticks", 5_000, |n| {
+                "*a ".repeat(n) + &"[".repeat(n) + &"`".repeat(n / 4)
+            }),
+            ("unmatched italics inside bold", 8_000, |n| {
+                "**".to_owned() + &"*x ".repeat(n) + "y**"
+            }),
+            ("unmatched underscores inside bold", 8_000, |n| {
+                "**".to_owned() + &"_x ".repeat(n) + "y**"
+            }),
+            ("unmatched bolds inside italic", 8_000, |n| {
+                "*".to_owned() + &"**x ".repeat(n) + "y*"
+            }),
+            ("unmatched italics inside a link", 8_000, |n| {
+                "[".to_owned() + &"*x ".repeat(n) + "](https://x.org)"
+            }),
+            ("K markers before L closers", 250_000, |n| {
+                "**".to_owned() + &"*a ".repeat(n / 500) + "a" + &"*".repeat(n)
+            }),
+        ];
+        for (say, n, build) in cases {
+            let violations = linear_violations(
+                build,
+                |s| {
+                    std::hint::black_box(parse_inlines(s, MarkdownLinks::Safe));
+                },
+                n,
+                RUNS,
+            );
+            assert!(violations.is_empty(), "{say}: {violations:#?}");
+        }
+    }
+
+    #[test]
+    fn hostile_rich_text_reads_in_linear_time() {
+        let cases: [ScalingCase; 9] = [
+            ("unclosed tags and comments", 5_000, |n| {
+                "<a <b <p>x<!--".repeat(n)
+            }),
+            ("deep bold", 1_250, |n| "<b>".repeat(n) + "x"),
+            ("spans closed by divs", 5_000, |n| {
+                "<span>".repeat(n) + &"</div>".repeat(n)
+            }),
+            // 4n is the 100,000 lines the wall-clock test read; three rounds keep it in the budget.
+            ("nested marks split at <br>", 25_000, |n| {
+                "<b><i><a href=\"https://x.org\">".repeat(11) + &"x<br>".repeat(n)
+            }),
+            // Dropped elements: nested, full of comments, tags and attributes, or never closed.
+            ("nested templates", 5_000, |n| {
+                "<template>".to_owned() + &"<template><!-- x --><a title='>'>".repeat(n)
+            }),
+            ("comments in a paragraph", 12_500, |n| {
+                "<p>".to_owned() + &"<!--x-->".repeat(n) + "</p>"
+            }),
+            ("bold in foreignObject", 12_500, |n| {
+                "<svg><foreignObject>".to_owned() + &"<b>".repeat(n) + &"</svg>".repeat(n / 50)
+            }),
+            ("deep svg groups", 12_500, |n| {
+                "<svg>".to_owned() + &"<g>".repeat(n) + &"</g>".repeat(n) + "</svg>x"
+            }),
+            ("script look-alikes", 12_500, |n| {
+                "<script><!--<script>".to_owned() + &"</script>-".repeat(n)
+            }),
+        ];
+        for (say, n, build) in cases {
+            let violations = linear_violations(
+                build,
+                |s| {
+                    std::hint::black_box(rich_text_blocks(s, MarkdownLinks::Safe));
+                },
+                n,
+                if n >= 25_000 { 3 } else { RUNS },
+            );
+            assert!(violations.is_empty(), "{say}: {violations:#?}");
+        }
+    }
+
+    #[test]
+    fn deciding_auto_is_linear() {
+        let cases: [(ScalingCase, bool); 4] = [
+            (("a run of `<`", 40_000, |n| "<".repeat(n)), false),
+            (
+                ("tag openers with no `>`", 40_000, |n| "<p ".repeat(n)),
+                false,
+            ),
+            // A `>` first, then only tag openers: every candidate is read, none may rescan the rest.
+            (
+                ("tag openers after the only `>`", 40_000, |n| {
+                    ">".to_owned() + &"<p ".repeat(n)
+                }),
+                false,
+            ),
+            // Openers that are not an editor's tag (`<px`), then one that is: each is read and
+            // refused before the real tag decides it.
+            (
+                ("refused openers before a real tag", 40_000, |n| {
+                    "<px ".repeat(n) + "<p>"
+                }),
+                true,
+            ),
+        ];
+        for ((say, n, build), rich) in cases {
+            assert_eq!(looks_like_rich_text(&build(n)), rich, "{say}");
+            let violations = linear_violations(
+                build,
+                |s| {
+                    std::hint::black_box(looks_like_rich_text(s));
+                },
+                n,
+                RUNS,
+            );
+            assert!(violations.is_empty(), "{say}: {violations:#?}");
+        }
+    }
+
+    #[test]
+    fn huge_and_deep_rich_text_has_no_stack_overflow() {
         let _ = rich_text_blocks(&("<b>".repeat(5_000) + "x"), MarkdownLinks::Safe);
         let nested = "<b><i><a href=\"https://x.org\">".repeat(11) + &"x<br>".repeat(100_000);
         let blocks = rich_text_blocks(&nested, MarkdownLinks::Safe);
@@ -3023,34 +3209,8 @@ mod tests {
             panic!("not a paragraph")
         };
         assert_eq!(lines.len(), 100_000);
-        let _ = rich_text_blocks(
-            &("<span>".repeat(20_000) + &"</div>".repeat(20_000)),
-            MarkdownLinks::Safe,
-        );
-        let k_by_l = "**".to_owned() + &"*a ".repeat(2_000) + "a" + &"*".repeat(1_000_000);
-        let _ = parse_inlines(&k_by_l, MarkdownLinks::Safe);
-        let _ = looks_like_rich_text(&"<".repeat(50_000));
-        assert!(
-            started.elapsed().as_secs() < 2,
-            "took {:?}",
-            started.elapsed()
-        );
-        let started = std::time::Instant::now();
-        // Dropped elements: nested, full of comments, tags and attributes, or never closed.
-        for s in [
-            "<template>".to_owned() + &"<template><!-- x --><a title='>'>".repeat(20_000),
-            "<p>".to_owned() + &"<!--x-->".repeat(50_000) + "</p>",
-            "<svg><foreignObject>".to_owned() + &"<b>".repeat(50_000) + &"</svg>".repeat(1_000),
-            "<svg>".to_owned() + &"<g>".repeat(50_000) + &"</g>".repeat(50_000) + "</svg>x",
-            "<script><!--<script>".to_owned() + &"</script>-".repeat(50_000),
-        ] {
-            let _ = rich_text_blocks(&s, MarkdownLinks::Safe);
-        }
-        assert!(
-            started.elapsed().as_secs() < 2,
-            "took {:?}",
-            started.elapsed()
-        );
+        let deep = "<svg>".to_owned() + &"<g>".repeat(50_000) + &"</g>".repeat(50_000) + "</svg>x";
+        assert!(!rich_text_blocks(&deep, MarkdownLinks::Safe).is_empty());
     }
 
     #[test]
