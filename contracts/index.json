@@ -694,6 +694,15 @@
       "astro": "mzizi-verified-badge",
       "tsx": "mzizi-verified-badge",
       "rs": null
+    },
+    {
+      "name": "ui/device-code",
+      "title": "DeviceCode",
+      "version": "1.0.0",
+      "file": "ui/device-code.contract.json",
+      "astro": "device-code",
+      "tsx": "device-code",
+      "rs": "device-code"
     }
   ]
 }
