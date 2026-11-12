@@ -1,0 +1,22 @@
+{
+  "name": "mzizi-dev",
+  "displayName": "Mzizi dev tools",
+  "version": "0.1.0",
+  "description": "Mzizi's own dev workflow for agents and maintainers (@nyuchi/mzizi-skills 0.20.0: digital-hygiene, progress-report, ship-release, registry-propagation, pr-gates), with the shell scripts three of them ship, and the Mzizi house rules hooks (the rules beside each typed prompt, a /mzizi command, and a guard against raw hex colours in styled files). Installed from this marketplace, not the Claude plugin directory. Owned and operated by Mzizi; live at mzizi.dev.",
+  "homepage": "https://mzizi.dev",
+  "repository": "https://github.com/mzizi-dev/mzizi-registry",
+  "author": {
+    "name": "Mzizi",
+    "email": "support@bundu.org",
+    "url": "https://mzizi.dev"
+  },
+  "license": "Apache-2.0",
+  "keywords": [
+    "mzizi",
+    "dev-workflow",
+    "skills",
+    "hooks",
+    "release",
+    "claude-code"
+  ]
+}

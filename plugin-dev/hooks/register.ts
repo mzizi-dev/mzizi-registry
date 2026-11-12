@@ -2,7 +2,7 @@ import type { Register } from "claude-code";
 
 // The rules the owner keeps repeating, given to the model once per session.
 const HOUSE_RULES = [
-  "Mzizi house rules (from the mzizi plugin):",
+  "Mzizi house rules (from the mzizi-dev plugin):",
   "- Check remote state before acting or asking: fetch the branch, read the open issues and PRs, and read the coordination board (nyuchi/nyuchi-api#407). Work moves between sessions; never plan from memory.",
   "- Mzizi is the rule. Colours, spacing, radius and type come from Mzizi tokens (mzizi_get_tokens on the Mzizi MCP, or @bundu/ui). Never type a raw hex or invent a value; if a token is missing, add it to mzizi-registry first.",
   "- Every PR adds a CHANGELOG entry under [Unreleased] and references its issue (Refs #n).",

@@ -16,6 +16,38 @@ import type { ChangelogRow } from "@/lib/db/types";
 
 export const CHANGELOG_RELEASES: readonly ChangelogRow[] = [
   {
+    version: "4.32.0",
+    title:
+      "v4.32.0 — the Claude plugin is two plugins, mzizi (public) and mzizi-dev; skills 0.20.0",
+    description:
+      "Releases staging to main as the next minor above v4.31.0 (nyuchi/.github#80). Changed: the Claude Code plugin splits into mzizi (public, 1.9.0, seven skills, nothing that runs) and mzizi-dev (0.1.0, the five dev skills and the house-rules hooks); the registry takes @nyuchi/mzizi-skills 0.20.0. Breaking for plugin users who installed mzizi@mzizi for the dev skills: install mzizi-dev@mzizi (#652). CHANGELOG.md section [4.32.0] is the narrative.",
+    line: "public",
+    line_rank: 1,
+    major: 4,
+    minor: 32,
+    patch: 0,
+    release_kind: "minor",
+    breaking: false,
+    released_at: "2026-11-12T23:59:00.000+00:00",
+    created_at: "2026-11-12T23:59:00.000+00:00",
+    nodes_affected: null,
+    components_added: null,
+    components_modified: null,
+    components_deprecated: null,
+    components_removed: null,
+    components_touched: null,
+    tools_added: null,
+    tools_modified: null,
+    tools_deprecated: null,
+    tools_removed: null,
+    linked_issues: null,
+    total_stable: null,
+    total_deprecated: null,
+    total_alpha: null,
+    changed_by: "claude-code",
+    entry_order: 0,
+  },
+  {
     version: "4.31.0",
     title: "v4.31.0 — BarChart 1.2.0 takes nullable values for withheld counts",
     description:

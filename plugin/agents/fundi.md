@@ -22,8 +22,9 @@ anything:
   contributing a component.
 - `mzizi-backend` for Workers and MCP servers, `mzizi-language` for `.mz` files, and
   `discoverability` for preview images and structured data.
-- `digital-hygiene`, `progress-report`, `ship-release`, `registry-propagation` and `pr-gates` for
-  any dev work.
+- For dev work, the `mzizi-dev` plugin (`/plugin install mzizi-dev@mzizi`) adds `digital-hygiene`,
+  `progress-report`, `ship-release`, `registry-propagation` and `pr-gates`. Without it, say so
+  and work from the repo's own guide.
 
 ## Tools
 
