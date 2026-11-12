@@ -82,12 +82,39 @@ describe("the plugin's MCP entry describes the server that exists", () => {
 });
 
 /**
- * The public plugin carries the skills. Claude Code installs a plugin from git,
- * so the skills must be files in this repository: `skills/` is a byte-for-byte
- * copy of `@nyuchi/mzizi-skills`, written by scripts/generate-plugin-skills.mjs
- * and gated in CI by `pnpm plugin:skills:check`. These specs pin the shape a
- * user installs; the check pins the bytes.
+ * The public plugin carries seven of the skills; the dev workflow is a second plugin.
+ * Claude Code installs a plugin from git, so the skills must be files in this
+ * repository: `skills/` is a copy of `@nyuchi/mzizi-skills`, written by
+ * scripts/generate-plugin-skills.mjs and gated in CI by `pnpm plugin:skills:check`.
+ * These specs pin the shape a user installs; the check pins the bytes.
+ *
+ * WHY TWO (owner, 2026-11-12). The Claude plugin directory holds a plugin for review
+ * when it ships scripts, a hook module or a file it cannot read as text or a supported
+ * image, and will later accept those only from verified organizations. The public
+ * `mzizi` plugin therefore ships Markdown, images and an MCP connection only; the
+ * scripts and the hooks module live in `mzizi-dev`.
  */
+const DEV_SKILLS = [
+  "digital-hygiene",
+  "pr-gates",
+  "progress-report",
+  "registry-propagation",
+  "ship-release",
+];
+const manifestOf = (dir: string) =>
+  JSON.parse(
+    fs.readFileSync(
+      path.join(root, dir, ".claude-plugin/plugin.json"),
+      "utf-8",
+    ),
+  );
+const walk = (dir: string): string[] =>
+  fs
+    .readdirSync(dir, { withFileTypes: true })
+    .flatMap((d) =>
+      d.isDirectory() ? walk(path.join(dir, d.name)) : [path.join(dir, d.name)],
+    );
+
 describe("the public plugin carries the published skills", () => {
   const bundle = JSON.parse(
     fs.readFileSync(
@@ -96,18 +123,79 @@ describe("the public plugin carries the published skills", () => {
     ),
   ) as { version: string; skills: { name: string; file: string }[] };
 
-  it("ships one skills/<name>/SKILL.md per skill in the package, and no others", () => {
+  it("ships one skills/<name>/SKILL.md per public skill in the package, and no others", () => {
     const onDisk = fs
       .readdirSync(path.join(root, "plugin/skills"), { withFileTypes: true })
       .filter((d) => d.isDirectory())
       .map((d) => d.name)
       .sort();
-    expect(onDisk).toEqual(bundle.skills.map((s) => s.name).sort());
-    for (const s of bundle.skills) {
+    const publicSkills = bundle.skills
+      .map((s) => s.name)
+      .filter((n) => !DEV_SKILLS.includes(n))
+      .sort();
+    expect(onDisk).toEqual(publicSkills);
+    for (const n of publicSkills) {
       expect(
-        fs.existsSync(path.join(root, "plugin/skills", s.name, "SKILL.md")),
-        s.name,
+        fs.existsSync(path.join(root, "plugin/skills", n, "SKILL.md")),
+        n,
       ).toBe(true);
+    }
+  });
+
+  it("ships the dev skills in the dev plugin, and only there", () => {
+    const dev = fs
+      .readdirSync(path.join(root, "plugin-dev/skills"), {
+        withFileTypes: true,
+      })
+      .filter((d) => d.isDirectory())
+      .map((d) => d.name)
+      .sort();
+    expect(dev).toEqual([...DEV_SKILLS].sort());
+    for (const n of DEV_SKILLS)
+      expect(fs.existsSync(path.join(root, "plugin/skills", n)), n).toBe(false);
+  });
+
+  it("runs nothing on the user's machine: no script, no hook module, no .mcp.json", () => {
+    // The directory holds a plugin for review for each of these. They belong in
+    // `plugin-dev/`.
+    const files = walk(path.join(root, "plugin"));
+    for (const f of files) {
+      expect(f, f).not.toMatch(/\.(sh|bash|zsh|ps1|js|mjs|cjs|ts)$/);
+    }
+    expect(fs.existsSync(path.join(root, "plugin/hooks"))).toBe(false);
+    expect(manifest().hooks).toBeUndefined();
+  });
+
+  it("carries no file the directory cannot read as text or a supported image", () => {
+    // `.ico` is refused (BINARIES_NOT_INSPECTED); text (Markdown, JSON, YAML, CSS) and PNG, JPEG, GIF, WebP and SVG images pass.
+    const ok = /\.(md|json|ya?ml|txt|css|png|jpe?g|gif|webp|svg)$/i;
+    for (const f of walk(path.join(root, "plugin"))) expect(f, f).toMatch(ok);
+  });
+
+  it("declares an icon the directory accepts and a privacy policy", () => {
+    // Square PNG, 512 to 2048 px a side, under 2 MB.
+    const icon = path.join(root, "plugin", manifest().icon);
+    const buf = fs.readFileSync(icon);
+    expect(buf.subarray(1, 4).toString()).toBe("PNG");
+    const [w, h] = [buf.readUInt32BE(16), buf.readUInt32BE(20)];
+    expect(w).toBe(h);
+    expect(w).toBeGreaterThanOrEqual(512);
+    expect(w).toBeLessThanOrEqual(2048);
+    expect(buf.length).toBeLessThan(2 * 1024 * 1024);
+    expect(manifest().privacyPolicyUrl).toBe(
+      "https://www.bundu.org/legal/privacy",
+    );
+  });
+
+  it("quotes every skill description in YAML frontmatter", () => {
+    for (const dir of ["plugin/skills", "plugin-dev/skills"]) {
+      for (const f of walk(path.join(root, dir)).filter((p) =>
+        p.endsWith("SKILL.md"),
+      )) {
+        const m = /^description: (.*)$/m.exec(fs.readFileSync(f, "utf-8"));
+        expect(m, f).not.toBeNull();
+        expect(m![1], f).toMatch(/^".*"$/);
+      }
     }
   });
 
@@ -124,9 +212,33 @@ describe("the public plugin carries the published skills", () => {
         "utf-8",
       ),
     );
-    expect(market.plugins).toHaveLength(1);
-    expect(market.plugins[0].name).toBe(manifest().name);
+    expect(market.plugins.map((p: { name: string }) => p.name)).toEqual([
+      manifest().name,
+      manifestOf("plugin-dev").name,
+    ]);
     expect(market.plugins[0].source).toBe("./plugin");
+    expect(market.plugins[1].source).toBe("./plugin-dev");
+  });
+
+  it("gives the dev plugin the hooks module and the scripts", () => {
+    expect(fs.existsSync(path.join(root, "plugin-dev/hooks/hooks.json"))).toBe(
+      true,
+    );
+    expect(fs.existsSync(path.join(root, "plugin-dev/hooks/register.ts"))).toBe(
+      true,
+    );
+    expect(manifestOf("plugin-dev").description).toContain(
+      `@nyuchi/mzizi-skills ${bundle.version}`,
+    );
+    for (const [skill, script] of [
+      ["digital-hygiene", "hygiene.sh"],
+      ["progress-report", "progress.sh"],
+      ["ship-release", "verify-live.sh"],
+    ])
+      expect(
+        fs.existsSync(path.join(root, "plugin-dev/skills", skill, script)),
+        script,
+      ).toBe(true);
   });
 
   it("names the project's contact, not a person's", () => {

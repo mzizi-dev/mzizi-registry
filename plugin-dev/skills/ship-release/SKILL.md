@@ -1,6 +1,6 @@
 ---
 name: ship-release
-description: Use this skill whenever you release a Mzizi repo, meaning staging goes to main and the change goes live (npm, Cloudflare Workers, docs.mzizi.dev, mzizi.dev). It is the runbook: cut the release branch off origin/main with staging's exact tree in one commit and prove the tree hashes are equal, the PR title and the issue line in its body, the version rule (next minor above npm, a CHANGELOG entry per bumped version in the repo's own heading style, majors need the owner), the main-gate failure about commits that staging may not have and its owner-only forward-ported label (never --admin), the merge queue (the repo convention `gh pr merge N --squash --auto`, the REST route as the fallback where GraphQL is blocked, and which method each queue really uses), stale checks, a publish that npm lists late, immutable releases, and verifying LIVE with commands. Ships verify-live.sh, which only reads. A release is live when the live commands say so, never when it merges.
+description: "Use this skill whenever you release a Mzizi repo, meaning staging goes to main and the change goes live (npm, Cloudflare Workers, docs.mzizi.dev, mzizi.dev). It is the runbook: cut the release branch off origin/main with staging's exact tree in one commit and prove the tree hashes are equal, the PR title and the issue line in its body, the version rule (next minor above npm, a CHANGELOG entry per bumped version in the repo's own heading style, majors need the owner), the main-gate failure about commits that staging may not have and its owner-only forward-ported label (never --admin), the merge queue (the repo convention `gh pr merge N --squash --auto`, the REST route as the fallback where GraphQL is blocked, and which method each queue really uses), stale checks, a publish that npm lists late, immutable releases, and verifying LIVE with commands. Ships verify-live.sh, which only reads. A release is live when the live commands say so, never when it merges."
 ---
 
 # Ship a release: staging to main, then prove it is live
@@ -25,14 +25,14 @@ merged PR into `staging` and say so in "Needs you:".
 `verify-live.sh` is portable bash (3.2+) and **read-only**: it reads npm, the GitHub API
 (through `gh`) and HTTP responses, and never publishes, tags or deploys.
 
-| Where you are                   | Path                                                                                                                       |
-| ------------------------------- | -------------------------------------------------------------------------------------------------------------------------- |
-| `@nyuchi/mzizi-skills` from npm | `node_modules/@nyuchi/mzizi-skills/skills/ship-release/verify-live.sh`                                                     |
-| The public `mzizi` plugin       | `skills/ship-release/verify-live.sh` in the plugin                                                                         |
-| Only the MCP                    | `curl -fsSL https://unpkg.com/@nyuchi/mzizi-skills/skills/ship-release/verify-live.sh -o "${TMPDIR:-/tmp}/verify-live.sh"` |
+| Where you are                   | Path                                                                                       |
+| ------------------------------- | ------------------------------------------------------------------------------------------ |
+| `@nyuchi/mzizi-skills` from npm | `node_modules/@nyuchi/mzizi-skills/skills/ship-release/verify-live.sh`                     |
+| The `mzizi-dev` plugin          | `skills/ship-release/verify-live.sh` in the plugin                                         |
+| Only the MCP                    | Install the package, then use the first path: `npm install --no-save @nyuchi/mzizi-skills` |
 
 Run it as `bash "$V" ...`. It is committed executable (like `hygiene.sh` and `progress.sh`), but
-npm packs every file as mode 644, so the copy from npm or unpkg has no execute bit: `bash` works
+npm packs every file as mode 644, so the copy from npm has no execute bit: `bash` works
 everywhere, `./verify-live.sh` only from a git checkout. `bash "$V" --help` prints the usage.
 
 ```bash

@@ -10,6 +10,41 @@ From 2026-10-04 releases follow the org versioning policy ([nyuchi/.github#80](h
 
 ## [Unreleased]
 
+### Added — `device-code`: RFC 8628 device pairing, with a QR code drawn on the device, in Astro, React and Rust under one contract (2026-10-07, #475)
+
+For pairing a TV, display or desktop app from a phone (OAuth 2.0 Device Authorization, RFC 8628 §3.3), first for Mukoko Home ([mukoko-dev/mukoko-home#24](https://github.com/mukoko-dev/mukoko-home/issues/24)).
+
+- **`device-code`** (N2, `contracts/ui/device-code` 1.0.0): the user code large and monospace in groups of four (`KTQB-4RMX`), the verification address without its scheme, a QR code of `verificationUriComplete`, "Expires in m:ss", and a status line for `pending`, `approved`, `expired`, `denied` and `error`. A pending code past `expiresAt` shows as expired with a "Get a new code" control (a button, or a link with `refreshHref`). `size` is `phone` or `tv` (a 10-foot UI: 7xl code, 320px QR code, 64px control). Colour comes from tokens only: `--primary` borders the code and fills the control, so Mukoko's overlay makes it tanzanite; the QR code is black on white in every theme.
+- **Accessible:** the root is a named group; the visible code is `aria-hidden` and a screen-reader line reads it one character at a time ("Code: K T Q B, 4 R M X"); the QR code is `role=img` named with the full address; status changes and the last minute are announced through `role=status`, while the countdown is a `timer` that is not live; the only motion (the pending dot) is `motion-safe:`.
+- **Builds:** `device-code.astro` (pure Astro; one enhancement script ticks the countdown, lapses the code and dispatches a bubbling `device-code:refresh` event), `device-code.tsx` (ticks once mounted; `onRefresh`), and `device-code.rs` in `mzizi-ui` (renders one frame from `now`; `on_refresh`; `rfc3339_to_unix_ms`). Server renders work with no script.
+- **QR codes, no network:** the new `qr-code` (registry:lib, no dependencies) encodes byte mode, versions 1 to 40, levels L/M/Q/H, and writes one SVG path. The Rust build uses the `qrcode` crate (0.14, default features off: no image renderers, no transitive dependencies), and `qr-code.ts` scores masks the way that crate does, so all three builds draw the same matrix. `device-code-format` (registry:lib) holds the shared words and classes.
+- **Tests:** the contract's ten states run in all three runners; `__tests__/fixtures/device-code.cases.json` (every version at every level, whole matrices, codes, countdowns, statuses, RFC 3339 times) runs in the TypeScript suite and in `mzizi-ui`'s `tests/contract.rs`; `__tests__/components/device-code.test.tsx` adds accessibility checks for every status and size and the live countdown in React.
+- **Crate:** `mzizi-ui` gains the `qrcode` dependency, and `js-sys` on `wasm32-unknown-unknown` only (to read the clock where `SystemTime` panics).
+- **Counts:** `registry.json` 690 to 693 items (`device-code`, `device-code-format`, `qr-code`); `contracts/ui` 18 to 19. `qr-matrix` (the `uqr`-backed helper already on `main`) stays; `qr-code` is the dependency-free encoder `device-code` draws with.
+- **Site/docs/skills impact:** `/v1/ui` gains 3 components, so the component total on mzizi.dev and docs.mzizi.dev moves by 3 after the API's pin moves; a `/v1/rs/device-code` Rust sibling appears (`mzizi-ui`).
+
+## [4.32.0] - 2026-11-12
+
+Releases `staging` to `main` as the next minor above v4.31.0 ([nyuchi/.github#80](https://github.com/nyuchi/.github/issues/80)). `package.json`, `README.md` and `content/changelog/releases.json` (and `lib/changelog.generated.ts`) are bumped to 4.32.0.
+
+### Changed — the Claude plugin is two plugins: `mzizi` (public) and `mzizi-dev`; skills 0.20.0, plugin 1.9.0 (2026-11-12)
+
+Owner direction (2026-11-12): split the plugin and ship the plugin directory's fixes at once. The directory's review held the single plugin for scripts that read the installer's environment, a hook module, a binary it cannot inspect, a missing icon and privacy policy, and unquoted skill descriptions. It will later accept scripts and mods only from verified organizations, which this organization is not and cannot ask to be. No issue: owner-directed fix.
+
+- **Changed, `plugin/` (the public `mzizi` plugin, 1.9.0, was 1.8.0):** seven skills (`mzizi-language`, `mzizi-roots`, `mzizi-design`, `mukoko-design`, `mzizi-backend`, `mzizi-architecture`, `discoverability`), `/mzizi:component`, `/mzizi:scaffold`, the fundi agent and the Mzizi MCP. Markdown, CSS, PNG and SVG and an MCP connection only: no script and no hook module. `favicon.ico` is left out of the public `mukoko-design` copy (the PNG and SVG forms stay).
+- **Added, `plugin/.claude-plugin/`:** `icon.png` (the light Mzizi mark, 1024 by 1024) and `privacyPolicyUrl` (`https://www.bundu.org/legal/privacy`).
+- **Added, `plugin-dev/` (the `mzizi-dev` plugin, 0.1.0):** the five dev skills (`digital-hygiene`, `progress-report`, `ship-release`, `registry-propagation`, `pr-gates`) with their shell scripts, and the house-rules hooks module (moved from `plugin/hooks/`). Install it with `/plugin install mzizi-dev@mzizi`. It is not submitted to the directory.
+- **Changed, `.claude-plugin/marketplace.json`:** lists both plugins.
+- **Changed, `scripts/generate-plugin-skills.mjs`:** writes both trees from `@nyuchi/mzizi-skills` (`plugin/skills/` and `plugin-dev/skills/`) and its `--check` covers both. `package.json`, `pnpm-lock.yaml` and `lib/skills.generated.ts` take skills 0.20.0, which quotes every skill description and drops the unpkg download rows.
+- **Changed, `__tests__/plugin-manifest.test.ts`:** pins the split, that the public plugin runs nothing and ships no file the directory cannot read, the icon size and the privacy URL, and that every skill description is quoted.
+- **Changed, `plugin/agents/fundi.md`:** says the dev skills are in `mzizi-dev`.
+- **Breaking, for plugin users:** anyone who installed `mzizi@mzizi` for the dev skills, the house-rules hooks or the `/mzizi` rules command now needs `mzizi-dev@mzizi`. Nothing else moved.
+- **Site/docs impact:** pages that say the plugin carries twelve skills or the house rules (`toolchain/skills`, `toolchain/mcp`, the site's llms.txt) need the two-plugin wording; `/v1/skills` and the MCP still serve all twelve skills.
+
+## [4.31.0] - 2026-11-12
+
+Releases `staging` to `main` as the next minor above v4.30.0 ([nyuchi/.github#80](https://github.com/nyuchi/.github/issues/80)). `package.json`, `README.md` and `content/changelog/releases.json` (and `lib/changelog.generated.ts`) are bumped to 4.31.0.
+
 ### Added — `app/bar-chart` 1.2.0: nullable values for withheld counts (2026-10-06, #457)
 
 BarChart drew every point as a number, so an app that withholds small counts (k-anonymity: a day with fewer than 5 is returned as `null`) had to draw it as 0 or drop the day, and the total then read as exact. Mukoko Events admin's Insights page needs both to be honest (nyuchi/api-gateway#268). The change is in the `.astro` and `.tsx` builds, with the same markup, and is backwards compatible.
