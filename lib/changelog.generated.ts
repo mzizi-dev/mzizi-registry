@@ -16,6 +16,38 @@ import type { ChangelogRow } from "@/lib/db/types";
 
 export const CHANGELOG_RELEASES: readonly ChangelogRow[] = [
   {
+    version: "4.30.0",
+    title:
+      "v4.30.0 — markdown-renderer linear-time tests measure scaling, not wall-clock",
+    description:
+      "Releases staging to main as the next minor above v4.29.0 (nyuchi/.github#80). Changed: the markdown-renderer linear-time tests (TypeScript and the Rust build) time each input at n and 4n and assert how the time grows, instead of fixed wall-clock budgets; no component, parser or API change (#516, #647). CHANGELOG.md section [4.30.0] is the narrative.",
+    line: "public",
+    line_rank: 1,
+    major: 4,
+    minor: 30,
+    patch: 0,
+    release_kind: "minor",
+    breaking: false,
+    released_at: "2026-11-12T23:59:00.000+00:00",
+    created_at: "2026-11-12T23:59:00.000+00:00",
+    nodes_affected: null,
+    components_added: null,
+    components_modified: null,
+    components_deprecated: null,
+    components_removed: null,
+    components_touched: null,
+    tools_added: null,
+    tools_modified: null,
+    tools_deprecated: null,
+    tools_removed: null,
+    linked_issues: null,
+    total_stable: null,
+    total_deprecated: null,
+    total_alpha: null,
+    changed_by: "claude-code",
+    entry_order: 0,
+  },
+  {
     version: "4.29.0",
     title: "v4.29.0 — @nyuchi/mzizi-skills 0.19.0 and plugin 1.8.0",
     description:
