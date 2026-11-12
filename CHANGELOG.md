@@ -20,10 +20,6 @@ Phase 2 of #472 starts with the infrastructure the Python build of the resilienc
 - **CI** gains a `Python` job (3.11, 3.12, 3.13): it builds the sdist and wheel, installs the wheel, and runs pytest and `mypy --strict` against it. `Build` needs it.
 - **`.github/workflows/publish-pypi.yml`** publishes a version not yet on PyPI on merge to `main` (or by dispatch, dry run by default) with **PyPI trusted publishing**: OIDC in a `pypi` environment, no API token anywhere. It re-runs the generated-copy check, the tests and mypy on the exact wheel it uploads, refuses a version the org next-version action does not allow, never publishes an empty package, then tags `mzizi-py-vX.Y.Z` and creates a release with `RELEASE_BUMP_TOKEN`.
 
-## [4.33.0] - 2026-11-12
-
-Releases `staging` to `main` as the next minor above v4.32.0 ([nyuchi/.github#80](https://github.com/nyuchi/.github/issues/80)). `package.json`, `README.md` and `content/changelog/releases.json` (and `lib/changelog.generated.ts`) are bumped to 4.33.0.
-
 ### Added — `device-code`: RFC 8628 device pairing, with a QR code drawn on the device, in Astro, React and Rust under one contract (2026-10-07, #475)
 
 For pairing a TV, display or desktop app from a phone (OAuth 2.0 Device Authorization, RFC 8628 §3.3), first for Mukoko Home ([mukoko-dev/mukoko-home#24](https://github.com/mukoko-dev/mukoko-home/issues/24)).
