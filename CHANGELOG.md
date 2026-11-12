@@ -10,6 +10,10 @@ From 2026-10-04 releases follow the org versioning policy ([nyuchi/.github#80](h
 
 ## [Unreleased]
 
+## [4.36.0] - 2026-11-12
+
+Releases `staging` to `main` as the next minor above v4.35.0 ([nyuchi/.github#80](https://github.com/nyuchi/.github/issues/80)). `package.json`, `README.md` and `content/changelog/releases.json` (and `lib/changelog.generated.ts`) are bumped to 4.36.0.
+
 ### Added — the public `mzizi` plugin for Codex and ChatGPT; plugin 1.10.0 (2026-11-12, #520)
 
 The public plugin in `plugin/` is now installable from Codex and ChatGPT as well as Claude Code, in OpenAI's portable Agent Plugins layout (Package your plugin, developers.openai.com/codex/plugins/build). `#520` was written against skills 0.11.0 and plugin 1.3.0; it is rebased on the plugin split (#652) and keeps only the Codex and ChatGPT packaging, with the skills it needs already vendored from `@nyuchi/mzizi-skills` 0.20.0.
@@ -22,6 +26,10 @@ The public plugin in `plugin/` is now installable from Codex and ChatGPT as well
 - **Changed, `README.md`:** the MCP section now matches the live server (free; sign-in only for `mzizi_fundi` and `mzizi_report_issue`; `tools/list` and `catalogue.json` instead of a tool list) and documents the plugin for Claude Code, Codex and ChatGPT.
 - **Not done:** the Codex CLI was not run against it; the manifests are checked against the published Agent Plugins schemas and OpenAI's packaging guide. Per-server sign-in is not declared in `mcp.json` (the schema allows no extensions on a server), so it connects the anonymous `/mcp`.
 - **Site/docs impact:** pages that say the plugin is for Claude Code only (`toolchain/skills`, `toolchain/connect`) can add the Codex and ChatGPT install path; no component or count change.
+
+## [4.35.0] - 2026-11-12
+
+Releases `staging` to `main` as the next minor above v4.34.0 ([nyuchi/.github#80](https://github.com/nyuchi/.github/issues/80)). `package.json`, `README.md` and `content/changelog/releases.json` (and `lib/changelog.generated.ts`) are bumped to 4.35.0.
 
 ### Added — `mzizi-ui` render path with no Dioxus for `alert`, `card` and `markdown-renderer`, byte-identical to `dioxus-ssr` (2026-10-20, #511)
 
@@ -46,6 +54,10 @@ Owner ruling, 2026-11-12: "yes do the device-based floor, desktop body 15px". A 
 - **Contract runner and Rust evaluator.** `hitRegion` and `hit_region` take the tier's floor (`HIT_AREA_FINE_PX` 28 on a fine pointer, `HIT_AREA_PX` 49 on a coarse one); a hit region under 28px on a fine pointer, or under 49px on a coarse one, fails. The role table's desktop column is `touch-min` 28, `field` 36, `field-sm` 32. `contracts/hit-region-cases.json` is updated to the two tiers and gains three cases.
 - **Docs.** `docs/sizes-and-density.md` and the brand-guidelines doctrine page state both tiers. The `mzizi-design` and `mzizi-roots` skills quote the old numbers; they are generated from `@nyuchi/mzizi-skills`, so they change with a follow-up in agent-tools, not here.
 
+## [4.34.0] - 2026-11-12
+
+Releases `staging` to `main` as the next minor above v4.33.0 ([nyuchi/.github#80](https://github.com/nyuchi/.github/issues/80)). `package.json`, `README.md` and `content/changelog/releases.json` (and `lib/changelog.generated.ts`) are bumped to 4.34.0.
+
 ### Added — the Python distribution path: `mzizi-py/`, `pnpm py:generate`, `lib/python-packages.ts` and `publish-pypi.yml` (2026-10-07, #473)
 
 Phase 2 of #472 starts with the infrastructure the Python build of the resilience node ships through, before its modules land.
@@ -55,6 +67,10 @@ Phase 2 of #472 starts with the infrastructure the Python build of the resilienc
 - **`mzizi-py/package-for-node.json`** says which package a node's Python ships in (`null`: not packaged, such as N1's single-file `mzizi-tokens-python.py`). **`lib/python-packages.ts`** (`pythonPackageFor`, `PYTHON_GIT`) reads it, the mirror of `lib/rust-crates.ts`, so the coming `/v1/py/{name}` route on api.mzizi.dev names the package, the `pip install` line and the module.
 - **CI** gains a `Python` job (3.11, 3.12, 3.13): it builds the sdist and wheel, installs the wheel, and runs pytest and `mypy --strict` against it. `Build` needs it.
 - **`.github/workflows/publish-pypi.yml`** publishes a version not yet on PyPI on merge to `main` (or by dispatch, dry run by default) with **PyPI trusted publishing**: OIDC in a `pypi` environment, no API token anywhere. It re-runs the generated-copy check, the tests and mypy on the exact wheel it uploads, refuses a version the org next-version action does not allow, never publishes an empty package, then tags `mzizi-py-vX.Y.Z` and creates a release with `RELEASE_BUMP_TOKEN`.
+
+## [4.33.0] - 2026-11-12
+
+Releases `staging` to `main` as the next minor above v4.32.0 ([nyuchi/.github#80](https://github.com/nyuchi/.github/issues/80)). `package.json`, `README.md` and `content/changelog/releases.json` (and `lib/changelog.generated.ts`) are bumped to 4.33.0.
 
 ### Added — `device-code`: RFC 8628 device pairing, with a QR code drawn on the device, in Astro, React and Rust under one contract (2026-10-07, #475)
 
