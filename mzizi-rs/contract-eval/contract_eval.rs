@@ -328,7 +328,7 @@ pub const ROLE_HEIGHTS: &[(&str, u32, u32)] = &[
 ];
 
 /// THE BUNDU FLOOR (owner ruling 2026-11-02), a copy of `BUNDU_FLOOR` in `lib/tokens/roles.source.ts`:
-/// the hit region every interactive control keeps on every device, desktop included, in px.
+/// the hit region every interactive control keeps on touch (a coarse pointer), in px; a desktop keeps `HIT_AREA_FINE_PX`.
 /// `__tests__/density.test.ts` holds it equal to the source.
 pub const HIT_AREA_PX: u32 = 49;
 /// The hit region on a desktop (a fine pointer with hover), owner ruling 2026-11-12, #660. Equal to `VISIBLE_FINE_MIN_PX`.

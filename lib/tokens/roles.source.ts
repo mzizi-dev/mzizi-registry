@@ -1393,7 +1393,7 @@ export const ROLES: readonly Role[] = [
     kind: "size",
     required: true,
     description:
-      "The hit-area floor (`min-h-touch-min`): 49px (`BUNDU_FLOOR.hitAreaPx`, 7 x 7, above Apple HIG Buttons' 44x44 pt) on every device, desktop included, registered as `--target-floor`. Density never lowers it: a desktop control may be drawn smaller but keeps this hit region (owner ruling 2026-11-02, replacing the 24px desktop floor of 2026-11-01 and the 44px of 2026-11-01). No brand pack can move it.",
+      "The hit-area floor (`min-h-touch-min`), registered as `--target-floor`, in two pointer tiers: 49px on touch (`BUNDU_FLOOR.hitAreaPx`, 7 x 7, above Apple HIG Buttons' 44x44 pt) and 28px on a desktop, a fine pointer with hover (`BUNDU_FLOOR.pointerFine.hitAreaPx`, 4 x 7, Apple's macOS default control). Only the desktop density layer lowers it, and not below 28px (owner rulings 2026-11-02 and 2026-11-12, #660; the 2026-11-02 ruling replaced the 24px desktop floor and the 44px touch floor of 2026-11-01). No brand pack can move it.",
     default: { px: access("minTouchTarget") },
     fixed: true,
     block: "invariant",

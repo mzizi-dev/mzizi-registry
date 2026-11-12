@@ -516,7 +516,8 @@ export const primitives = {
     },
     sm: {
       value: "49px",
-      description: "Minimum hit region on every device — NEVER below this",
+      description:
+        "Minimum hit region on touch — NEVER below this on touch; 28px on a desktop with a fine pointer (owner, 2026-11-12)",
     },
   },
 

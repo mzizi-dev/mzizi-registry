@@ -101,12 +101,12 @@ Density is about visual size only. Screen size is never used to guess network qu
 | `--fs-h6`                                    | 16px / 15px         | 17px               | 17px            | 16px      |
 | `--fs-h5`                                    | 17px / 16px         | 17px               | 17px            | 20px      |
 | `--fs-body-lg`, `--fs-code`                  | 18px / 14px         | unchanged          | 17px, 14px      | unchanged |
-| `text-base` (Tailwind's default step)        | 16px                | 17px               | 17px            | 16px      |
+| `text-base` (Tailwind's default step)        | 16px                | 17px               | 15px            | 16px      |
 | `--touch-target-lg` / `--touch-target`       | 44 / 44px           | 49 / 49px          | 36 / 32px       | 56 / 48px |
 | badge `fontSize`, chart axis labels          | 10 to 12px          | 14px               | 14px            | n/a       |
 | brand `componentSpecs` button / input / tabs | 44px (large 48px)   | 49px (large 56px)  | n/a             | n/a       |
 
-`--fs-h1` to `--fs-h4` and the display sizes are unchanged (they were already at or above 17px). The `text-xs` step is Tailwind's own (12px by default); the token layer now registers `--text-xs`, `--text-sm` and `--text-base` as 14, 14 and 17px, so a component that names them paints the floor.
+`--fs-h1` to `--fs-h4` and the display sizes are unchanged (they were already at or above 17px). The `text-xs` step is Tailwind's own (12px by default); the token layer now registers `--text-xs`, `--text-sm` and `--text-base` as 14, 14 and 17px (15px for `--text-base` on a desktop), so a component that names them paints the floor.
 
 Components: every arbitrary `text-[8px]` to `text-[13px]` (about 340 uses in 150 registry files) is now `text-sm` (14px), and the registry's chart axis and label sizes are 14px. `native-select` takes its height from the field roles (`h-field`, `h-field-sm`) instead of `h-12` and `h-8`. Expect denser layouts to need room: a badge or a meta label that fitted at 10px is now 14px.
 

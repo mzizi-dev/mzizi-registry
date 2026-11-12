@@ -145,7 +145,7 @@ export const primitives = {
   fontSize: {
     caption: { value: "14px", description: "0.875rem — Labels, metadata, timestamps: the Bundu caption floor, never smaller" },
     bodySmall: { value: "14px", description: "0.875rem — Secondary text: the Bundu caption floor on every device" },
-    body: { value: "17px", description: "1.0625rem — Default body text on every device, desktop included: the Bundu body floor (Apple Body 17 pt)" },
+    body: { value: "17px", description: "1.0625rem — Default body text on touch: the Bundu body floor (Apple Body 17 pt). On a desktop (fine pointer with hover) it is 15px, 0.9375rem (owner, 2026-11-12, #660)" },
     bodyLarge: { value: "18px", description: "1.125rem — Lead paragraphs" },
     h5: { value: "17px", description: "1.0625rem — Noto Sans 600 — Small headings (Apple Headline 17 pt)" },
     h4: { value: "20px", description: "1.25rem — Noto Sans 600 — Card titles (Apple Title 3 20 pt)" },
@@ -167,7 +167,7 @@ export const primitives = {
   // APCA 3.0 AAA accessibility standard
   touchTarget: {
     default: { value: "49px", description: "Default interactive element height: the Bundu hit area, 7 x 7 (above Apple's 44x44 pt)" },
-    sm: { value: "49px", description: "Minimum hit region on every device, desktop included — NEVER below this (a desktop control may be drawn smaller, down to 28px, but keeps this hit region)" },
+    sm: { value: "49px", description: "Minimum hit region on touch — NEVER below this on touch. On a desktop (fine pointer with hover) the minimum hit region, and the smallest a control is drawn, is 28px (owner, 2026-11-12, #660)" },
   },
 
   // ─── SPACING FLOOR (owner, 2026-11-04, #617) ─
