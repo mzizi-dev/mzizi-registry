@@ -312,3 +312,52 @@ describe("the public plugin's commands and agent", () => {
     }
   });
 });
+
+/**
+ * The same plugin, for Codex and ChatGPT. OpenAI's hosts read the portable
+ * Agent Plugins layout (https://agent-plugins.org): `plugin.json` and
+ * `mcp.json` at the plugin root, beside the same `skills/`, and a repo
+ * marketplace at `.agents/plugins/marketplace.json`. Claude Code reads neither
+ * file (it loads `.claude-plugin/plugin.json` and a dotted `.mcp.json`), so
+ * the two manifests can only drift apart; these specs keep them one plugin.
+ */
+describe("the portable manifest is the same plugin", () => {
+  const read = (p: string) =>
+    JSON.parse(fs.readFileSync(path.join(root, p), "utf-8"));
+  const portable = () => read("plugin/plugin.json");
+
+  it("declares the Agent Plugins schema", () => {
+    expect(portable().$schema).toBe(
+      "https://agent-plugins.org/schemas/1.0.0/plugin.schema.json",
+    );
+    expect(read("plugin/mcp.json").$schema).toBe(
+      "https://agent-plugins.org/schemas/1.0.0/mcp.schema.json",
+    );
+  });
+
+  it("has the Claude manifest's name, version and description", () => {
+    expect(portable().name).toBe(manifest().name);
+    expect(portable().version).toBe(manifest().version);
+    expect(portable().description).toBe(manifest().description);
+  });
+
+  it("connects the one Mzizi MCP, and only it", () => {
+    const servers = read("plugin/mcp.json").mcpServers;
+    expect(Object.keys(servers)).toEqual(["mzizi"]);
+    expect(servers.mzizi).toEqual({
+      type: "streamable-http",
+      url: manifest().mcpServers.mzizi.url,
+    });
+  });
+
+  it("is listed by the repo marketplace OpenAI's hosts read", () => {
+    const market = read(".agents/plugins/marketplace.json");
+    expect(market.plugins).toHaveLength(1);
+    expect(market.plugins[0].name).toBe(portable().name);
+    expect(market.plugins[0].source).toEqual({
+      source: "local",
+      path: "./plugin",
+    });
+    expect(market.plugins[0].policy.installation).toBe("AVAILABLE");
+  });
+});
