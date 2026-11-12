@@ -455,7 +455,7 @@ describe("the touch floor holds for every floored size role", () => {
   it("keys the clamp on the flag: a floored role under any name is clamped", () => {
     const extra: Role = { name: "spacing-tap", group: "size", kind: "size", required: true, description: "test", default: { px: 50 }, floor: true, block: "invariant" }
     const roles = manifest({}, [extra])
-    expect(sizeRoleTheme(roles, resolveWith(roles))).toContain("  --spacing-tap: max(var(--size-tap), var(--control-floor)); /* never under the control floor: 49px, or 28px drawn at desktop density */")
+    expect(sizeRoleTheme(roles, resolveWith(roles))).toContain("  --spacing-tap: max(var(--size-tap), var(--control-floor)); /* never under the control floor: 49px on touch, or 28px drawn at desktop density */")
   })
 })
 
@@ -464,7 +464,7 @@ describe("fixed size roles", () => {
     const second: Role = { name: "spacing-hit-min", group: "size", kind: "size", required: true, description: "test", default: { px: 60 }, fixed: true, block: "invariant" }
     const roles = manifest({}, [second])
     const lines = sizeRoleTheme(roles, resolveWith(roles))
-    expect(lines).toContain("  --spacing-touch-min: var(--target-floor); /* the hit-area floor: 49px on every device; no brand can lower it */")
+    expect(lines).toContain("  --spacing-touch-min: var(--target-floor); /* the hit-area floor: 49px on touch, 28px on a desktop; no brand can lower it */")
     expect(lines).toContain("  --spacing-hit-min: 3.75rem; /* a literal: fixed, no brand can move it */")
   })
 })

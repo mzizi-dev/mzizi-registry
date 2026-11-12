@@ -317,20 +317,22 @@ fn allows(allowed: &str, property: &str) -> bool {
 /// `__tests__/density.test.ts` holds it equal to the TypeScript runner's table and the roles.
 pub const ROLE_HEIGHTS: &[(&str, u32, u32)] = &[
     ("touch", 49, 36),
-    ("touch-min", 49, 49),
+    ("touch-min", 49, 28),
     ("control", 49, 36),
     ("control-sm", 49, 32),
     ("control-lg", 56, 40),
     ("control-icon", 49, 36),
     ("control-dense", 32, 28),
-    ("field", 49, 49),
-    ("field-sm", 49, 49),
+    ("field", 49, 36),
+    ("field-sm", 49, 32),
 ];
 
 /// THE BUNDU FLOOR (owner ruling 2026-11-02), a copy of `BUNDU_FLOOR` in `lib/tokens/roles.source.ts`:
-/// the hit region every interactive control keeps on every device, desktop included, in px.
+/// the hit region every interactive control keeps on touch (a coarse pointer), in px; a desktop keeps `HIT_AREA_FINE_PX`.
 /// `__tests__/density.test.ts` holds it equal to the source.
 pub const HIT_AREA_PX: u32 = 49;
+/// The hit region on a desktop (a fine pointer with hover), owner ruling 2026-11-12, #660. Equal to `VISIBLE_FINE_MIN_PX`.
+pub const HIT_AREA_FINE_PX: u32 = 28;
 /// The smallest a control is DRAWN at desktop density, in px (the Bundu floor again).
 pub const VISIBLE_FINE_MIN_PX: u32 = 28;
 
@@ -409,18 +411,19 @@ pub fn is_interactive(node: &Node) -> bool {
     }
 }
 
-/// The hit region, in px, of an interactive node drawn `drawn` px tall: raised to `HIT_AREA_PX` only where the
-/// token layer's rule provably does it (see `hitRegion` in `contracts/runner.ts`); otherwise its drawn box.
-pub fn hit_region(node: &Node, drawn: u32) -> u32 {
+/// The hit region, in px, of an interactive node drawn `drawn` px tall: raised to `floor` (`HIT_AREA_PX` on touch,
+/// `HIT_AREA_FINE_PX` on a desktop) only where the token layer's rule provably does it (see `hitRegion` in
+/// `contracts/runner.ts`); otherwise its drawn box.
+pub fn hit_region(node: &Node, drawn: u32, floor: u32) -> u32 {
     if is_composite_row(node) {
         return if own_min_height(node) {
             drawn
         } else {
-            drawn.max(HIT_AREA_PX)
+            drawn.max(floor)
         };
     }
     if carries_hit_area(node) && !clips(node) {
-        return drawn.max(HIT_AREA_PX);
+        return drawn.max(floor);
     }
     drawn
 }
@@ -436,16 +439,16 @@ pub fn hit_violations(node: &Node, fine: Option<u32>, coarse: Option<u32>) -> Ve
     }
     let at = coarse.unwrap_or(fine);
     let mut under = Vec::new();
-    if hit_region(node, fine) < HIT_AREA_PX {
+    if hit_region(node, fine, HIT_AREA_FINE_PX) < HIT_AREA_FINE_PX {
         under.push(format!(
-            "hit region is {}px on a fine pointer, below the {HIT_AREA_PX}px Bundu floor",
-            hit_region(node, fine)
+            "hit region is {}px on a fine pointer, below the {HIT_AREA_FINE_PX}px Bundu floor",
+            hit_region(node, fine, HIT_AREA_FINE_PX)
         ));
     }
-    if hit_region(node, at) < HIT_AREA_PX {
+    if hit_region(node, at, HIT_AREA_PX) < HIT_AREA_PX {
         under.push(format!(
             "hit region is {}px on a coarse pointer, below the {HIT_AREA_PX}px Bundu floor",
-            hit_region(node, at)
+            hit_region(node, at, HIT_AREA_PX)
         ));
     }
     if carries_hit_area(node) && !clips(node) && fine < VISIBLE_FINE_MIN_PX {
