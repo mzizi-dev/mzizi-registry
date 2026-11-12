@@ -106,7 +106,7 @@ export const DEVICE_CODE_CLASSES = {
   },
   code: {
     phone:
-      "my-2 rounded-[var(--radius-md,12px)] border-2 border-primary px-4 py-2 font-mono text-4xl font-bold tracking-widest whitespace-nowrap text-foreground tabular-nums",
+      "my-2 rounded-[var(--radius-md,12px)] border-2 border-primary px-4 py-4 font-mono text-4xl font-bold tracking-widest whitespace-nowrap text-foreground tabular-nums",
     tv: "my-4 rounded-[var(--radius-md,12px)] border-4 border-primary px-8 py-4 font-mono text-7xl font-bold tracking-widest whitespace-nowrap text-foreground tabular-nums",
   },
   countdown: {
