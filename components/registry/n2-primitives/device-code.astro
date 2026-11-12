@@ -1,0 +1,175 @@
+---
+/**
+ * DeviceCode — the device side of OAuth 2.0 Device Authorization (RFC 8628 §3.3), pure
+ * Astro (`contracts/ui/device-code`): the user code (large, monospace, read across a room),
+ * the short verification address, a QR code of the complete address drawn here on the
+ * device (`./qr-code`, never a network service), a countdown, and a status line that is a
+ * polite live region. `device-code.tsx` (React) and `device-code.rs` (Rust) render the same
+ * markup with the same classes.
+ *
+ * The one enhancement script ticks the countdown, turns a lapsed code into `expired`, and
+ * makes the refresh button dispatch a bubbling `device-code:refresh` event on the root.
+ * Without it, everything renders from the server's clock and `refreshHref` is a plain link.
+ */
+import { cn } from "./ui-utils";
+import {
+  DEVICE_CODE_CLASSES as C,
+  DEVICE_CODE_TEXT as T,
+  displayUri,
+  effectiveStatus,
+  formatRemaining,
+  formatUserCode,
+  spokenUserCode,
+  statusMessage,
+  timeMs,
+  type DeviceCodeSize,
+  type DeviceCodeStatus,
+  type DeviceCodeTime,
+} from "./device-code-format";
+import { qrMatrix, qrPath, qrViewBox } from "./qr-code";
+
+interface Props {
+  userCode: string;
+  verificationUri: string;
+  verificationUriComplete: string;
+  expiresAt: DeviceCodeTime;
+  status?: DeviceCodeStatus;
+  size?: DeviceCodeSize;
+  now?: DeviceCodeTime;
+  refreshHref?: string;
+  class?: string;
+}
+
+const {
+  userCode,
+  verificationUri,
+  verificationUriComplete,
+  expiresAt,
+  status = "pending",
+  size = "phone",
+  now,
+  refreshHref,
+  class: extra,
+} = Astro.props;
+
+const expiresMs = timeMs(expiresAt);
+const remaining = expiresMs - (now === undefined ? Date.now() : timeMs(now));
+const shown = effectiveStatus(status, remaining);
+const qr = shown === "pending" ? qrMatrix(verificationUriComplete, "M") : null;
+const qrLabel = `QR code for ${verificationUriComplete}`;
+---
+
+<div
+  data-slot="device-code"
+  data-portal="https://mzizi.dev/components/device-code"
+  data-status={shown}
+  data-size={size}
+  data-expires-at={Number.isFinite(expiresMs) ? String(expiresMs) : undefined}
+  role="group"
+  aria-label={T.label}
+  class={cn(C.root, C.rootSize[size], extra)}
+>
+  {
+    shown === "pending" && (
+      <div data-slot="device-code-pending" class={C.pending[size]}>
+        <div class={C.steps}>
+          <p class={C.step[size]}>{T.goTo}</p>
+          <p data-slot="device-code-uri" class={C.uri[size]}>
+            {displayUri(verificationUri)}
+          </p>
+          <p class={C.step[size]}>{T.enter}</p>
+          <p data-slot="device-code-user-code" aria-hidden="true" class={C.code[size]}>
+            {formatUserCode(userCode)}
+          </p>
+          <p data-slot="device-code-spoken" class="sr-only">
+            {T.spokenPrefix + spokenUserCode(userCode)}
+          </p>
+          {Number.isFinite(expiresMs) && (
+            <p data-slot="device-code-countdown" class={C.countdown[size]}>
+              {T.expiresIn}
+              <span data-slot="device-code-timer" role="timer" class={C.timer}>
+                {formatRemaining(remaining)}
+              </span>
+            </p>
+          )}
+        </div>
+        {qr && (
+          <figure class={C.figure}>
+            <svg
+              data-slot="device-code-qr"
+              role="img"
+              aria-label={qrLabel}
+              viewBox={qrViewBox(qr.size)}
+              shape-rendering="crispEdges"
+              class={C.qr[size]}
+            >
+              <path fill="currentColor" d={qrPath(qr)} />
+            </svg>
+            <figcaption class={C.caption[size]}>{T.scan}</figcaption>
+          </figure>
+        )}
+      </div>
+    )
+  }
+  <p data-slot="device-code-status" role="status" class={C.status[size]}>
+    <span aria-hidden="true" class={C.dot[size]}></span>
+    <span data-slot="device-code-message">{statusMessage(shown, remaining)}</span>
+  </p>
+  {
+    shown !== "approved" && (
+      <div data-slot="device-code-ended" hidden={shown === "pending"} class={C.ended}>
+        {refreshHref ? (
+          <a href={refreshHref} data-device-code-refresh class={C.refresh[size]}>
+            {T.refresh}
+          </a>
+        ) : (
+          <button type="button" data-device-code-refresh class={C.refresh[size]}>
+            {T.refresh}
+          </button>
+        )}
+      </div>
+    )
+  }
+</div>
+
+<script>
+  import { DEVICE_CODE_LAST_MINUTE, formatRemaining, statusMessage } from "./device-code-format";
+
+  function wire(root: HTMLElement) {
+    if (root.dataset.wired) return;
+    root.dataset.wired = "true";
+    root.addEventListener("click", (event) => {
+      const button = (event.target as Element | null)?.closest("button[data-device-code-refresh]");
+      if (button && root.contains(button)) {
+        root.dispatchEvent(new CustomEvent("device-code:refresh", { bubbles: true }));
+      }
+    });
+    const expires = Number(root.dataset.expiresAt);
+    if (root.dataset.status !== "pending" || !Number.isFinite(expires)) return;
+    const timer = root.querySelector("[data-slot=device-code-timer]");
+    const message = root.querySelector("[data-slot=device-code-message]");
+    const pending = root.querySelector<HTMLElement>("[data-slot=device-code-pending]");
+    const ended = root.querySelector<HTMLElement>("[data-slot=device-code-ended]");
+    let id = 0;
+    const tick = () => {
+      const left = expires - Date.now();
+      if (timer) timer.textContent = formatRemaining(left);
+      if (left <= 0) {
+        window.clearInterval(id);
+        root.dataset.status = "expired";
+        if (pending) pending.hidden = true;
+        if (ended) ended.hidden = false;
+        if (message) message.textContent = statusMessage("expired", left);
+      } else if (left <= 60_000 && message && message.textContent !== DEVICE_CODE_LAST_MINUTE) {
+        message.textContent = DEVICE_CODE_LAST_MINUTE;
+      }
+    };
+    id = window.setInterval(tick, 1000);
+    tick();
+  }
+
+  const wireAll = () =>
+    document.querySelectorAll<HTMLElement>("[data-slot=device-code]").forEach(wire);
+  wireAll();
+  document.addEventListener("astro:page-load", wireAll);
+</script>
