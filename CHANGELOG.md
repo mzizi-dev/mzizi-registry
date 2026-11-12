@@ -59,6 +59,20 @@ Owner decision, 2026-10-20. The parser's "linear time" tests used fixed budgets:
 
 Releases `staging` to `main` as the next minor above v4.28.0 ([nyuchi/.github#80](https://github.com/nyuchi/.github/issues/80)). `package.json`, `README.md` and `content/changelog/releases.json` (and `lib/changelog.generated.ts`) carry 4.29.0. The registry takes `@nyuchi/mzizi-skills` 0.19.0 and the Claude Code plugin is 1.8.0; `/v1/skills` and `mzizi_get_skills` serve 0.19.0 once the `mzizi-api` and `mzizi-mcp` pins move to this release ([#645](https://github.com/mzizi-dev/mzizi-registry/pull/645)).
 
+### Changed — the Claude plugin is two plugins: `mzizi` (public) and `mzizi-dev`; skills 0.20.0, plugin 1.9.0 (2026-11-12)
+
+Owner direction (2026-11-12): split the plugin and ship the plugin directory's fixes at once. The directory's review held the single plugin for scripts that read the installer's environment, a hook module, a binary it cannot inspect, a missing icon and privacy policy, and unquoted skill descriptions. It will later accept scripts and mods only from verified organizations, which this organization is not and cannot ask to be. No issue: owner-directed fix.
+
+- **Changed, `plugin/` (the public `mzizi` plugin, 1.9.0, was 1.8.0):** seven skills (`mzizi-language`, `mzizi-roots`, `mzizi-design`, `mukoko-design`, `mzizi-backend`, `mzizi-architecture`, `discoverability`), `/mzizi:component`, `/mzizi:scaffold`, the fundi agent and the Mzizi MCP. Markdown, CSS, PNG and SVG and an MCP connection only: no script and no hook module. `favicon.ico` is left out of the public `mukoko-design` copy (the PNG and SVG forms stay).
+- **Added, `plugin/.claude-plugin/`:** `icon.png` (the light Mzizi mark, 1024 by 1024) and `privacyPolicyUrl` (`https://www.bundu.org/legal/privacy`).
+- **Added, `plugin-dev/` (the `mzizi-dev` plugin, 0.1.0):** the five dev skills (`digital-hygiene`, `progress-report`, `ship-release`, `registry-propagation`, `pr-gates`) with their shell scripts, and the house-rules hooks module (moved from `plugin/hooks/`). Install it with `/plugin install mzizi-dev@mzizi`. It is not submitted to the directory.
+- **Changed, `.claude-plugin/marketplace.json`:** lists both plugins.
+- **Changed, `scripts/generate-plugin-skills.mjs`:** writes both trees from `@nyuchi/mzizi-skills` (`plugin/skills/` and `plugin-dev/skills/`) and its `--check` covers both. `package.json`, `pnpm-lock.yaml` and `lib/skills.generated.ts` take skills 0.20.0, which quotes every skill description and drops the unpkg download rows.
+- **Changed, `__tests__/plugin-manifest.test.ts`:** pins the split, that the public plugin runs nothing and ships no file the directory cannot read, the icon size and the privacy URL, and that every skill description is quoted.
+- **Changed, `plugin/agents/fundi.md`:** says the dev skills are in `mzizi-dev`.
+- **Breaking, for plugin users:** anyone who installed `mzizi@mzizi` for the dev skills, the house-rules hooks or the `/mzizi` rules command now needs `mzizi-dev@mzizi`. Nothing else moved.
+- **Site/docs impact:** pages that say the plugin carries twelve skills or the house rules (`toolchain/skills`, `toolchain/mcp`, the site's llms.txt) need the two-plugin wording; `/v1/skills` and the MCP still serve all twelve skills.
+
 ### Changed — take @nyuchi/mzizi-skills 0.19.0 (12 skills), plugin 1.8.0 (2026-11-11)
 
 No issue: freshness update; no new skill. `@nyuchi/mzizi-skills` 0.19.0 corrects facts in the release skills and in two language and component skills: `ship-release` and `pr-gates` give the CHANGELOG heading per repo, the real merge-queue methods (staging SQUASH, main MERGE) and `gh pr merge N --squash --auto` as the convention with the REST route as the fallback; `registry-propagation` says where mzizi-api's pin bot and parity change has and has not reached `main`; `verify-live.sh` reads past the first 100 releases and prints its whole `--help`; `mzizi-language`'s badge example keeps the spacing floor; `mzizi-roots` separates the 48px drawn height from the 49px hit-region floor.

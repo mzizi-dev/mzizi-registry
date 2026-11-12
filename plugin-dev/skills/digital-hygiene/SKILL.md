@@ -1,6 +1,6 @@
 ---
 name: digital-hygiene
-description: Use this skill whenever an agent clones a repository, adds a git worktree, fans out sub-agents, builds or tests (pnpm, npm, vitest, cargo, Astro, wrangler), reviews a PR, or finishes a task. It keeps agent hosts and cloud sessions from filling their disks: check free disk with `df -h /` before starting, refuse to fan out below 50 GB on a shared host, and in a Claude Code cloud session treat df's Avail as the fixed allowance. Work only in a folder unique to you (a clone or git worktree with an owner marker), never touch a folder you did not create, share build caches, never commit build output. On close, audit uncommitted changes, stashes and local branches with no commit on any remote (a squash merge leaves commits local-only), then delete only your own clone. Ships hygiene.sh; every deleting command is a dry run unless given --apply. Never rm -rf an unchecked variable, never touch ~/GitHub, claude-* temp, browser profiles or another agent's folders, never delete staging.
+description: "Use this skill whenever an agent clones a repository, adds a git worktree, fans out sub-agents, builds or tests (pnpm, npm, vitest, cargo, Astro, wrangler), reviews a PR, or finishes a task. It keeps agent hosts and cloud sessions from filling their disks: check free disk with `df -h /` before starting, refuse to fan out below 50 GB on a shared host, and in a Claude Code cloud session treat df's Avail as the fixed allowance. Work only in a folder unique to you (a clone or git worktree with an owner marker), never touch a folder you did not create, share build caches, never commit build output. On close, audit uncommitted changes, stashes and local branches with no commit on any remote (a squash merge leaves commits local-only), then delete only your own clone. Ships hygiene.sh; every deleting command is a dry run unless given --apply. Never rm -rf an unchecked variable, never touch ~/GitHub, claude-* temp, browser profiles or another agent's folders, never delete staging."
 ---
 
 # Digital hygiene: leave the machine as you found it
@@ -42,11 +42,11 @@ fetch first.
 `clone` and `worktree` always write: they make a clone or a worktree. `check` and `audit` only
 read.
 
-| Where you are                   | Path                                                                                                                  |
-| ------------------------------- | --------------------------------------------------------------------------------------------------------------------- |
-| `@nyuchi/mzizi-skills` from npm | `node_modules/@nyuchi/mzizi-skills/skills/digital-hygiene/hygiene.sh`                                                 |
-| The public `mzizi` plugin       | `skills/digital-hygiene/hygiene.sh` in the plugin                                                                     |
-| Only the MCP                    | `curl -fsSL https://unpkg.com/@nyuchi/mzizi-skills/skills/digital-hygiene/hygiene.sh -o "${TMPDIR:-/tmp}/hygiene.sh"` |
+| Where you are                   | Path                                                                                       |
+| ------------------------------- | ------------------------------------------------------------------------------------------ |
+| `@nyuchi/mzizi-skills` from npm | `node_modules/@nyuchi/mzizi-skills/skills/digital-hygiene/hygiene.sh`                      |
+| The `mzizi-dev` plugin          | `skills/digital-hygiene/hygiene.sh` in the plugin                                          |
+| Only the MCP                    | Install the package, then use the first path: `npm install --no-save @nyuchi/mzizi-skills` |
 
 ```bash
 H="${TMPDIR:-/tmp}/hygiene.sh"   # or one of the paths above
