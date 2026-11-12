@@ -10,6 +10,23 @@ From 2026-10-04 releases follow the org versioning policy ([nyuchi/.github#80](h
 
 ## [Unreleased]
 
+## [4.36.0] - 2026-11-12
+
+Releases `staging` to `main` as the next minor above v4.35.0 ([nyuchi/.github#80](https://github.com/nyuchi/.github/issues/80)). `package.json`, `README.md` and `content/changelog/releases.json` (and `lib/changelog.generated.ts`) are bumped to 4.36.0.
+
+### Added — the public `mzizi` plugin for Codex and ChatGPT; plugin 1.10.0 (2026-11-12, #520)
+
+The public plugin in `plugin/` is now installable from Codex and ChatGPT as well as Claude Code, in OpenAI's portable Agent Plugins layout (Package your plugin, developers.openai.com/codex/plugins/build). `#520` was written against skills 0.11.0 and plugin 1.3.0; it is rebased on the plugin split (#652) and keeps only the Codex and ChatGPT packaging, with the skills it needs already vendored from `@nyuchi/mzizi-skills` 0.20.0.
+
+- **Added, `plugin/plugin.json`:** the portable manifest (`$schema` `agent-plugins.org/schemas/1.0.0/plugin.schema.json`), with the Claude manifest's name, version and description and an `extensions["com.openai"].interface` listing.
+- **Added, `plugin/mcp.json`:** the `mzizi` server at `https://mcp.mzizi.dev/mcp` over `streamable-http`. Claude Code reads neither new file (it loads `.claude-plugin/plugin.json` and a dotted `.mcp.json`), so the public plugin still ships no `.mcp.json` and runs nothing.
+- **Added, `.agents/plugins/marketplace.json`:** the repo marketplace for Codex (`codex plugin marketplace add mzizi-dev/mzizi-registry`), listing `./plugin` only. The `mzizi-dev` dev plugin stays Claude Code only.
+- **Changed, `plugin/.claude-plugin/plugin.json`:** 1.10.0 (was 1.9.0), so installed copies update. The skills version is unchanged (0.20.0).
+- **Changed, `__tests__/plugin-manifest.test.ts`:** four specs keep the portable manifest's schema, name, version, description and MCP URL equal to the Claude manifest's, and the `.agents` marketplace pointing at `./plugin`.
+- **Changed, `README.md`:** the MCP section now matches the live server (free; sign-in only for `mzizi_fundi` and `mzizi_report_issue`; `tools/list` and `catalogue.json` instead of a tool list) and documents the plugin for Claude Code, Codex and ChatGPT.
+- **Not done:** the Codex CLI was not run against it; the manifests are checked against the published Agent Plugins schemas and OpenAI's packaging guide. Per-server sign-in is not declared in `mcp.json` (the schema allows no extensions on a server), so it connects the anonymous `/mcp`.
+- **Site/docs impact:** pages that say the plugin is for Claude Code only (`toolchain/skills`, `toolchain/connect`) can add the Codex and ChatGPT install path; no component or count change.
+
 ## [4.35.0] - 2026-11-12
 
 Releases `staging` to `main` as the next minor above v4.34.0 ([nyuchi/.github#80](https://github.com/nyuchi/.github/issues/80)). `package.json`, `README.md` and `content/changelog/releases.json` (and `lib/changelog.generated.ts`) are bumped to 4.35.0.

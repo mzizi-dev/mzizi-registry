@@ -1,7 +1,7 @@
 {
   "name": "mzizi",
   "displayName": "Mzizi",
-  "version": "1.9.0",
+  "version": "1.10.0",
   "description": "Build with Mzizi: seven Mzizi agent skills (@nyuchi/mzizi-skills 0.20.0: mzizi-language, mzizi-roots, mzizi-design, mukoko-design, mzizi-backend, mzizi-architecture, discoverability), the /mzizi:component and /mzizi:scaffold commands, the fundi architecture agent, and the Mzizi MCP at mcp.mzizi.dev (free, no account; sign-in only for the Fundi tools). The 21-family palette, the shell first, Mzizi Roots components in Rust first, the Mzizi language, and the Ubuntu doctrine. Markdown and an MCP connection only: no scripts and no hooks. Owned and operated by Mzizi; live at mzizi.dev.",
   "homepage": "https://mzizi.dev",
   "repository": "https://github.com/mzizi-dev/mzizi-registry",

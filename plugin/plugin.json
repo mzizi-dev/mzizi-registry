@@ -1,0 +1,49 @@
+{
+  "$schema": "https://agent-plugins.org/schemas/1.0.0/plugin.schema.json",
+  "name": "mzizi",
+  "version": "1.10.0",
+  "description": "Build with Mzizi: seven Mzizi agent skills (@nyuchi/mzizi-skills 0.20.0: mzizi-language, mzizi-roots, mzizi-design, mukoko-design, mzizi-backend, mzizi-architecture, discoverability), the /mzizi:component and /mzizi:scaffold commands, the fundi architecture agent, and the Mzizi MCP at mcp.mzizi.dev (free, no account; sign-in only for the Fundi tools). The 21-family palette, the shell first, Mzizi Roots components in Rust first, the Mzizi language, and the Ubuntu doctrine. Markdown and an MCP connection only: no scripts and no hooks. Owned and operated by Mzizi; live at mzizi.dev.",
+  "author": {
+    "name": "Mzizi",
+    "email": "support@bundu.org",
+    "url": "https://mzizi.dev"
+  },
+  "homepage": "https://mzizi.dev",
+  "repository": "https://github.com/mzizi-dev/mzizi-registry",
+  "license": "Apache-2.0",
+  "keywords": [
+    "mzizi",
+    "design-system",
+    "skills",
+    "mcp",
+    "rust",
+    "mzizi-roots",
+    "mzizi-language",
+    "registry",
+    "ubuntu",
+    "claude-code",
+    "architecture",
+    "app-shell",
+    "codex",
+    "chatgpt"
+  ],
+  "extensions": {
+    "com.openai": {
+      "interface": {
+        "displayName": "Mzizi",
+        "shortDescription": "Mzizi skills and MCP",
+        "longDescription": "Build with Mzizi, the programming language and the components that support it. The plugin carries the seven public Mzizi agent skills (@nyuchi/mzizi-skills 0.20.0): mzizi-language, mzizi-roots, mzizi-design, mukoko-design, mzizi-backend, mzizi-architecture and discoverability, and connects the Mzizi MCP server at https://mcp.mzizi.dev/mcp, free with no account (sign-in only for the Fundi tools). It runs nothing on your machine.",
+        "developerName": "Mzizi",
+        "category": "Developer Tools",
+        "capabilities": ["Search components", "Read skills, tokens and docs"],
+        "websiteURL": "https://mzizi.dev",
+        "defaultPrompt": [
+          "Find the Mzizi component for a status badge, Rust first.",
+          "Check this colour pair against the Mzizi contrast floor.",
+          "Show me the Mzizi architecture for an app shell."
+        ],
+        "brandColor": "#4A616B"
+      }
+    }
+  }
+}
