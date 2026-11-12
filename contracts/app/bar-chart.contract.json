@@ -2,7 +2,7 @@
   "$schema": "../schema/component-contract.schema.json",
   "name": "app/bar-chart",
   "title": "BarChart",
-  "version": "1.1.0",
+  "version": "1.2.0",
   "node": 6,
   "kind": "pattern",
   "summary": "A bar chart rendered on the server as plain HTML: columns over time or labelled rows, the exact figures in a real table under \"Show the figures\", following the theme through tokens.",
@@ -13,7 +13,10 @@
       "export": "@bundu/ui/app/BarChart.astro",
       "since": "0.3.0"
     },
-    "tsx": { "registry": "app-bar-chart", "identity": "contract" },
+    "tsx": {
+      "registry": "app-bar-chart",
+      "identity": "contract"
+    },
     "rs": null,
     "related": ["chart"]
   },
@@ -32,9 +35,9 @@
     },
     {
       "name": "data",
-      "type": "{ label: string; value: number; long?: string }[]",
+      "type": "{ label: string; value: number | null; long?: string }[]",
       "required": true,
-      "description": "The points; `long` is the table's label."
+      "description": "The points; `long` is the table's label. A `null` value is withheld or unknown (for example a count suppressed for k-anonymity): it is never drawn or totalled as 0."
     },
     {
       "name": "layout",
@@ -71,12 +74,22 @@
       "required": false,
       "default": "en-GB",
       "description": "BCP 47 locale for numbers."
+    },
+    {
+      "name": "missingLabel",
+      "type": "string",
+      "required": false,
+      "default": "Not available",
+      "description": "What a null value reads as, in the figures table, the rows layout and a column's title, e.g. \"Fewer than 5\"."
     }
   ],
   "slots": [],
   "behaviour": [
     "The bars are aria-hidden; the figures table (with a total) is the accessible version.",
-    "No data or all zero: \"Nothing to chart in this range.\"",
+    "No data, or every value 0 with none null: \"Nothing to chart in this range.\"",
+    "A null value draws no bar. In columns it leaves a small muted baseline tick (`fill-muted-foreground`) on a column marked `data-missing`, whose title reads \"<label>: <missingLabel>\"; in rows the bar is empty and the value is the missingLabel in muted text.",
+    "The figures table shows the missingLabel (muted) for a null; the total sums the known values and reads \"At least <n>\" when any value is null (values are non-negative counts).",
+    "Every value null: \"No figure in this range can be shown: <missingLabel, lower-cased> for every point.\"",
     "Axis labels (columns) are thinned so they never crowd: always the first and the last, never one crowding the last; at most 6 from sm up, and below sm only the first, the middle (with at least 5 points) and the last.",
     "Bar sizes are SVG geometry (a <rect>'s height or width in a 0–100 viewBox), never inline styles: a CSP needs no style-src-attr 'unsafe-inline'."
   ],
@@ -110,6 +123,65 @@
           {
             "label": "Admin",
             "value": 2
+          }
+        ]
+      }
+    },
+    "suppressed": {
+      "description": "A k-anonymity-suppressed day: drawn as no bar, never as 0, and the total is a lower bound.",
+      "props": {
+        "title": "Sign-ups",
+        "caption": "Per day, last 3 days",
+        "missingLabel": "Fewer than 5",
+        "data": [
+          {
+            "label": "Mon",
+            "value": 6
+          },
+          {
+            "label": "Tue",
+            "value": null
+          },
+          {
+            "label": "Wed",
+            "value": 5
+          }
+        ]
+      }
+    },
+    "suppressed-rows": {
+      "description": "Rows with a withheld value.",
+      "props": {
+        "title": "By role",
+        "caption": "Now",
+        "layout": "rows",
+        "missingLabel": "Fewer than 5",
+        "data": [
+          {
+            "label": "Admin",
+            "value": 7
+          },
+          {
+            "label": "Guest",
+            "value": null
+          }
+        ]
+      }
+    },
+    "suppressed-all": {
+      "description": "Every value withheld.",
+      "props": {
+        "title": "Sign-ups",
+        "caption": "Per day, last 2 days",
+        "missingLabel": "Fewer than 5",
+        "data": [
+          {
+            "label": "Mon",
+            "value": null
+          },
+          {
+            "label": "Tue",
+            "value": null
           }
         ]
       }
@@ -217,7 +289,7 @@
     "Scales from 320px to 1920px without distorting text; the plot is 12rem tall, 14rem from sm.",
     "Axis labels: at most 6 from sm up; first, middle and last below sm."
   ],
-  "contract": "contract\n  slot is \"bar-chart\"\n  summary \"Show the figures\" min_height 44\n  when default shows h3 \"Sign-ups\"\n  when empty shows p \"Nothing to chart in this range.\"\n  when rows shows th \"Admin\"\nend",
+  "contract": "contract\n  slot is \"bar-chart\"\n  summary \"Show the figures\" min_height 44\n  when default shows h3 \"Sign-ups\"\n  when empty shows p \"Nothing to chart in this range.\"\n  when rows shows th \"Admin\"\n  when suppressed shows td \"At least 11\"\n  when suppressed-all shows p \"No figure in this range can be shown: fewer than 5 for every point.\"\nend",
   "checks": [
     {
       "say": "Labelled figure.",
@@ -272,6 +344,79 @@
       "select": "[data-axis] > div:last-child > span:not(.hidden)",
       "count": 1,
       "text": "D12"
+    },
+    {
+      "say": "No value is null by default, so no column is marked missing.",
+      "select": "[data-missing]",
+      "absent": true
+    },
+    {
+      "say": "A null value is marked missing, and its title reads the missingLabel.",
+      "state": "suppressed",
+      "select": "[data-missing]",
+      "count": 1,
+      "attr": {
+        "title": "Tue: Fewer than 5"
+      }
+    },
+    {
+      "say": "A null value draws a muted baseline tick, not a bar.",
+      "state": "suppressed",
+      "select": "[data-missing] rect",
+      "count": 1,
+      "attr": {
+        "class": "fill-muted-foreground",
+        "x": "3",
+        "y": "98",
+        "width": "4",
+        "height": "2"
+      }
+    },
+    {
+      "say": "Only the known values draw bars.",
+      "state": "suppressed",
+      "select": "rect.fill-primary",
+      "count": 2
+    },
+    {
+      "say": "The figures table shows the missingLabel, muted, for a null.",
+      "state": "suppressed",
+      "select": "tbody td.text-muted-foreground",
+      "count": 1,
+      "text": "Fewer than 5"
+    },
+    {
+      "say": "With a null, the total is a lower bound of the known values.",
+      "state": "suppressed",
+      "select": "tfoot td",
+      "count": 1,
+      "text": "At least 11"
+    },
+    {
+      "say": "In rows, a null draws no bar.",
+      "state": "suppressed-rows",
+      "select": "li rect",
+      "count": 1
+    },
+    {
+      "say": "In rows, a null's value is the missingLabel in muted text.",
+      "state": "suppressed-rows",
+      "select": "li span.text-muted-foreground",
+      "count": 1,
+      "text": "Fewer than 5"
+    },
+    {
+      "say": "Every value null: the chart says no figure can be shown.",
+      "state": "suppressed-all",
+      "select": "figure > p",
+      "count": 1,
+      "text": "No figure in this range can be shown: fewer than 5 for every point."
+    },
+    {
+      "say": "Every value null: no bars are drawn.",
+      "state": "suppressed-all",
+      "select": "[data-bar]",
+      "absent": true
     }
   ]
 }
