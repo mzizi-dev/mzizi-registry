@@ -16,6 +16,38 @@ import type { ChangelogRow } from "@/lib/db/types";
 
 export const CHANGELOG_RELEASES: readonly ChangelogRow[] = [
   {
+    version: "4.33.0",
+    title:
+      "v4.33.0 — device-code: RFC 8628 device pairing with an on-device QR code",
+    description:
+      "Releases staging to main as the next minor above v4.32.0 (nyuchi/.github#80). Added: device-code (RFC 8628 device pairing, a QR code drawn on the device, in Astro, React and Rust under one contract), device-code-format and qr-code; /v1/ui grows from 690 to 693 components (#475, #656). CHANGELOG.md section [4.33.0] is the narrative.",
+    line: "public",
+    line_rank: 1,
+    major: 4,
+    minor: 33,
+    patch: 0,
+    release_kind: "minor",
+    breaking: false,
+    released_at: "2026-11-12T23:59:00.000+00:00",
+    created_at: "2026-11-12T23:59:00.000+00:00",
+    nodes_affected: null,
+    components_added: null,
+    components_modified: null,
+    components_deprecated: null,
+    components_removed: null,
+    components_touched: null,
+    tools_added: null,
+    tools_modified: null,
+    tools_deprecated: null,
+    tools_removed: null,
+    linked_issues: null,
+    total_stable: null,
+    total_deprecated: null,
+    total_alpha: null,
+    changed_by: "claude-code",
+    entry_order: 0,
+  },
+  {
     version: "4.32.0",
     title:
       "v4.32.0 — the Claude plugin is two plugins, mzizi (public) and mzizi-dev; skills 0.20.0",
