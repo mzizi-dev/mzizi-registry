@@ -61,13 +61,20 @@
  *   pnpm tokens:verify   CI gate: drift, plus the contrast gate
  */
 
-import { backgroundColors, brandMeta, ecosystem, semanticColors, typography } from "./brand.source"
-import { minerals } from "./palette.source"
+import {
+  backgroundColors,
+  brandMeta,
+  ecosystem,
+  semanticColors,
+  typography,
+} from "./brand.source";
+import { minerals } from "./palette.source";
 
-export type RoleKind = "text" | "fill" | "ui" | "surface" | "size" | "radius" | "font"
+export type RoleKind =
+  "text" | "fill" | "ui" | "surface" | "size" | "radius" | "font";
 
 /** A palette family tier, as `scripts/render-globals-css.ts` emits it. */
-export type FamilyTier = "base" | "container" | "on-container" | "aa" | "text"
+export type FamilyTier = "base" | "container" | "on-container" | "aa" | "text";
 
 /** One theme's value for a role. */
 export type RoleValue =
@@ -90,44 +97,44 @@ export type RoleValue =
   /** A rung of the radius ladder (`brandMeta.radii`): declared as `var(--r-<rung>)`, so it follows the rung. */
   | { radius: string }
   /** A font stack. */
-  | { font: string }
+  | { font: string };
 
-export type ThemedValue = RoleValue | { light: RoleValue; dark: RoleValue }
+export type ThemedValue = RoleValue | { light: RoleValue; dark: RoleValue };
 
 /** What every measured rule carries. */
 interface MeasuredBase {
   /** Roles the value is measured on, as text or UI over that background. */
-  against: readonly string[]
+  against: readonly string[];
   /**
    * Also a minimum WCAG 2.2 contrast ratio, where a WCAG criterion applies as well as the
    * APCA bar: `border-control` carries 3 for WCAG 1.4.11 (non-text contrast, 3:1).
    */
-  wcag?: number
+  wcag?: number;
   /** Set only where the default misses its bar and the fix is an owner decision. */
-  pending?: string
+  pending?: string;
   /**
    * A named, listed exception to the WCAG text minimum (`wcagFloor()`), never silent: this rule's WCAG bar is
    * `min` instead, for `reason`. The APCA bar still applies in full. The gate prints every one and
    * `__tests__/tokens-wcag-minimums.test.ts` pins the exact set, so it cannot grow quietly.
    */
-  wcagException?: { min: number; reason: string }
+  wcagException?: { min: number; reason: string };
 }
 
 /** A rule that measures the role. `contrastMin()` reads its bar. */
 export type MeasuredRule =
   | (MeasuredBase & {
       /** Minimum |APCA Lc|. */
-      min: number
-      nonBody?: undefined
+      min: number;
+      nonBody?: undefined;
     })
   | (MeasuredBase & {
       /**
        * Text only: why this text is never body copy. It implies the bar: Lc 60 (`NON_BODY`,
        * APCA's minimum for non-body text) instead of 75. An owner decision, pinned by the role tests.
        */
-      nonBody: string
-      min?: undefined
-    })
+      nonBody: string;
+      min?: undefined;
+    });
 
 export type ContrastRule =
   | MeasuredRule
@@ -137,7 +144,7 @@ export type ContrastRule =
    * A ui role that only decorates: exempt from the Lc 30 ui bar, and listed by the gate.
    * The reason says why it is never the only cue. Pinned by the role tests.
    */
-  | { decorative: string }
+  | { decorative: string };
 
 export type RoleGroup =
   | "identity"
@@ -155,7 +162,7 @@ export type RoleGroup =
   | "categorical"
   | "size"
   | "radius"
-  | "font"
+  | "font";
 
 /**
  * Which block of the Mzizi default stylesheet declares the role's bare var.
@@ -172,35 +179,35 @@ export type RoleBlock =
   | "sidebar"
   | "roles"
   | "invariant"
-  | "theme"
+  | "theme";
 
 export interface Role {
-  name: string
-  group: RoleGroup
-  kind: RoleKind
-  required: boolean
-  description: string
-  contrast?: ContrastRule
+  name: string;
+  group: RoleGroup;
+  kind: RoleKind;
+  required: boolean;
+  description: string;
+  contrast?: ContrastRule;
   /** The Mzizi pack. */
-  default: ThemedValue
+  default: ThemedValue;
   /**
    * Derive a compliant value from `default` with the palette's own `walk()` when
    * the default misses the contrast rule: `text` moves the role's value away from
    * its background, `fill` moves the fill away from its foreground. The `-aa`
    * principle: the canonical value stays, the role gets the measured-safe one.
    */
-  derive?: "text" | "fill"
+  derive?: "text" | "fill";
   /** Theme key, where the role's name would collide with a Tailwind keyword. */
-  utility?: string
+  utility?: string;
   /** size: registered with Tailwind as its own literal value, which no pack can override. */
-  fixed?: true
+  fixed?: true;
   /**
    * size: must not be smaller than `spacing-touch-min`. The stylesheet registers
    * it as `max(var(--size-<name>), <floor>)`, so a pack that lowers the bare var
    * still paints the floor, and the gate fails a default under it.
    */
-  floor?: true
-  block: RoleBlock
+  floor?: true;
+  block: RoleBlock;
 }
 
 /**
@@ -212,12 +219,18 @@ export interface Role {
  * Where each number comes from (The Bundu Order draws on biblical mathematical patterns and prime numbers;
  * owner, 2026-11-02):
  *   - `unitPx` 7: the radius unit (`brand.source.ts`, `--radius-unit`); the radii are 4/7/12/14/17 and a pill.
- *   - `bodyPx` 17: body text on every device, desktop included. It is Apple's iOS default body size, and a prime.
+ *   - `bodyPx` 17: body text on touch (every device that is not a desktop). It is Apple's iOS default body size, and a prime.
  *   - `captionPx` 14: captions, metadata and secondary labels; 2 x 7. Nothing readable is smaller.
- *   - `hitAreaPx` 49: every interactive control keeps a hit region this size on every device, desktop included;
- *     7 x 7, above Apple's 44 pt. A desktop control may DRAW smaller (`visibleControlMinPx` and up) but keeps the
- *     hit region through padding or the `hit-area` pseudo-element (see `densityLayer()`).
+ *   - `hitAreaPx` 49: every interactive control keeps a hit region this size on touch; 7 x 7, above Apple's 44 pt.
+ *     (On a desktop the tier below applies: the drawn box is the hit region.)
  *   - `visibleControlMinPx` 28: the smallest a control is DRAWN, at desktop density; 4 x 7 (Apple macOS default 28 pt).
+ *   - `pointerFine`: THE DESKTOP TIER (owner ruling, 2026-11-12, #660: "yes do the device-based floor, desktop body
+ *     15px"). A fine pointer with hover (`DENSITY_DESKTOP_QUERY`) is not a finger: Apple's own defaults drop to 28 pt
+ *     controls and 13 pt body on macOS, and a 49px hit region with 17px body on every desktop screen cost a great deal
+ *     of scrolling. So the floor has two tiers. Touch (a coarse pointer, and every device that is not a desktop) keeps
+ *     the numbers above untouched. Desktop: `hitAreaPx` 28 (4 x 7, Apple's macOS default control, above WCAG 2.2 SC
+ *     2.5.8's 24px), so a desktop control's drawn box IS its hit region and needs no pseudo-element; `bodyPx` 15 (the
+ *     owner's number; Apple's macOS default is 13 pt). Unchanged on both tiers: captions 14px, the spacing floor, contrast.
  *   - `spacing`: the SPACING FLOOR (owner, 2026-11-04, #617): minimums nothing can go under, even a component that
  *     sets no padding at all. All on the 7px unit. `insetPx` 14 (2 x 7): padding between text and the edge of its
  *     container (a control's label on the inline axis; a card, panel, dialog, alert or popover on both axes; a
@@ -237,29 +250,36 @@ export const BUNDU_FLOOR = {
   captionPx: 14,
   hitAreaPx: 49,
   visibleControlMinPx: 28,
-  spacing: { insetPx: 14, controlGapPx: 7, labelGapPx: 7, itemGapPx: 7, leadingBody: 1.5 },
+  pointerFine: { hitAreaPx: 28, bodyPx: 15 },
+  spacing: {
+    insetPx: 14,
+    controlGapPx: 7,
+    labelGapPx: 7,
+    itemGapPx: 7,
+    leadingBody: 1.5,
+  },
   contrast: { body: 7, nonBody: 4.5, ui: 3 },
   apca: { body: 75, nonBody: 60, ui: 30 },
-} as const
+} as const;
 
 /** APCA Lc 75: body text, and a foreground on its fill. The gate's text floor. */
-export const BODY = BUNDU_FLOOR.apca.body
+export const BODY = BUNDU_FLOOR.apca.body;
 /** APCA's minimum for non-body text: captions, timestamps, metadata (owner decision 2026-10-20, #484). */
-export const NON_BODY = BUNDU_FLOOR.apca.nonBody
+export const NON_BODY = BUNDU_FLOOR.apca.nonBody;
 /** APCA Lc 30: the parts of a control or focus indicator a user has to see. The gate's ui floor. */
-export const UI = BUNDU_FLOOR.apca.ui
+export const UI = BUNDU_FLOOR.apca.ui;
 /**
  * WCAG 2 contrast MINIMUMS, enforced next to the APCA bars (owner decision 2026-11-02, #399: "adopt a WCAG 7:1
  * floor for body text. We should have minimums set"). One definition; the gate, `textRamp()`, the derive walks
  * and the tests all read these.
  */
 /** WCAG 2 ratio 7:1 (the AAA level of 1.4.6): body text, and a foreground on its fill. */
-export const WCAG_BODY = BUNDU_FLOOR.contrast.body
+export const WCAG_BODY = BUNDU_FLOOR.contrast.body;
 /** WCAG 2 ratio 4.5:1 (1.4.3): non-body text, the `nonBody` rule: captions, timestamps, metadata. */
-export const WCAG_NON_BODY = BUNDU_FLOOR.contrast.nonBody
+export const WCAG_NON_BODY = BUNDU_FLOOR.contrast.nonBody;
 /** WCAG 2 ratio 3:1 (1.4.11, non-text contrast): the `UI` rule, focus rings and control edges. */
-export const WCAG_UI = BUNDU_FLOOR.contrast.ui
-const ON_PAGE = ["base", "surface"] as const
+export const WCAG_UI = BUNDU_FLOOR.contrast.ui;
+const ON_PAGE = ["base", "surface"] as const;
 
 /**
  * Every surface a control can sit on: the neutral ladder from `pitch` to `raised`, the
@@ -282,69 +302,86 @@ export const CONTROL_SURFACES = [
   "card",
   "popover",
   "sidebar",
-] as const
+] as const;
 
 /** The floor the gate holds a kind to: 75 for text (60 for `nonBody` text), 30 for ui, none otherwise. */
 export function contrastFloor(kind: RoleKind, rule?: ContrastRule): number {
-  if (kind === "text") return rule && "against" in rule && rule.nonBody ? NON_BODY : BODY
-  return kind === "ui" ? UI : 0
+  if (kind === "text")
+    return rule && "against" in rule && rule.nonBody ? NON_BODY : BODY;
+  return kind === "ui" ? UI : 0;
 }
 
 /** The WCAG 2 ratio floor the gate holds a kind to: 7 for body text, 4.5 for `nonBody` text, 3 for ui, none otherwise. */
 export function wcagFloor(kind: RoleKind, rule?: ContrastRule): number {
-  if (kind === "text") return rule && "against" in rule && rule.nonBody ? WCAG_NON_BODY : WCAG_BODY
-  return kind === "ui" ? WCAG_UI : 0
+  if (kind === "text")
+    return rule && "against" in rule && rule.nonBody
+      ? WCAG_NON_BODY
+      : WCAG_BODY;
+  return kind === "ui" ? WCAG_UI : 0;
 }
 
 /** The WCAG ratio a measured rule asks for: its own `wcag` where that is higher, else the kind's floor. 0 = none. */
 export function wcagMin(kind: RoleKind, rule: MeasuredRule): number {
-  if (rule.wcagException) return Math.max(rule.wcag ?? 0, rule.wcagException.min)
-  return Math.max(rule.wcag ?? 0, wcagFloor(kind, rule))
+  if (rule.wcagException)
+    return Math.max(rule.wcag ?? 0, rule.wcagException.min);
+  return Math.max(rule.wcag ?? 0, wcagFloor(kind, rule));
 }
 
 /** The |Lc| a measured rule asks for: its `min`, or for `nonBody` text, `NON_BODY`. */
 export function contrastMin(kind: RoleKind, rule: MeasuredRule): number {
-  return rule.min ?? contrastFloor(kind, rule)
+  return rule.min ?? contrastFloor(kind, rule);
 }
 
 /** A `brand.source.ts` semantic colour, failing loudly when canon lost it. */
 function semantic(name: string) {
-  const row = semanticColors.find((c) => c.name === name)
-  if (!row) throw new Error(`brand.source.ts semanticColors has no "${name}"`)
-  return row
+  const row = semanticColors.find((c) => c.name === name);
+  if (!row) throw new Error(`brand.source.ts semanticColors has no "${name}"`);
+  return row;
 }
 
 /** A component spec from `brandMeta.componentSpecs`, by name. */
-function spec(name: string): { heights: Record<string, number>; borderRadius: number } {
-  const row = brandMeta.componentSpecs.find((s) => s.name === name)
-  if (!row) throw new Error(`brand.source.ts componentSpecs has no "${name}"`)
-  return row as unknown as { heights: Record<string, number>; borderRadius: number }
+function spec(name: string): {
+  heights: Record<string, number>;
+  borderRadius: number;
+} {
+  const row = brandMeta.componentSpecs.find((s) => s.name === name);
+  if (!row) throw new Error(`brand.source.ts componentSpecs has no "${name}"`);
+  return row as unknown as {
+    heights: Record<string, number>;
+    borderRadius: number;
+  };
 }
 
 function access(key: "minTouchTarget" | "defaultTouchTarget"): number {
-  const v = brandMeta.accessibility[key]
-  if (typeof v !== "number") throw new Error(`brand.source.ts accessibility.${key} is not a number`)
+  const v = brandMeta.accessibility[key];
+  if (typeof v !== "number")
+    throw new Error(`brand.source.ts accessibility.${key} is not a number`);
   // canon (`/v1/brand`) carries the number too; the Bundu floor is the one source and canon must agree.
   if (v !== BUNDU_FLOOR.hitAreaPx) {
-    throw new Error(`brand.source.ts accessibility.${key} is ${v}px, but BUNDU_FLOOR.hitAreaPx is ${BUNDU_FLOOR.hitAreaPx}px`)
+    throw new Error(
+      `brand.source.ts accessibility.${key} is ${v}px, but BUNDU_FLOOR.hitAreaPx is ${BUNDU_FLOOR.hitAreaPx}px`,
+    );
   }
-  return v
+  return v;
 }
 
 /** Canon (`/v1/brand`) carries the spacing floor too; `BUNDU_FLOOR.spacing` is the one source and canon must agree. */
 function spacingFloorInCanon(): void {
-  const a = brandMeta.accessibility
+  const a = brandMeta.accessibility;
   const want: Record<string, number> = {
     minInset: BUNDU_FLOOR.spacing.insetPx,
     minControlGap: BUNDU_FLOOR.spacing.controlGapPx,
     minLabelGap: BUNDU_FLOOR.spacing.labelGapPx,
     minItemGap: BUNDU_FLOOR.spacing.itemGapPx,
     minBodyLeading: BUNDU_FLOOR.spacing.leadingBody,
-  }
+  };
   for (const [k, v] of Object.entries(want))
-    if (a[k] !== v) throw new Error(`brand.source.ts accessibility.${k} is ${String(a[k])}, but BUNDU_FLOOR.spacing says ${v}`)
+    if (a[k] !== v)
+      throw new Error(
+        `brand.source.ts accessibility.${k} is ${String(a[k])}, but BUNDU_FLOOR.spacing says ${v}`,
+      );
 }
-spacingFloorInCanon()
+spacingFloorInCanon();
 
 /**
  * A radius role's default: the rung of the radius ladder it follows, so a
@@ -353,19 +390,23 @@ spacingFloorInCanon()
  * stays the source and a spec that moves off its rung fails loudly.
  */
 function rung(specName: string, name: string): RoleValue {
-  const v = brandMeta.radii[name]
-  if (typeof v !== "string") throw new Error(`brand.source.ts radii has no "${name}"`)
-  const want = spec(specName).borderRadius
+  const v = brandMeta.radii[name];
+  if (typeof v !== "string")
+    throw new Error(`brand.source.ts radii has no "${name}"`);
+  const want = spec(specName).borderRadius;
   if (parseFloat(v) !== want) {
-    throw new Error(`componentSpecs.${specName}.borderRadius is ${want}px, but its radius rung "${name}" is ${v}`)
+    throw new Error(
+      `componentSpecs.${specName}.borderRadius is ${want}px, but its radius rung "${name}" is ${v}`,
+    );
   }
-  return { radius: name }
+  return { radius: name };
 }
 
 function fontFamily(name: "sans" | "serif" | "mono"): string {
-  const row = typography.find((t) => t.entryType === "font" && t.name === name)
-  if (!row?.family) throw new Error(`brand.source.ts typography has no font "${name}"`)
-  return row.family
+  const row = typography.find((t) => t.entryType === "font" && t.name === name);
+  if (!row?.family)
+    throw new Error(`brand.source.ts typography has no font "${name}"`);
+  return row.family;
 }
 
 /**
@@ -374,19 +415,23 @@ function fontFamily(name: "sans" | "serif" | "mono"): string {
  * >= `captionPx`. A canon row under its floor fails the build rather than serving a stale size.
  */
 for (const t of typography) {
-  if (t.entryType !== "scale" || typeof t.sizePx !== "number") continue
-  const floor = ["Body Small", "Caption", "Code"].includes(t.name) ? BUNDU_FLOOR.captionPx : BUNDU_FLOOR.bodyPx
+  if (t.entryType !== "scale" || typeof t.sizePx !== "number") continue;
+  const floor = ["Body Small", "Caption", "Code"].includes(t.name)
+    ? BUNDU_FLOOR.captionPx
+    : BUNDU_FLOOR.bodyPx;
   if (t.sizePx < floor) {
-    throw new Error(`brand.source.ts typography "${t.name}" is ${t.sizePx}px, under the Bundu floor of ${floor}px`)
+    throw new Error(
+      `brand.source.ts typography "${t.name}" is ${t.sizePx}px, under the Bundu floor of ${floor}px`,
+    );
   }
 }
 
 /** The mzizi row's family: hematite, by owner decision (2026-09-30). */
 export const DEFAULT_PRIMARY_FAMILY: string = (() => {
-  const row = ecosystem.find((e) => e.name === "mzizi")
-  if (!row) throw new Error(`brand.source.ts ecosystem has no "mzizi" row`)
-  return row.mineral
-})()
+  const row = ecosystem.find((e) => e.name === "mzizi");
+  if (!row) throw new Error(`brand.source.ts ecosystem has no "mzizi" row`);
+  return row.mineral;
+})();
 
 // ─── Status tones ────────────────────────────────────────────────────────────
 
@@ -397,7 +442,7 @@ export const STATUS_TONES = [
   ["info", "cobalt"],
   ["danger", "terracotta"],
   ["premium", "tanzanite"],
-] as const
+] as const;
 
 /** Lifecycle → tone. Aliases, so a pack that remaps a tone moves its lifecycle too. */
 export const LIFECYCLE = [
@@ -405,11 +450,15 @@ export const LIFECYCLE = [
   ["beta", "info"],
   ["alpha", "warning"],
   ["deprecated", "danger"],
-] as const
+] as const;
 
 /** The four tiers every status tone carries, and how each is measured. */
-function toneRoles(tone: string, values: Record<"fill" | "container" | "on" | "text", ThemedValue>, description: string): Role[] {
-  const name = `status-${tone}`
+function toneRoles(
+  tone: string,
+  values: Record<"fill" | "container" | "on" | "text", ThemedValue>,
+  description: string,
+): Role[] {
+  const name = `status-${tone}`;
   return [
     {
       name,
@@ -452,10 +501,10 @@ function toneRoles(tone: string, values: Record<"fill" | "container" | "on" | "t
       derive: "text",
       block: "roles",
     },
-  ]
+  ];
 }
 
-const fam = (family: string, tier: FamilyTier): RoleValue => ({ family, tier })
+const fam = (family: string, tier: FamilyTier): RoleValue => ({ family, tier });
 
 const STATUS_ROLES: Role[] = [
   ...STATUS_TONES.flatMap(([tone, family]) =>
@@ -467,8 +516,8 @@ const STATUS_ROLES: Role[] = [
         on: fam(family, "on-container"),
         text: fam(family, "text"),
       },
-      `${tone[0].toUpperCase()}${tone.slice(1)} (${family} in the Mzizi pack)`
-    )
+      `${tone[0].toUpperCase()}${tone.slice(1)} (${family} in the Mzizi pack)`,
+    ),
   ),
   ...toneRoles(
     "neutral",
@@ -478,17 +527,17 @@ const STATUS_ROLES: Role[] = [
       on: { role: "text-primary" },
       text: { role: "muted-foreground" },
     },
-    "Neutral (the muted ladder in the Mzizi pack)"
+    "Neutral (the muted ladder in the Mzizi pack)",
   ),
-]
+];
 
 const LIFECYCLE_ROLES: Role[] = LIFECYCLE.flatMap(([stage, tone]) =>
   ["", "-container", "-on-container", "-text"].map((suffix): Role => {
-    const of = STATUS_ROLES.find((r) => r.name === `status-${tone}${suffix}`)!
+    const of = STATUS_ROLES.find((r) => r.name === `status-${tone}${suffix}`)!;
     const contrast: ContrastRule | undefined =
       suffix === "-on-container"
         ? { against: [`status-${stage}-container`], min: BODY }
-        : of.contrast
+        : of.contrast;
     return {
       name: `status-${stage}${suffix}`,
       group: "lifecycle",
@@ -498,9 +547,9 @@ const LIFECYCLE_ROLES: Role[] = LIFECYCLE.flatMap(([stage, tone]) =>
       contrast,
       default: { role: `status-${tone}${suffix}` },
       block: "roles",
-    }
-  })
-)
+    };
+  }),
+);
 
 // ─── Verification: assurance levels and attestations ────────────────────────
 
@@ -537,14 +586,14 @@ export const ASSURANCE_LEVELS = [
   ["documented", "Documents Checked", "sodalite"],
   ["government", "Government Verified", "gold"],
   ["licensed", "Licensed Professional", "tanzanite"],
-] as const
+] as const;
 
 /** The attestations, unordered: each one is held or not, alongside the level. */
 export const ATTESTATIONS = [
   ["community", "Community Vouched", "terracotta"],
   ["business", "Registered Business", "malachite"],
   ["domain", "Domain Verified", "copper"],
-] as const
+] as const;
 
 /**
  * The legacy ladder (`bundu.verificationTier`, 0 unverified … 4 licensed) and the part of the
@@ -557,7 +606,7 @@ export const TIER_ALIASES = [
   ["otp", "assurance-otp"],
   ["government", "assurance-government"],
   ["licensed", "assurance-licensed"],
-] as const
+] as const;
 
 /** Kept for existing readers: the legacy tier → palette family it resolves to. */
 export const TIER_FAMILIES = [
@@ -565,7 +614,7 @@ export const TIER_FAMILIES = [
   ["otp", "cobalt"],
   ["government", "gold"],
   ["licensed", "tanzanite"],
-] as const
+] as const;
 
 /** The five legacy tiers in ladder order, with the label each one carries. */
 export const TIERS = [
@@ -574,14 +623,14 @@ export const TIERS = [
   ["otp", "Contact Verified"],
   ["government", "Government Verified"],
   ["licensed", "Licensed Professional"],
-] as const
+] as const;
 
 /** The four parts every level, attestation and tier carries: the same shape as a status tone. */
 function trustRoles(
   name: string,
   group: "assurance" | "attestation",
   what: string,
-  values: Record<"fill" | "container" | "on" | "text", ThemedValue>
+  values: Record<"fill" | "container" | "on" | "text", ThemedValue>,
 ): Role[] {
   return [
     {
@@ -628,7 +677,7 @@ function trustRoles(
       derive: "text",
       block: "roles",
     },
-  ]
+  ];
 }
 
 const familyValues = (family: string) => ({
@@ -636,34 +685,45 @@ const familyValues = (family: string) => ({
   container: fam(family, "container"),
   on: fam(family, "on-container"),
   text: fam(family, "text"),
-})
+});
 
-const ASSURANCE_ROLES: Role[] = ASSURANCE_LEVELS.flatMap(([level, label, family], i) =>
-  trustRoles(
-    `assurance-${level}`,
-    "assurance",
-    `Assurance level ${i} \`${level}\` ("${label}", ${family ?? "the neutral grey, `status-neutral`,"} in the Mzizi pack)`,
-    family
-      ? familyValues(family)
-      : {
-          fill: { role: "status-neutral" },
-          container: { role: "status-neutral-container" },
-          on: { role: "status-neutral-on-container" },
-          text: { role: "status-neutral-text" },
-        }
-  )
-)
+const ASSURANCE_ROLES: Role[] = ASSURANCE_LEVELS.flatMap(
+  ([level, label, family], i) =>
+    trustRoles(
+      `assurance-${level}`,
+      "assurance",
+      `Assurance level ${i} \`${level}\` ("${label}", ${family ?? "the neutral grey, `status-neutral`,"} in the Mzizi pack)`,
+      family
+        ? familyValues(family)
+        : {
+            fill: { role: "status-neutral" },
+            container: { role: "status-neutral-container" },
+            on: { role: "status-neutral-on-container" },
+            text: { role: "status-neutral-text" },
+          },
+    ),
+);
 
-const ATTESTATION_ROLES: Role[] = ATTESTATIONS.flatMap(([type, label, family]) =>
-  trustRoles(`attestation-${type}`, "attestation", `Attestation \`${type}\` ("${label}", ${family} in the Mzizi pack)`, familyValues(family))
-)
+const ATTESTATION_ROLES: Role[] = ATTESTATIONS.flatMap(
+  ([type, label, family]) =>
+    trustRoles(
+      `attestation-${type}`,
+      "attestation",
+      `Attestation \`${type}\` ("${label}", ${family} in the Mzizi pack)`,
+      familyValues(family),
+    ),
+);
 
 /** `--tier-*`: aliases of the new roles, so a pack that remaps a level moves its legacy tier too. */
 const TIER_ROLES: Role[] = TIER_ALIASES.flatMap(([tier, target]) =>
   ["", "-container", "-on-container", "-text"].map((suffix): Role => {
-    const of = [...ASSURANCE_ROLES, ...ATTESTATION_ROLES].find((r) => r.name === `${target}${suffix}`)!
+    const of = [...ASSURANCE_ROLES, ...ATTESTATION_ROLES].find(
+      (r) => r.name === `${target}${suffix}`,
+    )!;
     const contrast: ContrastRule | undefined =
-      suffix === "-on-container" ? { against: [`tier-${tier}-container`], min: BODY } : of.contrast
+      suffix === "-on-container"
+        ? { against: [`tier-${tier}-container`], min: BODY }
+        : of.contrast;
     return {
       name: `tier-${tier}${suffix}`,
       group: "tier",
@@ -673,9 +733,9 @@ const TIER_ROLES: Role[] = TIER_ALIASES.flatMap(([tier, target]) =>
       contrast,
       default: { role: `${target}${suffix}` },
       block: "roles",
-    }
-  })
-)
+    };
+  }),
+);
 
 // ─── Legacy status colours — `/v1/brand` semanticColors, read from canon ─────
 
@@ -685,21 +745,27 @@ const TIER_ROLES: Role[] = TIER_ALIASES.flatMap(([tier, target]) =>
  * stay as roles because components and consumers use them; the status TONES
  * above are what slice 4 migrates components onto.
  */
-const LEGACY_STATUS_NAMES = ["success", "warning", "error", "info", "neutral", "offline", "syncing"] as const
+const LEGACY_STATUS_NAMES = [
+  "success",
+  "warning",
+  "error",
+  "info",
+  "neutral",
+  "offline",
+  "syncing",
+] as const;
 
 const LEGACY_STATUS_ROLES: Role[] = [
-  ...LEGACY_STATUS_NAMES.map(
-    (name): Role => ({
-      name,
-      group: "status-legacy",
-      kind: "ui",
-      required: true,
-      description: semantic(name).usage,
-      contrast: { against: ON_PAGE, min: UI },
-      default: { semantic: name },
-      block: "status",
-    })
-  ),
+  ...LEGACY_STATUS_NAMES.map((name): Role => ({
+    name,
+    group: "status-legacy",
+    kind: "ui",
+    required: true,
+    description: semantic(name).usage,
+    contrast: { against: ON_PAGE, min: UI },
+    default: { semantic: name },
+    block: "status",
+  })),
   {
     name: "destructive-container",
     group: "destructive",
@@ -709,19 +775,32 @@ const LEGACY_STATUS_ROLES: Role[] = [
     default: { semantic: "destructive-container" },
     block: "status",
   },
-]
+];
 
 // ─── The manifest ────────────────────────────────────────────────────────────
 
-const LADDER_NAMES = ["pitch", "void", "base", "surface", "container", "overlay", "raised", "scrim"] as const
+const LADDER_NAMES = [
+  "pitch",
+  "void",
+  "base",
+  "surface",
+  "container",
+  "overlay",
+  "raised",
+  "scrim",
+] as const;
 
 function background(name: string) {
-  const row = backgroundColors.find((c) => c.name === name)
-  if (!row) throw new Error(`brand.source.ts backgroundColors has no "${name}"`)
-  return row
+  const row = backgroundColors.find((c) => c.name === name);
+  if (!row)
+    throw new Error(`brand.source.ts backgroundColors has no "${name}"`);
+  return row;
 }
 
-const fg = (against: string): ContrastRule => ({ against: [against], min: BODY })
+const fg = (against: string): ContrastRule => ({
+  against: [against],
+  min: BODY,
+});
 
 /**
  * The label on a brand's solid action fill (`primary` and what follows it) holds WCAG 4.5:1 (1.4.3), not the 7:1 body
@@ -736,19 +815,22 @@ const ON_BRAND_FILL_EXCEPTION = {
   reason:
     "a label on the brand's solid action fill, not body copy; the fill is each brand's -aa tier (4.5:1 under white) " +
     "and 7:1 would darken every brand's action colour, an owner decision",
-} as const
+} as const;
 const fgOnBrandFill = (against: string): ContrastRule => ({
   against: [against],
   min: BODY,
   wcagException: ON_BRAND_FILL_EXCEPTION,
-})
+});
 const DESTRUCTIVE_FILL_EXCEPTION = {
   min: 4.5,
   reason:
     "a label on the destructive action fill, not body copy; the fill is canon error #B3261E (6.54:1 under white, Lc 86), " +
     "and 7:1 would move it to #AA241D, a second red beside canon error; pending owner confirmation, 2026-11-02",
-} as const
-const onWhiteOrInk: ThemedValue = { light: { literal: "#FFFFFF" }, dark: { literal: "#0E0D0C" } }
+} as const;
+const onWhiteOrInk: ThemedValue = {
+  light: { literal: "#FFFFFF" },
+  dark: { literal: "#0E0D0C" },
+};
 
 export const ROLES: readonly Role[] = [
   // ── Identity ──
@@ -776,7 +858,8 @@ export const ROLES: readonly Role[] = [
     group: "identity",
     kind: "ui",
     required: true,
-    description: "The focus ring. Cobalt (-aa) in the Mzizi pack, for every ecosystem brand; a custom pack may set it.",
+    description:
+      "The focus ring. Cobalt (-aa) in the Mzizi pack, for every ecosystem brand; a custom pack may set it.",
     contrast: { against: ON_PAGE, min: UI },
     default: fam("cobalt", "aa"),
     block: "disputed",
@@ -786,7 +869,8 @@ export const ROLES: readonly Role[] = [
     group: "identity",
     kind: "fill",
     required: true,
-    description: "The saturated brand accent (accent fills, the page wash). Follows `primary` unless a brand names an accent.",
+    description:
+      "The saturated brand accent (accent fills, the page wash). Follows `primary` unless a brand names an accent.",
     default: { role: "primary" },
     block: "disputed",
   },
@@ -805,7 +889,8 @@ export const ROLES: readonly Role[] = [
     group: "identity",
     kind: "fill",
     required: true,
-    description: "An app's own accent inside the shell (`app/app-shell` `accent`). Follows `brand-accent`.",
+    description:
+      "An app's own accent inside the shell (`app/app-shell` `accent`). Follows `brand-accent`.",
     default: { role: "brand-accent" },
     block: "roles",
   },
@@ -821,26 +906,27 @@ export const ROLES: readonly Role[] = [
   },
 
   // ── Surfaces: the ladder, as today ──
-  ...LADDER_NAMES.map(
-    (name): Role => ({
-      name,
-      group: "surface",
-      kind: "surface",
-      required: true,
-      description: background(name).usage,
-      default: { background: name },
-      // `--color-base` made `text-base` a colour (#456).
-      utility: name === "base" ? "surface-base" : undefined,
-      block: "ladder",
-    })
-  ),
+  ...LADDER_NAMES.map((name): Role => ({
+    name,
+    group: "surface",
+    kind: "surface",
+    required: true,
+    description: background(name).usage,
+    default: { background: name },
+    // `--color-base` made `text-base` a colour (#456).
+    utility: name === "base" ? "surface-base" : undefined,
+    block: "ladder",
+  })),
   {
     name: "wash",
     group: "surface",
     kind: "surface",
     required: true,
     description: background("wash").usage,
-    default: { light: { mix: ["surface", 93, "brand-accent"] }, dark: { mix: ["surface", 88, "brand-accent"] } },
+    default: {
+      light: { mix: ["surface", 93, "brand-accent"] },
+      dark: { mix: ["surface", 88, "brand-accent"] },
+    },
     block: "ladder",
   },
   {
@@ -863,7 +949,8 @@ export const ROLES: readonly Role[] = [
     group: "surface",
     kind: "surface",
     required: true,
-    description: "The plate behind a QR code: white in every theme, so the code is never inverted.",
+    description:
+      "The plate behind a QR code: white in every theme, so the code is never inverted.",
     default: { literal: "#FFFFFF" },
     block: "roles",
   },
@@ -872,7 +959,8 @@ export const ROLES: readonly Role[] = [
     group: "surface",
     kind: "text",
     required: true,
-    description: "A QR code's modules on `surface-qr`: the canon's ink in every theme.",
+    description:
+      "A QR code's modules on `surface-qr`: the canon's ink in every theme.",
     contrast: fg("surface-qr"),
     default: { literal: "#0E0D0C" },
     block: "roles",
@@ -894,7 +982,8 @@ export const ROLES: readonly Role[] = [
     group: "text",
     kind: "text",
     required: true,
-    description: "Secondary text, descriptions. APCA Lc 75 on `base` and `surface` (#399).",
+    description:
+      "Secondary text, descriptions. APCA Lc 75 on `base` and `surface` (#399).",
     contrast: { against: ON_PAGE, min: BODY },
     default: { ramp: "secondary" },
     block: "text",
@@ -925,7 +1014,10 @@ export const ROLES: readonly Role[] = [
     kind: "text",
     required: true,
     description: "Text over photography, always with `--hero-text-shadow`.",
-    contrast: { exempt: "drawn over imagery, not over base or surface; carries --hero-text-shadow" },
+    contrast: {
+      exempt:
+        "drawn over imagery, not over base or surface; carries --hero-text-shadow",
+    },
     default: { literal: "#FFFFFF" },
     block: "text",
   },
@@ -949,45 +1041,39 @@ export const ROLES: readonly Role[] = [
   ...TIER_ROLES,
 
   // ── Categorical ──
-  ...minerals.map(
-    (m, i): Role => ({
-      name: `chart-${i + 1}`,
-      group: "categorical",
-      kind: "fill",
-      required: true,
-      description: `Chart series ${i + 1}. Mzizi: ${m.name}.`,
-      default: fam(m.name, "base"),
-      block: "chart",
-    })
-  ),
+  ...minerals.map((m, i): Role => ({
+    name: `chart-${i + 1}`,
+    group: "categorical",
+    kind: "fill",
+    required: true,
+    description: `Chart series ${i + 1}. Mzizi: ${m.name}.`,
+    default: fam(m.name, "base"),
+    block: "chart",
+  })),
   ...(
     [
       ["chart-positive", "success"],
       ["chart-negative", "error"],
       ["chart-neutral", "neutral"],
     ] as const
-  ).map(
-    ([name, of]): Role => ({
-      name,
-      group: "categorical",
-      kind: "fill",
-      required: true,
-      description: `Semantic chart series; never changes hue between themes. An alias of \`${of}\`.`,
-      default: { role: of },
-      block: "chart",
-    })
-  ),
-  ...minerals.map(
-    (m, i): Role => ({
-      name: `category-${i + 1}`,
-      group: "categorical",
-      kind: "fill",
-      required: true,
-      description: `Category ${i + 1} (the mineral strip, Discover categories). Mzizi: ${m.name}.`,
-      default: fam(m.name, "base"),
-      block: "roles",
-    })
-  ),
+  ).map(([name, of]): Role => ({
+    name,
+    group: "categorical",
+    kind: "fill",
+    required: true,
+    description: `Semantic chart series; never changes hue between themes. An alias of \`${of}\`.`,
+    default: { role: of },
+    block: "chart",
+  })),
+  ...minerals.map((m, i): Role => ({
+    name: `category-${i + 1}`,
+    group: "categorical",
+    kind: "fill",
+    required: true,
+    description: `Category ${i + 1} (the mineral strip, Discover categories). Mzizi: ${m.name}.`,
+    default: fam(m.name, "base"),
+    block: "roles",
+  })),
 
   // ── shadcn semantic set ──
   {
@@ -1009,18 +1095,70 @@ export const ROLES: readonly Role[] = [
     default: { role: "text-primary" },
     block: "shadcn",
   },
-  { name: "card", group: "shadcn", kind: "surface", required: true, description: "Card surface.", default: { role: "surface" }, block: "shadcn" },
-  { name: "card-foreground", group: "shadcn", kind: "text", required: true, description: "Text on `card`.", contrast: fg("card"), default: { role: "text-primary" }, block: "shadcn" },
-  { name: "popover", group: "shadcn", kind: "surface", required: true, description: "Popover surface.", default: { role: "overlay" }, block: "shadcn" },
-  { name: "popover-foreground", group: "shadcn", kind: "text", required: true, description: "Text on `popover`.", contrast: fg("popover"), default: { role: "text-primary" }, block: "shadcn" },
-  { name: "secondary", group: "shadcn", kind: "fill", required: true, description: "Secondary button fill.", default: { role: "container" }, block: "shadcn" },
-  { name: "secondary-foreground", group: "shadcn", kind: "text", required: true, description: "Text on `secondary`.", contrast: fg("secondary"), default: { role: "text-primary" }, block: "shadcn" },
+  {
+    name: "card",
+    group: "shadcn",
+    kind: "surface",
+    required: true,
+    description: "Card surface.",
+    default: { role: "surface" },
+    block: "shadcn",
+  },
+  {
+    name: "card-foreground",
+    group: "shadcn",
+    kind: "text",
+    required: true,
+    description: "Text on `card`.",
+    contrast: fg("card"),
+    default: { role: "text-primary" },
+    block: "shadcn",
+  },
+  {
+    name: "popover",
+    group: "shadcn",
+    kind: "surface",
+    required: true,
+    description: "Popover surface.",
+    default: { role: "overlay" },
+    block: "shadcn",
+  },
+  {
+    name: "popover-foreground",
+    group: "shadcn",
+    kind: "text",
+    required: true,
+    description: "Text on `popover`.",
+    contrast: fg("popover"),
+    default: { role: "text-primary" },
+    block: "shadcn",
+  },
+  {
+    name: "secondary",
+    group: "shadcn",
+    kind: "fill",
+    required: true,
+    description: "Secondary button fill.",
+    default: { role: "container" },
+    block: "shadcn",
+  },
+  {
+    name: "secondary-foreground",
+    group: "shadcn",
+    kind: "text",
+    required: true,
+    description: "Text on `secondary`.",
+    contrast: fg("secondary"),
+    default: { role: "text-primary" },
+    block: "shadcn",
+  },
   {
     name: "destructive",
     group: "destructive",
     kind: "fill",
     required: true,
-    description: "Errors and destructive actions: red, never the terracotta `status-danger` (owner decision 2026-10-07).",
+    description:
+      "Errors and destructive actions: red, never the terracotta `status-danger` (owner decision 2026-10-07).",
     default: { role: "error" },
     derive: "fill",
     block: "shadcn",
@@ -1031,7 +1169,11 @@ export const ROLES: readonly Role[] = [
     kind: "text",
     required: true,
     description: "Text and icons on `destructive`.",
-    contrast: { against: ["destructive"], min: BODY, wcagException: DESTRUCTIVE_FILL_EXCEPTION },
+    contrast: {
+      against: ["destructive"],
+      min: BODY,
+      wcagException: DESTRUCTIVE_FILL_EXCEPTION,
+    },
     default: onWhiteOrInk,
     block: "shadcn",
   },
@@ -1059,12 +1201,22 @@ export const ROLES: readonly Role[] = [
     group: "destructive",
     kind: "ui",
     required: true,
-    description: "The error status (`text-status-error`, `fill-status-error`): an alias of `destructive`, red, never the terracotta `status-danger`.",
+    description:
+      "The error status (`text-status-error`, `fill-status-error`): an alias of `destructive`, red, never the terracotta `status-danger`.",
     contrast: { against: ON_PAGE, min: UI },
     default: { role: "destructive" },
     block: "roles",
   },
-  { name: "overlay-foreground", group: "shadcn", kind: "text", required: true, description: "Text on `overlay`.", contrast: fg("overlay"), default: { role: "text-primary" }, block: "shadcn" },
+  {
+    name: "overlay-foreground",
+    group: "shadcn",
+    kind: "text",
+    required: true,
+    description: "Text on `overlay`.",
+    contrast: fg("overlay"),
+    default: { role: "text-primary" },
+    block: "shadcn",
+  },
   {
     name: "accent",
     group: "shadcn",
@@ -1074,7 +1226,16 @@ export const ROLES: readonly Role[] = [
     default: { mix: ["primary", 12, "base"] },
     block: "disputed",
   },
-  { name: "accent-foreground", group: "shadcn", kind: "text", required: true, description: "Text on `accent`.", contrast: fg("accent"), default: { role: "text-primary" }, block: "shadcn" },
+  {
+    name: "accent-foreground",
+    group: "shadcn",
+    kind: "text",
+    required: true,
+    description: "Text on `accent`.",
+    contrast: fg("accent"),
+    default: { role: "text-primary" },
+    block: "shadcn",
+  },
   {
     name: "border",
     group: "shadcn",
@@ -1131,18 +1292,70 @@ export const ROLES: readonly Role[] = [
   },
 
   // ── Sidebar ──
-  { name: "sidebar", group: "sidebar", kind: "surface", required: true, description: "Sidebar surface.", default: { role: "surface" }, block: "sidebar" },
-  { name: "sidebar-foreground", group: "sidebar", kind: "text", required: true, description: "Text on `sidebar`.", contrast: fg("sidebar"), default: { role: "text-primary" }, block: "sidebar" },
-  { name: "sidebar-primary", group: "sidebar", kind: "fill", required: true, description: "The sidebar's active item fill.", default: { role: "primary" }, block: "sidebar" },
-  { name: "sidebar-primary-foreground", group: "sidebar", kind: "text", required: true, description: "Text on `sidebar-primary`.", contrast: fgOnBrandFill("sidebar-primary"), default: { role: "primary-foreground" }, block: "sidebar" },
-  { name: "sidebar-accent", group: "sidebar", kind: "surface", required: true, description: "The sidebar's hover fill.", default: { role: "container" }, block: "sidebar" },
-  { name: "sidebar-accent-foreground", group: "sidebar", kind: "text", required: true, description: "Text on `sidebar-accent`.", contrast: fg("sidebar-accent"), default: { role: "text-primary" }, block: "sidebar" },
+  {
+    name: "sidebar",
+    group: "sidebar",
+    kind: "surface",
+    required: true,
+    description: "Sidebar surface.",
+    default: { role: "surface" },
+    block: "sidebar",
+  },
+  {
+    name: "sidebar-foreground",
+    group: "sidebar",
+    kind: "text",
+    required: true,
+    description: "Text on `sidebar`.",
+    contrast: fg("sidebar"),
+    default: { role: "text-primary" },
+    block: "sidebar",
+  },
+  {
+    name: "sidebar-primary",
+    group: "sidebar",
+    kind: "fill",
+    required: true,
+    description: "The sidebar's active item fill.",
+    default: { role: "primary" },
+    block: "sidebar",
+  },
+  {
+    name: "sidebar-primary-foreground",
+    group: "sidebar",
+    kind: "text",
+    required: true,
+    description: "Text on `sidebar-primary`.",
+    contrast: fgOnBrandFill("sidebar-primary"),
+    default: { role: "primary-foreground" },
+    block: "sidebar",
+  },
+  {
+    name: "sidebar-accent",
+    group: "sidebar",
+    kind: "surface",
+    required: true,
+    description: "The sidebar's hover fill.",
+    default: { role: "container" },
+    block: "sidebar",
+  },
+  {
+    name: "sidebar-accent-foreground",
+    group: "sidebar",
+    kind: "text",
+    required: true,
+    description: "Text on `sidebar-accent`.",
+    contrast: fg("sidebar-accent"),
+    default: { role: "text-primary" },
+    block: "sidebar",
+  },
   {
     name: "sidebar-border",
     group: "sidebar",
     kind: "ui",
     required: true,
-    description: "Decorative sidebar hairlines. An alias of `border`; a control's edge is `border-control` (from slice 4 of #484).",
+    description:
+      "Decorative sidebar hairlines. An alias of `border`; a control's edge is `border-control` (from slice 4 of #484).",
     contrast: {
       decorative:
         "an alias of border, the sidebar's dividers: never the only cue. A control's edge in the sidebar is meant to be " +
@@ -1151,7 +1364,16 @@ export const ROLES: readonly Role[] = [
     default: { role: "border" },
     block: "sidebar",
   },
-  { name: "sidebar-ring", group: "sidebar", kind: "ui", required: true, description: "Focus ring in the sidebar.", contrast: { against: ["sidebar"], min: UI }, default: { role: "ring" }, block: "sidebar" },
+  {
+    name: "sidebar-ring",
+    group: "sidebar",
+    kind: "ui",
+    required: true,
+    description: "Focus ring in the sidebar.",
+    contrast: { against: ["sidebar"], min: UI },
+    default: { role: "ring" },
+    block: "sidebar",
+  },
 
   // ── Size: touch targets and control heights (brandMeta) ──
   {
@@ -1159,7 +1381,8 @@ export const ROLES: readonly Role[] = [
     group: "size",
     kind: "size",
     required: true,
-    description: "The default touch target (`h-touch`, `min-h-touch`). brandMeta.accessibility.defaultTouchTarget.",
+    description:
+      "The default touch target (`h-touch`, `min-h-touch`). brandMeta.accessibility.defaultTouchTarget.",
     default: { px: access("defaultTouchTarget") },
     floor: true,
     block: "invariant",
@@ -1169,7 +1392,8 @@ export const ROLES: readonly Role[] = [
     group: "size",
     kind: "size",
     required: true,
-    description: "The hit-area floor (`min-h-touch-min`): 49px (`BUNDU_FLOOR.hitAreaPx`, 7 x 7, above Apple HIG Buttons' 44x44 pt) on every device, desktop included, registered as `--target-floor`. Density never lowers it: a desktop control may be drawn smaller but keeps this hit region (owner ruling 2026-11-02, replacing the 24px desktop floor of 2026-11-01 and the 44px of 2026-11-01). No brand pack can move it.",
+    description:
+      "The hit-area floor (`min-h-touch-min`): 49px (`BUNDU_FLOOR.hitAreaPx`, 7 x 7, above Apple HIG Buttons' 44x44 pt) on every device, desktop included, registered as `--target-floor`. Density never lowers it: a desktop control may be drawn smaller but keeps this hit region (owner ruling 2026-11-02, replacing the 24px desktop floor of 2026-11-01 and the 44px of 2026-11-01). No brand pack can move it.",
     default: { px: access("minTouchTarget") },
     fixed: true,
     block: "invariant",
@@ -1179,7 +1403,8 @@ export const ROLES: readonly Role[] = [
     group: "size",
     kind: "size",
     required: true,
-    description: "The inset floor (`p-inset-floor`, `px-inset-floor`): 14px (`BUNDU_FLOOR.spacing.insetPx`, 2 x 7), the least padding between text and the edge of its container, registered as `--inset-floor`. No component, density layer or brand pack can lower it (owner 2026-11-04, #617).",
+    description:
+      "The inset floor (`p-inset-floor`, `px-inset-floor`): 14px (`BUNDU_FLOOR.spacing.insetPx`, 2 x 7), the least padding between text and the edge of its container, registered as `--inset-floor`. No component, density layer or brand pack can lower it (owner 2026-11-04, #617).",
     default: { px: BUNDU_FLOOR.spacing.insetPx },
     fixed: true,
     block: "invariant",
@@ -1189,26 +1414,83 @@ export const ROLES: readonly Role[] = [
     group: "size",
     kind: "size",
     required: true,
-    description: "The gap floor (`gap-gap-floor`, `p-gap-floor`): 7px (`BUNDU_FLOOR.spacing.controlGapPx`, the unit), the least gap between adjacent controls, a label and its field, and sibling items, registered as `--gap-floor`. No component, density layer or brand pack can lower it (owner 2026-11-04, #617).",
+    description:
+      "The gap floor (`gap-gap-floor`, `p-gap-floor`): 7px (`BUNDU_FLOOR.spacing.controlGapPx`, the unit), the least gap between adjacent controls, a label and its field, and sibling items, registered as `--gap-floor`. No component, density layer or brand pack can lower it (owner 2026-11-04, #617).",
     default: { px: BUNDU_FLOOR.spacing.controlGapPx },
     fixed: true,
     block: "invariant",
   },
-  { name: "spacing-control", group: "size", kind: "size", required: true, description: "Default control height. componentSpecs.button.heights.default.", default: { px: spec("button").heights.default }, floor: true, block: "invariant" },
-  { name: "spacing-control-sm", group: "size", kind: "size", required: true, description: "Small control height. componentSpecs.button.heights.sm.", default: { px: spec("button").heights.sm }, floor: true, block: "invariant" },
-  { name: "spacing-control-lg", group: "size", kind: "size", required: true, description: "Large control height. componentSpecs.button.heights.lg.", default: { px: spec("button").heights.lg }, floor: true, block: "invariant" },
-  { name: "spacing-control-icon", group: "size", kind: "size", required: true, description: "Icon-button size. componentSpecs.button.heights.icon.", default: { px: spec("button").heights.icon }, floor: true, block: "invariant" },
+  {
+    name: "spacing-control",
+    group: "size",
+    kind: "size",
+    required: true,
+    description:
+      "Default control height. componentSpecs.button.heights.default.",
+    default: { px: spec("button").heights.default },
+    floor: true,
+    block: "invariant",
+  },
+  {
+    name: "spacing-control-sm",
+    group: "size",
+    kind: "size",
+    required: true,
+    description: "Small control height. componentSpecs.button.heights.sm.",
+    default: { px: spec("button").heights.sm },
+    floor: true,
+    block: "invariant",
+  },
+  {
+    name: "spacing-control-lg",
+    group: "size",
+    kind: "size",
+    required: true,
+    description: "Large control height. componentSpecs.button.heights.lg.",
+    default: { px: spec("button").heights.lg },
+    floor: true,
+    block: "invariant",
+  },
+  {
+    name: "spacing-control-icon",
+    group: "size",
+    kind: "size",
+    required: true,
+    description: "Icon-button size. componentSpecs.button.heights.icon.",
+    default: { px: spec("button").heights.icon },
+    floor: true,
+    block: "invariant",
+  },
   {
     name: "spacing-control-dense",
     group: "size",
     kind: "size",
     required: true,
-    description: "Dense control height for a fine pointer only (`pointer-fine:h-control-dense`); drawn below the hit-area floor on purpose (#484 §2a), its 49px hit region kept by the `hit-area` pseudo-element; 28px under desktop density.",
+    description:
+      "Dense control height for a fine pointer only (`pointer-fine:h-control-dense`); drawn below the hit-area floor on purpose (#484 §2a), its 49px hit region kept by the `hit-area` pseudo-element; 28px under desktop density.",
     default: { px: 32 },
     block: "invariant",
   },
-  { name: "spacing-field", group: "size", kind: "size", required: true, description: "Input height. componentSpecs.input.heights.default.", default: { px: spec("input").heights.default }, floor: true, block: "invariant" },
-  { name: "spacing-field-sm", group: "size", kind: "size", required: true, description: "Small input height. componentSpecs.input.heights.sm.", default: { px: spec("input").heights.sm }, floor: true, block: "invariant" },
+  {
+    name: "spacing-field",
+    group: "size",
+    kind: "size",
+    required: true,
+    description: "Input height. componentSpecs.input.heights.default.",
+    default: { px: spec("input").heights.default },
+    floor: true,
+    block: "invariant",
+  },
+  {
+    name: "spacing-field-sm",
+    group: "size",
+    kind: "size",
+    required: true,
+    description: "Small input height. componentSpecs.input.heights.sm.",
+    default: { px: spec("input").heights.sm },
+    floor: true,
+    block: "invariant",
+  },
 
   // ── Radius (brandMeta.componentSpecs) ──
   {
@@ -1216,38 +1498,100 @@ export const ROLES: readonly Role[] = [
     group: "radius",
     kind: "radius",
     required: true,
-    description: "Buttons and controls. Mzizi keeps pill (owner decision 2026-10-07); a pack may switch it.",
+    description:
+      "Buttons and controls. Mzizi keeps pill (owner decision 2026-10-07); a pack may switch it.",
     default: rung("button", "full"),
     block: "invariant",
   },
-  { name: "radius-field", group: "radius", kind: "radius", required: true, description: "Inputs. componentSpecs.input.borderRadius.", default: rung("input", "full"), block: "invariant" },
-  { name: "radius-badge", group: "radius", kind: "radius", required: true, description: "Badges. componentSpecs.badge.borderRadius.", default: rung("badge", "full"), block: "invariant" },
-  { name: "radius-card", group: "radius", kind: "radius", required: true, description: "Cards. componentSpecs.card.borderRadius.", default: rung("card", "base"), block: "invariant" },
-  { name: "radius-dialog", group: "radius", kind: "radius", required: true, description: "Dialogs. componentSpecs.dialog.borderRadius.", default: rung("dialog", "xl"), block: "invariant" },
+  {
+    name: "radius-field",
+    group: "radius",
+    kind: "radius",
+    required: true,
+    description: "Inputs. componentSpecs.input.borderRadius.",
+    default: rung("input", "full"),
+    block: "invariant",
+  },
+  {
+    name: "radius-badge",
+    group: "radius",
+    kind: "radius",
+    required: true,
+    description: "Badges. componentSpecs.badge.borderRadius.",
+    default: rung("badge", "full"),
+    block: "invariant",
+  },
+  {
+    name: "radius-card",
+    group: "radius",
+    kind: "radius",
+    required: true,
+    description: "Cards. componentSpecs.card.borderRadius.",
+    default: rung("card", "base"),
+    block: "invariant",
+  },
+  {
+    name: "radius-dialog",
+    group: "radius",
+    kind: "radius",
+    required: true,
+    description: "Dialogs. componentSpecs.dialog.borderRadius.",
+    default: rung("dialog", "xl"),
+    block: "invariant",
+  },
 
   // ── Font (brand.source typography) ──
-  { name: "font-body", group: "font", kind: "font", required: true, description: "Body and UI text. `font-sans` is an alias.", default: { font: `"${fontFamily("sans")}", ui-sans-serif, system-ui, sans-serif` }, block: "theme" },
-  { name: "font-display", group: "font", kind: "font", required: true, description: "Display and headings. `font-serif` is an alias.", default: { font: `"${fontFamily("serif")}", ui-serif, Georgia, serif` }, block: "theme" },
-  { name: "font-code", group: "font", kind: "font", required: true, description: "Code. `font-mono` is an alias.", default: { font: `"${fontFamily("mono")}", ui-monospace, Menlo, monospace` }, block: "theme" },
-]
+  {
+    name: "font-body",
+    group: "font",
+    kind: "font",
+    required: true,
+    description: "Body and UI text. `font-sans` is an alias.",
+    default: {
+      font: `"${fontFamily("sans")}", ui-sans-serif, system-ui, sans-serif`,
+    },
+    block: "theme",
+  },
+  {
+    name: "font-display",
+    group: "font",
+    kind: "font",
+    required: true,
+    description: "Display and headings. `font-serif` is an alias.",
+    default: { font: `"${fontFamily("serif")}", ui-serif, Georgia, serif` },
+    block: "theme",
+  },
+  {
+    name: "font-code",
+    group: "font",
+    kind: "font",
+    required: true,
+    description: "Code. `font-mono` is an alias.",
+    default: {
+      font: `"${fontFamily("mono")}", ui-monospace, Menlo, monospace`,
+    },
+    block: "theme",
+  },
+];
 
 /** Tailwind's own font utilities, kept as aliases of the font roles. */
 export const FONT_ALIASES = [
   ["sans", "font-body"],
   ["serif", "font-display"],
   ["mono", "font-code"],
-] as const
+] as const;
 
 export function role(name: string): Role {
-  const r = ROLES.find((x) => x.name === name)
-  if (!r) throw new Error(`no role "${name}" in lib/tokens/roles.source.ts`)
-  return r
+  const r = ROLES.find((x) => x.name === name);
+  if (!r) throw new Error(`no role "${name}" in lib/tokens/roles.source.ts`);
+  return r;
 }
 
-export const isColorKind = (k: RoleKind) => k === "text" || k === "fill" || k === "ui" || k === "surface"
+export const isColorKind = (k: RoleKind) =>
+  k === "text" || k === "fill" || k === "ui" || k === "surface";
 
 /** The theme key a colour role registers under: `--color-<utility>`. */
-export const colorKey = (r: Role) => r.utility ?? r.name
+export const colorKey = (r: Role) => r.utility ?? r.name;
 
 // ─── The folded constants ────────────────────────────────────────────────────
 //
@@ -1256,10 +1600,11 @@ export const colorKey = (r: Role) => r.utility ?? r.name
 // canon, so the stylesheet and the platform files cannot disagree with it.
 
 /** `[name, light, dark, usage]` — the legacy status colours, from `semanticColors`. */
-export const STATUS: ReadonlyArray<readonly [string, string, string, string]> = LEGACY_STATUS_ROLES.map((r) => {
-  const c = semantic(r.name)
-  return [r.name, c.lightValue, c.darkValue, c.usage] as const
-})
+export const STATUS: ReadonlyArray<readonly [string, string, string, string]> =
+  LEGACY_STATUS_ROLES.map((r) => {
+    const c = semantic(r.name);
+    return [r.name, c.lightValue, c.darkValue, c.usage] as const;
+  });
 
 /**
  * The radius ladder, from `brandMeta.radii`, in ladder order. CLAUDE.md §7.5:
@@ -1267,15 +1612,16 @@ export const STATUS: ReadonlyArray<readonly [string, string, string, string]> = 
  * 12 / 14 / 17 (xs is the unit less 3, for the smallest marks: swatches, kbd). A `--radius` of 10px or 12px with a `calc()` scale hung off it puts
  * every derived rung off the system.
  */
-export const RADIUS: ReadonlyArray<readonly [string, string]> = (["xs", "sm", "md", "base", "lg", "xl", "2xl", "full"] as const).map(
-  (n) => {
-    const v = brandMeta.radii[n]
-    if (typeof v !== "string") throw new Error(`brand.source.ts radii has no "${n}"`)
-    return [n, v] as const
-  }
-)
+export const RADIUS: ReadonlyArray<readonly [string, string]> = (
+  ["xs", "sm", "md", "base", "lg", "xl", "2xl", "full"] as const
+).map((n) => {
+  const v = brandMeta.radii[n];
+  if (typeof v !== "string")
+    throw new Error(`brand.source.ts radii has no "${n}"`);
+  return [n, v] as const;
+});
 
-const rem = (px: number) => `${px / 16}rem`
+const rem = (px: number) => `${px / 16}rem`;
 
 /**
  * Touch targets and control heights, under the names the stylesheet has always
@@ -1283,17 +1629,44 @@ const rem = (px: number) => `${px / 16}rem`
  * does not hold: a dense secondary action drawn below the floor, never a primary control.
  */
 export const SIZING: ReadonlyArray<readonly [string, string, string]> = [
-  ["touch-target-lg", `${access("defaultTouchTarget")}px`, "Default touch target — /v1/brand defaultTouchTarget"],
-  ["touch-target", `${access("minTouchTarget")}px`, "Minimum touch target — /v1/brand minTouchTarget"],
-  ["touch-target-sm", "40px", "Dense secondary actions: drawn at 40px, the 49px hit region kept by the hit-area pseudo-element; not for primary controls"],
-  ["h-button-default", rem(spec("button").heights.default), `${spec("button").heights.default}px — componentSpecs.button.heights.default`],
-  ["h-button-sm", rem(spec("button").heights.sm), `${spec("button").heights.sm}px — componentSpecs.button.heights.sm`],
-  ["h-input", rem(spec("input").heights.default), `${spec("input").heights.default}px — inputs match the default button`],
-]
+  [
+    "touch-target-lg",
+    `${access("defaultTouchTarget")}px`,
+    "Default touch target — /v1/brand defaultTouchTarget",
+  ],
+  [
+    "touch-target",
+    `${access("minTouchTarget")}px`,
+    "Minimum touch target — /v1/brand minTouchTarget",
+  ],
+  [
+    "touch-target-sm",
+    "40px",
+    "Dense secondary actions: drawn at 40px, the 49px hit region kept by the hit-area pseudo-element; not for primary controls",
+  ],
+  [
+    "h-button-default",
+    rem(spec("button").heights.default),
+    `${spec("button").heights.default}px — componentSpecs.button.heights.default`,
+  ],
+  [
+    "h-button-sm",
+    rem(spec("button").heights.sm),
+    `${spec("button").heights.sm}px — componentSpecs.button.heights.sm`,
+  ],
+  [
+    "h-input",
+    rem(spec("input").heights.default),
+    `${spec("input").heights.default}px — inputs match the default button`,
+  ],
+];
 
 /** The font stacks, by Tailwind alias, for the platform files. */
-export const FONTS = { sans: fontFamily("sans"), serif: fontFamily("serif"), mono: fontFamily("mono") } as const
-
+export const FONTS = {
+  sans: fontFamily("sans"),
+  serif: fontFamily("serif"),
+  mono: fontFamily("mono"),
+} as const;
 
 // ─── Density (owner decision 2026-11-01) ─────────────────────────────────────
 //
@@ -1305,29 +1678,35 @@ export const FONTS = { sans: fontFamily("sans"), serif: fontFamily("serif"), mon
 // guess: laptops and iPads are usually on wifi.
 
 /**
- * The hit region every interactive control keeps, on every device including desktop (the Bundu floor, owner ruling
- * 2026-11-02): `BUNDU_FLOOR.hitAreaPx`, 49px. It replaces Apple HIG Buttons' 44 pt on a coarse pointer AND the
- * 24px WCAG 2.2 SC 2.5.8 floor registry 4.21.0 set for a fine pointer. Kept under the old name for importers.
+ * The hit region every interactive control keeps on touch (the Bundu floor, owner ruling 2026-11-02):
+ * `BUNDU_FLOOR.hitAreaPx`, 49px. It replaces Apple HIG Buttons' 44 pt on a coarse pointer. A desktop keeps the
+ * smaller `FLOOR_FINE_HIT_PX` (28px, owner ruling 2026-11-12, #660). Kept under the old name for importers.
  */
-export const FLOOR_COARSE_PX = BUNDU_FLOOR.hitAreaPx
-/** The smallest a control is DRAWN under desktop density, px. Its hit region is still FLOOR_COARSE_PX. */
-export const FLOOR_VISIBLE_FINE_PX = BUNDU_FLOOR.visibleControlMinPx
+export const FLOOR_COARSE_PX = BUNDU_FLOOR.hitAreaPx;
+/** The smallest a control is DRAWN under desktop density, px. */
+export const FLOOR_VISIBLE_FINE_PX = BUNDU_FLOOR.visibleControlMinPx;
+/** The hit region every interactive control keeps on a desktop (a fine pointer with hover), px: 28 (#660). Equal to FLOOR_VISIBLE_FINE_PX, so a desktop control needs no hit-area pseudo-element. */
+export const FLOOR_FINE_HIT_PX = BUNDU_FLOOR.pointerFine.hitAreaPx;
 /** The type steps that are secondary text (floor `captionPx`, 14px); every other step is body or a heading (floor `bodyPx`, 17px). */
-export const CAPTION_STEPS: readonly string[] = ["small", "caption", "code"]
+export const CAPTION_STEPS: readonly string[] = ["small", "caption", "code"];
 /** Body text never below this on any device, px (17: Apple's iOS default body size). */
-export const BODY_FLOOR_PX = BUNDU_FLOOR.bodyPx
+export const BODY_FLOOR_PX = BUNDU_FLOOR.bodyPx;
+/** Body text never below this on a desktop (a fine pointer with hover), px: 15 (owner, #660). */
+export const BODY_FLOOR_FINE_PX = BUNDU_FLOOR.pointerFine.bodyPx;
 /** Captions, metadata and secondary labels never below this, px. */
-export const CAPTION_FLOOR_PX = BUNDU_FLOOR.captionPx
+export const CAPTION_FLOOR_PX = BUNDU_FLOOR.captionPx;
 
 /** The fine-pointer, hover-capable, wide-viewport media query. Tablets (coarse pointer) never match, nor does a touchscreen laptop, which also has a coarse pointer (`any-pointer: coarse`). */
-export const DENSITY_DESKTOP_QUERY = "(min-width: 64rem) and (pointer: fine) and (hover: hover) and (not (any-pointer: coarse))"
+export const DENSITY_DESKTOP_QUERY =
+  "(min-width: 64rem) and (pointer: fine) and (hover: hover) and (not (any-pointer: coarse))";
 /** Type steps down at tablet width on any pointer. */
-export const DENSITY_TABLET_QUERY = "(min-width: 48rem)"
+export const DENSITY_TABLET_QUERY = "(min-width: 48rem)";
 
 /**
- * Size roles under desktop density, in px: what a control is DRAWN at. Every one must be >= FLOOR_VISIBLE_FINE_PX,
- * and every control keeps a FLOOR_COARSE_PX hit region through the `hit-area` rule (`densityLayer()`). The field
- * roles do not step down: a native input or select cannot carry a pseudo-element, so its box IS its hit region.
+ * Size roles under desktop density, in px: what a control is DRAWN at. Every one must be >= FLOOR_FINE_HIT_PX
+ * (= FLOOR_VISIBLE_FINE_PX, 28), the desktop hit region: the drawn box IS the hit region, so a desktop control needs no
+ * pseudo-element. (Before #660 a desktop kept a 49px hit region, and the native field roles could not step down
+ * because an input or select cannot carry a pseudo-element; they now step down with the rest.)
  */
 export const DESKTOP_SIZES: Readonly<Record<string, number>> = {
   "spacing-touch": 36,
@@ -1336,9 +1715,9 @@ export const DESKTOP_SIZES: Readonly<Record<string, number>> = {
   "spacing-control-lg": 40,
   "spacing-control-icon": 36,
   "spacing-control-dense": 28,
-  "spacing-field": 49,
-  "spacing-field-sm": 49,
-}
+  "spacing-field": 36,
+  "spacing-field-sm": 32,
+};
 
 /**
  * The sizes consumers pinned before 2026-11-01, restored by
@@ -1353,8 +1732,11 @@ export const LEGACY_SIZES: Readonly<Record<string, number>> = {
   "spacing-control-dense": 32,
   "spacing-field": 56,
   "spacing-field-sm": 48,
-}
+};
 /** Size roles whose box is their hit region (native form fields: no pseudo-element): they keep the hit area drawn. */
-export const NATIVE_HIT_ROLES: readonly string[] = ["spacing-field", "spacing-field-sm"]
+export const NATIVE_HIT_ROLES: readonly string[] = [
+  "spacing-field",
+  "spacing-field-sm",
+];
 /** The legacy touch floor, px. */
-export const LEGACY_FLOOR_PX = 48
+export const LEGACY_FLOOR_PX = 48;

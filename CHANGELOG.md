@@ -10,6 +10,16 @@ From 2026-10-04 releases follow the org versioning policy ([nyuchi/.github#80](h
 
 ## [Unreleased]
 
+### Changed — the Bundu floor has two pointer tiers: 28px hit region and 15px body on a desktop, touch unchanged (2026-11-12, #660)
+
+Owner ruling, 2026-11-12: "yes do the device-based floor, desktop body 15px". A 49px hit region and 17px body on every desktop screen caused a great deal of scrolling, and Apple's own defaults drop to a 28 pt control and 13 pt body on macOS. The floor is now `BUNDU_FLOOR` with an explicit `pointerFine` tier. Touch (a coarse pointer, and every device that is not a desktop) is unchanged. The desktop tier is the existing density query: `(min-width: 64rem) and (pointer: fine) and (hover: hover) and (not (any-pointer: coarse))`.
+
+- **Hit region.** On a desktop it is 28px (was 49px): `--target-floor` is lowered to `1.75rem` by the desktop density layer only (nothing else lowers it), a desktop control's drawn box is its hit region, and menu and listbox rows take `min-height: 28px`. Touch stays 49px. `/v1/brand` `scale.density.floorPx` carries `hitAreaFine: 28`, and the deprecated `fine` alias is now 28 (was 49).
+- **Body text.** On a desktop `--fs-body` is 15px (was 17px) and `--fs-body-lg` 17px (was 18px); captions, small and code stay 14px, and touch keeps 17px. `floorPx.bodyFine` is 15 (was 17), and `bunduFloor` now includes `pointerFine: { hitAreaPx: 28, bodyPx: 15 }`.
+- **Native fields.** `--size-field` is 36px and `--size-field-sm` 32px on a desktop (were 49px); touch stays 49px. The three contract density rows that said `fine: 49` (`input`, `native-select`, `discover-search` field) now say 36.
+- **Contract runner and Rust evaluator.** `hitRegion` and `hit_region` take the tier's floor (`HIT_AREA_FINE_PX` 28 on a fine pointer, `HIT_AREA_PX` 49 on a coarse one); a hit region under 28px on a fine pointer, or under 49px on a coarse one, fails. The role table's desktop column is `touch-min` 28, `field` 36, `field-sm` 32. `contracts/hit-region-cases.json` is updated to the two tiers and gains three cases.
+- **Docs.** `docs/sizes-and-density.md` and the brand-guidelines doctrine page state both tiers. The `mzizi-design` and `mzizi-roots` skills quote the old numbers; they are generated from `@nyuchi/mzizi-skills`, so they change with a follow-up in agent-tools, not here.
+
 ### Added — the Python distribution path: `mzizi-py/`, `pnpm py:generate`, `lib/python-packages.ts` and `publish-pypi.yml` (2026-10-07, #473)
 
 Phase 2 of #472 starts with the infrastructure the Python build of the resilience node ships through, before its modules land.

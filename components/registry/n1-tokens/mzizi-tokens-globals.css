@@ -353,10 +353,10 @@
   --spacing-touch: max(
     var(--size-touch),
     var(--control-floor)
-  ); /* never under the control floor: 49px, or 28px drawn at desktop density */
+  ); /* never under the control floor: 49px on touch, or 28px drawn at desktop density */
   --spacing-touch-min: var(
     --target-floor
-  ); /* the hit-area floor: 49px on every device; no brand can lower it */
+  ); /* the hit-area floor: 49px on touch, 28px on a desktop; no brand can lower it */
   --spacing-inset-floor: var(
     --inset-floor
   ); /* the inset floor: 14px; no brand can lower it */
@@ -366,28 +366,28 @@
   --spacing-control: max(
     var(--size-control),
     var(--control-floor)
-  ); /* never under the control floor: 49px, or 28px drawn at desktop density */
+  ); /* never under the control floor: 49px on touch, or 28px drawn at desktop density */
   --spacing-control-sm: max(
     var(--size-control-sm),
     var(--control-floor)
-  ); /* never under the control floor: 49px, or 28px drawn at desktop density */
+  ); /* never under the control floor: 49px on touch, or 28px drawn at desktop density */
   --spacing-control-lg: max(
     var(--size-control-lg),
     var(--control-floor)
-  ); /* never under the control floor: 49px, or 28px drawn at desktop density */
+  ); /* never under the control floor: 49px on touch, or 28px drawn at desktop density */
   --spacing-control-icon: max(
     var(--size-control-icon),
     var(--control-floor)
-  ); /* never under the control floor: 49px, or 28px drawn at desktop density */
+  ); /* never under the control floor: 49px on touch, or 28px drawn at desktop density */
   --spacing-control-dense: var(--size-control-dense);
   --spacing-field: max(
     var(--size-field),
     var(--control-floor)
-  ); /* never under the control floor: 49px, or 28px drawn at desktop density */
+  ); /* never under the control floor: 49px on touch, or 28px drawn at desktop density */
   --spacing-field-sm: max(
     var(--size-field-sm),
     var(--control-floor)
-  ); /* never under the control floor: 49px, or 28px drawn at desktop density */
+  ); /* never under the control floor: 49px on touch, or 28px drawn at desktop density */
   --radius-control: var(--r-control);
   --radius-field: var(--r-field);
   --radius-badge: var(--r-badge);
@@ -952,7 +952,7 @@
   --h-button-default: 3.0625rem; /* 49px — componentSpecs.button.heights.default */
   --h-button-sm: 3.0625rem; /* 49px — componentSpecs.button.heights.sm */
   --h-input: 3.0625rem; /* 49px — inputs match the default button */
-  --target-floor: 3.0625rem; /* 49px — the Bundu hit region (7 x 7), on every device. Density never lowers it. */
+  --target-floor: 3.0625rem; /* 49px — the Bundu hit region (7 x 7) on touch. The desktop density block lowers it to 28px; nothing else does. */
   --inset-floor: 0.875rem; /* 14px — the least padding between text and the edge of its container (2 x 7). Density never lowers it. */
   --gap-floor: 0.4375rem; /* 7px — the least gap between adjacent controls, a label and its field, and sibling items (the 7px unit). */
   --leading-floor: 1.5; /* body line height, never tighter (WCAG 1.4.12). */
@@ -1353,14 +1353,15 @@
 /* ════════════════════════════════════════════════════════════════════════════
  * DENSITY — sizes step down as screens grow (2026-11-01). See densityLayer().
  * ════════════════════════════════════════════════════════════════════════════ */
-/* The 49px hit region (BUNDU_FLOOR.hitAreaPx): a transparent pseudo-element grows the click and
-   touch region of a button-like control to the floor, so a control drawn at 28px on a
-   desktop is still 49px to hit. It is in the base layer, so a utility on the element (absolute,
-   inset-*) wins, and it is a no-op where the control is already drawn at the floor or larger.
+/* The hit region (BUNDU_FLOOR.hitAreaPx, 49px on touch; 28px on a desktop, BUNDU_FLOOR.pointerFine): a
+   transparent pseudo-element grows the click and touch region of a button-like control to the floor
+   (--target-floor, which the desktop media block below lowers). It is in the base layer, so a utility on the
+   element (absolute, inset-*) wins, and it is a no-op where the control is already drawn at the floor or larger
+   (every desktop control is drawn at least 28px, so on a desktop it never grows one).
    It steps aside, by design, for:
    - an element that draws its own after: pseudo-element (checkbox, switch, radio, the tabs line): it keeps its
      own, because a utility only overrides the properties it sets and the rest of this rule would mix in;
-   - composite widgets, where a 49px overlay on a row 28 to 36px tall would
+   - composite widgets, where a touch-sized overlay on a row 28 to 36px tall would
      overlap its neighbours and the later sibling would steal the click: menu and listbox rows take
      min-height instead (below), and a calendar day ([data-day]) is a grid cell, left as drawn;
    - an element that clips its overflow (overflow-hidden), which would clip the pseudo-element too: add
@@ -1497,26 +1498,29 @@
 
 @media (min-width: 64rem) and (pointer: fine) and (hover: hover) and (not (any-pointer: coarse)) {
   :root {
-    --control-floor: 1.75rem; /* 28px: the smallest a control is DRAWN. --target-floor (the 49px hit region) is not lowered. */
+    --target-floor: 1.75rem; /* 28px: the desktop hit region (BUNDU_FLOOR.pointerFine). Touch keeps 49px. */
+    --control-floor: 1.75rem; /* 28px: the smallest a control is DRAWN. */
     --touch-target-lg: 36px;
     --touch-target: 32px;
     --h-button-default: 2.25rem; /* 36px */
     --h-button-sm: 2rem; /* 32px */
-    --h-input: 3.0625rem; /* 49px */
+    --h-input: 2.25rem; /* 36px */
     --size-touch: 2.25rem; /* 36px */
     --size-control: 2.25rem; /* 36px */
     --size-control-sm: 2rem; /* 32px */
     --size-control-lg: 2.5rem; /* 40px */
     --size-control-icon: 2.25rem; /* 36px */
     --size-control-dense: 1.75rem; /* 28px */
-    --size-field: 3.0625rem; /* 49px */
-    --size-field-sm: 3.0625rem; /* 49px */
+    --size-field: 2.25rem; /* 36px */
+    --size-field-sm: 2rem; /* 32px */
     --fs-display: 3rem; /* 48px */
     --fs-display-sm: 2.5rem; /* 40px */
     --fs-h1: 2rem; /* 32px */
     --fs-h2: 1.5rem; /* 24px */
     --fs-h3: 1.25rem; /* 20px */
     --fs-h4: 1.125rem; /* 18px */
+    --fs-body-lg: 1.0625rem; /* 17px */
+    --fs-body: 0.9375rem; /* 15px */
   }
 }
 
