@@ -10,6 +10,20 @@ From 2026-10-04 releases follow the org versioning policy ([nyuchi/.github#80](h
 
 ## [Unreleased]
 
+### Added — `app/bar-chart` 1.2.0: nullable values for withheld counts (2026-10-06, #457)
+
+BarChart drew every point as a number, so an app that withholds small counts (k-anonymity: a day with fewer than 5 is returned as `null`) had to draw it as 0 or drop the day, and the total then read as exact. Mukoko Events admin's Insights page needs both to be honest (nyuchi/api-gateway#268). The change is in the `.astro` and `.tsx` builds, with the same markup, and is backwards compatible.
+
+- `data[].value` is now `number | null`. A new optional prop, `missingLabel` (default `"Not available"`), is what a null reads as, e.g. `"Fewer than 5"`.
+- A null draws no bar. In `columns` it leaves a small muted baseline tick (`fill-muted-foreground`) on a column marked `data-missing`, whose title reads `<label>: <missingLabel>`. In `rows` the bar is empty and the value is the `missingLabel` in muted text.
+- The figures table shows the `missingLabel` (muted) for a null. The total sums the known values and reads `At least <n>` when any value is null.
+- Every value null: "No figure in this range can be shown: <missingLabel, lower-cased> for every point." No data, or every value 0 with none null, still reads "Nothing to chart in this range."
+- The contract adds the `suppressed`, `suppressed-rows` and `suppressed-all` states and their checks, which both builds pass.
+
+## [4.30.0] - 2026-11-12
+
+Releases `staging` to `main` as the next minor above v4.29.0 ([nyuchi/.github#80](https://github.com/nyuchi/.github/issues/80)). `package.json`, `README.md` and `content/changelog/releases.json` (and `lib/changelog.generated.ts`) are bumped to 4.30.0.
+
 ### Changed — the `markdown-renderer` linear-time tests measure scaling, not wall-clock (2026-10-20, #516)
 
 Owner decision, 2026-10-20. The parser's "linear time" tests used fixed budgets: 3000 ms for reading huge rich text and deciding `auto`, 1000 to 1500 ms for the hostile-input cases, and 2 s in the Rust build. On a 4-core host the same staging commit took 2.2 to 4.0 s against the 3000 ms budget, so the tests failed on the host and not on the parser. They now assert how the time grows.
@@ -40,6 +54,10 @@ Owner decision, 2026-10-20. The parser's "linear time" tests used fixed budgets:
   - Every TypeScript case stops inside its 30 s budget, and the Rust run fails in 49 s.
   - With those changes reverted, every test passes.
 - **Cost.** The main Vitest suite takes about 7 to 10 s longer than on staging: 30 to 34 s there, 40 s here, on a 4-core host. No component, parser or API change.
+
+## [4.29.0] - 2026-11-11
+
+Releases `staging` to `main` as the next minor above v4.28.0 ([nyuchi/.github#80](https://github.com/nyuchi/.github/issues/80)). `package.json`, `README.md` and `content/changelog/releases.json` (and `lib/changelog.generated.ts`) carry 4.29.0. The registry takes `@nyuchi/mzizi-skills` 0.19.0 and the Claude Code plugin is 1.8.0; `/v1/skills` and `mzizi_get_skills` serve 0.19.0 once the `mzizi-api` and `mzizi-mcp` pins move to this release ([#645](https://github.com/mzizi-dev/mzizi-registry/pull/645)).
 
 ### Changed — take @nyuchi/mzizi-skills 0.19.0 (12 skills), plugin 1.8.0 (2026-11-11)
 
