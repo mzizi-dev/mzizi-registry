@@ -19114,38 +19114,6 @@
     {
       "author": "Mzizi, operated by Nyuchi Africa (Pvt) Ltd — https://mzizi.dev",
       "categories": ["lib", "primitives"],
-      "dependencies": ["uqr"],
-      "description": "qrMatrix(text, ecc?): a QR code as one SVG path on a size×size grid (a square per dark module, a four-module quiet zone, error correction M by default), so a component draws it with fill=\"currentColor\" and no literal colour. Encoding is uqr (MIT, zero dependencies). Framework-free: Astro imports it flat (./qr-matrix), React as @/lib/qr-matrix.",
-      "docs": "Use it for: QR codes for share links, tickets and pairing, drawn server-side.\nIncludes: One SVG path per QR code, uqr encoding, ISO/IEC 18004 quiet zone.\nAccessibility: Non-visual helper: the caller gives the <svg> role=\"img\" and an aria-label naming what the code opens.\nInstall: npx shadcn@latest add https://api.mzizi.dev/v1/ui/qr-matrix",
-      "files": [
-        {
-          "path": "components/registry/n2-primitives/qr-matrix.ts",
-          "target": "lib/qr-matrix.ts",
-          "type": "registry:lib"
-        }
-      ],
-      "meta": {
-        "a11y": [
-          "Non-visual helper: the caller gives the <svg> role=\"img\" and an aria-label naming what the code opens"
-        ],
-        "collection": "lib",
-        "features": [
-          "One SVG path per QR code",
-          "uqr encoding, ISO/IEC 18004 quiet zone"
-        ],
-        "owner": "mzizi",
-        "useCases": [
-          "QR codes for share links, tickets and pairing, drawn server-side"
-        ]
-      },
-      "name": "qr-matrix",
-      "registryDependencies": [],
-      "title": "QR Matrix",
-      "type": "registry:lib"
-    },
-    {
-      "author": "Mzizi, operated by Nyuchi Africa (Pvt) Ltd — https://mzizi.dev",
-      "categories": ["lib", "primitives"],
       "dependencies": [],
       "description": "A framework-free QR Code encoder (ISO/IEC 18004): byte mode, versions 1 to 40, error correction L/M/Q/H, and SVG path data to draw it with one path in currentColor. No dependencies and no network: the code is made on the device. Chooses masks as the qrcode Rust crate does, so Rust and TypeScript builds draw the same matrix.",
       "docs": "Use it for: Drawing a sign-in or pairing address as a QR code without a network service, Invite and share links as QR codes.\nIncludes: Byte mode (UTF-8), versions 1 to 40, Error correction L, M, Q, H, SVG path output, no inline style, Same matrix as the qrcode Rust crate.\nAccessibility: Non-visual helper - the component drawing it names the image.\nInstall: npx shadcn@latest add https://api.mzizi.dev/v1/ui/qr-code",
@@ -19178,6 +19146,38 @@
       "name": "qr-code",
       "registryDependencies": [],
       "title": "QR Code",
+      "type": "registry:lib"
+    },
+    {
+      "author": "Mzizi, operated by Nyuchi Africa (Pvt) Ltd — https://mzizi.dev",
+      "categories": ["lib", "primitives"],
+      "dependencies": ["uqr"],
+      "description": "qrMatrix(text, ecc?): a QR code as one SVG path on a size×size grid (a square per dark module, a four-module quiet zone, error correction M by default), so a component draws it with fill=\"currentColor\" and no literal colour. Encoding is uqr (MIT, zero dependencies). Framework-free: Astro imports it flat (./qr-matrix), React as @/lib/qr-matrix.",
+      "docs": "Use it for: QR codes for share links, tickets and pairing, drawn server-side.\nIncludes: One SVG path per QR code, uqr encoding, ISO/IEC 18004 quiet zone.\nAccessibility: Non-visual helper: the caller gives the <svg> role=\"img\" and an aria-label naming what the code opens.\nInstall: npx shadcn@latest add https://api.mzizi.dev/v1/ui/qr-matrix",
+      "files": [
+        {
+          "path": "components/registry/n2-primitives/qr-matrix.ts",
+          "target": "lib/qr-matrix.ts",
+          "type": "registry:lib"
+        }
+      ],
+      "meta": {
+        "a11y": [
+          "Non-visual helper: the caller gives the <svg> role=\"img\" and an aria-label naming what the code opens"
+        ],
+        "collection": "lib",
+        "features": [
+          "One SVG path per QR code",
+          "uqr encoding, ISO/IEC 18004 quiet zone"
+        ],
+        "owner": "mzizi",
+        "useCases": [
+          "QR codes for share links, tickets and pairing, drawn server-side"
+        ]
+      },
+      "name": "qr-matrix",
+      "registryDependencies": [],
+      "title": "QR Matrix",
       "type": "registry:lib"
     },
     {
