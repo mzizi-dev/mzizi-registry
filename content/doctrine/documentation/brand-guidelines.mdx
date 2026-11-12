@@ -97,7 +97,7 @@ All visual design values live in dedicated database tables under the `brand_*` p
 ### Sizing & accessibility tokens
 
 - `styling-icon-sizes` — canonical icon dimensions from xs (12px) through xl (40px), default 20px
-- `styling-touch-targets` — accessibility tier minimums (superseded for the minimum by the Bundu floor below: 49px) with WCAG, Apple HIG, and Material Design citations per row
+- `styling-touch-targets` — accessibility tier minimums (superseded for the minimum by the Bundu floor below: 49px on touch, 28px on a desktop) with WCAG, Apple HIG, and Material Design citations per row
 - `styling-component-specs` — per-component canonical heights, padding, variants, border-radius, and minimum touch targets for primitives like button, input, avatar, badge, card, dialog, toggle, checkbox, tabs
 
 ### Density tokens
@@ -127,7 +127,7 @@ Three font families, chosen for complete coverage of African scripts including L
 - **Noto Sans** — body text, UI labels. Neutral, highly legible, same coverage as Noto Serif.
 - **JetBrains Mono** — code blocks, terminal output, technical content. Purpose-built for developer readability.
 
-The type scale runs from Display (40px serif on a phone, 48px on tablet and desktop) through Display Small, H1-H6 (34-17px on a phone, 32-17px on desktop, mixing serif and sans), Body Large/Body/Body Small (18px, 17px, 14px on every device), Caption (14px sans), and Code (14px mono). Body text is 17px and nothing readable is under 14px on any device, desktop included: that is the Bundu floor, below. Display sizes carry `fluid_min_px`/`fluid_max_px` so they scale responsively rather than breaking to one word per line on phones. Display through H4 carry negative letter-spacing for typographic refinement; Caption carries small positive tracking; Code carries `tabular-nums` so numbers align in tables.
+The type scale runs from Display (40px serif on a phone, 48px on tablet and desktop) through Display Small, H1-H6 (34-17px on a phone, 32-17px on desktop, mixing serif and sans), Body Large/Body/Body Small (18px, 17px, 14px on touch; 17px, 15px, 14px on a desktop), Caption (14px sans), and Code (14px mono). Body text is 17px on touch and 15px on a desktop, and nothing readable is under 14px on any device: that is the Bundu floor, below. Display sizes carry `fluid_min_px`/`fluid_max_px` so they scale responsively rather than breaking to one word per line on phones. Display through H4 carry negative letter-spacing for typographic refinement; Caption carries small positive tracking; Code carries `tabular-nums` so numbers align in tables.
 
 Lowercase wordmarks (mukoko, nyuchi, shamwari, bundu) are reserved for special instances — the brand wordmark lockup itself: logos, splash marks, and standalone brand marks. In site names, product names, and running text, Bundu and Nyuchi take capitals: Bundu Docs, Nyuchi Docs, Nyuchi Platform. Mukoko is the exception — it only uses lowercase, in every context. This is a brand decision, not a typography accident.
 
@@ -145,10 +145,10 @@ The label on a brand's solid action fill (`primary-foreground` and the roles tha
 
 ## Touch Targets
 
-Owner ruling, 2026-11-02: every interactive control keeps a **49px hit region on every device, desktop included**. It replaces the 44px floor on a coarse pointer (Apple's Buttons page: "a button needs a hit region of at least 44x44 pt", read 2026-11-01 at developer.apple.com/design/human-interface-guidelines) and the 24px floor on a fine pointer (WCAG 2.2 SC 2.5.8) that registry 4.21.0 set. Bundu sets the standard for outdoor reading and for people who find technology hard (older users, African and emerging markets), so the minimum is as high as it can be and one Bundu will stand by.
+Owner ruling, 2026-11-02: every interactive control keeps a **49px hit region on touch**. Owner ruling, 2026-11-12 (#660: "yes do the device-based floor, desktop body 15px"): the floor has two pointer tiers, and a desktop (a fine pointer with hover) keeps a **28px hit region and 15px body** (Apple's macOS defaults are a 28 pt control and 13 pt body), captions still 14px. The 49px hit region replaces the 44px floor on a coarse pointer (Apple's Buttons page: "a button needs a hit region of at least 44x44 pt", read 2026-11-01 at developer.apple.com/design/human-interface-guidelines) on touch; the desktop tier stays above the 24px floor of WCAG 2.2 SC 2.5.8. Bundu sets the standard for outdoor reading and for people who find technology hard (older users, African and emerging markets), so the minimum is as high as it can be and one Bundu will stand by.
 
-- **Coarse pointer (phones, tablets):** controls are drawn at 49px (the large control 56px), body text is 17px. The gaps between targets stay generous: spacing tokens are untouched.
-- **Desktop density (fine pointer, hover, 64rem and up):** a control may be DRAWN smaller, 28-40px (`--control-floor`, 28px), but keeps its 49px hit region: the token layer's `hit-area` rule grows every button-like control with a transparent pseudo-element (`--target-floor`, never lowered). A native field or select cannot carry a pseudo-element, so it is drawn at 49px. Body text stays 17px, captions 14px.
+- **Coarse pointer (phones, tablets):** controls are drawn at 49px (the large control 56px), body text is 17px, the hit region is 49px. The gaps between targets stay generous: spacing tokens are untouched.
+- **Desktop density (fine pointer, hover, 64rem and up):** controls are DRAWN 28-40px (`--control-floor`, 28px) and the hit region is 28px (`--target-floor`, lowered by the desktop layer only), so a desktop control's drawn box is its hit region. A native field or select is drawn 32-36px. Body text is 15px, captions stay 14px.
 - Density is about visual size only. It is never a guess about the network: laptops and iPads are usually on wifi, and the performance budgets do not change with it.
 
 The sizes consumers pinned before 2026-11-01 (48px and 56px targets, 16px body, 12px captions) come back with `data-mzizi-sizes="legacy"` on the root element, until the app has migrated; that attribute steps out of the Bundu floor, so remove it to take it. The older tiers in `styling-touch-targets` (48 accessible, 56 comfortable) are superseded by this section.
@@ -166,7 +166,7 @@ Owner ruling, 2026-11-04 (mzizi-registry#617): the Bundu floor also sets **minim
 | Body leading             | 1.5   | `--leading-floor`   | Body line height, never tighter (WCAG 1.4.12). Headings and display type keep their own tighter leading.                                                |
 
 - **Enforced as defaults and as tests.** The base layer of `mzizi-tokens-globals.css` gives a bare control (a `button`, `select`, `textarea`, a text `input`) `padding-inline: var(--inset-floor)`, a bare text surface (a native `dialog`, a `[popover]`, an alert, a tooltip, a card with no structured children) `padding: var(--inset-floor)`, a list, group, toolbar or tablist `gap: var(--gap-floor)`, and `body` `line-height: max(var(--lh-body), var(--leading-floor))`. A utility on the element (`p-6`, `gap-2`) is the author's own value and wins, so the tests hold every explicit value to the floor.
-- **A control's block axis is held by its height.** 14px of block padding does not fit a control drawn at 28px, so a control's vertical room is decided by the 28px drawn and 49px hit-region floors, not by the inset.
+- **A control's block axis is held by its height.** 14px of block padding does not fit a control drawn at 28px, so a control's vertical room is decided by the 28px drawn and hit-region floors (49px on touch), not by the inset.
 - **Hit regions may touch, never overlap.** The gap floor is measured between visible edges; the `hit-area` overlay of the hit-region floor may reach into neighbouring space as before.
 - **No `p-0`, `gap-0` or negative margin on a text container** without an explicit exception: a `spacing-floor: exception <reason>` comment in a component, or a pinned entry with a reason in the contract runner (today a chart's 1px bars, a joined search-and-submit toolbar, an image that bleeds to a card edge, and inline code).
 - **No brand pack, density layer or component may lower a floor.** `data-mzizi-sizes="legacy"` steps out of it with the other Bundu floors.
@@ -179,7 +179,7 @@ The Bundu Order draws on biblical mathematical patterns and prime numbers (owner
 
 - **The unit is 7px** (`--radius-unit`). The radii are 4, 7, 12, 14 and 17px and a pill, and they do not change.
 - **P7 and P17** are prime steps of the surface-elevation ladder (`surface` is P7, `raised` is P17), and the seven experimental families are a heptagon of hues offset 17 degrees.
-- **The floors derive from the same numbers.** Body text is 17px (a prime; Apple's iOS default body size) on every device, including desktop. Captions, metadata and secondary labels are 14px (2 x 7), and nothing readable is smaller. Every interactive control keeps a 49px hit region (7 x 7, above Apple's 44 pt). A control may be drawn down to 28px (4 x 7) at desktop density, never with a smaller hit region.
+- **The floors derive from the same numbers.** Body text is 17px on touch (a prime; Apple's iOS default body size) and 15px on a desktop (owner, 2026-11-12). Captions, metadata and secondary labels are 14px (2 x 7), and nothing readable is smaller. Every interactive control keeps a 49px hit region on touch (7 x 7, above Apple's 44 pt) and a 28px one on a desktop (4 x 7, Apple's macOS default control).
 - **Spacing** floors stand beside them: 14px of inset (2 x 7), 7px gaps (the unit) and 1.5 body leading (see Spacing Floor).
 - **Contrast** floors stand beside them: body text 7:1, non-body text 4.5:1, UI parts 3:1 (see Contrast Minimums).
 

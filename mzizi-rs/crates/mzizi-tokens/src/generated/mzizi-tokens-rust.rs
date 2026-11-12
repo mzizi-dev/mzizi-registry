@@ -963,7 +963,7 @@ impl Roles {
 
     /// 49px. The default touch target (`h-touch`, `min-h-touch`). brandMeta.accessibility.defaultTouchTarget.
     pub const SPACING_TOUCH: u32 = 49;
-    /// 49px. The hit-area floor (`min-h-touch-min`): 49px (`BUNDU_FLOOR.hitAreaPx`, 7 x 7, above Apple HIG Buttons' 44x44 pt) on every device, desktop included, registered as `--target-floor`. Density never lowers it: a desktop control may be drawn smaller but keeps this hit region (owner ruling 2026-11-02, replacing the 24px desktop floor of 2026-11-01 and the 44px of 2026-11-01). No brand pack can move it.
+    /// 49px. The hit-area floor (`min-h-touch-min`), registered as `--target-floor`, in two pointer tiers: 49px on touch (`BUNDU_FLOOR.hitAreaPx`, 7 x 7, above Apple HIG Buttons' 44x44 pt) and 28px on a desktop, a fine pointer with hover (`BUNDU_FLOOR.pointerFine.hitAreaPx`, 4 x 7, Apple's macOS default control). Only the desktop density layer lowers it, and not below 28px (owner rulings 2026-11-02 and 2026-11-12, #660; the 2026-11-02 ruling replaced the 24px desktop floor and the 44px touch floor of 2026-11-01). No brand pack can move it.
     pub const SPACING_TOUCH_MIN: u32 = 49;
     /// 14px. The inset floor (`p-inset-floor`, `px-inset-floor`): 14px (`BUNDU_FLOOR.spacing.insetPx`, 2 x 7), the least padding between text and the edge of its container, registered as `--inset-floor`. No component, density layer or brand pack can lower it (owner 2026-11-04, #617).
     pub const SPACING_INSET_FLOOR: u32 = 14;
