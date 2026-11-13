@@ -1272,6 +1272,11 @@ export const brandMeta: BrandMeta = {
     focusIndicator: "2px ring with ring-offset-2, using --ring token",
     minTouchTarget: 49,
     defaultTouchTarget: 49,
+    // The pointer-aware tier (owner, 2026-11-12): on a desktop with a fine pointer and hover, and no coarse
+    // pointer anywhere, the hit region is 28px and body text 15px. Touch, and any narrow viewport, keep 49 and
+    // 17. `BUNDU_FLOOR.pointerFine` in roles.source.ts is the one source; the build fails if these disagree.
+    minTouchTargetPointerFine: 28,
+    bodyPxPointerFine: 15,
     // The spacing floor (owner, 2026-11-04, #617): minimums nothing can go under. `BUNDU_FLOOR.spacing` in
     // roles.source.ts is the one source; the build fails if these disagree.
     minInset: 14,
