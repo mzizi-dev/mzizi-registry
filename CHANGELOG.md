@@ -13,6 +13,7 @@ From 2026-10-04 releases follow the org versioning policy ([nyuchi/.github#80](h
 ### Security
 
 - **Dev dependency.** The `@hono/node-server` override moves from `>=2.1.3` to `>=2.1.6`, which fixes two moderate advisories (GHSA-qv5m-9pm6-hqp3, GHSA-jpvv-r467-5p4w) reached through `shadcn`. Dev tooling only: nothing the registry or the API ships changes. The low `deepmerge` advisory has no patched release and stays below the audit gate.
+- **Dev dependency.** The `hono` override moves from `>=4.13.13` to `>=4.13.16`, which fixes two moderate advisories (GHSA-4m76-xfj5-7975, GHSA-h7mg-cq63-vhpq) reached through `shadcn`. Dev tooling only: nothing the registry or the API ships changes.
 
 ## [4.36.0] - 2026-11-12
 
