@@ -186,7 +186,7 @@
       "express-rate-limit": ">=8.6.1",
       "fast-uri": ">=3.1.9",
       "flatted": ">=3.4.4",
-      "hono": ">=4.13.13",
+      "hono": ">=4.13.16",
       "ip-address": ">=10.7.4",
       "js-yaml": ">=4.3.2",
       "katex": ">=0.18.2",
