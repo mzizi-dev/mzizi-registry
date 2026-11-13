@@ -10,6 +10,10 @@ From 2026-10-04 releases follow the org versioning policy ([nyuchi/.github#80](h
 
 ## [Unreleased]
 
+### Security
+
+- **Dev dependency.** The `@hono/node-server` override moves from `>=2.1.3` to `>=2.1.6`, which fixes two moderate advisories (GHSA-qv5m-9pm6-hqp3, GHSA-jpvv-r467-5p4w) reached through `shadcn`. Dev tooling only: nothing the registry or the API ships changes. The low `deepmerge` advisory has no patched release and stays below the audit gate.
+
 ## [4.36.0] - 2026-11-12
 
 Releases `staging` to `main` as the next minor above v4.35.0 ([nyuchi/.github#80](https://github.com/nyuchi/.github/issues/80)). `package.json`, `README.md` and `content/changelog/releases.json` (and `lib/changelog.generated.ts`) are bumped to 4.36.0.
