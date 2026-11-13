@@ -10,6 +10,17 @@ From 2026-10-04 releases follow the org versioning policy ([nyuchi/.github#80](h
 
 ## [Unreleased]
 
+## [4.37.0] - 2026-11-13
+
+### Added
+
+- **Canon carries the desktop tier.** `/v1/brand` `brand_meta.accessibility` gains `minTouchTargetPointerFine` 28 and `bodyPxPointerFine` 15, beside the unchanged `minTouchTarget` 49 and the 17px touch body. Until now only the token files and `/v1/architecture` stated the pointer-aware floor, so a tool that reads the brand data listed 49px as the only hit region. The build fails if canon disagrees with `BUNDU_FLOOR.pointerFine`. Touch, and any narrow viewport, are unchanged.
+
+### Security
+
+- **Dev dependency.** The `@hono/node-server` override moves from `>=2.1.3` to `>=2.1.6`, which fixes two moderate advisories (GHSA-qv5m-9pm6-hqp3, GHSA-jpvv-r467-5p4w) reached through `shadcn`. Dev tooling only: nothing the registry or the API ships changes. The low `deepmerge` advisory has no patched release and stays below the audit gate.
+- **Dev dependency.** The `hono` override moves from `>=4.13.13` to `>=4.13.16`, which fixes two moderate advisories (GHSA-4m76-xfj5-7975, GHSA-h7mg-cq63-vhpq) reached through `shadcn`. Dev tooling only: nothing the registry or the API ships changes.
+
 ## [4.36.0] - 2026-11-12
 
 Releases `staging` to `main` as the next minor above v4.35.0 ([nyuchi/.github#80](https://github.com/nyuchi/.github/issues/80)). `package.json`, `README.md` and `content/changelog/releases.json` (and `lib/changelog.generated.ts`) are bumped to 4.36.0.
