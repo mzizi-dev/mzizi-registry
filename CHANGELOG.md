@@ -10,6 +10,10 @@ From 2026-10-04 releases follow the org versioning policy ([nyuchi/.github#80](h
 
 ## [Unreleased]
 
+### Added
+
+- **Canon carries the desktop tier.** `/v1/brand` `brand_meta.accessibility` gains `minTouchTargetPointerFine` 28 and `bodyPxPointerFine` 15, beside the unchanged `minTouchTarget` 49 and the 17px touch body. Until now only the token files and `/v1/architecture` stated the pointer-aware floor, so a tool that reads the brand data listed 49px as the only hit region. The build fails if canon disagrees with `BUNDU_FLOOR.pointerFine`. Touch, and any narrow viewport, are unchanged.
+
 ## [4.36.0] - 2026-11-12
 
 Releases `staging` to `main` as the next minor above v4.35.0 ([nyuchi/.github#80](https://github.com/nyuchi/.github/issues/80)). `package.json`, `README.md` and `content/changelog/releases.json` (and `lib/changelog.generated.ts`) are bumped to 4.36.0.
