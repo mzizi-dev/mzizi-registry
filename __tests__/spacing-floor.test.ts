@@ -66,6 +66,12 @@ describe("BUNDU_FLOOR.spacing: the one definition", () => {
     expect(a.minItemGap).toBe(spacing.itemGapPx);
     expect(a.minBodyLeading).toBe(spacing.leadingBody);
   });
+  it("carries the pointer-aware desktop tier in canon too", () => {
+    const a = brandMeta.accessibility;
+    expect(a.minTouchTargetPointerFine).toBe(BUNDU_FLOOR.pointerFine.hitAreaPx);
+    expect(a.bodyPxPointerFine).toBe(BUNDU_FLOOR.pointerFine.bodyPx);
+    expect(a.minTouchTarget).toBe(BUNDU_FLOOR.hitAreaPx);
+  });
   it("is what /v1/tokens (lib/tokens primitives) carries", () => {
     const f = primitives.spacingFloor;
     expect(f.inset.value).toBe(`${spacing.insetPx}px`);

@@ -380,6 +380,15 @@ function spacingFloorInCanon(): void {
       throw new Error(
         `brand.source.ts accessibility.${k} is ${String(a[k])}, but BUNDU_FLOOR.spacing says ${v}`,
       );
+  const fine: Record<string, number> = {
+    minTouchTargetPointerFine: BUNDU_FLOOR.pointerFine.hitAreaPx,
+    bodyPxPointerFine: BUNDU_FLOOR.pointerFine.bodyPx,
+  };
+  for (const [k, v] of Object.entries(fine))
+    if (a[k] !== v)
+      throw new Error(
+        `brand.source.ts accessibility.${k} is ${String(a[k])}, but BUNDU_FLOOR.pointerFine says ${v}`,
+      );
 }
 spacingFloorInCanon();
 
