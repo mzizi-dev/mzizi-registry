@@ -10,6 +10,11 @@ From 2026-10-04 releases follow the org versioning policy ([nyuchi/.github#80](h
 
 ## [Unreleased]
 
+### Changed — the chat and prompt boxes grow by CSS, and an IME's confirming Enter no longer submits (2026-11-14, [#693](https://github.com/mzizi-dev/mzizi-registry/issues/693))
+
+- **`field-sizing: content` replaces the auto-grow JavaScript** in `chat-input` and `prompt-input` (n2-primitives): the textarea grows with its content, stops at the same 160px / 200px caps (`max-h-40` / `max-h-50`), and the resize effect, the textarea ref and the reset-on-send all go. Browsers without `field-sizing` fall back to a single-line box with internal scrolling, the same as an empty box today.
+- **Every custom Enter handling now checks `isComposing`** before it acts — `chat-input`, `prompt-input`, `inline-edit`, `note-editor`, `search-bar`, `tag-input` (n2-primitives) and `app-command-palette` (n7-shell). A reader composing with an IME uses Enter to confirm a conversion candidate; that keystroke must confirm the candidate, not send the message, add the tag or open the first link.
+
 ## [4.40.0] - 2026-11-14
 
 ### Fixed — a sync-back no longer has to race the next staging tag (2026-11-14, No issue: release tooling)

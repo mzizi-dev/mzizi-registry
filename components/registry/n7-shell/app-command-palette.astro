@@ -155,7 +155,8 @@ const inputId = `${id}-q`;
         }
       });
       input.addEventListener("keydown", (e) => {
-        if (e.key === "Enter" && !(input.form ?? null)) {
+        // isComposing: an IME confirming a conversion candidate must not open
+        if (e.key === "Enter" && !e.isComposing && !(input.form ?? null)) {
           const first = links()[0];
           if (first) window.location.assign(first.href);
         }
