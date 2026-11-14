@@ -30,8 +30,8 @@
 // So `CHANGELOG.md` stays what it is — the human narrative — and this file is
 // the machine-readable release record the API serves. The staleness that a
 // plain dump invites is closed by a gate rather than by hope: the check below
-// fails when `package.json`'s version is not the newest release here, so
-// shipping a version bump without a release record breaks CI.
+// fails when `package.json`'s version is newer than the newest release here,
+// so shipping a version bump without a release record breaks CI.
 //
 // WHAT IS GENERATED. The raw records, untouched. No sorting, no reshaping, no
 // derived fields: the route serves the array in the order it appears here, and
@@ -117,12 +117,41 @@ for (const [version, entries] of byVersion) {
 
 // The staleness gate. The release history is ordered newest-first — that is the
 // order the API serves and the order the `releases` view carried — so the head
-// of the array is the current release, and it must be the version this package
-// claims to be. Bump `package.json` without writing the release record and this
-// fails, which is precisely the failure mode a committed record is accused of
-// hiding.
+// of the array is the current release. Bump `package.json` without writing the
+// release record and this fails, which is precisely the failure mode a
+// committed record is accused of hiding.
+//
+// Only that direction fails. A record NEWER than `package.json` is the normal
+// state of `staging` after a sync-back: the release records come back from
+// `main` (4.37.0, say), but the org's required release version check refuses
+// a pull request into `staging` that writes 4.37.0 once `staging` is tagged
+// v4.37.1, so `package.json` keeps staging's own version. Requiring equality
+// made those two required checks contradict each other, and a sync-back
+// passed only if it merged before the next staging tag. The next release
+// branch sets `package.json` and its record together.
+function parseVersion(version) {
+  const match = /^(\d+)\.(\d+)\.(\d+)(?:[-+].*)?$/.exec(version)
+  return match ? [Number(match[1]), Number(match[2]), Number(match[3])] : null
+}
+function compareVersions(a, b) {
+  for (let i = 0; i < 3; i++) {
+    if (a[i] !== b[i]) return a[i] < b[i] ? -1 : 1
+  }
+  return 0
+}
 const declared = JSON.parse(readFileSync(join(process.cwd(), "package.json"), "utf8")).version
-if (releases[0].version !== declared) {
+const declaredParts = parseVersion(declared)
+const newestParts = parseVersion(releases[0].version)
+if (!declaredParts) {
+  fail(`package.json version ${JSON.stringify(declared)} is not MAJOR.MINOR.PATCH`)
+}
+if (!newestParts) {
+  fail(
+    `the newest release in content/changelog/releases.json, ` +
+      `${JSON.stringify(releases[0].version)}, is not MAJOR.MINOR.PATCH`
+  )
+}
+if (compareVersions(declaredParts, newestParts) > 0) {
   fail(
     `package.json is version ${declared} but the newest release in ` +
       `content/changelog/releases.json is ${releases[0].version}. ` +
