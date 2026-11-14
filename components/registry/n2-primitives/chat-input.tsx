@@ -22,32 +22,18 @@ function ChatInput({
   ...props
 }: ChatInputProps) {
   const [value, setValue] = React.useState("")
-  const textareaRef = React.useRef<HTMLTextAreaElement>(null)
-
-  const adjustHeight = React.useCallback(() => {
-    const textarea = textareaRef.current
-    if (!textarea) return
-    textarea.style.height = "auto"
-    textarea.style.height = `${Math.min(textarea.scrollHeight, 160)}px`
-  }, [])
-
-  React.useEffect(() => {
-    adjustHeight()
-  }, [value, adjustHeight])
 
   const handleSend = React.useCallback(() => {
     const trimmed = value.trim()
     if (!trimmed || disabled) return
     onSend?.(trimmed)
     setValue("")
-    if (textareaRef.current) {
-      textareaRef.current.style.height = "auto"
-    }
   }, [value, disabled, onSend])
 
   const handleKeyDown = React.useCallback(
     (e: React.KeyboardEvent<HTMLTextAreaElement>) => {
-      if (e.key === "Enter" && !e.shiftKey) {
+      // isComposing: an IME confirming a conversion candidate must not send
+      if (e.key === "Enter" && !e.shiftKey && !e.nativeEvent.isComposing) {
         e.preventDefault()
         handleSend()
       }
@@ -79,7 +65,6 @@ function ChatInput({
       )}
 
       <textarea
-        ref={textareaRef}
         value={value}
         onChange={(e) => setValue(e.target.value)}
         onKeyDown={handleKeyDown}
@@ -87,7 +72,9 @@ function ChatInput({
         disabled={disabled}
         rows={1}
         className={cn(
-          "flex-1 resize-none bg-transparent px-2 py-1.5 text-sm outline-none placeholder:text-muted-foreground disabled:cursor-not-allowed disabled:opacity-50"
+          "flex-1 resize-none bg-transparent px-2 py-1.5 text-sm outline-none placeholder:text-muted-foreground disabled:cursor-not-allowed disabled:opacity-50",
+          // the box grows with its content and stops at 160px (max-h-40)
+          "[field-sizing:content] max-h-40 overflow-y-auto"
         )}
       />
 

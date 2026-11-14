@@ -36,7 +36,8 @@ function TagInput({
   }
 
   const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
-    if (e.key === "Enter" || e.key === ",") {
+    // isComposing: an IME confirming a conversion candidate must not add the tag
+    if ((e.key === "Enter" && !e.nativeEvent.isComposing) || e.key === ",") {
       e.preventDefault()
       addTag(inputValue)
     }
