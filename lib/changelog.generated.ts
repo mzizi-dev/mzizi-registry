@@ -16,6 +16,37 @@ import type { ChangelogRow } from "@/lib/db/types";
 
 export const CHANGELOG_RELEASES: readonly ChangelogRow[] = [
   {
+    version: "4.40.0",
+    title: "v4.40.0 — a sync-back no longer races the next staging tag",
+    description:
+      "Releases staging to main as the next minor above v4.39.0 (nyuchi/.github#80). Fixed: changelog:generate --check now fails only when package.json is newer than the newest release record, not whenever the two differ, so the sync-back into staging no longer contradicts the org release version check (#690). Release tooling only; no component or count change. CHANGELOG.md section [4.40.0] is the narrative.",
+    line: "public",
+    line_rank: 1,
+    major: 4,
+    minor: 40,
+    patch: 0,
+    release_kind: "minor",
+    breaking: false,
+    released_at: "2026-11-14T23:59:00.000+00:00",
+    created_at: "2026-11-14T23:59:00.000+00:00",
+    nodes_affected: null,
+    components_added: null,
+    components_modified: null,
+    components_deprecated: null,
+    components_removed: null,
+    components_touched: null,
+    tools_added: null,
+    tools_modified: null,
+    tools_deprecated: null,
+    tools_removed: null,
+    linked_issues: null,
+    total_stable: null,
+    total_deprecated: null,
+    total_alpha: null,
+    changed_by: "claude-code",
+    entry_order: 0,
+  },
+  {
     version: "4.39.0",
     title: "v4.39.0 — CI action pins move",
     description:
