@@ -10,6 +10,12 @@ From 2026-10-04 releases follow the org versioning policy ([nyuchi/.github#80](h
 
 ## [Unreleased]
 
+## [4.39.0] - 2026-11-14
+
+### Changed — CI action pins move (2026-11-14, #682, #683, #684, #685, #686)
+
+- **`.github/workflows/`:** Dependabot raises the pinned actions: the nyuchi/.github `next-version` action and the `reusable-staging-release` and `reusable-auto-tag` workflows from 0.9.0 to 0.11.1, `actions/setup-python` from 7.0.0 to 7.1.0, and `pypa/gh-action-pypi-publish` from 1.14.2 to 1.14.3. CI and release tooling only: nothing the registry or the API ships changes.
+
 ## [4.38.0] - 2026-11-14
 
 ### Changed — Dependabot opens no major version bumps (2026-11-13, No issue: repository maintenance)
