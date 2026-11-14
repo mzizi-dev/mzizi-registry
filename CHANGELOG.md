@@ -14,6 +14,8 @@ From 2026-10-04 releases follow the org versioning policy ([nyuchi/.github#80](h
 
 - **Dev dependency.** The `astro` floor moves from `>=7.3.5` to `>=7.4.12` (locked 7.3.5 to 7.4.12), which fixes a moderate advisory: the `@astrojs/node` image endpoint could read files from a case-variant sibling of the output directory on case-sensitive filesystems (GHSA-r3h5-4585-7x3w, affects 5.14.3 to 7.4.6). The registry builds and tests its Astro components with `astro`; it serves no Astro site, and the `.astro` component sources are unchanged. The lockfile moves only within astro's own dependency tree. `pnpm audit --audit-level=moderate` passes again (one low advisory remains below the gate).
 
+## [4.37.0] - 2026-11-13
+
 ### Added
 
 - **Canon carries the desktop tier.** `/v1/brand` `brand_meta.accessibility` gains `minTouchTargetPointerFine` 28 and `bodyPxPointerFine` 15, beside the unchanged `minTouchTarget` 49 and the 17px touch body. Until now only the token files and `/v1/architecture` stated the pointer-aware floor, so a tool that reads the brand data listed 49px as the only hit region. The build fails if canon disagrees with `BUNDU_FLOOR.pointerFine`. Touch, and any narrow viewport, are unchanged.
