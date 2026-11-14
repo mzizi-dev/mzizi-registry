@@ -10,6 +10,16 @@ From 2026-10-04 releases follow the org versioning policy ([nyuchi/.github#80](h
 
 ## [Unreleased]
 
+## [4.38.0] - 2026-11-14
+
+### Changed — Dependabot opens no major version bumps (2026-11-13, No issue: repository maintenance)
+
+- **`.github/dependabot.yml`:** the npm and GitHub Actions ecosystems ignore `version-update:semver-major`, so a major bump arrives only when someone chooses it (owner, 2026-11-12). Security updates are not blocked by an `ignore` rule. Nothing the registry or the API ships changes.
+
+### Security — astro 7.4.12 clears GHSA-r3h5-4585-7x3w (2026-11-14, #679)
+
+- **Dev dependency.** The `astro` floor moves from `>=7.3.5` to `>=7.4.12` (locked 7.3.5 to 7.4.12), which fixes a moderate advisory: the `@astrojs/node` image endpoint could read files from a case-variant sibling of the output directory on case-sensitive filesystems (GHSA-r3h5-4585-7x3w, affects 5.14.3 to 7.4.6). The registry builds and tests its Astro components with `astro`; it serves no Astro site, and the `.astro` component sources are unchanged. The lockfile moves only within astro's own dependency tree. `pnpm audit --audit-level=moderate` passes again (one low advisory remains below the gate).
+
 ## [4.37.0] - 2026-11-13
 
 ### Added
