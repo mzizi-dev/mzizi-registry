@@ -58,7 +58,8 @@ function SearchBar({
   }, [showShortcut, shortcutKey])
 
   const handleKeyDown = (e: React.KeyboardEvent) => {
-    if (e.key === "Enter") {
+    // isComposing: an IME confirming a conversion candidate must not submit
+    if (e.key === "Enter" && !e.nativeEvent.isComposing) {
       onSubmit?.(value)
     }
     if (e.key === "Escape") {

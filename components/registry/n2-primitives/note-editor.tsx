@@ -93,7 +93,8 @@ function NoteEditor({
             value={tagInput}
             onChange={(e) => setTagInput(e.target.value)}
             onKeyDown={(e) => {
-              if (e.key === "Enter") {
+              // isComposing: an IME confirming a conversion candidate must not add the tag
+              if (e.key === "Enter" && !e.nativeEvent.isComposing) {
                 e.preventDefault()
                 addTag()
               }
