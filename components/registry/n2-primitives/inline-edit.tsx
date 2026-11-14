@@ -101,11 +101,12 @@ function InlineEdit({
   }, [draft, required, validate, value, onSave])
 
   const onKeyDown = (e: React.KeyboardEvent) => {
-    if (e.key === "Enter" && fieldType !== "textarea") {
+    // isComposing: an IME confirming a conversion candidate must not commit
+    if (e.key === "Enter" && fieldType !== "textarea" && !e.nativeEvent.isComposing) {
       e.preventDefault()
       commit()
     }
-    if (e.key === "Enter" && e.metaKey && fieldType === "textarea") {
+    if (e.key === "Enter" && e.metaKey && fieldType === "textarea" && !e.nativeEvent.isComposing) {
       e.preventDefault()
       commit()
     }

@@ -1,5 +1,35 @@
 [
   {
+    "version": "4.41.0",
+    "title": "v4.41.0 — IME-safe Enter submits; the chat boxes grow by CSS",
+    "description": "Releases staging to main as the next minor above v4.40.2 (nyuchi/.github#80). Changed: every custom Enter handling in the chat, prompt, inline-edit, note-editor, search-bar and tag-input primitives and the app command palette checks isComposing first, so an IME's confirming Enter no longer submits; chat-input and prompt-input grow by field-sizing: content (max-h-40 / max-h-50) instead of JavaScript auto-grow (#694, #693). CHANGELOG.md section [4.41.0] is the narrative.",
+    "line": "public",
+    "line_rank": 1,
+    "major": 4,
+    "minor": 41,
+    "patch": 0,
+    "release_kind": "minor",
+    "breaking": false,
+    "released_at": "2026-11-14T23:59:00.000+00:00",
+    "created_at": "2026-11-14T23:59:00.000+00:00",
+    "nodes_affected": null,
+    "components_added": null,
+    "components_modified": null,
+    "components_deprecated": null,
+    "components_removed": null,
+    "components_touched": null,
+    "tools_added": null,
+    "tools_modified": null,
+    "tools_deprecated": null,
+    "tools_removed": null,
+    "linked_issues": null,
+    "total_stable": null,
+    "total_deprecated": null,
+    "total_alpha": null,
+    "changed_by": "claude-code",
+    "entry_order": 0
+  },
+  {
     "version": "4.40.0",
     "title": "v4.40.0 — a sync-back no longer races the next staging tag",
     "description": "Releases staging to main as the next minor above v4.39.0 (nyuchi/.github#80). Fixed: changelog:generate --check now fails only when package.json is newer than the newest release record, not whenever the two differ, so the sync-back into staging no longer contradicts the org release version check (#690). Release tooling only; no component or count change. CHANGELOG.md section [4.40.0] is the narrative.",
@@ -1212,7 +1242,19 @@
     "breaking": null,
     "released_at": "2026-07-26T23:30:41.732616+00:00",
     "created_at": "2026-07-26T23:30:41.732616+00:00",
-    "nodes_affected": [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11],
+    "nodes_affected": [
+      1,
+      2,
+      3,
+      4,
+      5,
+      6,
+      7,
+      8,
+      9,
+      10,
+      11
+    ],
     "components_added": null,
     "components_modified": null,
     "components_deprecated": null,
@@ -1603,7 +1645,18 @@
     "breaking": null,
     "released_at": "2026-05-21T11:05:22.542417+00:00",
     "created_at": "2026-05-21T11:05:22.542417+00:00",
-    "nodes_affected": [1, 2, 3, 4, 5, 6, 7, 8, 9, 10],
+    "nodes_affected": [
+      1,
+      2,
+      3,
+      4,
+      5,
+      6,
+      7,
+      8,
+      9,
+      10
+    ],
     "components_added": [],
     "components_modified": [
       "mzizi-a11y-audit",
@@ -1647,7 +1700,12 @@
     "tools_modified": [],
     "tools_deprecated": [],
     "tools_removed": [],
-    "linked_issues": ["FRD-36", "FRD-37", "FRD-38", "FRD-40"],
+    "linked_issues": [
+      "FRD-36",
+      "FRD-37",
+      "FRD-38",
+      "FRD-40"
+    ],
     "total_stable": null,
     "total_deprecated": null,
     "total_alpha": null,
@@ -1667,7 +1725,18 @@
     "breaking": null,
     "released_at": "2026-05-01T09:59:41.09013+00:00",
     "created_at": "2026-05-01T09:59:41.09013+00:00",
-    "nodes_affected": [1, 2, 3, 4, 5, 6, 7, 8, 9, 10],
+    "nodes_affected": [
+      1,
+      2,
+      3,
+      4,
+      5,
+      6,
+      7,
+      8,
+      9,
+      10
+    ],
     "components_added": [],
     "components_modified": [],
     "components_deprecated": [],
@@ -1697,7 +1766,18 @@
     "breaking": null,
     "released_at": "2026-05-01T09:55:01.89929+00:00",
     "created_at": "2026-05-01T09:55:01.89929+00:00",
-    "nodes_affected": [1, 2, 3, 4, 5, 6, 7, 8, 9, 10],
+    "nodes_affected": [
+      1,
+      2,
+      3,
+      4,
+      5,
+      6,
+      7,
+      8,
+      9,
+      10
+    ],
     "components_added": [],
     "components_modified": [],
     "components_deprecated": [],
@@ -1727,7 +1807,18 @@
     "breaking": null,
     "released_at": "2026-05-01T09:53:28.867212+00:00",
     "created_at": "2026-05-01T09:53:28.867212+00:00",
-    "nodes_affected": [1, 2, 3, 4, 5, 6, 7, 8, 9, 10],
+    "nodes_affected": [
+      1,
+      2,
+      3,
+      4,
+      5,
+      6,
+      7,
+      8,
+      9,
+      10
+    ],
     "components_added": [],
     "components_modified": [],
     "components_deprecated": [],
@@ -1757,7 +1848,10 @@
     "breaking": null,
     "released_at": "2026-05-01T09:32:43.745568+00:00",
     "created_at": "2026-05-01T09:32:43.745568+00:00",
-    "nodes_affected": [9, 10],
+    "nodes_affected": [
+      9,
+      10
+    ],
     "components_added": [],
     "components_modified": [],
     "components_deprecated": [],
@@ -1787,8 +1881,21 @@
     "breaking": null,
     "released_at": "2026-05-24T16:08:53.156096+00:00",
     "created_at": "2026-05-24T16:08:53.156096+00:00",
-    "nodes_affected": [1, 2, 3, 4, 5, 6, 7, 8, 10],
-    "components_added": ["node-badge", "status-badge"],
+    "nodes_affected": [
+      1,
+      2,
+      3,
+      4,
+      5,
+      6,
+      7,
+      8,
+      10
+    ],
+    "components_added": [
+      "node-badge",
+      "status-badge"
+    ],
     "components_modified": [
       "mukoko-header",
       "mukoko-footer",
@@ -1833,7 +1940,13 @@
       "get_ai_instructions",
       "get_changelog"
     ],
-    "linked_issues": ["103", "104", "105", "106", "107"],
+    "linked_issues": [
+      "103",
+      "104",
+      "105",
+      "106",
+      "107"
+    ],
     "total_stable": null,
     "total_deprecated": null,
     "total_alpha": null,
@@ -1853,7 +1966,10 @@
     "breaking": null,
     "released_at": "2026-04-29T14:40:27.559671+00:00",
     "created_at": "2026-04-29T14:40:27.559671+00:00",
-    "nodes_affected": [9, 10],
+    "nodes_affected": [
+      9,
+      10
+    ],
     "components_added": [],
     "components_modified": [],
     "components_deprecated": [],
@@ -1883,7 +1999,13 @@
     "breaking": null,
     "released_at": "2026-04-29T13:31:36.120589+00:00",
     "created_at": "2026-04-29T13:31:36.120589+00:00",
-    "nodes_affected": [1, 4, 5, 8, 9],
+    "nodes_affected": [
+      1,
+      4,
+      5,
+      8,
+      9
+    ],
     "components_added": [],
     "components_modified": [],
     "components_deprecated": [],
@@ -1913,7 +2035,9 @@
     "breaking": null,
     "released_at": "2026-04-29T12:53:33.029728+00:00",
     "created_at": "2026-04-29T12:53:33.029728+00:00",
-    "nodes_affected": [1],
+    "nodes_affected": [
+      1
+    ],
     "components_added": [],
     "components_modified": [
       "nyuchi-a11y",
@@ -1984,7 +2108,9 @@
     "breaking": null,
     "released_at": "2026-04-29T11:18:11.839104+00:00",
     "created_at": "2026-04-29T11:18:11.839104+00:00",
-    "nodes_affected": [10],
+    "nodes_affected": [
+      10
+    ],
     "components_added": [],
     "components_modified": [
       "nyuchi-ai-context",
@@ -2019,7 +2145,18 @@
     "breaking": null,
     "released_at": "2026-04-28T17:16:46.429458+00:00",
     "created_at": "2026-04-28T17:16:46.429458+00:00",
-    "nodes_affected": [1, 2, 3, 4, 5, 6, 7, 8, 9, 10],
+    "nodes_affected": [
+      1,
+      2,
+      3,
+      4,
+      5,
+      6,
+      7,
+      8,
+      9,
+      10
+    ],
     "components_added": [],
     "components_modified": [],
     "components_deprecated": [],
@@ -2049,7 +2186,12 @@
     "breaking": null,
     "released_at": "2026-04-28T17:16:46.429458+00:00",
     "created_at": "2026-04-28T17:16:46.429458+00:00",
-    "nodes_affected": [1, 3, 7, 10],
+    "nodes_affected": [
+      1,
+      3,
+      7,
+      10
+    ],
     "components_added": [],
     "components_modified": [],
     "components_deprecated": [],
@@ -2079,7 +2221,9 @@
     "breaking": null,
     "released_at": "2026-04-29T11:00:28.226801+00:00",
     "created_at": "2026-04-29T11:00:28.226801+00:00",
-    "nodes_affected": [1],
+    "nodes_affected": [
+      1
+    ],
     "components_added": [
       "nyuchi-tokens-swift",
       "nyuchi-tokens-kotlin",
@@ -2115,8 +2259,15 @@
     "breaking": null,
     "released_at": "2026-04-28T17:16:46.429458+00:00",
     "created_at": "2026-04-28T17:16:46.429458+00:00",
-    "nodes_affected": [1, 8, 9, 10],
-    "components_added": ["accessibility-audit"],
+    "nodes_affected": [
+      1,
+      8,
+      9,
+      10
+    ],
+    "components_added": [
+      "accessibility-audit"
+    ],
     "components_modified": [],
     "components_deprecated": [],
     "components_removed": [],
@@ -2145,7 +2296,18 @@
     "breaking": null,
     "released_at": "2026-04-29T10:51:23.394515+00:00",
     "created_at": "2026-04-29T10:51:23.394515+00:00",
-    "nodes_affected": [1, 2, 3, 4, 5, 6, 7, 8, 9, 10],
+    "nodes_affected": [
+      1,
+      2,
+      3,
+      4,
+      5,
+      6,
+      7,
+      8,
+      9,
+      10
+    ],
     "components_added": [],
     "components_modified": [
       "architecture_frontend_layers",
@@ -2182,7 +2344,10 @@
     "breaking": null,
     "released_at": "2026-04-28T17:16:46.429458+00:00",
     "created_at": "2026-04-28T17:16:46.429458+00:00",
-    "nodes_affected": [1, 10],
+    "nodes_affected": [
+      1,
+      10
+    ],
     "components_added": [],
     "components_modified": [],
     "components_deprecated": [],
@@ -2212,7 +2377,10 @@
     "breaking": null,
     "released_at": "2026-04-28T17:16:46.429458+00:00",
     "created_at": "2026-04-28T17:16:46.429458+00:00",
-    "nodes_affected": [2, 8],
+    "nodes_affected": [
+      2,
+      8
+    ],
     "components_added": [],
     "components_modified": [
       "segmented-control",
@@ -2249,7 +2417,11 @@
     "breaking": null,
     "released_at": "2026-04-28T17:16:46.429458+00:00",
     "created_at": "2026-04-28T17:16:46.429458+00:00",
-    "nodes_affected": [1, 2, 8],
+    "nodes_affected": [
+      1,
+      2,
+      8
+    ],
     "components_added": [
       "segmented-control",
       "toolbar",
@@ -2286,7 +2458,13 @@
     "breaking": null,
     "released_at": "2026-04-28T17:16:46.429458+00:00",
     "created_at": "2026-04-28T17:16:46.429458+00:00",
-    "nodes_affected": [1, 2, 3, 6, 7],
+    "nodes_affected": [
+      1,
+      2,
+      3,
+      6,
+      7
+    ],
     "components_added": [],
     "components_modified": [],
     "components_deprecated": [],
@@ -2316,7 +2494,18 @@
     "breaking": null,
     "released_at": "2026-04-28T17:16:46.429458+00:00",
     "created_at": "2026-04-28T17:16:46.429458+00:00",
-    "nodes_affected": [1, 2, 3, 4, 5, 6, 7, 8, 9, 10],
+    "nodes_affected": [
+      1,
+      2,
+      3,
+      4,
+      5,
+      6,
+      7,
+      8,
+      9,
+      10
+    ],
     "components_added": [],
     "components_modified": [],
     "components_deprecated": [],
@@ -2376,7 +2565,18 @@
     "breaking": null,
     "released_at": "2026-04-28T17:16:46.429458+00:00",
     "created_at": "2026-04-28T17:16:46.429458+00:00",
-    "nodes_affected": [1, 2, 3, 4, 5, 6, 7, 8, 9, 10],
+    "nodes_affected": [
+      1,
+      2,
+      3,
+      4,
+      5,
+      6,
+      7,
+      8,
+      9,
+      10
+    ],
     "components_added": [],
     "components_modified": [],
     "components_deprecated": [],
@@ -2406,7 +2606,13 @@
     "breaking": null,
     "released_at": "2026-04-28T17:16:46.429458+00:00",
     "created_at": "2026-04-28T17:16:46.429458+00:00",
-    "nodes_affected": [1, 2, 3, 5, 10],
+    "nodes_affected": [
+      1,
+      2,
+      3,
+      5,
+      10
+    ],
     "components_added": [],
     "components_modified": [
       "nyuchi-event-card",
@@ -2441,7 +2647,16 @@
     "breaking": null,
     "released_at": "2026-04-28T17:16:46.429458+00:00",
     "created_at": "2026-04-28T17:16:46.429458+00:00",
-    "nodes_affected": [1, 2, 3, 4, 5, 6, 7, 10],
+    "nodes_affected": [
+      1,
+      2,
+      3,
+      4,
+      5,
+      6,
+      7,
+      10
+    ],
     "components_added": [],
     "components_modified": [
       "nyuchi-event-card",
@@ -2484,7 +2699,9 @@
     "breaking": null,
     "released_at": "2026-04-28T17:16:46.429458+00:00",
     "created_at": "2026-04-28T17:16:46.429458+00:00",
-    "nodes_affected": [10],
+    "nodes_affected": [
+      10
+    ],
     "components_added": [],
     "components_modified": [],
     "components_deprecated": [],
@@ -2514,7 +2731,9 @@
     "breaking": null,
     "released_at": "2026-04-28T17:16:46.429458+00:00",
     "created_at": "2026-04-28T17:16:46.429458+00:00",
-    "nodes_affected": [6],
+    "nodes_affected": [
+      6
+    ],
     "components_added": [],
     "components_modified": [
       "login-01",
@@ -2558,7 +2777,11 @@
     "breaking": null,
     "released_at": "2026-04-28T17:16:46.429458+00:00",
     "created_at": "2026-04-28T17:16:46.429458+00:00",
-    "nodes_affected": [1, 2, 6],
+    "nodes_affected": [
+      1,
+      2,
+      6
+    ],
     "components_added": [],
     "components_modified": [],
     "components_deprecated": [],
@@ -2588,7 +2811,18 @@
     "breaking": null,
     "released_at": "2026-04-28T17:16:46.429458+00:00",
     "created_at": "2026-04-28T17:16:46.429458+00:00",
-    "nodes_affected": [1, 2, 3, 4, 5, 6, 7, 8, 9, 10],
+    "nodes_affected": [
+      1,
+      2,
+      3,
+      4,
+      5,
+      6,
+      7,
+      8,
+      9,
+      10
+    ],
     "components_added": [],
     "components_modified": [],
     "components_deprecated": [],
@@ -2618,7 +2852,18 @@
     "breaking": null,
     "released_at": "2026-04-28T17:16:46.429458+00:00",
     "created_at": "2026-04-28T17:16:46.429458+00:00",
-    "nodes_affected": [1, 2, 3, 4, 5, 6, 7, 8, 9, 10],
+    "nodes_affected": [
+      1,
+      2,
+      3,
+      4,
+      5,
+      6,
+      7,
+      8,
+      9,
+      10
+    ],
     "components_added": [],
     "components_modified": [],
     "components_deprecated": [],
@@ -2648,7 +2893,9 @@
     "breaking": null,
     "released_at": "2026-04-28T17:16:46.429458+00:00",
     "created_at": "2026-04-28T17:16:46.429458+00:00",
-    "nodes_affected": [10],
+    "nodes_affected": [
+      10
+    ],
     "components_added": [],
     "components_modified": [],
     "components_deprecated": [],
@@ -2678,7 +2925,9 @@
     "breaking": null,
     "released_at": "2026-04-28T17:16:46.429458+00:00",
     "created_at": "2026-04-28T17:16:46.429458+00:00",
-    "nodes_affected": [10],
+    "nodes_affected": [
+      10
+    ],
     "components_added": [
       "nyuchi-docs-engine",
       "nyuchi-docs-api",
@@ -2713,7 +2962,11 @@
     "breaking": null,
     "released_at": "2026-04-28T17:16:46.429458+00:00",
     "created_at": "2026-04-28T17:16:46.429458+00:00",
-    "nodes_affected": [7, 8, 9],
+    "nodes_affected": [
+      7,
+      8,
+      9
+    ],
     "components_added": [],
     "components_modified": [
       "nyuchi-header",
@@ -2762,9 +3015,16 @@
     "breaking": null,
     "released_at": "2026-04-28T17:16:46.429458+00:00",
     "created_at": "2026-04-28T17:16:46.429458+00:00",
-    "nodes_affected": [9],
-    "components_added": ["nyuchi-fundi-reporter", "nyuchi-fundi-learning"],
-    "components_modified": ["nyuchi-fundi"],
+    "nodes_affected": [
+      9
+    ],
+    "components_added": [
+      "nyuchi-fundi-reporter",
+      "nyuchi-fundi-learning"
+    ],
+    "components_modified": [
+      "nyuchi-fundi"
+    ],
     "components_deprecated": [],
     "components_removed": [],
     "components_touched": 3,
@@ -2792,7 +3052,9 @@
     "breaking": null,
     "released_at": "2026-04-28T17:16:46.429458+00:00",
     "created_at": "2026-04-28T17:16:46.429458+00:00",
-    "nodes_affected": [8],
+    "nodes_affected": [
+      8
+    ],
     "components_added": [
       "nyuchi-synthetic-probe",
       "nyuchi-a11y-audit",
@@ -2832,7 +3094,9 @@
     "breaking": null,
     "released_at": "2026-04-28T17:16:46.429458+00:00",
     "created_at": "2026-04-28T17:16:46.429458+00:00",
-    "nodes_affected": [7],
+    "nodes_affected": [
+      7
+    ],
     "components_added": [
       "nyuchi-root-layout",
       "nyuchi-route-guard",
@@ -2873,9 +3137,21 @@
     "breaking": null,
     "released_at": "2026-04-28T17:16:46.429458+00:00",
     "created_at": "2026-04-28T17:16:46.429458+00:00",
-    "nodes_affected": [1, 2, 3, 4, 5, 6, 7, 8, 9],
+    "nodes_affected": [
+      1,
+      2,
+      3,
+      4,
+      5,
+      6,
+      7,
+      8,
+      9
+    ],
     "components_added": [],
-    "components_modified": ["nyuchi-harness"],
+    "components_modified": [
+      "nyuchi-harness"
+    ],
     "components_deprecated": [],
     "components_removed": [],
     "components_touched": 1,
@@ -2903,9 +3179,21 @@
     "breaking": null,
     "released_at": "2026-04-28T17:16:46.429458+00:00",
     "created_at": "2026-04-28T17:16:46.429458+00:00",
-    "nodes_affected": [1, 2, 3, 4, 5, 6, 7, 8, 9],
+    "nodes_affected": [
+      1,
+      2,
+      3,
+      4,
+      5,
+      6,
+      7,
+      8,
+      9
+    ],
     "components_added": [],
-    "components_modified": ["all components with data-slot"],
+    "components_modified": [
+      "all components with data-slot"
+    ],
     "components_deprecated": [],
     "components_removed": [],
     "components_touched": 1,
@@ -2933,7 +3221,14 @@
     "breaking": null,
     "released_at": "2026-04-28T17:16:46.429458+00:00",
     "created_at": "2026-04-28T17:16:46.429458+00:00",
-    "nodes_affected": [1, 2, 3, 4, 5, 6],
+    "nodes_affected": [
+      1,
+      2,
+      3,
+      4,
+      5,
+      6
+    ],
     "components_added": [],
     "components_modified": [
       "all L6 pages",
@@ -2973,8 +3268,16 @@
     "breaking": null,
     "released_at": "2026-04-28T17:16:46.429458+00:00",
     "created_at": "2026-04-28T17:16:46.429458+00:00",
-    "nodes_affected": [1, 2, 3, 4, 6],
-    "components_added": ["nyuchi-icons"],
+    "nodes_affected": [
+      1,
+      2,
+      3,
+      4,
+      6
+    ],
+    "components_added": [
+      "nyuchi-icons"
+    ],
     "components_modified": [
       "severity-badge",
       "deployment-status-card",
@@ -3018,7 +3321,10 @@
     "breaking": null,
     "released_at": "2026-04-28T17:16:46.429458+00:00",
     "created_at": "2026-04-28T17:16:46.429458+00:00",
-    "nodes_affected": [2, 6],
+    "nodes_affected": [
+      2,
+      6
+    ],
     "components_added": [
       "token-row",
       "quick-action-grid",
@@ -3052,7 +3358,11 @@
     "breaking": null,
     "released_at": "2026-04-28T17:16:46.429458+00:00",
     "created_at": "2026-04-28T17:16:46.429458+00:00",
-    "nodes_affected": [2, 3, 6],
+    "nodes_affected": [
+      2,
+      3,
+      6
+    ],
     "components_added": [
       "kpi-card",
       "step-progress",
@@ -3090,9 +3400,13 @@
     "breaking": null,
     "released_at": "2026-04-28T17:16:46.429458+00:00",
     "created_at": "2026-04-28T17:16:46.429458+00:00",
-    "nodes_affected": [6],
+    "nodes_affected": [
+      6
+    ],
     "components_added": [],
-    "components_modified": ["all L6 pages"],
+    "components_modified": [
+      "all L6 pages"
+    ],
     "components_deprecated": [],
     "components_removed": [],
     "components_touched": 1,
@@ -3120,7 +3434,9 @@
     "breaking": null,
     "released_at": "2026-04-28T17:16:46.429458+00:00",
     "created_at": "2026-04-28T17:16:46.429458+00:00",
-    "nodes_affected": [6],
+    "nodes_affected": [
+      6
+    ],
     "components_added": [
       "analytics-dashboard-page",
       "data-explorer-page",
@@ -3161,7 +3477,9 @@
     "breaking": null,
     "released_at": "2026-04-28T17:16:46.429458+00:00",
     "created_at": "2026-04-28T17:16:46.429458+00:00",
-    "nodes_affected": [6],
+    "nodes_affected": [
+      6
+    ],
     "components_added": [
       "wallet-page",
       "payment-page",
@@ -3209,7 +3527,10 @@
     "breaking": null,
     "released_at": "2026-04-28T17:16:46.429458+00:00",
     "created_at": "2026-04-28T17:16:46.429458+00:00",
-    "nodes_affected": [6, 7],
+    "nodes_affected": [
+      6,
+      7
+    ],
     "components_added": [
       "nyuchi-grid",
       "nyuchi-page",
@@ -3260,9 +3581,18 @@
     "breaking": null,
     "released_at": "2026-04-28T17:16:46.429458+00:00",
     "created_at": "2026-04-28T17:16:46.429458+00:00",
-    "nodes_affected": [1, 2, 3, 4, 5],
+    "nodes_affected": [
+      1,
+      2,
+      3,
+      4,
+      5
+    ],
     "components_added": [],
-    "components_modified": ["notification-bell", "permission-badge"],
+    "components_modified": [
+      "notification-bell",
+      "permission-badge"
+    ],
     "components_deprecated": [],
     "components_removed": [],
     "components_touched": 2,
@@ -3320,7 +3650,15 @@
     "breaking": null,
     "released_at": "2026-04-28T17:16:46.429458+00:00",
     "created_at": "2026-04-28T17:16:46.429458+00:00",
-    "nodes_affected": [1, 2, 3, 4, 5, 8, 9],
+    "nodes_affected": [
+      1,
+      2,
+      3,
+      4,
+      5,
+      8,
+      9
+    ],
     "components_added": [
       "nyuchi-chaos",
       "nyuchi-platform-health",
@@ -3381,7 +3719,11 @@
     "breaking": null,
     "released_at": "2026-04-28T17:16:46.429458+00:00",
     "created_at": "2026-04-28T17:16:46.429458+00:00",
-    "nodes_affected": [4, 5, 7],
+    "nodes_affected": [
+      4,
+      5,
+      7
+    ],
     "components_added": [
       "nyuchi-permission-gate",
       "nyuchi-content-gate",
@@ -3405,7 +3747,9 @@
       "nyuchi-abr-content",
       "nyuchi-prefetch-boundary"
     ],
-    "components_modified": ["subscription-gate"],
+    "components_modified": [
+      "subscription-gate"
+    ],
     "components_deprecated": [],
     "components_removed": [],
     "components_touched": 22,
@@ -3433,7 +3777,11 @@
     "breaking": null,
     "released_at": "2026-04-28T17:16:46.429458+00:00",
     "created_at": "2026-04-28T17:16:46.429458+00:00",
-    "nodes_affected": [1, 2, 3],
+    "nodes_affected": [
+      1,
+      2,
+      3
+    ],
     "components_added": [],
     "components_modified": [
       "nyuchi-tokens",
@@ -3469,7 +3817,15 @@
     "breaking": null,
     "released_at": "2026-04-28T17:16:46.429458+00:00",
     "created_at": "2026-04-28T17:16:46.429458+00:00",
-    "nodes_affected": [1, 2, 3, 4, 5, 6, 7],
+    "nodes_affected": [
+      1,
+      2,
+      3,
+      4,
+      5,
+      6,
+      7
+    ],
     "components_added": [
       "nyuchi-tokens",
       "nyuchi-harness",
@@ -3483,7 +3839,11 @@
       "nyuchi-layout"
     ],
     "components_modified": [],
-    "components_deprecated": ["event-card", "featured-card", "product-card"],
+    "components_deprecated": [
+      "event-card",
+      "featured-card",
+      "product-card"
+    ],
     "components_removed": [],
     "components_touched": 13,
     "tools_added": [],
