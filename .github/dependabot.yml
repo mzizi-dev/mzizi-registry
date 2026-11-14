@@ -51,11 +51,19 @@ updates:
       # Upgrade both together when vitest@5 ships.
       - dependency-name: "@vitejs/plugin-react"
         versions: [">=6.0.0"]
+      # every major, only when chosen (owner, 2026-11-12)
+      - dependency-name: "*"
+        update-types: ["version-update:semver-major"]
 
   # GitHub Actions
   - package-ecosystem: "github-actions"
     directory: "/"
     target-branch: "staging"
+    # Majors arrive only when someone chooses them (owner, 2026-11-12);
+    # ignore never blocks security updates.
+    ignore:
+      - dependency-name: "*"
+        update-types: ["version-update:semver-major"]
     schedule:
       interval: "weekly"
       day: "monday"
