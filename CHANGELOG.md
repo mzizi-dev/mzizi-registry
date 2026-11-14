@@ -10,6 +10,10 @@ From 2026-10-04 releases follow the org versioning policy ([nyuchi/.github#80](h
 
 ## [Unreleased]
 
+### Fixed — a sync-back no longer has to race the next staging tag (2026-11-14, No issue: release tooling)
+
+- **`scripts/generate-changelog.mjs`:** `changelog:generate --check` now fails only when `package.json` is newer than the newest record in `content/changelog/releases.json` (a version bump with no release record), not whenever the two differ. After a release, the sync-back into `staging` carries `main`'s new record, but the org's required release version check lets a pull request into `staging` write only the next patch, so `package.json` cannot follow it there once `staging` has a patch tag. Requiring equality made the two required checks contradict each other, and a sync-back passed only if it merged before the next staging merge was tagged. The next release branch still sets `package.json` and its record together, and nothing the registry or the API serves changes.
+
 ## [4.39.0] - 2026-11-14
 
 ### Changed — CI action pins move (2026-11-14, #682, #683, #684, #685, #686)
