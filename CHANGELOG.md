@@ -10,6 +10,10 @@ From 2026-10-04 releases follow the org versioning policy ([nyuchi/.github#80](h
 
 ## [Unreleased]
 
+### Fixed — the crate publish skips crates marked `publish = false` (2026-11-17, No issue: 4.42.0 publish run failed)
+
+- **`publish-crates.yml` compares the publish order with the publishable workspace members only.** The 4.42.0 run stopped before uploading anything, because `mzizi-css` (the Lightning CSS build tool from #716, `publish = false`) is a workspace member that the publish order rightly leaves out. Members whose `cargo metadata` `publish` is `[]` are now excluded from that check and from the release notes' crate list. No crate was published, so the 0.8.0 crates go out with the next release to `main`.
+
 ### Changed — Mzizi Roots is the Dioxus-free core, and eight components render unstyled (2026-11-17, Refs [#710](https://github.com/mzizi-dev/mzizi-registry/issues/710))
 
 - **`mzizi-roots` holds the runtime core** (`mzizi-rs/crates/mzizi-roots`): `node` is the element tree (`Node`: an element with a tag, ordered attributes and children; text; a fragment) and `render_to_string`, which escapes every text node and attribute value with the language renderer's five decimal references. Its one dependency is `url`, for the link hosts `markdown-renderer` shows, and it has no Dioxus.

@@ -154,9 +154,11 @@ jobs:
 
           metadata=$(cargo metadata --manifest-path "$manifest" --no-deps --format-version 1)
 
-          # The list must name every workspace member exactly once, so a new crate
-          # cannot be merged and silently never published.
-          members=$(jq -r '.packages[].name' <<<"$metadata" | sort)
+          # The list must name every publishable workspace member exactly once, so a new
+          # crate cannot be merged and silently never published. A crate marked
+          # `publish = false` (cargo metadata reports `"publish": []`), such as the
+          # mzizi-css build tool, is not published and is left out.
+          members=$(jq -r '.packages[] | select(.publish != []) | .name' <<<"$metadata" | sort)
           listed=$(printf '%s\n' "${order[@]}" | sort)
           if [ "$members" != "$listed" ]; then
             echo "::error::The publish order does not match the workspace members."
@@ -260,7 +262,7 @@ jobs:
             echo "The Mzizi Roots crates at $version on crates.io:"
             echo
             crates=$(cargo metadata --manifest-path mzizi-rs/Cargo.toml --no-deps --format-version 1 \
-              | jq -r '.packages[].name' | sort)
+              | jq -r '.packages[] | select(.publish != []) | .name' | sort)
             for crate in $crates; do
               echo "- [\`$crate\` $version](https://crates.io/crates/$crate/$version)"
             done
