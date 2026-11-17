@@ -16,6 +16,37 @@ import type { ChangelogRow } from "@/lib/db/types";
 
 export const CHANGELOG_RELEASES: readonly ChangelogRow[] = [
   {
+    version: "4.43.0",
+    title: "v4.43.0 — the Mzizi Roots 0.8.0 crates reach crates.io",
+    description:
+      "Releases staging to main as the next minor above v4.42.0 (nyuchi/.github#80). Fixed: publish-crates.yml compares its publish order with the publishable workspace members only, so mzizi-css (publish = false, from #716) no longer stops the run before anything uploads. The 4.42.0 run had failed at that check; this release publishes the 0.8.0 crates it carried (Dioxus-free mzizi-roots, unstyled components, mzizi-tokens family record, SeoConfig site identity) (#720). CHANGELOG.md section [4.43.0] is the narrative.",
+    line: "public",
+    line_rank: 1,
+    major: 4,
+    minor: 43,
+    patch: 0,
+    release_kind: "minor",
+    breaking: false,
+    released_at: "2026-11-17T23:59:00.000+00:00",
+    created_at: "2026-11-17T23:59:00.000+00:00",
+    nodes_affected: null,
+    components_added: null,
+    components_modified: null,
+    components_deprecated: null,
+    components_removed: null,
+    components_touched: null,
+    tools_added: null,
+    tools_modified: null,
+    tools_deprecated: null,
+    tools_removed: null,
+    linked_issues: null,
+    total_stable: null,
+    total_deprecated: null,
+    total_alpha: null,
+    changed_by: "claude-code",
+    entry_order: 0,
+  },
+  {
     version: "4.42.0",
     title:
       "v4.42.0 — Mzizi Roots without Dioxus; the unstyled button; tokens and SEO for any site",
