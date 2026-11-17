@@ -14,6 +14,13 @@ From 2026-10-04 releases follow the org versioning policy ([nyuchi/.github#80](h
 
 - **Dev dependency.** The `next` floor moves from `>=16.4.1` to `>=16.4.5` (the lockfile resolves 16.4.6), which clears a moderate advisory (GHSA-mfr8-8qww-v76h) in 16.4.4. `pnpm audit --audit-level=moderate` passes again; it had failed on `staging`, so the pre-commit audit gate refused every commit. The registry serves no Next.js app; `next` is a build and test dependency only, and nothing the registry or the API serves changes.
 
+### Added — `mzizi-tokens` exports the full per-family record (2026-11-17, [#709](https://github.com/mzizi-dev/mzizi-registry/issues/709))
+
+- **`mzizi_tokens::Family` and `mzizi_tokens::FAMILIES`** (`[Family; 21]`, minerals then heritage then experimental, in palette order): every field the registry serves per family. `name`, `role`, `family`, `css_var`, `hex_dark` / `hex_light`, `container_dark` / `container_light`, `on_container_dark` / `on_container_light`, `text_dark` / `text_light`, `origin`, `symbolism`, `usage`, and `ui_dark` / `ui_light` for the experimental seven. A field the palette does not define for a family is `None`: heritage tones have no role, family or container, and only the experimental seven carry `ui_*`.
+- **Generated, not hand-written.** `scripts/sync-tokens.ts` emits the record from the same palette rows as the CSS and the other emitters. The text tones are `textOnBaseTier()`, the function that emits `--mineral-<name>-text` in the globals CSS, so a Rust consumer reads the text colour the CSS ships. The existing `*_DARK` / `*_LIGHT` constants are unchanged and the new hex fields refer to them.
+- **`__tests__/tokens-surface-parity.test.ts`** checks the Rust record field by field: the struct declares every field, each of the 21 rows carries every field, and each value matches the palette (text tones match the globals CSS). Removing one emitted field fails the test by name.
+- No crate version change in this release; the workspace version moves in the release step.
+
 ### Changed — the chat and prompt boxes grow by CSS, and an IME's confirming Enter no longer submits (2026-11-14, [#693](https://github.com/mzizi-dev/mzizi-registry/issues/693))
 
 - **`field-sizing: content` replaces the auto-grow JavaScript** in `chat-input` and `prompt-input` (n2-primitives): the textarea grows with its content, stops at the same 160px / 200px caps (`max-h-40` / `max-h-50`), and the resize effect, the textarea ref and the reset-on-send all go. Browsers without `field-sizing` fall back to a single-line box with internal scrolling, the same as an empty box today.
