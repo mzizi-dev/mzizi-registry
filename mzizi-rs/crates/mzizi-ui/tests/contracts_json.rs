@@ -14,11 +14,9 @@ use std::fs;
 use std::path::PathBuf;
 
 use dioxus::prelude::*;
-use mzizi_ui::card::CardSize;
 use mzizi_ui::{
-    Alert, AlertVariant, Badge, BadgeVariant, Button, ButtonSize, ButtonVariant, Card, DeviceCode,
-    DeviceCodeSize, DeviceCodeStatus, Input, Label, MarkdownLinks, MarkdownRenderer,
-    MarkdownSource, SafeAreaFrame, Skeleton, StatusBadge, StatusBadgeStatus, rfc3339_to_unix_ms,
+    Button, ButtonSize, ButtonVariant, DeviceCode, DeviceCodeSize, DeviceCodeStatus, Input, Label,
+    Skeleton, StatusBadge, StatusBadgeStatus, rfc3339_to_unix_ms,
 };
 use serde_json::Value;
 
@@ -81,6 +79,8 @@ fn contract_files() -> Vec<Value> {
 enum Suite {
     /// This file: a renderer per build, every state, `Case::check` or the CSP test below.
     Ui,
+    /// `mzizi-roots/tests/contracts.rs`: the unstyled builds, which carry no class to check (#708).
+    Roots,
     /// `mzizi-brand/tests/contract.rs`: one `Case` per entry of `mzizi_brand::CONTRACTS`
     /// (that suite asserts its cases and `CONTRACTS` are the same list).
     Brand,
@@ -126,14 +126,29 @@ fn suite_for(name: &str, registry: &str) -> Suite {
         many => panic!("{name} declares `{file}`, which is in more than one node: {many:?}"),
     };
     let path = format!("components/registry/{node}/{file}");
-    let map: Value = serde_json::from_str(
+    let by_node: Value = serde_json::from_str(
         &fs::read_to_string(repo().join("mzizi-rs/crate-for-node.json")).unwrap(),
     )
     .unwrap();
-    let krate = map[&node]
+    let by_file: Value = serde_json::from_str(
+        &fs::read_to_string(repo().join("mzizi-rs/crate-for-file.json")).unwrap(),
+    )
+    .unwrap();
+    let krate = by_file[format!("{node}/{file}")]
         .as_str()
-        .unwrap_or_else(|| panic!("{name} ({path}): no crate in mzizi-rs/crate-for-node.json"));
+        .or_else(|| by_node[&node].as_str())
+        .unwrap_or_else(|| panic!("{name} ({path}): no crate in mzizi-rs/crate-for-*.json"));
     match krate {
+        "mzizi-roots" => {
+            assert!(
+                repo()
+                    .join("mzizi-rs/crates/mzizi-roots/src/generated")
+                    .join(&file)
+                    .is_file(),
+                "{name} ({path}): no generated copy at mzizi-roots/src/generated/{file}; run `pnpm rust:generate`"
+            );
+            Suite::Roots
+        }
         "mzizi-ui" => {
             assert!(
                 in_this_crate(registry),
@@ -222,21 +237,6 @@ fn text(name: &str) -> String {
     slot(name).unwrap_or_default()
 }
 
-/// `app/badge`: the registry badge, held to that contract by identity (`slot+variants`).
-fn badge_state() -> Element {
-    let variant = match prop("variant").as_deref() {
-        None | Some("default") => BadgeVariant::Default,
-        Some("secondary") => BadgeVariant::Secondary,
-        Some("destructive") => BadgeVariant::Destructive,
-        Some("outline") => BadgeVariant::Outline,
-        Some("ghost") => BadgeVariant::Ghost,
-        Some("link") => BadgeVariant::Link,
-        Some(other) => panic!("badge: the contract names an unknown variant `{other}`"),
-    };
-    let label = text("default");
-    rsx! { Badge { variant, "{label}" } }
-}
-
 fn button_state() -> Element {
     let variant = match prop("variant").as_deref() {
         None | Some("default") => ButtonVariant::Default,
@@ -263,16 +263,6 @@ fn button_state() -> Element {
     }
 }
 
-fn card_state() -> Element {
-    let size = match prop("size").as_deref() {
-        None | Some("default") => CardSize::Default,
-        Some("sm") => CardSize::Sm,
-        Some(other) => panic!("card: the contract names an unknown size `{other}`"),
-    };
-    let body = text("default");
-    rsx! { Card { size, loading: flag("loading"), "{body}" } }
-}
-
 fn input_state() -> Element {
     let name = prop("name").unwrap_or_default();
     let kind = prop("type").unwrap_or_default();
@@ -285,44 +275,6 @@ fn label_state() -> Element {
     let body = text("default");
     rsx! { Label { r#for: target, "{body}" } }
 }
-
-fn num(name: &str) -> Option<u32> {
-    PROPS.with(|p| {
-        p.borrow()["props"][name]
-            .as_u64()
-            .map(|n| u32::try_from(n).expect("a contract number fits in u32"))
-    })
-}
-
-fn alert_state() -> Element {
-    let variant = match prop("variant").as_deref() {
-        None | Some("default") => AlertVariant::Default,
-        Some("destructive") => AlertVariant::Destructive,
-        Some(other) => panic!("alert: the contract names an unknown variant `{other}`"),
-    };
-    let body = text("default");
-    rsx! { Alert { variant, "{body}" } }
-}
-
-fn markdown_renderer_state() -> Element {
-    let content = prop("content").expect("markdown-renderer: content");
-    let links = match prop("links").as_deref() {
-        None | Some("safe") => MarkdownLinks::Safe,
-        Some("https") => MarkdownLinks::Https,
-        Some(other) => panic!("markdown-renderer: the contract names an unknown links `{other}`"),
-    };
-    let from = match prop("from").as_deref() {
-        None | Some("markdown") => MarkdownSource::Markdown,
-        Some("html") => MarkdownSource::Html,
-        Some("auto") => MarkdownSource::Auto,
-        Some(other) => panic!("markdown-renderer: the contract names an unknown from `{other}`"),
-    };
-    let heading_base =
-        num("headingBase").map_or(1, |n| u8::try_from(n).expect("headingBase fits u8"));
-    let class = prop("class").unwrap_or_default();
-    rsx! { MarkdownRenderer { content, links, from, heading_base, class } }
-}
-
 fn device_code_state() -> Element {
     let time = |name: &str| {
         prop(name).map(|t| {
@@ -364,32 +316,13 @@ fn skeleton_state() -> Element {
     rsx! { Skeleton { class } }
 }
 
-fn safe_area_frame_state() -> Element {
-    let width = num("width").expect("safe-area-frame: width");
-    let height = num("height").expect("safe-area-frame: height");
-    let safe = PROPS.with(|p| {
-        p.borrow()["props"]["safe"].as_array().map_or([0; 4], |a| {
-            let n = |i: usize| u32::try_from(a[i].as_u64().unwrap()).unwrap();
-            [n(0), n(1), n(2), n(3)]
-        })
-    });
-    let box_px = num("box").unwrap_or(56);
-    let class = prop("class").unwrap_or_default();
-    rsx! { SafeAreaFrame { width, height, safe, box_px, class } }
-}
-
 /// The renderer for each registry item of this crate that a contract declares.
 fn renderer(registry: &str) -> Option<fn() -> Element> {
     Some(match registry {
-        "alert" => alert_state,
-        "badge" => badge_state,
         "button" => button_state,
-        "card" => card_state,
         "device-code" => device_code_state,
         "input" => input_state,
         "label" => label_state,
-        "markdown-renderer" => markdown_renderer_state,
-        "safe-area-frame" => safe_area_frame_state,
         "skeleton" => skeleton_state,
         "status-badge" => status_badge_state,
         _ => return None,
@@ -417,7 +350,8 @@ fn every_rust_build_a_contract_declares_exists_and_one_suite_evaluates_it() {
 fn a_mzizi_brand_build_is_evaluated_by_mzizi_brands_suite() {
     // No contract file declares one yet; this holds the branch that would take it.
     assert_eq!(suite_for("app/x", "mzizi-gauge-card"), Suite::Brand);
-    assert_eq!(suite_for("ui/badge", "badge"), Suite::Ui);
+    assert_eq!(suite_for("ui/badge", "badge"), Suite::Roots);
+    assert_eq!(suite_for("ui/alert", "alert"), Suite::Roots);
     let brand = brand_contracts();
     assert!(
         brand.len() >= 12 && brand.iter().all(|n| n.starts_with("mzizi-")),
@@ -442,7 +376,7 @@ fn a_declared_rust_build_no_suite_evaluates_fails() {
 #[should_panic(expected = "has no renderer for it")]
 fn a_declared_rust_build_of_this_crate_without_a_renderer_fails() {
     // A real mzizi-ui component that no contract declares, so it has no renderer here.
-    suite_for("ui/x", "separator");
+    suite_for("ui/x", "avatar");
 }
 
 fn render_state(registry: &str, state: &Value) -> Rendered {

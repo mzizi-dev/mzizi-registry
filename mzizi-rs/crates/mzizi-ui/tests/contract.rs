@@ -19,9 +19,8 @@ use std::fs;
 use std::path::PathBuf;
 
 use mzizi_ui::{
-    AvatarSize, BadgeVariant, ButtonSize, ButtonVariant, SeparatorOrientation, avatar_variants,
-    badge_variants, button_variants, chart_loading_variants, chart_variants, input_variants,
-    label_variants, progress_variants, separator_variants,
+    AvatarSize, ButtonSize, ButtonVariant, avatar_variants, button_variants, input_variants,
+    label_variants,
 };
 use mzizi_ui::{STATUS_BADGE_STATUSES, status_badge_variants};
 
@@ -130,27 +129,6 @@ fn consumer_classes_come_last_so_they_win() {
 }
 
 #[test]
-fn badge_variants_match_the_typescript() {
-    let ts = tsx("n2-primitives", "badge");
-    for variant in [
-        BadgeVariant::Default,
-        BadgeVariant::Secondary,
-        BadgeVariant::Destructive,
-        BadgeVariant::Outline,
-        BadgeVariant::Ghost,
-        BadgeVariant::Link,
-    ] {
-        assert_classes_present(variant.classes(), &ts, &format!("badge/{}", variant.slug()));
-        assert!(
-            ts.contains(&format!("{}:", variant.slug())),
-            "badge: variant `{}` is not declared in badgeVariants",
-            variant.slug()
-        );
-    }
-    assert!(badge_variants(BadgeVariant::Default, "").contains("rounded-md"));
-}
-
-#[test]
 fn every_data_slot_the_rust_emits_exists_in_the_typescript() {
     // The `data-slot` names ARE the contract between a component and the stylesheet — more so
     // than the class list, because brand components and consumer CSS select on them. A card
@@ -245,25 +223,6 @@ fn tokens_are_the_generated_ones() {
 }
 
 #[test]
-fn separator_orientations_match_the_typescript() {
-    let ts = tsx("n2-primitives", "separator");
-    for orientation in [
-        SeparatorOrientation::Horizontal,
-        SeparatorOrientation::Vertical,
-    ] {
-        assert_classes_present(
-            orientation.classes(),
-            &ts,
-            &format!("separator/{}", orientation.slug()),
-        );
-    }
-    assert!(
-        separator_variants(SeparatorOrientation::Horizontal, "").contains("bg-border"),
-        "separator base class missing"
-    );
-}
-
-#[test]
 fn label_classes_match_the_typescript() {
     let ts = tsx("n2-primitives", "label");
     assert_classes_present(&label_variants(""), &ts, "label");
@@ -290,20 +249,6 @@ fn input_classes_match_the_typescript() {
             .any(|c| c == "h-field"),
         "input does not take its height from the size role (h-field: 44px touch, 36px desktop)"
     );
-}
-
-#[test]
-fn progress_classes_match_the_typescript() {
-    let ts = tsx("n2-primitives", "progress");
-    assert_classes_present(&progress_variants(""), &ts, "progress/track");
-    // The indicator's classes are on a separate constant in the .rs, so this compares them
-    // by hand rather than via `progress_variants`, which only composes the track.
-    for class in ["size-full", "flex-1", "bg-primary", "transition-all"] {
-        assert!(
-            ts.contains(class),
-            "progress/indicator: Rust emits `{class}`, which does not appear in the TypeScript"
-        );
-    }
 }
 
 #[test]
@@ -352,17 +297,6 @@ fn avatar_fallback_and_badge_classes_match_the_typescript() {
 }
 
 #[test]
-fn chart_classes_match_the_typescript() {
-    let ts = tsx("n2-primitives", "chart");
-    assert_classes_present(&chart_variants(""), &ts, "chart/container");
-    assert_classes_present(&chart_loading_variants(""), &ts, "chart/loading");
-    // The `data-portal` attribute is on the loading branch only in the TypeScript — an
-    // asymmetry already present there, not something to reconcile quietly (rule 1: match
-    // the contract, not a guess at what it "should" be).
-    assert!(ts.contains("data-portal=\"https://mzizi.dev/components/chart\""));
-}
-
-#[test]
 fn status_badge_matches_the_typescript() {
     // The React build composes `Badge` (outline) with its own classes, so the Rust's classes
     // are checked against the two files together.
@@ -395,224 +329,6 @@ fn every_exported_contract_is_listed() {
             .iter()
             .any(|(name, c)| *name == "status-badge" && c.starts_with("contract"))
     );
-}
-
-#[test]
-fn safe_area_frame_classes_and_geometry_match_the_typescript() {
-    use mzizi_ui::safe_area_frame::{BAND_X, BAND_Y, CANVAS, FRAME};
-    let ts = tsx("n2-primitives", "safe-area-frame");
-    for (what, classes) in [
-        ("frame", FRAME),
-        ("canvas", CANVAS),
-        ("band-y", BAND_Y),
-        ("band-x", BAND_X),
-    ] {
-        assert_classes_present(classes, &ts, &format!("safe-area-frame/{what}"));
-    }
-    // A 1080x1920 story with Meta's 250/340 bands in a 56px box: the TypeScript's
-    // safeAreaBands gives 32x56, top 13.02%, bottom 17.71%, sides 5.93%.
-    let b = mzizi_ui::safe_area_bands(1080, 1920, [250, 64, 340, 64], 56);
-    assert_eq!((b.width, b.height), (32, 56));
-    assert!((b.top - 13.02).abs() < 1e-9 && (b.bottom - 17.71).abs() < 1e-9);
-    assert!((b.left - 5.93).abs() < 1e-9 && (b.right - 5.93).abs() < 1e-9);
-    // A favicon never collapses below 6px a side.
-    let f = mzizi_ui::safe_area_bands(32, 4, [0, 0, 0, 0], 56);
-    assert_eq!((f.width, f.height), (56, 7));
-}
-
-// ─── markdown-renderer ──────────────────────────────────────────────────────────────────────
-//
-// The React and Astro builds share `markdown-parse.ts`; this build has its own parser. They are
-// held together three ways: the same class strings, the same trees for every case in
-// `__tests__/fixtures/markdown-renderer.cases.json` (which the TypeScript suite runs too), and
-// no HTML string sink in any of the three files.
-
-mod markdown {
-    use super::*;
-    use mzizi_ui::markdown_renderer::{
-        Align, Block, Inline, List, ListChild, MarkdownLinks, MarkdownSource, classes,
-        markdown_blocks,
-    };
-    use serde_json::{Value, json};
-
-    fn source(file: &str) -> String {
-        let path = PathBuf::from(env!("CARGO_MANIFEST_DIR"))
-            .join("../../../components/registry/n2-primitives")
-            .join(file);
-        fs::read_to_string(&path).unwrap_or_else(|e| panic!("cannot read {path:?}: {e}"))
-    }
-
-    #[test]
-    fn classes_are_the_typescript_classes() {
-        let ts = source("markdown-parse.ts");
-        let mut all = vec![
-            classes::ROOT,
-            classes::P,
-            classes::UL,
-            classes::OL,
-            classes::NESTED,
-            classes::QUOTE,
-            classes::PRE,
-            classes::CODE,
-            classes::A,
-            classes::HR,
-            classes::TABLE_WRAP,
-            classes::TABLE,
-            classes::TH,
-            classes::TD,
-            classes::LEFT,
-            classes::CENTER,
-            classes::RIGHT,
-        ];
-        all.extend(classes::H);
-        for class in all {
-            assert!(
-                ts.contains(&format!("\"{class}\"")),
-                "markdown-renderer.rs has the class string `{class}`, which MARKDOWN_CLASSES in \
-                 markdown-parse.ts does not: the builds have drifted"
-            );
-        }
-    }
-
-    #[test]
-    fn no_build_has_an_html_string_sink() {
-        for file in [
-            "markdown-renderer.rs",
-            "markdown-renderer.tsx",
-            "markdown-renderer.astro",
-            "markdown-parse.ts",
-        ] {
-            let code: String = source(file)
-                .lines()
-                .filter(|l| {
-                    let t = l.trim_start();
-                    !(t.starts_with("//") || t.starts_with('*') || t.starts_with("/*"))
-                })
-                .collect::<Vec<_>>()
-                .join("\n");
-            for sink in [
-                "dangerouslySetInnerHTML",
-                "set:html",
-                "dangerous_inner_html",
-                "innerHTML",
-                "outerHTML",
-                "insertAdjacentHTML",
-                "document.write",
-            ] {
-                assert!(
-                    !code.contains(sink),
-                    "{file} uses the HTML string sink `{sink}`"
-                );
-            }
-        }
-    }
-
-    fn inlines(c: &[Inline]) -> Value {
-        Value::Array(
-            c.iter()
-                .map(|x| match x {
-                    Inline::Text(v) => json!({ "t": "text", "v": v }),
-                    Inline::Code(v) => json!({ "t": "code", "v": v }),
-                    Inline::Strong(c) => json!({ "t": "strong", "c": inlines(c) }),
-                    Inline::Em(c) => json!({ "t": "em", "c": inlines(c) }),
-                    Inline::Link {
-                        href,
-                        title,
-                        children,
-                    } => {
-                        json!({ "t": "link", "href": href, "title": title, "c": inlines(children) })
-                    }
-                })
-                .collect(),
-        )
-    }
-
-    fn lines(ls: &[Vec<Inline>]) -> Value {
-        Value::Array(ls.iter().map(|l| inlines(l)).collect())
-    }
-
-    fn list(l: &List) -> Value {
-        let items: Vec<Value> = l
-            .items
-            .iter()
-            .map(|it| {
-                let children: Vec<Value> = it
-                    .children
-                    .iter()
-                    .map(|c| match c {
-                        ListChild::List(l) => list(l),
-                        ListChild::Lines(ls) => json!({ "kind": "lines", "lines": lines(ls) }),
-                    })
-                    .collect();
-                json!({ "lines": lines(&it.lines), "children": children })
-            })
-            .collect();
-        if l.ordered {
-            json!({ "kind": "ol", "start": l.start, "items": items })
-        } else {
-            json!({ "kind": "ul", "items": items })
-        }
-    }
-
-    /// The tree in `markdown-parse.ts`'s JSON shape.
-    fn blocks(bs: &[Block]) -> Value {
-        Value::Array(
-            bs.iter()
-                .map(|b| match b {
-                    Block::Paragraph(ls) => json!({ "kind": "p", "lines": lines(ls) }),
-                    Block::Heading { level, children } => {
-                        json!({ "kind": "h", "level": level, "c": inlines(children) })
-                    }
-                    Block::List(l) => list(l),
-                    Block::Quote(children) => json!({ "kind": "quote", "children": blocks(children) }),
-                    Block::Code { lang, text } => json!({ "kind": "code", "lang": lang, "v": text }),
-                    Block::Rule => json!({ "kind": "hr" }),
-                    Block::Table { align, head, rows } => json!({
-                        "kind": "table",
-                        "align": align.iter().map(|a| match a {
-                            None => Value::Null,
-                            Some(Align::Left) => json!("left"),
-                            Some(Align::Center) => json!("center"),
-                            Some(Align::Right) => json!("right"),
-                        }).collect::<Vec<_>>(),
-                        "head": head.iter().map(|c| inlines(c)).collect::<Vec<_>>(),
-                        "rows": rows.iter().map(|r| r.iter().map(|c| inlines(c)).collect::<Vec<_>>()).collect::<Vec<_>>(),
-                    }),
-                })
-                .collect(),
-        )
-    }
-
-    #[test]
-    fn the_parser_matches_the_typescript_case_for_case() {
-        let path = PathBuf::from(env!("CARGO_MANIFEST_DIR"))
-            .join("../../../__tests__/fixtures/markdown-renderer.cases.json");
-        let fixture: Value = serde_json::from_str(&fs::read_to_string(&path).unwrap()).unwrap();
-        let cases = fixture["cases"].as_array().unwrap();
-        assert!(cases.len() >= 40, "the shared fixture has too few cases");
-        for case in cases {
-            let policy = match case["links"].as_str() {
-                Some("https") => MarkdownLinks::Https,
-                _ => MarkdownLinks::Safe,
-            };
-            let from = match case["from"].as_str() {
-                Some("html") => MarkdownSource::Html,
-                Some("auto") => MarkdownSource::Auto,
-                _ => MarkdownSource::Markdown,
-            };
-            let got = blocks(&markdown_blocks(
-                case["input"].as_str().unwrap(),
-                policy,
-                from,
-            ));
-            assert_eq!(
-                got,
-                case["expect"],
-                "case `{}`",
-                case["say"].as_str().unwrap()
-            );
-        }
-    }
 }
 
 // ─── device-code ────────────────────────────────────────────────────────────────────────────

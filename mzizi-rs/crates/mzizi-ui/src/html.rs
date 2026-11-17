@@ -115,16 +115,14 @@ mod tests {
     }
 
     /// Every inline copy, the one in each registry file's `mod html` included, must escape the
-    /// probe the way this reference does. Each component is rendered with the probe in every
+    /// probe the way this reference does. The eight unstyled components moved to `mzizi-roots`,
+    /// which holds its own escaping test over `node::escape`. Each component is rendered with the probe in every
     /// attribute and text slot it has; its output must hold the reference escaping of the probe
     /// and never the probe itself. The skeleton test above holds one component to exact bytes;
     /// this one holds every component to the escaping table, so a copy that drifts fails here.
     #[test]
     fn every_inline_copy_escapes_like_the_reference() {
-        use crate::{
-            alert, badge, card, chart, markdown_renderer, progress, safe_area_frame, separator,
-            skeleton, status_badge,
-        };
+        use crate::{skeleton, status_badge};
 
         const PROBE: &str = "a&b<c>d\"e'f ünï";
         let mut escaped = String::new();
@@ -138,81 +136,11 @@ mod tests {
                 }),
             ),
             (
-                "separator",
-                separator::render(&separator::RenderProps {
-                    class: PROBE.to_owned(),
-                    ..separator::RenderProps::default()
-                }),
-            ),
-            (
-                "progress",
-                progress::render(&progress::RenderProps {
-                    class: PROBE.to_owned(),
-                    ..progress::RenderProps::default()
-                }),
-            ),
-            (
-                "badge",
-                badge::render(&badge::RenderProps {
-                    class: PROBE.to_owned(),
-                    text: PROBE.to_owned(),
-                    ..badge::RenderProps::default()
-                }),
-            ),
-            (
                 "status-badge",
                 status_badge::render(&status_badge::RenderProps {
                     class: PROBE.to_owned(),
                     label: Some(PROBE.to_owned()),
                     ..status_badge::RenderProps::default()
-                }),
-            ),
-            (
-                "safe-area-frame",
-                safe_area_frame::render(&safe_area_frame::RenderProps {
-                    width: 1,
-                    height: 1,
-                    safe: [0; 4],
-                    box_px: 56,
-                    class: PROBE.to_owned(),
-                }),
-            ),
-            (
-                "chart",
-                chart::render(&chart::RenderProps {
-                    id: PROBE.to_owned(),
-                    class: PROBE.to_owned(),
-                    ..chart::RenderProps::default()
-                }),
-            ),
-            (
-                "alert",
-                alert::render(&alert::RenderProps {
-                    class: PROBE.to_owned(),
-                    children: alert::render_title(&alert::PartProps {
-                        class: PROBE.to_owned(),
-                        children: escaped.clone(),
-                    }),
-                    ..alert::RenderProps::default()
-                }),
-            ),
-            (
-                "card",
-                card::render(&card::RenderProps {
-                    class: PROBE.to_owned(),
-                    children: card::render_header(&card::SlotProps {
-                        class: PROBE.to_owned(),
-                        children: escaped.clone(),
-                    }),
-                    ..card::RenderProps::default()
-                }),
-            ),
-            (
-                "markdown-renderer",
-                markdown_renderer::render(&markdown_renderer::RenderProps {
-                    content: PROBE.to_owned(),
-                    class: PROBE.to_owned(),
-                    ..markdown_renderer::RenderProps::default()
                 }),
             ),
         ];

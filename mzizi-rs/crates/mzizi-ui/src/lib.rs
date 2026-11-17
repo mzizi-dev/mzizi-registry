@@ -38,17 +38,8 @@
 #[cfg(test)]
 pub(crate) mod html;
 
-#[path = "generated/alert.rs"]
-pub mod alert;
-
 #[path = "generated/button.rs"]
 pub mod button;
-
-#[path = "generated/badge.rs"]
-pub mod badge;
-
-#[path = "generated/card.rs"]
-pub mod card;
 
 #[path = "generated/avatar.rs"]
 pub mod avatar;
@@ -59,26 +50,11 @@ pub mod input;
 #[path = "generated/label.rs"]
 pub mod label;
 
-#[path = "generated/progress.rs"]
-pub mod progress;
-
-#[path = "generated/separator.rs"]
-pub mod separator;
-
 #[path = "generated/skeleton.rs"]
 pub mod skeleton;
 
-#[path = "generated/chart.rs"]
-pub mod chart;
-
 #[path = "generated/status-badge.rs"]
 pub mod status_badge;
-
-#[path = "generated/safe-area-frame.rs"]
-pub mod safe_area_frame;
-
-#[path = "generated/markdown-renderer.rs"]
-pub mod markdown_renderer;
 
 #[path = "generated/device-code.rs"]
 pub mod device_code;
@@ -107,19 +83,12 @@ pub mod device_code;
 // ── wave 1 · batch H · modules ──
 // ── end wave 1 · batch H · modules ──
 
-pub use alert::{
-    Alert, AlertAction, AlertDescription, AlertPartProps, AlertProps, AlertTitle, AlertVariant,
-    alert_variants,
-};
 pub use avatar::{
     Avatar, AvatarBadge, AvatarBadgeProps, AvatarFallback, AvatarFallbackProps, AvatarGroup,
     AvatarGroupCount, AvatarGroupCountProps, AvatarGroupProps, AvatarImage, AvatarImageProps,
     AvatarProps, AvatarSize, avatar_variants,
 };
-pub use badge::{Badge, BadgeProps, BadgeVariant, badge_variants};
 pub use button::{Button, ButtonProps, ButtonSize, ButtonVariant, button_variants};
-pub use card::{Card, CardContent, CardFooter, CardHeader, CardTitle};
-pub use chart::{Chart, ChartProps, chart_loading_variants, chart_variants};
 pub use device_code::{
     DeviceCode, DeviceCodeProps, DeviceCodeSize, DeviceCodeStatus, QrEcc, QrMatrix,
     effective_status as device_code_effective_status, format_remaining as device_code_remaining,
@@ -127,15 +96,6 @@ pub use device_code::{
 };
 pub use input::{Input, InputProps, input_variants};
 pub use label::{Label, LabelProps, label_variants};
-pub use markdown_renderer::{
-    Align as MarkdownAlign, Block as MarkdownBlock, Inline as MarkdownInline, List as MarkdownList,
-    ListChild as MarkdownListChild, ListItem as MarkdownListItem, MarkdownHref, MarkdownLinks,
-    MarkdownRenderer, MarkdownRendererProps, MarkdownSource,
-    parse_inlines as parse_markdown_inlines, parse_markdown, safe_href, safe_link,
-};
-pub use progress::{Progress, ProgressProps, progress_variants};
-pub use safe_area_frame::{SafeAreaBands, SafeAreaFrame, SafeAreaFrameProps, safe_area_bands};
-pub use separator::{Separator, SeparatorOrientation, SeparatorProps, separator_variants};
 pub use skeleton::{Skeleton, SkeletonProps, skeleton_variants};
 pub use status_badge::{
     STATUS_BADGE_STATUSES, StatusBadge, StatusBadgeProps, StatusBadgeStatus, status_badge_variants,
@@ -165,16 +125,13 @@ pub use status_badge::{
 // ── wave 1 · batch H · exports ──
 // ── end wave 1 · batch H · exports ──
 
-/// Every N2 primitive that exports a `CONTRACT`, with its registry name.
+/// Every N2 primitive that exports a `CONTRACT`, with its registry name. The unstyled components
+/// (alert, card, markdown-renderer, safe-area-frame) moved to `mzizi-roots`, which lists them.
 pub const CONTRACTS: &[(&str, &str)] = &[
-    ("alert", alert::CONTRACT),
     ("button", button::CONTRACT),
-    ("card", card::CONTRACT),
     ("device-code", device_code::CONTRACT),
     ("input", input::CONTRACT),
     ("label", label::CONTRACT),
-    ("markdown-renderer", markdown_renderer::CONTRACT),
-    ("safe-area-frame", safe_area_frame::CONTRACT),
     ("skeleton", skeleton::CONTRACT),
     ("status-badge", status_badge::CONTRACT),
     // ── wave 1 · batch A · contracts ──

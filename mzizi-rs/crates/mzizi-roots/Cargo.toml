@@ -1,8 +1,8 @@
 [package]
 name = "mzizi-roots"
-description = "Mzizi Roots, the UI side: one dependency for Mzizi's Dioxus components and design tokens (mzizi-tokens, mzizi-ui, mzizi-brand, mzizi-shell), each behind a feature."
+description = "Mzizi Roots, the UI side: the Dioxus-free element-tree runtime and its unstyled components, and one dependency for the Dioxus components still in mzizi-ui, mzizi-brand and mzizi-shell, each behind a feature."
 readme = "README.md"
-keywords = ["dioxus", "ui", "components", "design-system", "mzizi"]
+keywords = ["ui", "components", "design-system", "ssr", "mzizi"]
 categories = ["gui", "web-programming"]
 version.workspace = true
 edition.workspace = true
@@ -14,9 +14,13 @@ homepage.workspace = true
 [lints]
 workspace = true
 
-# An umbrella: no code of its own, only re-exports. The components live in the node crates,
-# which stay the ones `/v1/rs/{name}` names; this crate is the one-line install.
+# The core (`node`, `components`) needs one dependency, `url`, and no Dioxus. The features below
+# re-export the node crates' Dioxus components, which stay the ones `/v1/rs/{name}` names until
+# they move here.
 [dependencies]
+# `url` is the core's one dependency: `markdown-renderer` shows a link's host the way the WHATWG URL
+# parser serialises it (see the registry source). The same pin as `mzizi-ui` had.
+url = "2.5.4"
 mzizi-tokens = { path = "../mzizi-tokens", version = "0.7.0" }
 mzizi-ui = { path = "../mzizi-ui", version = "0.7.0", optional = true }
 mzizi-brand = { path = "../mzizi-brand", version = "0.7.0", optional = true }
@@ -32,3 +36,10 @@ ui = ["dep:mzizi-ui"]
 brand = ["dep:mzizi-brand"]
 # N7 app shell (Dioxus, plus `regex` for deep links).
 shell = ["dep:mzizi-shell"]
+
+[dev-dependencies]
+# Test-only: `tests/contracts.rs` includes the shared contract evaluator (`mzizi-rs/contract-eval/`),
+# which renders Dioxus builds with `dioxus-ssr`. The core itself does not use Dioxus.
+dioxus = { version = "0.7", default-features = false, features = ["macro", "html"] }
+dioxus-ssr = "0.7"
+serde_json = "1"
