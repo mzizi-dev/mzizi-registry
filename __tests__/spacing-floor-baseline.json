@@ -27,9 +27,6 @@
   "components/registry/n2-primitives/card.astro": {
     "padZero": 1
   },
-  "components/registry/n2-primitives/card.rs": {
-    "padZero": 1
-  },
   "components/registry/n2-primitives/card.tsx": {
     "padZero": 1
   },

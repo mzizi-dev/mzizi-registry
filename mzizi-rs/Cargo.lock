@@ -896,10 +896,14 @@ dependencies = [
 name = "mzizi-roots"
 version = "0.7.0"
 dependencies = [
+ "dioxus",
+ "dioxus-ssr",
  "mzizi-brand",
  "mzizi-shell",
  "mzizi-tokens",
  "mzizi-ui",
+ "serde_json",
+ "url",
 ]
 
 [[package]]
@@ -935,7 +939,6 @@ dependencies = [
  "mzizi-tokens",
  "qrcode",
  "serde_json",
- "url",
 ]
 
 [[package]]

@@ -58,6 +58,19 @@ const CRATE_FOR_NODE = JSON.parse(
   readFileSync(join(ROOT, "mzizi-rs", "crate-for-node.json"), "utf8")
 )
 
+/**
+ * `<node>/<file>.rs` → the crate, for the components that move out of their node's crate.
+ *
+ * Step 1 of #710 moves the eight components that already render without Dioxus into
+ * `mzizi-roots`, the Dioxus-free runtime core, while the rest of `n2-primitives` stays in
+ * `mzizi-ui` until its own migration. The map is consulted before `CRATE_FOR_NODE`, so a file
+ * here overrides its node. Keep it to the files that move; an entry is removed when its
+ * component leaves the list.
+ */
+const CRATE_FOR_FILE = JSON.parse(
+  readFileSync(join(ROOT, "mzizi-rs", "crate-for-file.json"), "utf8")
+)
+
 /** The header prepended to every copy. `source` is repo-relative, forward-slashed. */
 function header(source) {
   return `// GENERATED — DO NOT EDIT.
@@ -80,20 +93,22 @@ function discover() {
     const files = readdirSync(join(REGISTRY, node.name)).filter((f) => f.endsWith(".rs"))
     if (files.length === 0) continue
     const crate = CRATE_FOR_NODE[node.name]
-    if (!crate) {
+    const unmapped = files.filter((f) => !crate && !(`${node.name}/${f}` in CRATE_FOR_FILE))
+    if (unmapped.length > 0) {
       throw new Error(
-        `components/registry/${node.name}/ contains Rust (${files.sort().join(", ")}) but no ` +
+        `components/registry/${node.name}/ contains Rust (${unmapped.sort().join(", ")}) but no ` +
           `crate claims it. Add an entry to mzizi-rs/crate-for-node.json ` +
-          `and a \`mod\` line in that crate's src/lib.rs.`
+          `(or the file to mzizi-rs/crate-for-file.json) and a \`mod\` line in that crate's src/lib.rs.`
       )
     }
     for (const file of files.sort()) {
+      const target = CRATE_FOR_FILE[`${node.name}/${file}`] ?? crate
       found.push({
-        crate,
+        crate: target,
         file,
         source: `components/registry/${node.name}/${file}`,
         from: join(REGISTRY, node.name, file),
-        to: join(CRATES, crate, "src", "generated", file),
+        to: join(CRATES, target, "src", "generated", file),
       })
     }
   }
@@ -105,7 +120,7 @@ const check = process.argv.includes("--check")
 
 /** Copies that exist on disk but no longer have a source — stale, and must go. */
 const stale = []
-for (const crate of new Set(Object.values(CRATE_FOR_NODE))) {
+for (const crate of new Set([...Object.values(CRATE_FOR_NODE), ...Object.values(CRATE_FOR_FILE)])) {
   const dir = join(CRATES, crate, "src", "generated")
   let existing = []
   try {

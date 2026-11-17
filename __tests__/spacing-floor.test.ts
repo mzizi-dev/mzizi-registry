@@ -340,6 +340,12 @@ describe("the contract runner holds the spacing floor", () => {
           ]);
       }
     })(join(ROOT, "components/registry"));
+    // markdown-renderer's classes live in its shared parser, markdown-parse.ts (not walked above,
+    // which reads .tsx, .astro and .rs), which its .tsx and .astro import: a class there is its class.
+    all.set("markdown-renderer", [
+      ...(all.get("markdown-renderer") ?? []),
+      readFileSync(join(ROOT, "components/registry/n2-primitives/markdown-parse.ts"), "utf8"),
+    ]);
     for (const key of Object.keys(SPACING_GAPS)) {
       const [name, ...rest] = key.split(":");
       const c = JSON.parse(

@@ -293,11 +293,14 @@ describe("Rust (.rs) siblings carry the contract's identity", () => {
   test.each(withRs.map((c) => [c.name, c] as const))("%s", (_name, c) => {
     const sib = c.implementations.rs as Sibling
     const rs = registryFile(sib.registry, "rs")
-    expect(rs).toContain(`"data-slot": "${slotOf(c)}"`)
+    // A Roots build writes its attributes as `("name", "value")` pairs (mzizi-roots `node`); a Dioxus
+    // build wrote `"name": "value"`. Either form names the attribute.
+    const attr = (name: string, value: string) => new RegExp(`"${name}"(?::| ,|,) ?"${value}"`)
+    expect(rs).toMatch(attr("data-slot", slotOf(c) ?? ""))
     if (sib.identity === "slot+variants") {
       expect(rs).toContain(`"data-variant"`)
       for (const v of variantsOf(c)) expect(rs, v).toContain(`"${v}"`)
     }
-    if (sib.identity === "slot+role") expect(rs).toContain(`"role": "${roleOf(c)}"`)
+    if (sib.identity === "slot+role") expect(rs).toMatch(attr("role", roleOf(c) ?? ""))
   })
 })

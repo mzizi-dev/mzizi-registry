@@ -1,0 +1,10 @@
+{
+  "n2-primitives/alert.rs": "mzizi-roots",
+  "n2-primitives/badge.rs": "mzizi-roots",
+  "n2-primitives/card.rs": "mzizi-roots",
+  "n2-primitives/chart.rs": "mzizi-roots",
+  "n2-primitives/progress.rs": "mzizi-roots",
+  "n2-primitives/separator.rs": "mzizi-roots",
+  "n2-primitives/safe-area-frame.rs": "mzizi-roots",
+  "n2-primitives/markdown-renderer.rs": "mzizi-roots"
+}
