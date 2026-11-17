@@ -159,6 +159,7 @@ jobs:
           pnpm openapi:generate:check
           pnpm node-map:generate:check
           pnpm rust:generate:check
+          pnpm pattern:generate:check
           pnpm py:generate:check
           pnpm changelog:generate:check
 

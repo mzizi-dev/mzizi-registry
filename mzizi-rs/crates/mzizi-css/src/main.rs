@@ -63,8 +63,29 @@ fn pattern_dir() -> PathBuf {
     Path::new(env!("CARGO_MANIFEST_DIR")).join("../../../styles/pattern")
 }
 
+/// What the command line asked for: build (no arguments) or `--check`.
+/// Anything else is refused, so a mistyped `--check` in CI cannot fall
+/// through to build mode and pass.
+fn parse_mode<I: IntoIterator<Item = String>>(args: I) -> Result<bool, String> {
+    let args: Vec<String> = args.into_iter().collect();
+    match args.as_slice() {
+        [] => Ok(false),
+        [flag] if flag == "--check" => Ok(true),
+        _ => Err(format!(
+            "mzizi-css: unexpected arguments {args:?}; usage: mzizi-css [--check]"
+        )),
+    }
+}
+
 fn main() -> ExitCode {
-    let check = std::env::args().any(|a| a == "--check");
+    // nosemgrep: rust.lang.security.args.args -- reads this build tool's own flag; argv[0] is skipped and nothing security-relevant depends on it.
+    let check = match parse_mode(std::env::args().skip(1)) {
+        Ok(check) => check,
+        Err(e) => {
+            eprintln!("{e}");
+            return ExitCode::from(2);
+        }
+    };
     let dir = pattern_dir();
     let dist = dir.join("dist");
     let mut drift = Vec::new();
@@ -116,5 +137,31 @@ fn main() -> ExitCode {
         }
     } else {
         ExitCode::SUCCESS
+    }
+}
+
+#[cfg(test)]
+mod tests {
+    use super::parse_mode;
+
+    fn mode(args: &[&str]) -> Result<bool, String> {
+        parse_mode(args.iter().map(|a| a.to_string()))
+    }
+
+    #[test]
+    fn no_arguments_builds() {
+        assert_eq!(mode(&[]), Ok(false));
+    }
+
+    #[test]
+    fn check_flag_checks() {
+        assert_eq!(mode(&["--check"]), Ok(true));
+    }
+
+    #[test]
+    fn typos_and_extra_arguments_are_refused() {
+        for args in [&["--chekc"][..], &["check"], &["--check", "x"], &["build"]] {
+            assert!(mode(args).is_err(), "{args:?} should be refused");
+        }
     }
 }
