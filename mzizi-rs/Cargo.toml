@@ -51,6 +51,7 @@ members = [
   "crates/mzizi-harness",
   "crates/mzizi-data",
   "crates/mzizi-mongodb",
+  "crates/mzizi-css",
 ]
 
 [workspace.package]

@@ -250,3 +250,43 @@ export const appCheckClasses =
  */
 export const appSwitchClasses =
   "relative h-6 w-10 shrink-0 cursor-pointer appearance-none rounded-full border border-border bg-muted transition-colors outline-none before:absolute before:top-0.5 before:start-0.5 before:size-4 before:rounded-full before:bg-muted-foreground before:transition-transform checked:border-transparent checked:bg-[var(--app-accent,var(--primary))] checked:before:translate-x-4 checked:before:bg-[var(--app-accent-foreground,var(--primary-foreground))] rtl:checked:before:-translate-x-4 focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background disabled:cursor-not-allowed";
+
+/* The button's Tailwind recipe as it stood before #708. The button itself now sets no class
+   (styles/pattern/mzizi-theme.css carries the look); this recipe is kept for the components that
+   still style themselves through `buttonVariants` from `@/components/ui/button` (calendar), and
+   it leaves with them. Re-exported from button.tsx under the old name. */
+export const buttonRecipe = cva(
+  "focus-visible:border-ring focus-visible:ring-ring/50 aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive dark:aria-invalid:border-destructive/50 rounded-full border border-transparent bg-clip-padding text-sm font-medium focus-visible:ring-[3px] aria-invalid:ring-[3px] [&_svg:not([class*='size-'])]:size-4 inline-flex items-center justify-center whitespace-nowrap transition-all disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none shrink-0 [&_svg]:shrink-0 outline-none group/button select-none",
+  {
+    variants: {
+      variant: {
+        default: "bg-primary text-primary-foreground hover:bg-primary/80",
+        outline:
+          "border-border bg-input/30 hover:bg-input/50 hover:text-foreground aria-expanded:bg-muted aria-expanded:text-foreground",
+        secondary:
+          "bg-secondary text-secondary-foreground hover:bg-secondary/80 aria-expanded:bg-secondary aria-expanded:text-secondary-foreground",
+        ghost:
+          "hover:bg-muted hover:text-foreground dark:hover:bg-muted/50 aria-expanded:bg-muted aria-expanded:text-foreground",
+        destructive:
+          "bg-destructive/10 hover:bg-destructive/20 focus-visible:ring-destructive/20 dark:focus-visible:ring-destructive/40 dark:bg-destructive/20 text-destructive focus-visible:border-destructive/40 dark:hover:bg-destructive/30",
+        link: "text-primary underline-offset-4 hover:underline",
+      },
+      size: {
+        /* DEFAULT = --size-control: 44px touch, 36px desktop */
+        default:
+          "h-control gap-2 px-5 has-data-[icon=inline-end]:pr-4 has-data-[icon=inline-start]:pl-4",
+        /* SM = --size-control-sm: 44px touch (the floor), 32px desktop */
+        sm: "h-control-sm gap-2 px-4 has-data-[icon=inline-end]:pr-3.5 has-data-[icon=inline-start]:pl-3.5",
+        /* LG = --size-control-lg: 48px touch, 40px desktop, wider padding */
+        lg: "h-control-lg gap-2 px-6 has-data-[icon=inline-end]:pr-5 has-data-[icon=inline-start]:pl-5",
+        /* ICON variants — square touch targets */
+        icon: "size-control-icon",
+        "icon-sm": "size-control-sm",
+      },
+    },
+    defaultVariants: {
+      variant: "default",
+      size: "default",
+    },
+  },
+);

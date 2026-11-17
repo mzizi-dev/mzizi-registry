@@ -2939,9 +2939,9 @@
     {
       "author": "Mzizi, operated by Nyuchi Africa (Pvt) Ltd — https://mzizi.dev",
       "categories": ["components", "primitives"],
-      "dependencies": ["radix-ui", "class-variance-authority"],
+      "dependencies": ["radix-ui"],
       "description": "Displays a button or a component that looks like a button.",
-      "docs": "Use it for: Primary CTA (mineral accent), Secondary action (outline/ghost), Destructive action (delete, remove), Icon-only action, Link-style navigation.\nVariants: default, outline, secondary, ghost, destructive, link.\nSizes: default (56px), sm (48px), lg (56px wide), icon (56px square), icon-sm (48px square).\nIncludes: Pill-shaped (rounded-full) per brand standard, data-slot attribute for CSS targeting, asChild support via Radix Slot, Disabled state with pointer-events-none.\nAccessibility: Focus-visible ring with --ring token, aria-invalid styling, Minimum 48px touch target, Keyboard accessible (Enter/Space).\nInstall: npx shadcn@latest add https://api.mzizi.dev/v1/ui/button",
+      "docs": "Use it for: Primary CTA (mineral accent), Secondary action (outline/ghost), Destructive action (delete, remove), Icon-only action, Link-style navigation.\nVariants: default, outline, secondary, ghost, destructive, link.\nSizes: default (56px), sm (48px), lg (56px wide), icon (56px square), icon-sm (48px square).\nIncludes: No styling class: data-slot, data-variant, data-size and data-state carry the state, Look in styles/pattern/mzizi-theme.css; minimums in styles/pattern/floor.css, asChild support via Radix Slot, Disabled is the native attribute, mirrored to data-state.\nAccessibility: Focus-visible ring with --ring token, aria-invalid styling, Bundu hit region: 49px on touch, 28px on a desktop (floor.css), Keyboard accessible (Enter/Space).\nInstall: npx shadcn@latest add https://api.mzizi.dev/v1/ui/button",
       "files": [
         {
           "path": "components/registry/n2-primitives/button.tsx",
@@ -2953,15 +2953,15 @@
         "a11y": [
           "Focus-visible ring with --ring token",
           "aria-invalid styling",
-          "Minimum 48px touch target",
+          "Bundu hit region: 49px on touch, 28px on a desktop (floor.css)",
           "Keyboard accessible (Enter/Space)"
         ],
         "collection": "components",
         "features": [
-          "Pill-shaped (rounded-full) per brand standard",
-          "data-slot attribute for CSS targeting",
+          "No styling class: data-slot, data-variant, data-size and data-state carry the state",
+          "Look in styles/pattern/mzizi-theme.css; minimums in styles/pattern/floor.css",
           "asChild support via Radix Slot",
-          "Disabled state with pointer-events-none"
+          "Disabled is the native attribute, mirrored to data-state"
         ],
         "hasDemo": true,
         "owner": "framework",
@@ -2989,7 +2989,7 @@
         ]
       },
       "name": "button",
-      "registryDependencies": [],
+      "registryDependencies": ["https://api.mzizi.dev/v1/ui/ui-variants"],
       "title": "Button",
       "type": "registry:ui"
     },

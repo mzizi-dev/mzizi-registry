@@ -19,8 +19,7 @@ use std::fs;
 use std::path::PathBuf;
 
 use mzizi_ui::{
-    AvatarSize, ButtonSize, ButtonVariant, avatar_variants, button_variants, input_variants,
-    label_variants,
+    AvatarSize, ButtonSize, ButtonVariant, avatar_variants, input_variants, label_variants,
 };
 use mzizi_ui::{STATUS_BADGE_STATUSES, status_badge_variants};
 
@@ -48,7 +47,9 @@ fn assert_classes_present(rust_classes: &str, ts_source: &str, what: &str) {
 }
 
 #[test]
-fn button_variants_match_the_typescript() {
+fn button_attributes_match_the_typescript() {
+    // The Rust button emits the same data-* values as the TypeScript one, so one stylesheet
+    // (styles/pattern/mzizi-theme.css) and one selector serve both targets.
     let ts = tsx("n2-primitives", "button");
     for variant in [
         ButtonVariant::Default,
@@ -58,24 +59,12 @@ fn button_variants_match_the_typescript() {
         ButtonVariant::Destructive,
         ButtonVariant::Link,
     ] {
-        assert_classes_present(
-            variant.classes(),
-            &ts,
-            &format!("button/{}", variant.slug()),
-        );
-        // The slug is what lands in `data-variant`, so a stylesheet or a test selector
-        // written against one target must match the other.
         assert!(
-            ts.contains(&format!("{}:", variant.slug())),
-            "button: variant `{}` is not declared in buttonVariants",
+            ts.contains(&format!("\"{}\"", variant.slug())),
+            "button: variant `{}` is not in the TypeScript union",
             variant.slug()
         );
     }
-}
-
-#[test]
-fn button_sizes_match_the_typescript() {
-    let ts = tsx("n2-primitives", "button");
     for size in [
         ButtonSize::Default,
         ButtonSize::Sm,
@@ -83,49 +72,31 @@ fn button_sizes_match_the_typescript() {
         ButtonSize::Icon,
         ButtonSize::IconSm,
     ] {
-        assert_classes_present(size.classes(), &ts, &format!("button/{}", size.slug()));
+        assert!(
+            ts.contains(&format!("\"{}\"", size.slug())),
+            "button: size `{}` is not in the TypeScript union",
+            size.slug()
+        );
     }
 }
 
 #[test]
-fn buttons_are_always_pill_shaped() {
-    // CLAUDE.md §7.5 — an executive brand decision, not a radius-scale value, and it applies
-    // to every target. Asserted on the composed string rather than the base constant so
-    // no variant or size can override it away.
-    for variant in [
-        ButtonVariant::Default,
-        ButtonVariant::Ghost,
-        ButtonVariant::Link,
-    ] {
-        for size in [ButtonSize::Default, ButtonSize::Sm, ButtonSize::Icon] {
-            let classes = button_variants(variant, size, "");
-            assert!(
-                classes.split_whitespace().any(|c| c == "rounded-full"),
-                "button {}/{} is not pill-shaped",
-                variant.slug(),
-                size.slug()
-            );
-        }
+fn button_sets_no_styling_class_in_either_target() {
+    // The source of each button carries structure and state only. No class string, no cva.
+    let ts = tsx("n2-primitives", "button");
+    let rs = fs::read_to_string(
+        PathBuf::from(env!("CARGO_MANIFEST_DIR"))
+            .join("../../../components/registry/n2-primitives/button.rs"),
+    )
+    .expect("button.rs");
+    for (name, src) in [("button.tsx", ts.as_str()), ("button.rs", rs.as_str())] {
+        assert!(!src.contains("cva("), "{name} builds a class recipe");
+        assert!(!src.contains("classes()"), "{name} still has a class table");
+        assert!(
+            !src.contains("className=\"") && !src.contains("class=\""),
+            "{name} sets a literal class string"
+        );
     }
-}
-
-#[test]
-fn consumer_classes_come_last_so_they_win() {
-    // Tailwind resolves a conflict by source order in the stylesheet, not the class list, but
-    // the ordering still matters for `tailwind-merge`-style consumers and for readability.
-    // What is load-bearing is that the consumer's classes are PRESENT at all — dropping them
-    // silently is the failure this catches.
-    let classes = button_variants(ButtonVariant::Default, ButtonSize::Default, "w-full mt-2");
-    assert!(
-        classes.ends_with("w-full mt-2"),
-        "consumer classes were not appended: {classes}"
-    );
-
-    let none = button_variants(ButtonVariant::Default, ButtonSize::Default, "");
-    assert!(
-        !none.ends_with(' '),
-        "an empty class prop left a trailing space: {none:?}"
-    );
 }
 
 #[test]

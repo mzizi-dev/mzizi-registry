@@ -1,0 +1,16 @@
+[package]
+name = "mzizi-css"
+description = "Builds the Mzizi pattern stylesheets (tokens, floor, theme) with Lightning CSS: minified output, and a --check mode for CI."
+publish = false
+version.workspace = true
+edition.workspace = true
+rust-version.workspace = true
+license.workspace = true
+repository.workspace = true
+homepage.workspace = true
+
+[lints]
+workspace = true
+
+[dependencies]
+lightningcss = "1.0.0-alpha.72"

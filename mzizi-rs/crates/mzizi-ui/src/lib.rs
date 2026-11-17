@@ -88,7 +88,7 @@ pub use avatar::{
     AvatarGroupCount, AvatarGroupCountProps, AvatarGroupProps, AvatarImage, AvatarImageProps,
     AvatarProps, AvatarSize, avatar_variants,
 };
-pub use button::{Button, ButtonProps, ButtonSize, ButtonVariant, button_variants};
+pub use button::{Button, ButtonProps, ButtonSize, ButtonVariant};
 pub use device_code::{
     DeviceCode, DeviceCodeProps, DeviceCodeSize, DeviceCodeStatus, QrEcc, QrMatrix,
     effective_status as device_code_effective_status, format_remaining as device_code_remaining,
