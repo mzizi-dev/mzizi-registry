@@ -2139,6 +2139,18 @@ export const COMPONENT_PROPS: Record<string, PropInfo[]> = {
       "required": false
     }
   ],
+  "button": [
+    {
+      "name": "variant",
+      "type": "ButtonVariant",
+      "required": false
+    },
+    {
+      "name": "size",
+      "type": "ButtonSize",
+      "required": false
+    }
+  ],
   "calendar": [
     {
       "name": "buttonVariant",
