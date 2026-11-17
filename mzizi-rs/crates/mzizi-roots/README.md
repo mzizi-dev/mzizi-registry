@@ -1,59 +1,65 @@
 # mzizi-roots
 
-**Mzizi Roots**, the UI side: one dependency for the components and design tokens of the
-[Mzizi](https://mzizi.dev) component registry. The components are Dioxus today, and Mzizi's own
-render path is replacing Dioxus (see the registry's `docs/roots/RFC-roots-renderer.md`); Dioxus
-stays a dependency until that finishes.
+**Mzizi Roots**, the Dioxus-free runtime core of the [Mzizi](https://mzizi.dev) component
+registry, and one dependency for the Dioxus components that have not moved onto it yet.
 
-Mzizi Roots is the Rust build of Mzizi's own components. This crate has no code of its own.
-It re-exports the node crates, each behind a feature:
+The core has no dependency and no renderer. It has two parts:
 
-| Module   | Crate          | What it holds                                       | Feature           |
-| -------- | -------------- | --------------------------------------------------- | ----------------- |
-| `tokens` | `mzizi-tokens` | N1 design tokens: the Mzizi palette and scales      | always on         |
-| `ui`     | `mzizi-ui`     | N2 primitives: button, badge, card and the rest     | `ui` (default)    |
-| `brand`  | `mzizi-brand`  | N3 brand components, each with a checkable contract | `brand` (default) |
-| `shell`  | `mzizi-shell`  | N7 app shell: navigation, footer, toasts, theme     | `shell` (default) |
+- **`node`**: the element tree. A `Node` is an element (a tag, its attributes in order, and its
+  children), a text run, or a fragment. `render_to_string` writes a list of nodes as markup, and
+  escapes every text node and every attribute value with the five decimal references
+  (`&#38;` `&#60;` `&#62;` `&#34;` `&#39;`). It is the node shape of the Mzizi language's renderer
+  (`compiler/src/render.rs` in `mzizi-dev/mzizi`), so a component written in Rust and one compiled
+  from `.mz` produce the same tree.
+- **`components`**: the components that render through the core, each unstyled. They carry the hooks
+  a stylesheet keys off (`data-slot`, `data-variant`, `data-size`, `data-state`, `data-loading`, ARIA)
+  and no class names. A `class` passed in is a pass-through for the adopter's own styling, written
+  last, as given. The eight are alert, badge, card, chart, progress, separator, safe-area-frame and
+  markdown-renderer.
 
-The server-side components are in [`mzizi-roots-server`](https://crates.io/crates/mzizi-roots-server).
+```rust
+use mzizi_roots::components::badge::{self, BadgeVariant, RenderProps};
+
+let html = badge::render(&RenderProps {
+    variant: BadgeVariant::Destructive,
+    text: "Revoked".to_owned(),
+    ..RenderProps::default()
+});
+assert_eq!(
+    html,
+    r#"<span data-slot="badge" data-portal="https://mzizi.dev/components/badge" data-variant="destructive">Revoked</span>"#
+);
+```
+
+Each component also exposes `node(&RenderProps) -> Node`, so a parent can compose its tree
+without serialising it first.
 
 ## Install
 
 ```sh
-cargo add mzizi-roots
+cargo add mzizi-roots --no-default-features
 ```
 
-Before the first crates.io release, or to follow `main`, install from git:
-
-```sh
-cargo add mzizi-roots --git https://github.com/mzizi-dev/mzizi-registry
-```
-
-To take only what you use:
+The default features re-export the Dioxus components in the node crates (`ui`, `brand`, `shell`),
+which still need Dioxus. Turn them off to take only the core:
 
 ```toml
 [dependencies]
-mzizi-roots = { version = "0.4", default-features = false, features = ["brand"] }
+mzizi-roots = { version = "0.8", default-features = false }
 ```
 
-```rust
-use mzizi_roots::brand::{AlertSeverity, MziziAlertBanner};
-use mzizi_roots::tokens::COBALT_DARK;
-```
+## Tests
 
-The components pull in no renderer, so the app that mounts them picks the target: web,
-desktop, mobile, or server-side rendering. They style with Tailwind classes over Mzizi's
-CSS custom properties, the same classes their React siblings use.
-
-## Why an umbrella
-
-The components stay in one crate per registry node. That keeps the crate that compiles a
-component the one `https://api.mzizi.dev/v1/rs/<name>` names. This crate is the one-line
-install for an app that wants the design system.
+`tests/components.rs` holds the goldens for every component state and the rule that a component
+writes no class of its own. `tests/contracts.rs` evaluates the registry contracts for these builds
+with the shared evaluator in `mzizi-rs/contract-eval/`; the class clauses of a contract cannot hold
+for an unstyled build, so they are dropped there and the no-class rule covers them.
+`tests/markdown_parity.rs` holds the Markdown parser to the shared fixture the TypeScript suite runs.
 
 ## Links
 
 - Source: <https://github.com/mzizi-dev/mzizi-registry>
 - A component's Rust source: `https://api.mzizi.dev/v1/rs/<name>`
+- The Roots design: [`docs/roots/RFC-roots.md`](https://github.com/mzizi-dev/mzizi-registry/blob/staging/docs/roots/RFC-roots.md)
 
 Apache-2.0. Copyright 2026 Bundu Foundation.

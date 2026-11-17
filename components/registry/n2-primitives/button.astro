@@ -1,11 +1,12 @@
 ---
 /**
- * Button — the registry primitive (`contracts/ui/button`), pure Astro: a <button> with
- * the classes of `button.tsx` and `button.rs`: the pill shape, a 56px default target
- * (48px `sm`, never smaller) and the six variants. The Dashboard Standard button, at
- * app density, is `./app-button.astro`.
+ * Button — the registry primitive (`contracts/ui/button`), pure Astro, unstyled (#708).
+ *
+ * A <button> that carries structure, state and ARIA only: data-slot, data-variant,
+ * data-size, data-state. It sets no class. The look is styles/pattern/mzizi-theme.css,
+ * the identity-neutral minimums are styles/pattern/floor.css, and both read the values in
+ * styles/pattern/tokens.css. `class` is a pass-through for the adopter's own classes.
  */
-import { cn } from "./ui-utils";
 
 type Variant = "default" | "outline" | "secondary" | "ghost" | "destructive" | "link";
 type Size = "default" | "sm" | "lg" | "icon" | "icon-sm";
@@ -18,22 +19,6 @@ interface Props {
   class?: string;
 }
 const { variant = "default", size = "default", type, disabled, class: extra } = Astro.props;
-
-const VARIANTS: Record<Variant, string> = {
-  default: "bg-primary text-primary-foreground hover:bg-primary/80",
-  outline: "border-border bg-input/30 hover:bg-input/50 hover:text-foreground aria-expanded:bg-muted aria-expanded:text-foreground",
-  secondary: "bg-secondary text-secondary-foreground hover:bg-secondary/80 aria-expanded:bg-secondary aria-expanded:text-secondary-foreground",
-  ghost: "hover:bg-muted hover:text-foreground dark:hover:bg-muted/50 aria-expanded:bg-muted aria-expanded:text-foreground",
-  destructive: "bg-destructive/10 hover:bg-destructive/20 focus-visible:ring-destructive/20 dark:focus-visible:ring-destructive/40 dark:bg-destructive/20 text-destructive focus-visible:border-destructive/40 dark:hover:bg-destructive/30",
-  link: "text-primary underline-offset-4 hover:underline",
-};
-const SIZES: Record<Size, string> = {
-  default: "h-control gap-2 px-5 has-data-[icon=inline-end]:pr-4 has-data-[icon=inline-start]:pl-4",
-  sm: "h-control-sm gap-2 px-4 has-data-[icon=inline-end]:pr-3.5 has-data-[icon=inline-start]:pl-3.5",
-  lg: "h-control-lg gap-2 px-6 has-data-[icon=inline-end]:pr-5 has-data-[icon=inline-start]:pl-5",
-  icon: "size-control-icon",
-  "icon-sm": "size-control-sm",
-};
 ---
 
 <button
@@ -41,12 +26,8 @@ const SIZES: Record<Size, string> = {
   data-portal="https://mzizi.dev/components/button"
   data-variant={variant}
   data-size={size}
+  data-state={disabled ? "disabled" : "enabled"}
   type={type}
   disabled={disabled}
-  class={cn(
-    "focus-visible:border-ring focus-visible:ring-ring/50 aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive dark:aria-invalid:border-destructive/50 rounded-full border border-transparent bg-clip-padding text-sm font-medium focus-visible:ring-[3px] aria-invalid:ring-[3px] [&_svg:not([class*='size-'])]:size-4 inline-flex items-center justify-center whitespace-nowrap transition-all disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none shrink-0 [&_svg]:shrink-0 outline-none group/button select-none",
-    VARIANTS[variant],
-    SIZES[size],
-    extra,
-  )}
+  class={extra}
 ><slot /></button>

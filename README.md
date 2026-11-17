@@ -71,9 +71,12 @@ its own repo:
 `mzizi-rs/` is the Rust half of the bet above: a Cargo workspace whose `mzizi-ui` crate
 (N2 primitives) and `mzizi-tokens` crate (generated from the same palette source as the
 CSS custom properties) are compiled and contract-tested in CI, not just committed as text.
-The UI crates still depend on a third-party Rust UI framework that the owner has removed from the stack
-(2026-11-04, [#635](https://github.com/mzizi-dev/mzizi-registry/issues/635)). Mzizi is replacing it with its own `render(props) -> String`
-path, which is in progress and described in [`docs/roots/RFC-roots-renderer.md`](docs/roots/RFC-roots-renderer.md).
+`mzizi-roots` is the Dioxus-free core (step 1 of [#710](https://github.com/mzizi-dev/mzizi-registry/issues/710)):
+an element tree (`mzizi_roots::node`) whose serialiser escapes every text node and attribute, and the
+eight components that already render through it, unstyled: alert, badge, card, chart, progress,
+separator, safe-area-frame and markdown-renderer. The other Rust components still use Dioxus, in
+`mzizi-ui`, `mzizi-brand` and `mzizi-shell`, until they move onto the core (see
+[`docs/roots/RFC-roots-renderer.md`](docs/roots/RFC-roots-renderer.md)).
 
 The server crates are host-agnostic and are meant for three build targets: Cloudflare Workers,
 containers and bare metal (owner decision, 2026-10-20). Every Rust crate builds and tests natively

@@ -51,10 +51,11 @@ members = [
   "crates/mzizi-harness",
   "crates/mzizi-data",
   "crates/mzizi-mongodb",
+  "crates/mzizi-css",
 ]
 
 [workspace.package]
-version = "0.7.0"
+version = "0.8.0"
 edition = "2024"
 rust-version = "1.85"
 license = "Apache-2.0"
