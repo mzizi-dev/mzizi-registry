@@ -90,7 +90,14 @@ import type {
   MineralToken as Mineral,
 } from "../lib/tokens/palette.source"
 import { FONTS, RADIUS, ROLES, isColorKind, type Role } from "../lib/tokens/roles.source"
-import { renderGlobalsCss, resolveRoles, roleGate, roleVar, type ResolvedRole } from "./render-globals-css"
+import {
+  renderGlobalsCss,
+  resolveRoles,
+  roleGate,
+  roleVar,
+  textOnBaseTier,
+  type ResolvedRole,
+} from "./render-globals-css"
 
 const CHECK = process.argv.includes("--check")
 
@@ -890,7 +897,161 @@ ${Object.entries(SCALE.fonts)
   .join("\n")}
 }
 
+${renderRustFamilies(minerals, heritage, experimental)}
 ${rustRoles(roles(resolved))}
+`
+}
+
+/**
+ * One record per family, with every field `mzizi_get_tokens` serves for it.
+ *
+ * The rows are the same ones every other emitter reads. The text tones come from
+ * `textOnBaseTier()`, the function that emits `--mineral-<name>-text` in the
+ * globals CSS, so the text colour a Rust consumer reads is the one the CSS ships.
+ * A field the source does not define for a family is `None`, not an empty string:
+ * a heritage tone has no container and says so. The `*_DARK` / `*_LIGHT` consts
+ * above stay; the hex fields here refer to them rather than repeating the value.
+ */
+function renderRustFamilies(
+  minerals: Mineral[],
+  heritage: Heritage[],
+  experimental: Experimental[]
+): string {
+  const all = [...minerals, ...heritage, ...experimental]
+  const text = textOnBaseTier(
+    all.map((r) => ({ name: r.name, lightHex: r.lightHex, darkHex: r.darkHex }))
+  )
+  const str = (v: string) => JSON.stringify(v)
+  const opt = (v: string | undefined) => (v === undefined ? "None" : `Some(${str(v)})`)
+  const tone = (name: string) => {
+    const t = text.get(name)
+    if (!t) throw new Error(`textOnBaseTier has no entry for "${name}"`)
+    return t
+  }
+  const fields = (rows: [string, string][]) =>
+    rows.map(([k, v]) => `        ${k}: ${v},`).join("\n")
+  const hexes = (name: string) => [
+    ["hex_dark", `${upper(name)}_DARK`],
+    ["hex_light", `${upper(name)}_LIGHT`],
+  ]
+
+  const mineralRows = minerals.map((m) => {
+    const t = tone(m.name)
+    return [
+      ["name", str(m.name)],
+      ["role", opt(m.role)],
+      ["family", opt(m.family)],
+      ["css_var", str(m.cssVar)],
+      ...hexes(m.name),
+      ["container_dark", opt(m.containerDark)],
+      ["container_light", opt(m.containerLight)],
+      ["on_container_dark", opt(m.onContainerDark)],
+      ["on_container_light", opt(m.onContainerLight)],
+      ["text_dark", str(t.dark.hex)],
+      ["text_light", str(t.light.hex)],
+      ["origin", opt(m.origin)],
+      ["symbolism", opt(m.symbolism)],
+      ["usage", opt(m.usage)],
+      ["ui_dark", "None"],
+      ["ui_light", "None"],
+    ] as [string, string][]
+  })
+  const heritageRows = heritage.map((h) => {
+    const t = tone(h.name)
+    return [
+      ["name", str(h.name)],
+      ["role", "None"],
+      ["family", "None"],
+      ["css_var", str(h.cssVar)],
+      ...hexes(h.name),
+      ["container_dark", "None"],
+      ["container_light", "None"],
+      ["on_container_dark", "None"],
+      ["on_container_light", "None"],
+      ["text_dark", str(t.dark.hex)],
+      ["text_light", str(t.light.hex)],
+      ["origin", opt(h.origin)],
+      ["symbolism", opt(h.symbolism)],
+      ["usage", opt(h.usage)],
+      ["ui_dark", "None"],
+      ["ui_light", "None"],
+    ] as [string, string][]
+  })
+  const experimentalRows = experimental.map((e) => {
+    const t = tone(e.name)
+    return [
+      ["name", str(e.name)],
+      ["role", "None"],
+      ["family", "None"],
+      // The registry builds this name for the experimental seven (see /v1/brand).
+      ["css_var", str(`--color-${e.name}`)],
+      ...hexes(e.name),
+      ["container_dark", opt(e.containerDark)],
+      ["container_light", opt(e.containerLight)],
+      ["on_container_dark", opt(e.onContainerDark)],
+      ["on_container_light", opt(e.onContainerLight)],
+      ["text_dark", str(t.dark.hex)],
+      ["text_light", str(t.light.hex)],
+      ["origin", "None"],
+      ["symbolism", "None"],
+      ["usage", "None"],
+      ["ui_dark", opt(e.uiDark)],
+      ["ui_light", opt(e.uiLight)],
+    ] as [string, string][]
+  })
+
+  const record = (rows: [string, string][]): string => `    Family {\n${fields(rows)}\n    },`
+  const familyRows: [string, string][][] = [...mineralRows, ...heritageRows, ...experimentalRows]
+  const entries: string = familyRows.map((rows) => record(rows)).join("\n")
+
+  return `/// One Mzizi family, with every field \`mzizi_get_tokens\` serves for it.
+///
+/// A field the source does not define for a family is \`None\`: a heritage tone has
+/// no role, family or container, and only the experimental seven carry \`ui_*\`.
+/// Use \`text_*\` for text on the page and \`on_container_*\` for text on a container;
+/// \`hex_*\` is the fill.
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+pub struct Family {
+    /// The family name, lower case: \`cobalt\`, \`ember\`.
+    pub name: &'static str,
+    /// What the family is for (minerals only).
+    pub role: Option<&'static str>,
+    /// \`deep-earth\` or \`hand\` (minerals only).
+    pub family: Option<&'static str>,
+    /// The CSS custom property that carries the family.
+    pub css_var: &'static str,
+    /// The fill, dark theme.
+    pub hex_dark: &'static str,
+    /// The fill, light theme.
+    pub hex_light: &'static str,
+    /// The container surface, dark theme.
+    pub container_dark: Option<&'static str>,
+    /// The container surface, light theme.
+    pub container_light: Option<&'static str>,
+    /// Text on a container, dark theme.
+    pub on_container_dark: Option<&'static str>,
+    /// Text on a container, light theme.
+    pub on_container_light: Option<&'static str>,
+    /// Text on the page surface, dark theme.
+    pub text_dark: &'static str,
+    /// Text on the page surface, light theme.
+    pub text_light: &'static str,
+    /// Where the colour comes from.
+    pub origin: Option<&'static str>,
+    /// What the colour stands for.
+    pub symbolism: Option<&'static str>,
+    /// Where the colour is used.
+    pub usage: Option<&'static str>,
+    /// The UI tone, dark theme (experimental seven only).
+    pub ui_dark: Option<&'static str>,
+    /// The UI tone, light theme (experimental seven only).
+    pub ui_light: Option<&'static str>,
+}
+
+/// Every family, minerals then heritage then experimental, in palette order.
+pub const FAMILIES: [Family; 21] = [
+${entries}
+];
 `
 }
 
