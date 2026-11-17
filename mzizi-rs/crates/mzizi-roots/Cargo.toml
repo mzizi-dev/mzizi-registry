@@ -14,11 +14,12 @@ homepage.workspace = true
 [lints]
 workspace = true
 
-# The core (`node`, `components`) needs no dependency. The features below re-export the node
-# crates' Dioxus components, which stay the ones `/v1/rs/{name}` names until they move here.
+# The core (`node`, `components`) needs one dependency, `url`, and no Dioxus. The features below
+# re-export the node crates' Dioxus components, which stay the ones `/v1/rs/{name}` names until
+# they move here.
 [dependencies]
-# `markdown-renderer` shows a link's host the way the WHATWG URL parser serialises it (see the
-# registry source). The same pin as `mzizi-ui` had.
+# `url` is the core's one dependency: `markdown-renderer` shows a link's host the way the WHATWG URL
+# parser serialises it (see the registry source). The same pin as `mzizi-ui` had.
 url = "2.5.4"
 mzizi-tokens = { path = "../mzizi-tokens", version = "0.7.0" }
 mzizi-ui = { path = "../mzizi-ui", version = "0.7.0", optional = true }

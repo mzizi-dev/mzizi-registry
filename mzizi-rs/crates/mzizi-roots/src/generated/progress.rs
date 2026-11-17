@@ -50,6 +50,17 @@ fn state_for(value: Option<u8>, max: u8) -> ProgressState {
     }
 }
 
+/// How far the indicator is shifted left, in percent of its own width: `100 - value / max`. The
+/// fill is `value / max` of the track, so a bar at 25 of 50 shows half, a shift of 50. No reading
+/// is a fully shifted (empty) bar. A `max` of 0 has nothing to fill, so any reading is complete.
+fn offset_percent(value: Option<u8>, max: u8) -> u16 {
+    match value {
+        None => 100,
+        Some(_) if max == 0 => 0,
+        Some(v) => 100 - u16::from(v.min(max)) * 100 / u16::from(max),
+    }
+}
+
 /// The props a progress render takes.
 #[derive(Debug, Clone, PartialEq, Eq)]
 pub struct RenderProps {
@@ -75,10 +86,9 @@ impl Default for RenderProps {
 #[must_use]
 pub fn node(props: &RenderProps) -> Node {
     let state = state_for(props.value, props.max);
-    let percent = props.value.unwrap_or(0).min(props.max);
     let transform = format!(
         "transform: translateX(-{}%);",
-        100u16.saturating_sub(u16::from(percent))
+        offset_percent(props.value, props.max)
     );
     let max = props.max.to_string();
     let value = props.value.map(|v| v.to_string());

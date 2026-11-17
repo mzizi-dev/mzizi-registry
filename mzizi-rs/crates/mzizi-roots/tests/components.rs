@@ -367,6 +367,11 @@ fn progress_cases() -> Vec<Case> {
         ),
         case(
             "progress",
+            "half-of-fifty",
+            progress::render(&p(Some(25), 50, "")),
+        ),
+        case(
+            "progress",
             "escaped-class",
             progress::render(&p(Some(40), 100, PROBE)),
         ),
@@ -458,6 +463,33 @@ fn golden_path(c: &Case) -> PathBuf {
         .join("tests/goldens")
         .join(c.component)
         .join(format!("{}.html", c.state))
+}
+
+/// The fill's `translateX` for one reading: the indicator is shifted left by the part of the track
+/// it does not fill.
+fn progress_offset(value: Option<u8>, max: u8) -> String {
+    let html = progress::render(&progress::RenderProps {
+        value,
+        max,
+        class: String::new(),
+    });
+    let start = html
+        .find("transform: translateX(-")
+        .expect("an indicator transform");
+    html[start..].split('%').next().unwrap().to_owned()
+}
+
+#[test]
+fn progress_fill_is_value_over_max_not_value_over_100() {
+    assert_eq!(progress_offset(Some(25), 50), "transform: translateX(-50");
+    assert_eq!(progress_offset(Some(3), 4), "transform: translateX(-25");
+    assert_eq!(progress_offset(Some(40), 100), "transform: translateX(-60");
+    assert_eq!(progress_offset(Some(100), 100), "transform: translateX(-0");
+    // Past the max is complete, not a negative fill.
+    assert_eq!(progress_offset(Some(60), 50), "transform: translateX(-0");
+    // No reading is an empty bar, and a zero max has nothing to fill, so any reading is complete.
+    assert_eq!(progress_offset(None, 50), "transform: translateX(-100");
+    assert_eq!(progress_offset(Some(0), 0), "transform: translateX(-0");
 }
 
 #[test]
