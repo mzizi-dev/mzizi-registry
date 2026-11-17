@@ -16,6 +16,38 @@ import type { ChangelogRow } from "@/lib/db/types";
 
 export const CHANGELOG_RELEASES: readonly ChangelogRow[] = [
   {
+    version: "4.44.0",
+    title:
+      "v4.44.0 — the seven engineering constraints join the Ubuntu doctrine",
+    description:
+      "Releases staging to main as the next minor above v4.43.0 (nyuchi/.github#80). Added: a doctrine collection, genetic-code-engineering-constraints, holding the seven engineering constraints in their fixed order (outdoor-readability, connectivity-gradient-design, multilingual-parity, shared-device-awareness, personal-data-sovereignty, no-surveillance-business-model, bundu-floor), each with the Ubuntu principles it serves, its expression and the check that fails a surface which misses it. Connectivity-gradient design makes offline-first its enforced minimum (#723, #722). CHANGELOG.md section [4.44.0] is the narrative.",
+    line: "public",
+    line_rank: 1,
+    major: 4,
+    minor: 44,
+    patch: 0,
+    release_kind: "minor",
+    breaking: false,
+    released_at: "2026-11-17T23:59:00.000+00:00",
+    created_at: "2026-11-17T23:59:00.000+00:00",
+    nodes_affected: null,
+    components_added: null,
+    components_modified: null,
+    components_deprecated: null,
+    components_removed: null,
+    components_touched: null,
+    tools_added: null,
+    tools_modified: null,
+    tools_deprecated: null,
+    tools_removed: null,
+    linked_issues: null,
+    total_stable: null,
+    total_deprecated: null,
+    total_alpha: null,
+    changed_by: "claude-code",
+    entry_order: 0,
+  },
+  {
     version: "4.43.0",
     title: "v4.43.0 — the Mzizi Roots 0.8.0 crates reach crates.io",
     description:

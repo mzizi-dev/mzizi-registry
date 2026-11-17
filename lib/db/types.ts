@@ -854,6 +854,22 @@ export interface UbuntuPrincipleRow {
   updated_at: string
 }
 
+/**
+ * One of the seven engineering constraints (bundu-labs/bundu-standards#105): what
+ * every surface must meet, the Ubuntu principles it serves and the check that fails
+ * a surface which does not. Order and ids are fixed; the canonical record lists them.
+ */
+export interface EngineeringConstraintRow {
+  name: string
+  title: string
+  description: string
+  principles: string[]
+  expression: string
+  check: string
+  source: string
+  sort_order: number
+}
+
 export interface UbuntuPrincipleInsert {
   name: string
   shona: string

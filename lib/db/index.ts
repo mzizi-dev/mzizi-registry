@@ -61,6 +61,7 @@ import type {
   HelixStrand,
   UbuntuPillarRow,
   UbuntuPrincipleRow,
+  EngineeringConstraintRow,
 } from "./types"
 
 // ── Component docs, from the manifest ───────────────────────────────
@@ -767,4 +768,11 @@ export async function getUbuntuPillars(): Promise<UbuntuPillarRow[]> {
  */
 export async function getUbuntuPrinciples(): Promise<UbuntuPrincipleRow[]> {
   return doctrineRows<UbuntuPrincipleRow>(DOCTRINE.ubuntuPrinciples)
+}
+
+/**
+ * The seven engineering constraints, in their fixed order, from content/doctrine.
+ */
+export async function getEngineeringConstraints(): Promise<EngineeringConstraintRow[]> {
+  return doctrineRows<EngineeringConstraintRow>(DOCTRINE.engineeringConstraints)
 }
