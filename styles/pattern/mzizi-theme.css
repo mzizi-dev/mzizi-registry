@@ -1,0 +1,189 @@
+/* ════════════════════════════════════════════════════════════════════════════
+ * mzizi-theme.css: the Mzizi look of the button. Opt in; fork it or skip it.
+ *
+ * It targets the attributes the component emits (data-slot, data-variant,
+ * data-size, data-state) and reads values only from tokens.css. The floor
+ * (hit region, focus, reduced motion) is floor.css, loaded beside it.
+ *
+ * Derived from the button's former Tailwind classes, so the look is the same:
+ * the pill shape, text-sm medium, the six variants, the three control heights,
+ * the focus ring (3px, ring at 50%) and the aria-invalid ring. Focus here is the
+ * ring, not an outline: the outline colour is transparent, and the ring carries
+ * the focus. Forced-colors mode still shows the outline from floor.css.
+ * ════════════════════════════════════════════════════════════════════════════ */
+
+[data-slot="button"] {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  margin: 0;
+  padding: 0;
+  border: 1px solid transparent;
+  border-radius: var(--r-full);
+  background-color: transparent;
+  background-clip: padding-box;
+  color: inherit;
+  font-family: inherit;
+  font-size: var(--fs-small);
+  font-weight: 500;
+  line-height: var(--lh-small);
+  white-space: nowrap;
+  text-transform: none;
+  letter-spacing: normal;
+  text-decoration: none;
+  user-select: none;
+
+  svg:not([class*="size-"]) {
+    width: 1rem;
+    height: 1rem;
+  }
+  svg {
+    flex-shrink: 0;
+    pointer-events: none;
+  }
+
+  &:disabled {
+    cursor: default;
+    opacity: 0.5;
+    pointer-events: none;
+  }
+
+  @media (prefers-reduced-motion: no-preference) {
+    transition-property: all;
+    transition-duration: 150ms;
+    transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
+  }
+
+  /* Sizes: the heights are the size roles; the padding is the Mzizi rhythm. */
+  &[data-size="default"] {
+    gap: 0.5rem;
+    height: var(--size-control);
+    padding-inline: 1.25rem;
+    &:has([data-icon="inline-start"]) { padding-left: 1rem; }
+    &:has([data-icon="inline-end"]) { padding-right: 1rem; }
+  }
+  &[data-size="sm"] {
+    gap: 0.5rem;
+    height: var(--size-control-sm);
+    padding-inline: 1rem;
+    &:has([data-icon="inline-start"]) { padding-left: 0.875rem; }
+    &:has([data-icon="inline-end"]) { padding-right: 0.875rem; }
+  }
+  &[data-size="lg"] {
+    gap: 0.5rem;
+    height: var(--size-control-lg);
+    padding-inline: 1.5rem;
+    &:has([data-icon="inline-start"]) { padding-left: 1.25rem; }
+    &:has([data-icon="inline-end"]) { padding-right: 1.25rem; }
+  }
+  &[data-size="icon"] {
+    width: var(--size-control-icon);
+    height: var(--size-control-icon);
+    padding: 0;
+  }
+  &[data-size="icon-sm"] {
+    width: var(--size-control-sm);
+    height: var(--size-control-sm);
+    padding: 0;
+  }
+
+  /* Variants */
+  &[data-variant="default"] {
+    background-color: var(--primary);
+    color: var(--primary-foreground);
+    @media (hover: hover) {
+      &:hover { background-color: color-mix(in oklab, var(--primary) 80%, transparent); }
+    }
+  }
+
+  &[data-variant="outline"] {
+    border-color: var(--border);
+    background-color: color-mix(in oklab, var(--input) 30%, transparent);
+    @media (hover: hover) {
+      &:hover {
+        background-color: color-mix(in oklab, var(--input) 50%, transparent);
+        color: var(--foreground);
+      }
+    }
+    &[aria-expanded="true"] {
+      background-color: var(--muted);
+      color: var(--foreground);
+    }
+  }
+
+  &[data-variant="secondary"] {
+    background-color: var(--secondary);
+    color: var(--secondary-foreground);
+    @media (hover: hover) {
+      &:hover { background-color: color-mix(in oklab, var(--secondary) 80%, transparent); }
+    }
+    &[aria-expanded="true"] {
+      background-color: var(--secondary);
+      color: var(--secondary-foreground);
+    }
+  }
+
+  &[data-variant="ghost"] {
+    @media (hover: hover) {
+      &:hover {
+        background-color: var(--muted);
+        color: var(--foreground);
+      }
+    }
+    &[aria-expanded="true"] {
+      background-color: var(--muted);
+      color: var(--foreground);
+    }
+  }
+  :is(.dark, [data-theme="dark"]) &[data-variant="ghost"]:hover {
+    background-color: color-mix(in oklab, var(--muted) 50%, transparent);
+  }
+
+  &[data-variant="destructive"] {
+    background-color: color-mix(in oklab, var(--destructive) 10%, transparent);
+    color: var(--destructive);
+    @media (hover: hover) {
+      &:hover { background-color: color-mix(in oklab, var(--destructive) 20%, transparent); }
+    }
+    &:focus-visible {
+      border-color: color-mix(in oklab, var(--destructive) 40%, transparent);
+      box-shadow: 0 0 0 3px color-mix(in oklab, var(--destructive) 20%, transparent);
+    }
+  }
+  :is(.dark, [data-theme="dark"]) &[data-variant="destructive"] {
+    background-color: color-mix(in oklab, var(--destructive) 20%, transparent);
+    &:focus-visible { box-shadow: 0 0 0 3px color-mix(in oklab, var(--destructive) 40%, transparent); }
+    @media (hover: hover) {
+      &:hover { background-color: color-mix(in oklab, var(--destructive) 30%, transparent); }
+    }
+  }
+
+  &[data-variant="link"] {
+    color: var(--primary);
+    text-decoration-line: none;
+    text-underline-offset: 4px;
+    @media (hover: hover) {
+      &:hover { text-decoration-line: underline; }
+    }
+  }
+
+  /* States last: the focus ring and the invalid ring win over the variant border, as the
+     Tailwind variant order did. */
+  &:focus-visible {
+    outline-color: transparent;
+    border-color: var(--ring);
+    box-shadow: 0 0 0 3px color-mix(in oklab, var(--ring) 50%, transparent);
+  }
+
+  &[aria-invalid="true"] {
+    border-color: var(--destructive);
+    box-shadow: 0 0 0 3px color-mix(in oklab, var(--destructive) 20%, transparent);
+    /* the invalid border beats the destructive variant's focus border, as before */
+    &:focus-visible { border-color: var(--destructive); }
+  }
+  :is(.dark, [data-theme="dark"]) &[aria-invalid="true"] {
+    border-color: color-mix(in oklab, var(--destructive) 50%, transparent);
+    box-shadow: 0 0 0 3px color-mix(in oklab, var(--destructive) 40%, transparent);
+  }
+}

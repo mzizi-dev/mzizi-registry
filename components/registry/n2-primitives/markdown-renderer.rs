@@ -1,12 +1,12 @@
-//! MARKDOWN RENDERER — N2 primitive, Dioxus.
+//! MARKDOWN RENDERER — N2 primitive, Mzizi Roots.
 //!
 //! The Rust build of `contracts/ui/markdown-renderer.contract.json`, beside
 //! `markdown-renderer.astro` and `markdown-renderer.tsx` (which share `markdown-parse.ts`).
 //!
 //! Safe by construction. The Markdown is parsed into a typed tree ([`Block`], [`Inline`]) and
-//! the tree is rendered as Dioxus elements, so every piece of text is a text node and every
-//! address an attribute, both escaped by the renderer. There is no HTML string and no
-//! `dangerous_inner_html`. Raw HTML in the source is text. Links pass [`safe_link`], an
+//! the tree is rendered as [`Node`] elements, so every piece of text is a text node and every
+//! address an attribute, both escaped by the runtime. There is no raw-HTML path. Raw HTML in the
+//! source is text. Links pass [`safe_link`], an
 //! allow-list of schemes; a refused link keeps its words and loses its address, and a kept one
 //! shows its address on hover (`title`), normalised so an IDN look-alike host reads as punycode.
 //!
@@ -17,71 +17,10 @@
 //! values and never a DOM.
 //!
 //! Written against the contract, NOT machine-translated from the `.tsx` (registry issue #222,
-//! rule 1). Self-contained, like every file in this crate.
+//! rule 1). Unstyled: the output carries `data-slot`, `data-align` and the semantic elements, and
+//! no class names; a stylesheet decides the look.
 
-use dioxus::prelude::*;
-
-/// The escaping HTML writer `render` uses, inlined so this file installs on its own.
-///
-/// It is a copy of `mzizi-ui/src/html.rs`, which is the reference and carries the unit tests.
-/// A test in `html.rs` holds the two to the same output on the five escaped characters and on
-/// non-ASCII text, so the copies cannot drift without a test failing.
-mod html {
-    /// Escape `value` for text and double-quoted attribute values: `&`, `<`, `>`, `"` and `'`
-    /// become decimal references; everything else, including non-ASCII, is written unchanged.
-    fn escape_into(out: &mut String, value: &str) {
-        for c in value.chars() {
-            match c {
-                '&' => out.push_str("&#38;"),
-                '<' => out.push_str("&#60;"),
-                '>' => out.push_str("&#62;"),
-                '"' => out.push_str("&#34;"),
-                '\'' => out.push_str("&#39;"),
-                _ => out.push(c),
-            }
-        }
-    }
-
-    /// Write an opening tag with its attributes, in the order given. Values are escaped.
-    pub(super) fn open(out: &mut String, tag: &str, attrs: &[(&str, &str)]) {
-        out.push('<');
-        out.push_str(tag);
-        for (name, value) in attrs {
-            out.push(' ');
-            out.push_str(name);
-            out.push_str("=\"");
-            escape_into(out, value);
-            out.push('"');
-        }
-        out.push('>');
-    }
-
-    /// Write a closing tag.
-    pub(super) fn close(out: &mut String, tag: &str) {
-        out.push_str("</");
-        out.push_str(tag);
-        out.push('>');
-    }
-
-    /// Write a void element, self-closed as `dioxus-ssr` writes it: `<br/>`, `<hr class="…"/>`.
-    pub(super) fn void(out: &mut String, tag: &str, attrs: &[(&str, &str)]) {
-        out.push('<');
-        out.push_str(tag);
-        for (name, value) in attrs {
-            out.push(' ');
-            out.push_str(name);
-            out.push_str("=\"");
-            escape_into(out, value);
-            out.push('"');
-        }
-        out.push_str("/>");
-    }
-
-    /// Write text content, escaped.
-    pub(super) fn text(out: &mut String, value: &str) {
-        escape_into(out, value);
-    }
-}
+use crate::node::{Node, render_to_string};
 
 // ─── The tree ───────────────────────────────────────────────────────────────────────────────
 
@@ -218,64 +157,6 @@ const BUDGET_BASE: usize = 100_000;
 const BUDGET_PER_CHAR: usize = 32;
 
 // ─── Classes (the same strings as `MARKDOWN_CLASSES` in markdown-parse.ts) ──────────────────
-
-/// The classes each part carries; `tests/contract.rs` checks they match the TypeScript.
-pub mod classes {
-    /// The root.
-    pub const ROOT: &str = "text-sm leading-relaxed text-foreground";
-    /// A paragraph.
-    pub const P: &str = "leading-7 [&:not(:first-child)]:mt-4";
-    /// `h1` to `h6`.
-    pub const H: [&str; 6] = [
-        "font-serif text-3xl font-bold tracking-tight mt-8 mb-4 first:mt-0",
-        "font-serif text-2xl font-semibold tracking-tight mt-6 mb-3 first:mt-0",
-        "font-serif text-xl font-semibold mt-5 mb-2 first:mt-0",
-        "text-lg font-semibold mt-4 mb-2 first:mt-0",
-        "text-base font-semibold mt-3 mb-1 first:mt-0",
-        "text-sm font-semibold mt-3 mb-1 first:mt-0 text-muted-foreground",
-    ];
-    /// A bulleted list.
-    pub const UL: &str = "my-4 list-disc space-y-2 pl-6";
-    /// A numbered list.
-    pub const OL: &str = "my-4 list-decimal space-y-2 pl-6";
-    /// Added to a nested list.
-    pub const NESTED: &str = "mt-1 mb-0";
-    /// A blockquote.
-    pub const QUOTE: &str = "my-4 border-l-4 border-border pl-4 italic text-muted-foreground";
-    /// Fenced code.
-    pub const PRE: &str =
-        "my-4 overflow-x-auto rounded-[var(--radius-xl,17px)] bg-muted/50 p-4 font-mono text-sm";
-    /// A code span.
-    pub const CODE: &str =
-        "rounded-[var(--radius-md,12px)] bg-muted px-1.5 py-0.5 font-mono text-sm";
-    /// A link.
-    pub const A: &str = "text-primary underline underline-offset-4 transition-colors hover:text-primary/80 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ring";
-    /// A rule.
-    pub const HR: &str = "my-6 border-border";
-    /// The box a table scrolls in.
-    pub const TABLE_WRAP: &str = "my-4 w-full overflow-x-auto";
-    /// A table.
-    pub const TABLE: &str = "w-full border-collapse text-sm";
-    /// A header cell.
-    pub const TH: &str = "border border-border px-3.5 py-3.5 font-medium";
-    /// A body cell.
-    pub const TD: &str = "border border-border px-3.5 py-3.5";
-    /// Left, centre and right alignment.
-    pub const LEFT: &str = "text-left";
-    /// Centre.
-    pub const CENTER: &str = "text-center";
-    /// Right.
-    pub const RIGHT: &str = "text-right";
-}
-
-fn cell_class(base: &str, align: Option<Align>) -> String {
-    let a = match align {
-        None | Some(Align::Left) => classes::LEFT,
-        Some(Align::Center) => classes::CENTER,
-        Some(Align::Right) => classes::RIGHT,
-    };
-    format!("{base} {a}")
-}
 
 /// The heading level (1–6) a Markdown level renders at, shifted by `heading_base`.
 #[must_use]
@@ -2612,203 +2493,7 @@ pub fn markdown_blocks(content: &str, links: MarkdownLinks, from: MarkdownSource
 
 // ─── Rendering ──────────────────────────────────────────────────────────────────────────────
 
-fn render_inlines(c: &[Inline]) -> Element {
-    rsx! {
-        for x in c.iter() {
-            {render_inline(x)}
-        }
-    }
-}
-
-fn render_inline(x: &Inline) -> Element {
-    match x {
-        Inline::Text(v) => rsx! { "{v}" },
-        Inline::Code(v) => rsx! { code { class: classes::CODE, "{v}" } },
-        Inline::Strong(c) => rsx! { strong { {render_inlines(c)} } },
-        Inline::Em(c) => rsx! { em { {render_inlines(c)} } },
-        Inline::Link {
-            href,
-            title,
-            children,
-        } => {
-            if is_external(href) {
-                rsx! {
-                    a {
-                        href: "{href}",
-                        title: "{title}",
-                        class: classes::A,
-                        target: "_blank",
-                        rel: "noopener noreferrer",
-                        {render_inlines(children)}
-                    }
-                }
-            } else {
-                rsx! { a { href: "{href}", title: "{title}", class: classes::A, {render_inlines(children)} } }
-            }
-        }
-    }
-}
-
-fn render_lines(lines: &[Vec<Inline>]) -> Element {
-    rsx! {
-        for (j, l) in lines.iter().enumerate() {
-            if j > 0 {
-                br {}
-            }
-            {render_inlines(l)}
-        }
-    }
-}
-
-fn render_list_child(child: &ListChild) -> Element {
-    match child {
-        ListChild::List(sub) => render_list(sub, true),
-        ListChild::Lines(lines) => render_lines(lines),
-    }
-}
-
-fn render_list(list: &List, nested: bool) -> Element {
-    let class = match (list.ordered, nested) {
-        (true, false) => classes::OL.to_owned(),
-        (true, true) => format!("{} {}", classes::OL, classes::NESTED),
-        (false, false) => classes::UL.to_owned(),
-        (false, true) => format!("{} {}", classes::UL, classes::NESTED),
-    };
-    let items = rsx! {
-        for it in list.items.iter() {
-            li {
-                {render_lines(&it.lines)}
-                for sub in it.children.iter() {
-                    {render_list_child(sub)}
-                }
-            }
-        }
-    };
-    if !list.ordered {
-        rsx! { ul { class, {items} } }
-    } else if list.start == 1 {
-        rsx! { ol { class, {items} } }
-    } else {
-        let start = list.start.to_string();
-        rsx! { ol { class, start, {items} } }
-    }
-}
-
-fn render_heading(level: u8, c: &[Inline]) -> Element {
-    let inner = render_inlines(c);
-    let class = classes::H[usize::from(level.clamp(1, 6)) - 1];
-    match level {
-        1 => rsx! { h1 { class, {inner} } },
-        2 => rsx! { h2 { class, {inner} } },
-        3 => rsx! { h3 { class, {inner} } },
-        4 => rsx! { h4 { class, {inner} } },
-        5 => rsx! { h5 { class, {inner} } },
-        _ => rsx! { h6 { class, {inner} } },
-    }
-}
-
-fn render_blocks(blocks: &[Block], heading_base: u8) -> Element {
-    rsx! {
-        for b in blocks.iter() {
-            {render_block(b, heading_base)}
-        }
-    }
-}
-
-fn render_block(b: &Block, heading_base: u8) -> Element {
-    match b {
-        Block::Paragraph(lines) => rsx! { p { class: classes::P, {render_lines(lines)} } },
-        Block::Heading { level, children } => {
-            render_heading(heading_level(*level, heading_base), children)
-        }
-        Block::List(list) => render_list(list, false),
-        Block::Quote(children) => rsx! {
-            blockquote { class: classes::QUOTE, {render_blocks(children, heading_base)} }
-        },
-        Block::Code { lang, text } => {
-            if lang.is_empty() {
-                rsx! { pre { class: classes::PRE, code { "{text}" } } }
-            } else {
-                rsx! { pre { class: classes::PRE, code { "data-language": "{lang}", "{text}" } } }
-            }
-        }
-        Block::Rule => rsx! { hr { class: classes::HR } },
-        Block::Table { align, head, rows } => {
-            let col = |k: usize| align.get(k).copied().flatten();
-            rsx! {
-                div { class: classes::TABLE_WRAP,
-                    table { class: classes::TABLE,
-                        thead {
-                            tr {
-                                for (k, cell) in head.iter().enumerate() {
-                                    th { scope: "col", class: cell_class(classes::TH, col(k)), {render_inlines(cell)} }
-                                }
-                            }
-                        }
-                        tbody {
-                            for row in rows.iter() {
-                                tr {
-                                    for (k, cell) in row.iter().enumerate() {
-                                        td { class: cell_class(classes::TD, col(k)), {render_inlines(cell)} }
-                                    }
-                                }
-                            }
-                        }
-                    }
-                }
-            }
-        }
-    }
-}
-
-fn join(base: &str, extra: &str) -> String {
-    if extra.is_empty() {
-        base.to_owned()
-    } else {
-        format!("{base} {extra}")
-    }
-}
-
-/// Props for [`MarkdownRenderer`].
-#[derive(Props, Clone, PartialEq)]
-pub struct MarkdownRendererProps {
-    /// The Markdown to show. Untrusted text is fine: it is never parsed as HTML.
-    #[props(into)]
-    pub content: String,
-    /// Which link addresses are kept.
-    #[props(default)]
-    pub links: MarkdownLinks,
-    /// What `content` is: Markdown, or an editor's HTML read into Markdown first.
-    #[props(default)]
-    pub from: MarkdownSource,
-    /// The heading level a `#` heading renders at (1–6).
-    #[props(default = 1)]
-    pub heading_base: u8,
-    /// Extra classes, appended last.
-    #[props(default)]
-    pub class: String,
-    /// Any other attribute.
-    #[props(extends = GlobalAttributes)]
-    pub attributes: Vec<Attribute>,
-}
-
-/// Markdown, parsed into a typed tree and rendered as elements.
-#[component]
-pub fn MarkdownRenderer(props: MarkdownRendererProps) -> Element {
-    let blocks = markdown_blocks(&props.content, props.links, props.from);
-    rsx! {
-        div {
-            "data-slot": "markdown-renderer",
-            "data-portal": "https://mzizi.dev/components/markdown-renderer",
-            class: join(classes::ROOT, &props.class),
-            ..props.attributes,
-            {render_blocks(&blocks, props.heading_base)}
-        }
-    }
-}
-
-/// The Dioxus-free render path: the props a [`render`] call takes, the same as
-/// [`MarkdownRendererProps`] without the free-form attributes.
+/// The props a render takes: the same as the component's, with `class` as a pass-through.
 #[derive(Debug, Clone, PartialEq, Eq)]
 pub struct RenderProps {
     /// The Markdown to show. Untrusted text is fine: it is never parsed as HTML.
@@ -2819,7 +2504,7 @@ pub struct RenderProps {
     pub from: MarkdownSource,
     /// The heading level a `#` heading renders at (1–6).
     pub heading_base: u8,
-    /// Extra classes, appended last.
+    /// Extra classes, passed through as the `class` attribute when not empty.
     pub class: String,
 }
 
@@ -2835,212 +2520,189 @@ impl Default for RenderProps {
     }
 }
 
-/// Render Markdown to an HTML string, with no Dioxus and no WASM.
-///
-/// Byte-identical to `dioxus-ssr` rendering [`MarkdownRenderer`] with the same props, for the
-/// cases `mzizi-ui/tests/render_parity.rs` covers. The text is parsed by the same
-/// [`markdown_blocks`] both paths use, and every text node and attribute value is escaped.
-#[must_use]
-pub fn render(props: &RenderProps) -> String {
-    let blocks = markdown_blocks(&props.content, props.links, props.from);
-    let class = join(classes::ROOT, &props.class);
-    let mut out = String::with_capacity(props.content.len() * 2 + 256);
-    html::open(
-        &mut out,
-        "div",
-        &[
-            ("data-slot", "markdown-renderer"),
-            (
-                "data-portal",
-                "https://mzizi.dev/components/markdown-renderer",
-            ),
-            ("class", class.as_str()),
-        ],
-    );
-    write_blocks(&mut out, &blocks, props.heading_base);
-    html::close(&mut out, "div");
-    out
+/// The `data-align` value a table cell takes from its column's alignment, when it has one.
+fn align_attr(align: Option<Align>) -> Option<&'static str> {
+    align.map(|a| match a {
+        Align::Left => "left",
+        Align::Center => "center",
+        Align::Right => "right",
+    })
 }
 
-fn write_inlines(out: &mut String, c: &[Inline]) {
-    for x in c {
-        write_inline(out, x);
-    }
-}
-
-fn write_inline(out: &mut String, x: &Inline) {
-    match x {
-        Inline::Text(v) => html::text(out, v),
-        Inline::Code(v) => {
-            html::open(out, "code", &[("class", classes::CODE)]);
-            html::text(out, v);
-            html::close(out, "code");
-        }
-        Inline::Strong(c) => {
-            html::open(out, "strong", &[]);
-            write_inlines(out, c);
-            html::close(out, "strong");
-        }
-        Inline::Em(c) => {
-            html::open(out, "em", &[]);
-            write_inlines(out, c);
-            html::close(out, "em");
-        }
-        Inline::Link {
-            href,
-            title,
-            children,
-        } => {
-            if is_external(href) {
-                html::open(
-                    out,
-                    "a",
-                    &[
-                        ("href", href.as_str()),
-                        ("title", title.as_str()),
-                        ("class", classes::A),
-                        ("target", "_blank"),
-                        ("rel", "noopener noreferrer"),
-                    ],
-                );
-            } else {
-                html::open(
-                    out,
-                    "a",
-                    &[
-                        ("href", href.as_str()),
-                        ("title", title.as_str()),
-                        ("class", classes::A),
-                    ],
-                );
-            }
-            write_inlines(out, children);
-            html::close(out, "a");
-        }
-    }
-}
-
-/// The lines of a paragraph, item or cell, each a hard break apart.
-fn write_lines(out: &mut String, lines: &[Vec<Inline>]) {
-    for (j, l) in lines.iter().enumerate() {
-        if j > 0 {
-            html::void(out, "br", &[]);
-        }
-        write_inlines(out, l);
-    }
-}
-
-fn write_list(out: &mut String, list: &List, nested: bool) {
-    let class = match (list.ordered, nested) {
-        (true, false) => classes::OL.to_owned(),
-        (true, true) => format!("{} {}", classes::OL, classes::NESTED),
-        (false, false) => classes::UL.to_owned(),
-        (false, true) => format!("{} {}", classes::UL, classes::NESTED),
-    };
-    let tag = if list.ordered { "ol" } else { "ul" };
-    let start = list.start.to_string();
-    if list.ordered && list.start != 1 {
-        html::open(
-            out,
-            tag,
-            &[("class", class.as_str()), ("start", start.as_str())],
-        );
-    } else {
-        html::open(out, tag, &[("class", class.as_str())]);
-    }
-    for it in &list.items {
-        html::open(out, "li", &[]);
-        write_lines(out, &it.lines);
-        for child in &it.children {
-            match child {
-                ListChild::List(sub) => write_list(out, sub, true),
-                ListChild::Lines(lines) => write_lines(out, lines),
-            }
-        }
-        html::close(out, "li");
-    }
-    html::close(out, tag);
-}
-
-fn write_heading(out: &mut String, level: u8, c: &[Inline]) {
-    let class = classes::H[usize::from(level.clamp(1, 6)) - 1];
-    let tag = match level {
+/// The tag for a heading level, 1 to 6.
+fn heading_tag(level: u8) -> &'static str {
+    match level {
         1 => "h1",
         2 => "h2",
         3 => "h3",
         4 => "h4",
         5 => "h5",
         _ => "h6",
-    };
-    html::open(out, tag, &[("class", class)]);
-    write_inlines(out, c);
-    html::close(out, tag);
-}
-
-fn write_blocks(out: &mut String, blocks: &[Block], heading_base: u8) {
-    for b in blocks {
-        write_block(out, b, heading_base);
     }
 }
 
-fn write_block(out: &mut String, b: &Block, heading_base: u8) {
+fn inline_nodes(c: &[Inline]) -> Vec<Node> {
+    c.iter().map(inline_node).collect()
+}
+
+fn inline_node(x: &Inline) -> Node {
+    match x {
+        Inline::Text(v) => Node::text(v.as_str()),
+        Inline::Code(v) => Node::element("code", &[], vec![Node::text(v.as_str())]),
+        Inline::Strong(c) => Node::element("strong", &[], inline_nodes(c)),
+        Inline::Em(c) => Node::element("em", &[], inline_nodes(c)),
+        Inline::Link {
+            href,
+            title,
+            children,
+        } => {
+            let mut attrs = vec![("href", href.as_str()), ("title", title.as_str())];
+            if is_external(href) {
+                attrs.push(("target", "_blank"));
+                attrs.push(("rel", "noopener noreferrer"));
+            }
+            Node::element("a", &attrs, inline_nodes(children))
+        }
+    }
+}
+
+/// The lines of a paragraph, item or cell, each a hard break apart.
+fn lines_nodes(lines: &[Vec<Inline>]) -> Vec<Node> {
+    let mut out = Vec::new();
+    for (j, l) in lines.iter().enumerate() {
+        if j > 0 {
+            out.push(Node::element("br", &[], vec![]));
+        }
+        out.extend(inline_nodes(l));
+    }
+    out
+}
+
+fn list_node(list: &List) -> Node {
+    let tag = if list.ordered { "ol" } else { "ul" };
+    let start = list.start.to_string();
+    let mut attrs: Vec<(&str, &str)> = Vec::new();
+    if list.ordered && list.start != 1 {
+        attrs.push(("start", start.as_str()));
+    }
+    let items = list
+        .items
+        .iter()
+        .map(|it| {
+            let mut children = lines_nodes(&it.lines);
+            for child in &it.children {
+                match child {
+                    ListChild::List(sub) => children.push(list_node(sub)),
+                    ListChild::Lines(lines) => children.extend(lines_nodes(lines)),
+                }
+            }
+            Node::element("li", &[], children)
+        })
+        .collect();
+    Node::element(tag, &attrs, items)
+}
+
+fn heading_node(level: u8, c: &[Inline]) -> Node {
+    Node::element(heading_tag(level.clamp(1, 6)), &[], inline_nodes(c))
+}
+
+/// One table cell. A header cell carries `scope="col"`; both carry `data-align` when the column
+/// sets an alignment.
+fn cell_node(tag: &'static str, align: Option<Align>, c: &[Inline]) -> Node {
+    let mut attrs: Vec<(&str, &str)> = Vec::new();
+    if tag == "th" {
+        attrs.push(("scope", "col"));
+    }
+    if let Some(a) = align_attr(align) {
+        attrs.push(("data-align", a));
+    }
+    Node::element(tag, &attrs, inline_nodes(c))
+}
+
+fn blocks_nodes(blocks: &[Block], heading_base: u8) -> Vec<Node> {
+    blocks.iter().map(|b| block_node(b, heading_base)).collect()
+}
+
+fn block_node(b: &Block, heading_base: u8) -> Node {
     match b {
-        Block::Paragraph(lines) => {
-            html::open(out, "p", &[("class", classes::P)]);
-            write_lines(out, lines);
-            html::close(out, "p");
-        }
+        Block::Paragraph(lines) => Node::element("p", &[], lines_nodes(lines)),
         Block::Heading { level, children } => {
-            write_heading(out, heading_level(*level, heading_base), children);
+            heading_node(heading_level(*level, heading_base), children)
         }
-        Block::List(list) => write_list(out, list, false),
+        Block::List(list) => list_node(list),
         Block::Quote(children) => {
-            html::open(out, "blockquote", &[("class", classes::QUOTE)]);
-            write_blocks(out, children, heading_base);
-            html::close(out, "blockquote");
+            Node::element("blockquote", &[], blocks_nodes(children, heading_base))
         }
         Block::Code { lang, text } => {
-            html::open(out, "pre", &[("class", classes::PRE)]);
-            if lang.is_empty() {
-                html::open(out, "code", &[]);
+            let code_attrs: Vec<(&str, &str)> = if lang.is_empty() {
+                Vec::new()
             } else {
-                html::open(out, "code", &[("data-language", lang.as_str())]);
-            }
-            html::text(out, text);
-            html::close(out, "code");
-            html::close(out, "pre");
+                vec![("data-language", lang.as_str())]
+            };
+            let code = Node::element("code", &code_attrs, vec![Node::text(text.as_str())]);
+            Node::element("pre", &[], vec![code])
         }
-        Block::Rule => html::void(out, "hr", &[("class", classes::HR)]),
+        Block::Rule => Node::element("hr", &[], vec![]),
         Block::Table { align, head, rows } => {
             let col = |k: usize| align.get(k).copied().flatten();
-            html::open(out, "div", &[("class", classes::TABLE_WRAP)]);
-            html::open(out, "table", &[("class", classes::TABLE)]);
-            html::open(out, "thead", &[]);
-            html::open(out, "tr", &[]);
-            for (k, cell) in head.iter().enumerate() {
-                let class = cell_class(classes::TH, col(k));
-                html::open(out, "th", &[("scope", "col"), ("class", class.as_str())]);
-                write_inlines(out, cell);
-                html::close(out, "th");
-            }
-            html::close(out, "tr");
-            html::close(out, "thead");
-            html::open(out, "tbody", &[]);
-            for row in rows {
-                html::open(out, "tr", &[]);
-                for (k, cell) in row.iter().enumerate() {
-                    let class = cell_class(classes::TD, col(k));
-                    html::open(out, "td", &[("class", class.as_str())]);
-                    write_inlines(out, cell);
-                    html::close(out, "td");
-                }
-                html::close(out, "tr");
-            }
-            html::close(out, "tbody");
-            html::close(out, "table");
-            html::close(out, "div");
+            let head_row = Node::element(
+                "tr",
+                &[],
+                head.iter()
+                    .enumerate()
+                    .map(|(k, cell)| cell_node("th", col(k), cell))
+                    .collect(),
+            );
+            let body = rows
+                .iter()
+                .map(|row| {
+                    Node::element(
+                        "tr",
+                        &[],
+                        row.iter()
+                            .enumerate()
+                            .map(|(k, cell)| cell_node("td", col(k), cell))
+                            .collect(),
+                    )
+                })
+                .collect();
+            let table = Node::element(
+                "table",
+                &[("data-slot", "markdown-table")],
+                vec![
+                    Node::element("thead", &[], vec![head_row]),
+                    Node::element("tbody", &[], body),
+                ],
+            );
+            Node::element("div", &[("data-slot", "markdown-table-wrap")], vec![table])
         }
     }
+}
+
+/// The root element as a node tree: the Markdown, parsed and rendered as elements.
+#[must_use]
+pub fn node(props: &RenderProps) -> Node {
+    let blocks = markdown_blocks(&props.content, props.links, props.from);
+    let mut attrs = vec![
+        ("data-slot", "markdown-renderer"),
+        (
+            "data-portal",
+            "https://mzizi.dev/components/markdown-renderer",
+        ),
+    ];
+    if !props.class.is_empty() {
+        attrs.push(("class", props.class.as_str()));
+    }
+    Node::element("div", &attrs, blocks_nodes(&blocks, props.heading_base))
+}
+
+/// Render Markdown to an HTML string, with no Dioxus and no WASM.
+///
+/// The text is parsed by [`markdown_blocks`], and every text node and attribute value is escaped
+/// by the runtime. A link address is kept only when [`safe_link`] allows it.
+#[must_use]
+pub fn render(props: &RenderProps) -> String {
+    render_to_string(&[node(props)])
 }
 
 /// The contract this build implements, copied by `pnpm contracts:sync` from
@@ -3504,20 +3166,16 @@ mod tests {
 
     #[test]
     fn rendered_markup_has_no_html_from_the_source() {
-        fn app() -> Element {
-            rsx! {
-                MarkdownRenderer {
-                    content: "<script>alert(1)</script>\n\n[x](javascript:alert(2)) <img src=x onerror=alert(3)>"
-                }
-            }
-        }
-        let mut dom = VirtualDom::new(app);
-        dom.rebuild_in_place();
-        let html = dioxus_ssr::render(&dom);
+        let html = render(&RenderProps {
+            content:
+                "<script>alert(1)</script>\n\n[x](javascript:alert(2)) <img src=x onerror=alert(3)>"
+                    .to_owned(),
+            ..RenderProps::default()
+        });
         assert!(!html.contains("<script"), "{html}");
         assert!(!html.contains("<img"), "{html}");
         assert!(!html.contains("javascript:"), "{html}");
-        // The text is there, escaped (dioxus-ssr writes numeric references).
+        // The text is there, escaped (the runtime writes numeric references).
         assert!(html.contains("&#60;script&#62;alert(1)"), "{html}");
     }
 
@@ -3747,12 +3405,10 @@ mod tests {
 
     #[test]
     fn a_link_shows_its_normalised_address_on_hover() {
-        fn app() -> Element {
-            rsx! { MarkdownRenderer { content: "[look-alike](https://\u{430}pple.com/login)" } }
-        }
-        let mut dom = VirtualDom::new(app);
-        dom.rebuild_in_place();
-        let html = dioxus_ssr::render(&dom);
+        let html = render(&RenderProps {
+            content: "[look-alike](https://\u{430}pple.com/login)".to_owned(),
+            ..RenderProps::default()
+        });
         assert!(
             html.contains("title=\"https://xn--pple-43d.com/login\""),
             "{html}"

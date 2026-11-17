@@ -80,4 +80,25 @@ mod tests {
     fn mzizi_keeps_controls_pill() {
         assert_eq!(Roles::RADIUS_CONTROL, 9999);
     }
+
+    #[test]
+    fn families_carry_the_text_tone_and_container_for_text_on_a_surface() {
+        assert_eq!(FAMILIES.len(), 21);
+        let cobalt = FAMILIES.iter().find(|f| f.name == "cobalt").unwrap();
+        assert_eq!(cobalt.hex_light, COBALT_LIGHT);
+        assert_eq!(cobalt.text_light, "#0047AB");
+        assert_eq!(cobalt.text_dark, "#86DCFF");
+        assert_eq!(cobalt.container_light, Some("#E3F2FD"));
+        assert_eq!(cobalt.on_container_light, Some("#002966"));
+        assert_eq!(cobalt.role, Some("Knowledge"));
+    }
+
+    #[test]
+    fn heritage_tones_have_no_container_and_only_the_experimental_seven_carry_ui_tones() {
+        let indigo = FAMILIES.iter().find(|f| f.name == "indigo").unwrap();
+        assert_eq!(indigo.container_dark, None);
+        assert_eq!(indigo.role, None);
+        let ui = FAMILIES.iter().filter(|f| f.ui_light.is_some()).count();
+        assert_eq!(ui, 7);
+    }
 }

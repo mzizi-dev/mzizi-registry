@@ -49,7 +49,9 @@ own change.
 
 **No third-party Rust UI framework (Dioxus, Leptos, Yew) and no Svelte, anywhere** (owner, 2026-10-20 and 2026-11-04:
 "dioxus is out!!!"). Mzizi's Rust components use Mzizi's own render path (`render(props) -> String`,
-`docs/roots/RFC-roots-renderer.md`); some crates still carry the framework until that migration finishes (#635). The guards that refuse Svelte imports stay.
+`docs/roots/RFC-roots-renderer.md`). `mzizi-roots` holds that path and has no Dioxus: its `node` module is the
+element tree and serialiser, and `components` holds the eight components that render through it, unstyled (#710).
+Other crates still carry the framework until their components move (#635, #710). The guards that refuse Svelte imports stay.
 
 **Astro is the default web UI; other stacks get the same component** (owner, 2026-10-05: "Astro
 is our default web ui but other may not use Astro"). Mzizi's own sites and apps are built in
@@ -95,8 +97,8 @@ to the wrong file:
 
 - `mzizi-ui/` at the repo root — a small Cloudflare Worker (`src/index.ts`) that proxies
   `ui.mzizi.dev`, one of two domain-proxy Workers in this repo alongside `mzizi-plus/`.
-- `mzizi-rs/crates/mzizi-ui` — the **Rust component crate** (N2 on the helix; its UI framework is
-  being replaced by Mzizi's own render path, see `docs/roots/RFC-roots-renderer.md`), a
+- `mzizi-rs/crates/mzizi-ui` — the **Rust component crate** (N2 on the helix; its Dioxus components
+  are moving onto `mzizi-roots`, #710, see `docs/roots/RFC-roots-renderer.md`), a
   genuinely different codebase that happens to share the name because both serve node N2's
   viewable surface, one in TypeScript/React and one in Rust.
 

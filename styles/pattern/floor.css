@@ -1,0 +1,40 @@
+/* ════════════════════════════════════════════════════════════════════════════
+ * floor.css: the identity-neutral minimums for [data-slot="button"].
+ *
+ * Every adopter keeps these, whatever theme it brings. They are accessibility
+ * and layout guarantees, not the Mzizi look (that is mzizi-theme.css):
+ *   - the Bundu hit region: the drawn box is never below --target-floor
+ *     (49px on touch, 28px on a desktop with a fine pointer), and the hit
+ *     area is grown with a pseudo-element when the drawn box is smaller;
+ *   - a visible focus indicator on keyboard focus, reading --ring;
+ *   - no motion for a reader who asked for reduced motion.
+ *
+ * It reads only custom properties from tokens.css. It sets no colour, radius,
+ * font, padding or height: those are the theme's, or the adopter's.
+ * ════════════════════════════════════════════════════════════════════════════ */
+
+[data-slot="button"] {
+  position: relative;
+  min-height: var(--target-floor);
+}
+
+[data-slot="button"]::after {
+  content: "";
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: max(100%, var(--target-floor));
+  height: max(100%, var(--target-floor));
+  transform: translate(-50%, -50%);
+}
+
+[data-slot="button"]:focus-visible {
+  outline: 2px solid var(--ring);
+  outline-offset: 2px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  [data-slot="button"] {
+    transition: none;
+  }
+}

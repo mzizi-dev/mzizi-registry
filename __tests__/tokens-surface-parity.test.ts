@@ -400,3 +400,135 @@ describe("the generated palette region", () => {
     ).toEqual([])
   })
 })
+
+/**
+ * The Rust `FAMILIES` record is the one emitter that carries a whole record per
+ * family rather than a colour per name, so it gets the field-level check. A
+ * missing emitter field fails here, by name, without a Rust toolchain: the
+ * struct must declare every field the registry serves, every row must carry
+ * every field, and each value must be the palette's (or the globals CSS's, for
+ * the text tones) for that family.
+ */
+/** The source fields the Rust record reads, across the three palette row shapes. */
+type SourceRow = {
+  name: string
+  role?: string
+  family?: string
+  cssVar?: string
+  containerDark?: string
+  containerLight?: string
+  onContainerDark?: string
+  onContainerLight?: string
+  origin?: string
+  symbolism?: string
+  usage?: string
+  uiDark?: string
+  uiLight?: string
+}
+
+describe("the Rust family record", () => {
+  const RUST = read("mzizi-tokens-rust.rs")
+  const CSS = read("mzizi-tokens-globals.css")
+  const FIELDS = [
+    "name",
+    "role",
+    "family",
+    "css_var",
+    "hex_dark",
+    "hex_light",
+    "container_dark",
+    "container_light",
+    "on_container_dark",
+    "on_container_light",
+    "text_dark",
+    "text_light",
+    "origin",
+    "symbolism",
+    "usage",
+    "ui_dark",
+    "ui_light",
+  ]
+
+  const structBody = RUST.match(/pub struct Family \{([\s\S]*?)\n\}/)?.[1] ?? ""
+  const block = RUST.match(/pub const FAMILIES: \[Family; 21\] = \[([\s\S]*?)\n\];/)?.[1] ?? ""
+  const rows = [...block.matchAll(/Family \{\n([\s\S]*?)\n\s*\},/g)].map((m) => {
+    const row: Record<string, string> = {}
+    for (const f of m[1].matchAll(/^\s*(\w+): (.+?),$/gm)) row[f[1]] = f[2]
+    return row
+  })
+  /** `Some("x")` -> "x", `None` -> null, `"x"` -> "x", a bare identifier -> itself. */
+  const value = (raw: string | undefined): string | null | undefined => {
+    if (raw === undefined) return undefined
+    if (raw === "None") return null
+    const some = raw.match(/^Some\("(.*)"\)$/)
+    if (some) return some[1]
+    const quoted = raw.match(/^"(.*)"$/)
+    return quoted ? quoted[1] : raw
+  }
+  const byName = new Map(rows.map((r) => [value(r.name) as string, r]))
+
+  // The text tones are the ones the globals CSS ships (`--<prefix>-<name>-text`),
+  // light in :root and dark after `.dark,`, so the Rust record cannot disagree
+  // with the CSS a Rust web build loads.
+  const darkAt = CSS.indexOf("\n.dark,")
+  const textOf = (name: string, theme: "light" | "dark") => {
+    const scope = theme === "light" ? CSS.slice(0, darkAt) : CSS.slice(darkAt)
+    const hit = scope.match(new RegExp(`--(?:mineral|heritage|exp)-${name}-text:\\s*(#[0-9a-fA-F]{6})`))
+    return hit?.[1].toUpperCase()
+  }
+
+  it("declares every field the registry serves on the Family struct", () => {
+    const declared = [...structBody.matchAll(/^\s*pub (\w+):/gm)].map((m) => m[1]).sort()
+    expect(declared, "pub struct Family is missing or has extra fields").toEqual([...FIELDS].sort())
+  })
+
+  it("carries every field on each of the 21 rows", () => {
+    expect(rows).toHaveLength(21)
+    for (const row of rows) {
+      expect(Object.keys(row).sort(), `row ${value(row.name)} is missing a field`).toEqual(
+        [...FIELDS].sort()
+      )
+    }
+  })
+
+  it("has the palette's family set, one row each", () => {
+    expect(rows.map((r) => value(r.name)).sort()).toEqual(EXPECTED_ALL)
+  })
+
+  for (const [group, sources] of [
+    ["mineral", minerals],
+    ["heritage", heritageColors],
+    ["experimental", experimentalColors],
+  ] as const) {
+    describe(`${group} rows`, () => {
+      it("match the palette field for field, with the text tones from the globals CSS", () => {
+        for (const src of sources as ReadonlyArray<SourceRow>) {
+          const row = byName.get(src.name)
+          expect(row, `no Family row for ${src.name}`).toBeDefined()
+          const upper = src.name.toUpperCase()
+          const expected = {
+            name: src.name,
+            role: group === "mineral" ? (src.role ?? null) : null,
+            family: group === "mineral" ? (src.family ?? null) : null,
+            css_var: group === "experimental" ? `--color-${src.name}` : (src.cssVar ?? null),
+            hex_dark: `${upper}_DARK`,
+            hex_light: `${upper}_LIGHT`,
+            container_dark: group === "heritage" ? null : (src.containerDark ?? null),
+            container_light: group === "heritage" ? null : (src.containerLight ?? null),
+            on_container_dark: group === "heritage" ? null : (src.onContainerDark ?? null),
+            on_container_light: group === "heritage" ? null : (src.onContainerLight ?? null),
+            text_dark: textOf(src.name, "dark"),
+            text_light: textOf(src.name, "light"),
+            origin: group === "experimental" ? null : (src.origin ?? null),
+            symbolism: group === "experimental" ? null : (src.symbolism ?? null),
+            usage: group === "experimental" ? null : (src.usage ?? null),
+            ui_dark: group === "experimental" ? (src.uiDark ?? null) : null,
+            ui_light: group === "experimental" ? (src.uiLight ?? null) : null,
+          }
+          const actual = Object.fromEntries(FIELDS.map((f) => [f, value(row![f])]))
+          expect(actual, `${src.name} diverged from the palette`).toEqual(expected)
+        }
+      })
+    })
+  }
+})
