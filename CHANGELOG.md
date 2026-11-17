@@ -10,6 +10,13 @@ From 2026-10-04 releases follow the org versioning policy ([nyuchi/.github#80](h
 
 ## [Unreleased]
 
+### Added — the seven engineering constraints join the Ubuntu doctrine (2026-11-17, Refs [#722](https://github.com/mzizi-dev/mzizi-registry/issues/722))
+
+- **New doctrine collection `genetic-code-engineering-constraints`**, beside the Ubuntu pillars and principles: outdoor-readability, connectivity-gradient-design, multilingual-parity, shared-device-awareness, personal-data-sovereignty, no-surveillance-business-model and bundu-floor, in that order. Each record names the Ubuntu principles it serves, what it looks like in a build (`expression`) and the `check` that fails a surface which does not meet it. The ids and order match the canonical ecosystem record (bundu-labs/bundu-standards#105).
+- **Connectivity-gradient design makes offline-first its enforced minimum** (owner, 2026-11-17): a surface whose core tasks do not work offline fails; better connectivity adds to that baseline.
+- `getEngineeringConstraints()` in `lib/db` and `DOCTRINE.engineeringConstraints` read them. A test holds the seven ids and their order, and checks that every principle named is a real one.
+- Not changed yet: the `get_doctrine` MCP topic and an `/api/v1` route that serve them, and the `bundu-design` skill's move to four pillars. Both are tracked on #722.
+
 ### Fixed — the crate publish skips crates marked `publish = false` (2026-11-17, No issue: 4.42.0 publish run failed)
 
 - **`publish-crates.yml` compares the publish order with the publishable workspace members only.** The 4.42.0 run stopped before uploading anything, because `mzizi-css` (the Lightning CSS build tool from #716, `publish = false`) is a workspace member that the publish order rightly leaves out. Members whose `cargo metadata` `publish` is `[]` are now excluded from that check and from the release notes' crate list. No crate was published, so the 0.8.0 crates go out with the next release to `main`.

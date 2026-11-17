@@ -1,0 +1,21 @@
+---
+_schemaVersion: "v1"
+baseLayer: true
+currentVersion: 1
+check: "A surface whose core tasks do not work offline fails. Core tasks are also tested on a throttled 2G profile."
+description: "Design for the whole range of connections, from none to fibre. Offline-first is the enforced minimum: core tasks work with no connection, and better connectivity adds to that baseline."
+dnaRole: "genetic-code"
+doctrineVersion: "4.2.0"
+expression: "Local-first data, queued writes that sync when a connection returns, assets sized for 2G, nothing on a core path that needs the network to answer."
+kind: "engineering-constraint"
+model: "mzizi-dna-helix"
+name: "connectivity-gradient-design"
+node: 10
+owner: "mzizi"
+principles:
+- "survival"
+sort_order: 2
+source: "Owner decision, 2026-11-17 (bundu-labs/bundu-standards#105)"
+strand: "genetic-code"
+title: "Connectivity-gradient design"
+---
