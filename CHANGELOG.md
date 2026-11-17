@@ -10,6 +10,10 @@ From 2026-10-04 releases follow the org versioning policy ([nyuchi/.github#80](h
 
 ## [Unreleased]
 
+### Security — next >= 16.4.5 for GHSA-mfr8-8qww-v76h (2026-11-17, No issue: audit gate red on staging)
+
+- **Dev dependency.** The `next` floor moves from `>=16.4.1` to `>=16.4.5` (the lockfile resolves 16.4.6), which clears a moderate advisory (GHSA-mfr8-8qww-v76h) in 16.4.4. `pnpm audit --audit-level=moderate` passes again; it had failed on `staging`, so the pre-commit audit gate refused every commit. The registry serves no Next.js app; `next` is a build and test dependency only, and nothing the registry or the API serves changes.
+
 ### Changed — the chat and prompt boxes grow by CSS, and an IME's confirming Enter no longer submits (2026-11-14, [#693](https://github.com/mzizi-dev/mzizi-registry/issues/693))
 
 - **`field-sizing: content` replaces the auto-grow JavaScript** in `chat-input` and `prompt-input` (n2-primitives): the textarea grows with its content, stops at the same 160px / 200px caps (`max-h-40` / `max-h-50`), and the resize effect, the textarea ref and the reset-on-send all go. Browsers without `field-sizing` fall back to a single-line box with internal scrolling, the same as an empty box today.
