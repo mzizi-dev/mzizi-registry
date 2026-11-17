@@ -21,6 +21,14 @@ From 2026-10-04 releases follow the org versioning policy ([nyuchi/.github#80](h
 - **`__tests__/tokens-surface-parity.test.ts`** checks the Rust record field by field: the struct declares every field, each of the 21 rows carries every field, and each value matches the palette (text tones match the globals CSS). Removing one emitted field fails the test by name.
 - No crate version change in this release; the workspace version moves in the release step.
 
+### Breaking — `mzizi-discovery` takes the site's identity from `SeoConfig`, not from Mukoko constants (2026-11-17, [#707](https://github.com/mzizi-dev/mzizi-registry/issues/707))
+
+- **New `SeoConfig` fields:** `base_url`, `site_name`, `title_template` (`{title}` and `{site_name}`, filled in one pass), `default_image`, `default_image_width`, `default_image_height`, `default_image_alt`, `twitter_site`, `twitter_creator`, `alternates` (finished absolute URLs, `x-default` included; when set it replaces the list derived from `alternate_locales`) and `locale_alternates` (one `og:locale:alternate` each).
+- **Breaking for struct-literal callers:** `SeoConfig` and `Metadata` have public fields, so a `SeoConfig { … }` literal that does not end in `..Default::default()` no longer compiles. Add `..Default::default()`. `Metadata` gains `site_name`, `twitter_site`, `twitter_creator` and `locale_alternates`, and `og:site_name` now comes from the config.
+- **Defaults are the Mukoko values.** `SeoConfig` implements `Default` by hand, carrying `https://mukoko.com`, `Mukoko`, `{title} — {site_name}`, `/og-default.png` and 1200×630. A default caller gets the same bytes as before: `golden_tests` in `mzizi-seo.rs` checks five configs against the output captured before this change, byte for byte.
+- **Added builders:** `id_ref(id)` (a `{"@id": …}` node reference), `person(id, name, url)` and `web_site(id, name, url)`, so a site can declare a linked `@graph` without hand-built objects. Follow-ups, not in this change: builders for `Organization` and `WebPage`, and the same `SeoConfig` fields in the `.ts` sibling.
+- **Not changed:** the `.ts` sibling in `components/registry/n11-discovery/` keeps its own constants. The crate version does not move in this change; the release step handles it.
+
 ### Changed — the chat and prompt boxes grow by CSS, and an IME's confirming Enter no longer submits (2026-11-14, [#693](https://github.com/mzizi-dev/mzizi-registry/issues/693))
 
 - **`field-sizing: content` replaces the auto-grow JavaScript** in `chat-input` and `prompt-input` (n2-primitives): the textarea grows with its content, stops at the same 160px / 200px caps (`max-h-40` / `max-h-50`), and the resize effect, the textarea ref and the reset-on-send all go. Browsers without `field-sizing` fall back to a single-line box with internal scrolling, the same as an empty box today.

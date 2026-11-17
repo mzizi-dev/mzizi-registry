@@ -36,10 +36,12 @@
 //! is a workaround for one framework's types, not a fact about Open Graph, so
 //! here [`OgType::Product`] simply emits `og:type` as `product` once.
 //!
-//! **`alternates.languages` built from a bare locale list.** Preserved as-is,
-//! including that it emits no `x-default` and does not include the current locale
-//! — changing either alters what crawlers do with a live site, which is a
-//! product decision rather than a porting one.
+//! **`alternates.languages` built from a bare locale list.** The default is
+//! preserved as-is: `alternate_locales` builds `{base_url}/{locale}{path}`, emits
+//! no `x-default` and does not include the current locale. Changing that default
+//! alters what crawlers do with a live site, so it stays a product decision. A
+//! site that needs `x-default` or its own URL scheme sets `alternates` to finished
+//! absolute URLs instead.
 
 use core::fmt::Write as _;
 
@@ -101,16 +103,23 @@ pub const SITE_NAME: &str = "Mukoko";
 /// Open Graph image used when a page supplies none.
 pub const DEFAULT_OG_IMAGE: &str = "/og-default.png";
 
+/// Title template used when a caller does not set one: `"<title> — Mukoko"`.
+const DEFAULT_TITLE_TEMPLATE: &str = "{title} — {site_name}";
+
 /// Everything a caller says about a page.
-#[derive(Debug, Clone, Default)]
+///
+/// Every site field defaults to the Mukoko value this crate was written for, so
+/// `SeoConfig { title, ..Default::default() }` renders exactly what it always has.
+/// A site that is not Mukoko sets the site fields explicitly.
+#[derive(Debug, Clone)]
 pub struct SeoConfig {
-    /// Page title, before ` — Mukoko` is appended.
+    /// Page title, before the site name is added by [`Self::title_template`].
     pub title: String,
     /// Meta description. Omitted entirely when `None`.
     pub description: Option<String>,
-    /// Site-root-relative path, e.g. `/jobs/123`. Joined to [`BASE_URL`].
+    /// Site-root-relative path, e.g. `/jobs/123`. Joined to [`Self::base_url`].
     pub canonical_url: Option<String>,
-    /// Open Graph image URL. Falls back to [`DEFAULT_OG_IMAGE`].
+    /// Open Graph image URL. Falls back to [`Self::default_image`].
     pub og_image: Option<String>,
     /// What kind of thing this page is.
     pub og_type: OgType,
@@ -120,8 +129,64 @@ pub struct SeoConfig {
     pub no_index: bool,
     /// BCP 47 locale of this page.
     pub locale: Option<String>,
-    /// Other locales this page exists in, for `alternates.languages`.
+    /// Other locales this page exists in. Each becomes `{base_url}/{locale}{path}`
+    /// in the alternates, unless [`Self::alternates`] is non-empty.
     pub alternate_locales: Vec<String>,
+    /// The site's origin with no trailing slash, e.g. `https://example.org`.
+    pub base_url: String,
+    /// The site name, for `og:site_name` and for `{site_name}` in the title template.
+    pub site_name: String,
+    /// How the full title is built. `{title}` becomes [`Self::title`] and
+    /// `{site_name}` becomes [`Self::site_name`], in one pass: text inside the title
+    /// is never scanned for placeholders.
+    pub title_template: String,
+    /// Image used when [`Self::og_image`] is absent or empty. Emitted as given, so
+    /// a relative path stays relative.
+    pub default_image: String,
+    /// Width in pixels of the emitted image. The crate cannot measure an image, so
+    /// this describes whichever image is used.
+    pub default_image_width: u32,
+    /// Height in pixels of the emitted image.
+    pub default_image_height: u32,
+    /// `og:image:alt`. `None` means the page title.
+    pub default_image_alt: Option<String>,
+    /// `twitter:site`, e.g. `@example`. Omitted when `None`.
+    pub twitter_site: Option<String>,
+    /// `twitter:creator`, e.g. `@author`. Omitted when `None`.
+    pub twitter_creator: Option<String>,
+    /// Explicit `hreflang` alternates with absolute URLs, `x-default` included. When
+    /// non-empty they replace the list derived from [`Self::alternate_locales`].
+    pub alternates: Vec<Alternate>,
+    /// `og:locale:alternate` values, one meta element each. Omitted when empty.
+    pub locale_alternates: Vec<String>,
+}
+
+impl Default for SeoConfig {
+    /// The Mukoko site: the values the crate has always emitted.
+    fn default() -> Self {
+        Self {
+            title: String::new(),
+            description: None,
+            canonical_url: None,
+            og_image: None,
+            og_type: OgType::default(),
+            twitter_card: TwitterCard::default(),
+            no_index: false,
+            locale: None,
+            alternate_locales: Vec::new(),
+            base_url: BASE_URL.to_owned(),
+            site_name: SITE_NAME.to_owned(),
+            title_template: DEFAULT_TITLE_TEMPLATE.to_owned(),
+            default_image: DEFAULT_OG_IMAGE.to_owned(),
+            default_image_width: 1200,
+            default_image_height: 630,
+            default_image_alt: None,
+            twitter_site: None,
+            twitter_creator: None,
+            alternates: Vec::new(),
+            locale_alternates: Vec::new(),
+        }
+    }
 }
 
 /// One `hreflang` alternate.
@@ -139,7 +204,7 @@ pub struct Alternate {
 /// host may read the fields directly or call [`Metadata::to_head_html`].
 #[derive(Debug, Clone, PartialEq, Eq)]
 pub struct Metadata {
-    /// `"<title> — Mukoko"`.
+    /// The full title, built from the title template: `"<title> — Mukoko"` by default.
     pub title: String,
     /// Meta description, if the caller gave one.
     pub description: Option<String>,
@@ -155,14 +220,22 @@ pub struct Metadata {
     pub locale: String,
     /// The image URL used for both Open Graph and Twitter.
     pub image: String,
-    /// Open Graph image width, fixed at 1200 as in the `.ts`.
+    /// Open Graph image width in pixels (1200 by default, as in the `.ts`).
     pub image_width: u32,
-    /// Open Graph image height, fixed at 630 as in the `.ts`.
+    /// Open Graph image height in pixels (630 by default, as in the `.ts`).
     pub image_height: u32,
-    /// `og:image:alt` — the raw title, not the site-suffixed one.
+    /// `og:image:alt`. The raw title unless the config set one.
     pub image_alt: String,
     /// Twitter card style.
     pub twitter_card: TwitterCard,
+    /// `og:site_name`.
+    pub site_name: String,
+    /// `twitter:site`, when the site has an account.
+    pub twitter_site: Option<String>,
+    /// `twitter:creator`, when the page has an author account.
+    pub twitter_creator: Option<String>,
+    /// `og:locale:alternate` values, in the order given.
+    pub locale_alternates: Vec<String>,
 }
 
 /// Resolve a [`SeoConfig`] into [`Metadata`], applying every default.
@@ -171,11 +244,9 @@ pub struct Metadata {
 /// string falls back to the default (the `.ts` uses `||`, not `??`).
 #[must_use]
 pub fn generate_metadata(config: &SeoConfig) -> Metadata {
-    let full_title = format!("{} — {SITE_NAME}", config.title);
-
     let image = match config.og_image.as_deref() {
         Some(s) if !s.is_empty() => s.to_owned(),
-        _ => DEFAULT_OG_IMAGE.to_owned(),
+        _ => config.default_image.clone(),
     };
 
     let canonical_path = config.canonical_url.as_deref().unwrap_or("");
@@ -183,19 +254,23 @@ pub fn generate_metadata(config: &SeoConfig) -> Metadata {
         .canonical_url
         .as_deref()
         .filter(|s| !s.is_empty())
-        .map(|path| format!("{BASE_URL}{path}"));
+        .map(|path| format!("{}{path}", config.base_url));
 
-    let alternates = config
-        .alternate_locales
-        .iter()
-        .map(|l| Alternate {
-            locale: l.clone(),
-            url: format!("{BASE_URL}/{l}{canonical_path}"),
-        })
-        .collect();
+    let alternates = if config.alternates.is_empty() {
+        config
+            .alternate_locales
+            .iter()
+            .map(|l| Alternate {
+                locale: l.clone(),
+                url: format!("{}/{l}{canonical_path}", config.base_url),
+            })
+            .collect()
+    } else {
+        config.alternates.clone()
+    };
 
     Metadata {
-        title: full_title,
+        title: render_title(&config.title_template, &config.title, &config.site_name),
         description: config.description.clone(),
         canonical,
         alternates,
@@ -203,11 +278,31 @@ pub fn generate_metadata(config: &SeoConfig) -> Metadata {
         og_type: config.og_type,
         locale: config.locale.clone().unwrap_or_else(|| "en".to_owned()),
         image,
-        image_width: 1200,
-        image_height: 630,
-        image_alt: config.title.clone(),
+        image_width: config.default_image_width,
+        image_height: config.default_image_height,
+        image_alt: config
+            .default_image_alt
+            .clone()
+            .unwrap_or_else(|| config.title.clone()),
         twitter_card: config.twitter_card,
+        site_name: config.site_name.clone(),
+        twitter_site: config.twitter_site.clone(),
+        twitter_creator: config.twitter_creator.clone(),
+        locale_alternates: config.locale_alternates.clone(),
     }
+}
+
+/// Fill a title template in one pass.
+///
+/// The template is split on `{title}` before anything is inserted, so the title
+/// and site name are never scanned for placeholders: a title that says
+/// `{site_name}` keeps those characters.
+fn render_title(template: &str, title: &str, site_name: &str) -> String {
+    template
+        .split("{title}")
+        .map(|part| part.replace("{site_name}", site_name))
+        .collect::<Vec<_>>()
+        .join(title)
 }
 
 /// Escape a string for an HTML attribute value.
@@ -285,9 +380,12 @@ impl Metadata {
         if let Some(c) = &self.canonical {
             meta_property(&mut out, "og:url", c);
         }
-        meta_property(&mut out, "og:site_name", SITE_NAME);
+        meta_property(&mut out, "og:site_name", &self.site_name);
         meta_property(&mut out, "og:type", self.og_type.as_str());
         meta_property(&mut out, "og:locale", &self.locale);
+        for locale in &self.locale_alternates {
+            meta_property(&mut out, "og:locale:alternate", locale);
+        }
         meta_property(&mut out, "og:image", &self.image);
         let mut buf = String::new();
         let _ = write!(buf, "{}", self.image_width);
@@ -298,6 +396,12 @@ impl Metadata {
         meta_property(&mut out, "og:image:alt", &self.image_alt);
 
         meta_name(&mut out, "twitter:card", self.twitter_card.as_str());
+        if let Some(site) = &self.twitter_site {
+            meta_name(&mut out, "twitter:site", site);
+        }
+        if let Some(creator) = &self.twitter_creator {
+            meta_name(&mut out, "twitter:creator", creator);
+        }
         meta_name(&mut out, "twitter:title", &self.title);
         if let Some(d) = &self.description {
             meta_name(&mut out, "twitter:description", d);
@@ -616,6 +720,37 @@ pub fn product(
         )
 }
 
+/// A `{"@id": …}` reference to a node declared elsewhere in the same `@graph`.
+///
+/// Use it where one node points at another (a `WebSite`'s publisher, an article's
+/// author) rather than repeating the node.
+#[must_use]
+pub fn id_ref(id: impl Into<String>) -> Json {
+    Json::obj([("@id", Json::s(id))])
+}
+
+/// A `Person` node whose `@id` the caller sets, so other nodes can [`id_ref`] it.
+#[must_use]
+pub fn person(id: impl Into<String>, name: impl Into<String>, url: impl Into<String>) -> SchemaOrg {
+    SchemaOrg::new("Person")
+        .with("@id", Json::s(id))
+        .with("name", Json::s(name))
+        .with("url", Json::s(url))
+}
+
+/// A `WebSite` node whose `@id` the caller sets, so other nodes can [`id_ref`] it.
+#[must_use]
+pub fn web_site(
+    id: impl Into<String>,
+    name: impl Into<String>,
+    url: impl Into<String>,
+) -> SchemaOrg {
+    SchemaOrg::new("WebSite")
+        .with("@id", Json::s(id))
+        .with("name", Json::s(name))
+        .with("url", Json::s(url))
+}
+
 #[cfg(test)]
 mod tests {
     use super::*;
@@ -774,5 +909,273 @@ mod tests {
     fn empty_slice_yields_a_bare_context_not_an_empty_graph() {
         let json = generate_schema_ld(&[]);
         assert_eq!(json, r#"{"@context":"https://schema.org"}"#);
+    }
+}
+
+#[cfg(test)]
+mod golden_tests {
+    //! The byte-identical proof. Each expected string is the output of this crate
+    //! before the site fields were configurable, captured from the Mukoko defaults
+    //! and checked in unchanged. A default caller must still get exactly these bytes.
+    use super::*;
+
+    const GOLDEN_DEFAULT: &str = r#"<title> — Mukoko</title>
+<meta property="og:title" content=" — Mukoko">
+<meta property="og:site_name" content="Mukoko">
+<meta property="og:type" content="website">
+<meta property="og:locale" content="en">
+<meta property="og:image" content="/og-default.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:image:alt" content="">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content=" — Mukoko">
+<meta name="twitter:image" content="/og-default.png">
+"#;
+
+    const GOLDEN_JOBS: &str = r#"<title>Jobs — Mukoko</title>
+<meta name="description" content="Find work in Zimbabwe &amp; beyond">
+<link rel="canonical" href="https://mukoko.com/jobs/1">
+<link rel="alternate" hreflang="sn" href="https://mukoko.com/sn/jobs/1">
+<link rel="alternate" hreflang="nd" href="https://mukoko.com/nd/jobs/1">
+<meta property="og:title" content="Jobs — Mukoko">
+<meta property="og:description" content="Find work in Zimbabwe &amp; beyond">
+<meta property="og:url" content="https://mukoko.com/jobs/1">
+<meta property="og:site_name" content="Mukoko">
+<meta property="og:type" content="article">
+<meta property="og:locale" content="sn-ZW">
+<meta property="og:image" content="/og-default.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:image:alt" content="Jobs">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Jobs — Mukoko">
+<meta name="twitter:description" content="Find work in Zimbabwe &amp; beyond">
+<meta name="twitter:image" content="/og-default.png">
+"#;
+
+    const GOLDEN_ESCAPE: &str = r#"<title>Tom &amp; &quot;Jerry&quot; &lt;script&gt;x&lt;/script&gt; — Mukoko</title>
+<meta name="robots" content="noindex, nofollow">
+<link rel="canonical" href="https://mukoko.com/p/&#39;quoted&#39;">
+<meta property="og:title" content="Tom &amp; &quot;Jerry&quot; &lt;script&gt;x&lt;/script&gt; — Mukoko">
+<meta property="og:url" content="https://mukoko.com/p/&#39;quoted&#39;">
+<meta property="og:site_name" content="Mukoko">
+<meta property="og:type" content="product">
+<meta property="og:locale" content="en">
+<meta property="og:image" content="https://cdn.example/x.png?a=1&amp;b=2">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:image:alt" content="Tom &amp; &quot;Jerry&quot; &lt;script&gt;x&lt;/script&gt;">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Tom &amp; &quot;Jerry&quot; &lt;script&gt;x&lt;/script&gt; — Mukoko">
+<meta name="twitter:image" content="https://cdn.example/x.png?a=1&amp;b=2">
+"#;
+
+    const GOLDEN_EMPTY_IMAGE: &str = r#"<title>Empty — Mukoko</title>
+<meta property="og:title" content="Empty — Mukoko">
+<meta property="og:site_name" content="Mukoko">
+<meta property="og:type" content="website">
+<meta property="og:locale" content="en">
+<meta property="og:image" content="/og-default.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:image:alt" content="Empty">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Empty — Mukoko">
+<meta name="twitter:image" content="/og-default.png">
+"#;
+
+    const GOLDEN_PLAYER_PROFILE: &str = r#"<title>Profile — Mukoko</title>
+<link rel="canonical" href="https://mukoko.com/u/9">
+<link rel="alternate" hreflang="en" href="https://mukoko.com/en/u/9">
+<meta property="og:title" content="Profile — Mukoko">
+<meta property="og:url" content="https://mukoko.com/u/9">
+<meta property="og:site_name" content="Mukoko">
+<meta property="og:type" content="profile">
+<meta property="og:locale" content="en">
+<meta property="og:image" content="/og-default.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:image:alt" content="Profile">
+<meta name="twitter:card" content="player">
+<meta name="twitter:title" content="Profile — Mukoko">
+<meta name="twitter:image" content="/og-default.png">
+"#;
+
+    fn render(config: &SeoConfig) -> String {
+        generate_metadata(config).to_head_html()
+    }
+
+    #[test]
+    fn default_config_is_byte_identical_to_the_pre_change_output() {
+        assert_eq!(render(&SeoConfig::default()), GOLDEN_DEFAULT);
+    }
+
+    #[test]
+    fn jobs_page_is_byte_identical_to_the_pre_change_output() {
+        let config = SeoConfig {
+            title: "Jobs".into(),
+            description: Some("Find work in Zimbabwe & beyond".into()),
+            canonical_url: Some("/jobs/1".into()),
+            og_type: OgType::Article,
+            alternate_locales: vec!["sn".into(), "nd".into()],
+            locale: Some("sn-ZW".into()),
+            ..SeoConfig::default()
+        };
+        assert_eq!(render(&config), GOLDEN_JOBS);
+    }
+
+    #[test]
+    fn escaped_page_is_byte_identical_to_the_pre_change_output() {
+        let config = SeoConfig {
+            title: "Tom & \"Jerry\" <script>x</script>".into(),
+            og_image: Some("https://cdn.example/x.png?a=1&b=2".into()),
+            no_index: true,
+            twitter_card: TwitterCard::Summary,
+            og_type: OgType::Product,
+            canonical_url: Some("/p/'quoted'".into()),
+            ..SeoConfig::default()
+        };
+        assert_eq!(render(&config), GOLDEN_ESCAPE);
+    }
+
+    #[test]
+    fn empty_image_and_canonical_are_byte_identical_to_the_pre_change_output() {
+        let config = SeoConfig {
+            title: "Empty".into(),
+            og_image: Some(String::new()),
+            canonical_url: Some(String::new()),
+            ..SeoConfig::default()
+        };
+        assert_eq!(render(&config), GOLDEN_EMPTY_IMAGE);
+    }
+
+    #[test]
+    fn player_profile_is_byte_identical_to_the_pre_change_output() {
+        let config = SeoConfig {
+            title: "Profile".into(),
+            twitter_card: TwitterCard::Player,
+            og_type: OgType::Profile,
+            alternate_locales: vec!["en".into()],
+            canonical_url: Some("/u/9".into()),
+            ..SeoConfig::default()
+        };
+        assert_eq!(render(&config), GOLDEN_PLAYER_PROFILE);
+    }
+
+    #[test]
+    fn default_site_fields_are_the_mukoko_values() {
+        let c = SeoConfig::default();
+        assert_eq!(c.base_url, BASE_URL);
+        assert_eq!(c.site_name, SITE_NAME);
+        assert_eq!(c.title_template, "{title} — {site_name}");
+        assert_eq!(c.default_image, DEFAULT_OG_IMAGE);
+        assert_eq!((c.default_image_width, c.default_image_height), (1200, 630));
+        assert!(c.default_image_alt.is_none());
+        assert!(c.twitter_site.is_none() && c.twitter_creator.is_none());
+        assert!(c.alternates.is_empty() && c.locale_alternates.is_empty());
+    }
+
+    #[test]
+    fn a_non_mukoko_site_sets_every_site_field_and_emits_it() {
+        let m = generate_metadata(&SeoConfig {
+            title: "Home".into(),
+            canonical_url: Some("/".into()),
+            base_url: "https://example.org".into(),
+            site_name: "Example".into(),
+            title_template: "{title} | {site_name}".into(),
+            default_image: "https://example.org/og.png".into(),
+            default_image_width: 1600,
+            default_image_height: 900,
+            default_image_alt: Some("Example home".into()),
+            twitter_site: Some("@example".into()),
+            twitter_creator: Some("@editor".into()),
+            alternates: vec![
+                Alternate {
+                    locale: "x-default".into(),
+                    url: "https://example.org/".into(),
+                },
+                Alternate {
+                    locale: "fr".into(),
+                    url: "https://example.org/fr/".into(),
+                },
+            ],
+            locale: Some("en_GB".into()),
+            locale_alternates: vec!["fr_FR".into()],
+            ..SeoConfig::default()
+        });
+        let html = m.to_head_html();
+        assert_eq!(m.title, "Home | Example");
+        assert_eq!(m.canonical.as_deref(), Some("https://example.org/"));
+        assert!(
+            !html.contains("Mukoko"),
+            "no Mukoko value may reach a non-Mukoko site"
+        );
+        assert!(html.contains(
+            "<link rel=\"alternate\" hreflang=\"x-default\" href=\"https://example.org/\">\n"
+        ));
+        assert!(html.contains(
+            "<link rel=\"alternate\" hreflang=\"fr\" href=\"https://example.org/fr/\">\n"
+        ));
+        assert!(html.contains("<meta property=\"og:site_name\" content=\"Example\">\n"));
+        assert!(html.contains("<meta property=\"og:locale:alternate\" content=\"fr_FR\">\n"));
+        assert!(
+            html.contains("<meta property=\"og:image\" content=\"https://example.org/og.png\">\n")
+        );
+        assert!(html.contains("<meta property=\"og:image:width\" content=\"1600\">\n"));
+        assert!(html.contains("<meta property=\"og:image:alt\" content=\"Example home\">\n"));
+        assert!(html.contains("<meta name=\"twitter:site\" content=\"@example\">\n"));
+        assert!(html.contains("<meta name=\"twitter:creator\" content=\"@editor\">\n"));
+    }
+
+    #[test]
+    fn explicit_alternates_replace_the_derived_list() {
+        let m = generate_metadata(&SeoConfig {
+            canonical_url: Some("/jobs/1".into()),
+            alternate_locales: vec!["sn".into()],
+            alternates: vec![Alternate {
+                locale: "x-default".into(),
+                url: "https://example.org/jobs/1".into(),
+            }],
+            ..SeoConfig::default()
+        });
+        assert_eq!(
+            m.alternates,
+            vec![Alternate {
+                locale: "x-default".into(),
+                url: "https://example.org/jobs/1".into(),
+            }]
+        );
+    }
+
+    #[test]
+    fn title_template_never_rescans_the_title() {
+        let m = generate_metadata(&SeoConfig {
+            title: "{site_name} notes".into(),
+            ..SeoConfig::default()
+        });
+        assert_eq!(m.title, "{site_name} notes — Mukoko");
+    }
+
+    #[test]
+    fn an_id_reference_points_at_a_node_in_the_graph() {
+        let site = web_site(
+            "https://example.org/#site",
+            "Example",
+            "https://example.org/",
+        )
+        .with("publisher", id_ref("https://example.org/#person"));
+        let author = person(
+            "https://example.org/#person",
+            "Ada",
+            "https://example.org/about",
+        );
+        let out = generate_schema_ld(&[site, author]);
+        assert!(
+            out.contains(r#""publisher":{"@id":"https://example.org/#person"}"#),
+            "{out}"
+        );
+        assert_eq!(out.matches("\"@context\"").count(), 1);
+        assert!(out.contains(r#""@type":"Person""#));
     }
 }
