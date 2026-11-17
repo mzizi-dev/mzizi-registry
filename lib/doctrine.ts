@@ -295,6 +295,7 @@ export const DOCTRINE = {
   removed: "documentation-architecture-removed",
   ubuntuPillars: "genetic-code-ubuntu-pillars",
   ubuntuPrinciples: "genetic-code-ubuntu-principles",
+  engineeringConstraints: "genetic-code-engineering-constraints",
   conventions: "genetic-code-conventions",
   aiInstructions: "ai-instructions",
   documentation: "documentation",
