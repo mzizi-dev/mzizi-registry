@@ -13,4 +13,4 @@ homepage.workspace = true
 workspace = true
 
 [dependencies]
-lightningcss = "1.0.0-alpha.72"
+lightningcss = { version = "1.0.0-alpha.72", default-features = false }
