@@ -97,7 +97,7 @@ All visual design values live in dedicated database tables under the `brand_*` p
 ### Sizing & accessibility tokens
 
 - `styling-icon-sizes` — canonical icon dimensions from xs (12px) through xl (40px), default 20px
-- `styling-touch-targets` — accessibility tier minimums (superseded for the minimum by the Bundu floor below: 49px on touch, 28px on a desktop) with WCAG, Apple HIG, and Material Design citations per row
+- `styling-touch-targets` — accessibility tier minimums (superseded for the minimum by the Bundu floor below: 45px on touch, 24px on a desktop) with WCAG, Apple HIG, and Material Design citations per row
 - `styling-component-specs` — per-component canonical heights, padding, variants, border-radius, and minimum touch targets for primitives like button, input, avatar, badge, card, dialog, toggle, checkbox, tabs
 
 ### Density tokens
@@ -145,33 +145,49 @@ The label on a brand's solid action fill (`primary-foreground` and the roles tha
 
 ## Touch Targets
 
-Owner ruling, 2026-11-02: every interactive control keeps a **49px hit region on touch**. Owner ruling, 2026-11-12 (#660: "yes do the device-based floor, desktop body 15px"): the floor has two pointer tiers, and a desktop (a fine pointer with hover) keeps a **28px hit region and 15px body** (Apple's macOS defaults are a 28 pt control and 13 pt body), captions still 14px. The 49px hit region replaces the 44px floor on a coarse pointer (Apple's Buttons page: "a button needs a hit region of at least 44x44 pt", read 2026-11-01 at developer.apple.com/design/human-interface-guidelines) on touch; the desktop tier stays above the 24px floor of WCAG 2.2 SC 2.5.8. Bundu sets the standard for outdoor reading and for people who find technology hard (older users, African and emerging markets), so the minimum is as high as it can be and one Bundu will stand by.
+Owner ruling, 2026-11-02: every interactive control keeps a hit region of 49px on touch. Owner ruling, 2026-11-12 (#660): the floor has two pointer tiers, and a desktop (a fine pointer with hover) keeps a hit region with 15px body and 14px captions. Owner ruling, 2026-11-19: the hit-area floor is **45px on touch** (3 x 15, above Apple's 44 pt: "a button needs a hit region of at least 44x44 pt", read 2026-11-01 at developer.apple.com/design/human-interface-guidelines) and **24px on a desktop** (3 x 8, WCAG 2.2 SC 2.5.8). The 45px and 24px replace the 49px and 28px of the earlier rulings. The drawn sizes did not change: a control on touch is still drawn at 49px, and a desktop control at 28px or more. Bundu sets the standard for outdoor reading and for people who find technology hard (older users, African and emerging markets), so the minimum is as high as it can be and one Bundu will stand by.
 
-- **Coarse pointer (phones, tablets):** controls are drawn at 49px (the large control 56px), body text is 17px, the hit region is 49px. The gaps between targets stay generous: spacing tokens are untouched.
-- **Desktop density (fine pointer, hover, 64rem and up):** controls are DRAWN 28-40px (`--control-floor`, 28px) and the hit region is 28px (`--target-floor`, lowered by the desktop layer only), so a desktop control's drawn box is its hit region. A native field or select is drawn 32-36px. Body text is 15px, captions stay 14px.
+- **Coarse pointer (phones, tablets):** controls are drawn at 49px (the large control 56px), body text is 17px, and the hit region is 45px. Adjacent controls are 9px apart (the controls layer's between token, see Spacing Floor).
+- **Desktop density (fine pointer, hover, 64rem and up):** controls are DRAWN 28 to 41px (`--control-floor`, 28px) and the hit region is 24px (`--target-floor`, lowered by the desktop layer only), so a desktop control's drawn box holds its hit region. A native field or select is drawn 33 to 36px. Body text is 15px, captions stay 14px.
 - Density is about visual size only. It is never a guess about the network: laptops and iPads are usually on wifi, and the performance budgets do not change with it.
 
 The sizes consumers pinned before 2026-11-01 (48px and 56px targets, 16px body, 12px captions) come back with `data-mzizi-sizes="legacy"` on the root element, until the app has migrated; that attribute steps out of the Bundu floor, so remove it to take it. The older tiers in `styling-touch-targets` (48 accessible, 56 comfortable) are superseded by this section.
 
 ## Spacing Floor
 
-Owner ruling, 2026-11-04 (mzizi-registry#617): the Bundu floor also sets **minimums for space**, that nothing can go under, even a component that sets no padding at all. They are the named values `BUNDU_FLOOR.spacing` in `lib/tokens/roles.source.ts`, on the 7px unit, and `/v1/brand` carries them in `brand_meta.accessibility`.
+Owner ruling, 2026-11-04 (mzizi-registry#617): the Bundu floor also sets **minimums for space**, that nothing can go under, even a component that sets no padding at all. Owner rulings, 2026-11-19: the single 14px inset and 7px gap became one floor per layer, each with a dense step. The values are `BUNDU_FLOOR.spacing` in `lib/tokens/roles.source.ts`, and `/v1/brand` carries them in `brand_meta.accessibility`.
 
-| Floor                    | Value | CSS custom property | Meaning                                                                                                                                                 |
-| ------------------------ | ----- | ------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| Inset (`insetPx`)        | 14px  | `--inset-floor`     | Padding between text and the edge of its container (2 x 7). A control's label on the inline axis; a card, panel, dialog, alert or popover on both axes. |
-| Control gap              | 7px   | `--gap-floor`       | Gap between adjacent interactive controls, visible edge to visible edge. Hit regions may touch, never overlap.                                          |
-| Label gap (`labelGapPx`) | 7px   | `--gap-floor`       | Gap between a label and its field.                                                                                                                      |
-| Item gap (`itemGapPx`)   | 7px   | `--gap-floor`       | Gap between sibling items of a list, grid, stack or toolbar.                                                                                            |
-| Body leading             | 1.5   | `--leading-floor`   | Body line height, never tighter (WCAG 1.4.12). Headings and display type keep their own tighter leading.                                                |
+| Layer      | Token                     | Default | Dense (the floor) | Built from                                  |
+| ---------- | ------------------------- | ------- | ----------------- | ------------------------------------------- |
+| Layout     | `--space-page-x`          | 17px    | none              | prime (M3 compact 16)                       |
+| Layout     | `--space-page-x-wide`     | 28px    | 21px              | 7 x 4 and 7 x 3 (M3 medium and expanded 24) |
+| Layout     | `--space-section`         | 49px    | 28px              | 7 x 7 and 7 x 4 (M3 48)                     |
+| Containers | `--space-container`       | 28px    | 21px              | 7 x 4 and 7 x 3 (M3 dialog 24)              |
+| Containers | `--space-container-gap`   | 21px    | 14px              | 7 x 3 and 7 x 2 (M3 dialog 16)              |
+| Cards      | `--space-card`            | 21px    | 14px              | 7 x 3 and 7 x 2 (M3 card 16)                |
+| Cards      | `--space-card-gap`        | 14px    | 7px               | 7 x 2 and 7 (M3 card gap 8)                 |
+| Cards      | `--space-card-stack`      | 7px     | 7px               | 7 (title to body 4)                         |
+| Controls   | `--space-control-x`       | 17px    | 12px              | prime and 3 x 4 (M3 small button 16)        |
+| Controls   | `--space-field-x`         | 17px    | 12px              | prime and 3 x 4 (M3 text field 16)          |
+| Controls   | `--space-control-gap`     | 9px     | 7px               | 3 x 3 and 7 (M3 icon to label 8)            |
+| Controls   | `--space-control-between` | 9px     | 9px               | 3 x 3 (M3 target spacing 8)                 |
+| Controls   | `--space-label-gap`       | 7px     | 5px               | 7 and prime (label to field 6 to 8)         |
+| Chips      | `--space-chip-x`          | 12px    | 9px               | 3 x 4 and 3 x 3 (M3 chip 12)                |
+| Pills      | `--space-pill-x`          | 9px     | 5px               | 3 x 3 and prime (M3 badge 4)                |
+| Pills      | `--space-pill-gap`        | 5px     | 3px               | prime (4)                                   |
 
-- **Enforced as defaults and as tests.** The base layer of `mzizi-tokens-globals.css` gives a bare control (a `button`, `select`, `textarea`, a text `input`) `padding-inline: var(--inset-floor)`, a bare text surface (a native `dialog`, a `[popover]`, an alert, a tooltip, a card with no structured children) `padding: var(--inset-floor)`, a list, group, toolbar or tablist `gap: var(--gap-floor)`, and `body` `line-height: max(var(--lh-body), var(--leading-floor))`. A utility on the element (`p-6`, `gap-2`) is the author's own value and wins, so the tests hold every explicit value to the floor.
-- **A control's block axis is held by its height.** 14px of block padding does not fit a control drawn at 28px, so a control's vertical room is decided by the 28px drawn and hit-region floors (49px on touch), not by the inset.
+The default is the floor at default density. The dense step is the absolute floor for a density layer, and nothing goes below it. The dense tokens are named `<token>-dense`, for example `--space-card-dense`. The sibling-item gap (`itemGapPx`) is the dense floor of `--space-card-gap`, 7px.
+
+- **The number rule.** Every spacing or size value is a multiple of 3, a multiple of 7, or a prime. A value starts from the recommended one (WCAG, Apple HIG or Material 3) and takes the nearest Mzizi number at or above it: a little larger is fine, lower never is. The hit floors follow it too: 45 is 3 x 15 and 24 is 3 x 8.
+- **Enforced as defaults.** The base layer of `mzizi-tokens-globals.css` gives a bare control (a `button`, `select`, `textarea`, a text `input`) `padding-inline: var(--space-control-x-dense)` (12px); a bare native `dialog`, `[popover]` or alert dialog `padding: var(--space-container-dense)` (21px); a bare card, alert or tooltip `padding: var(--space-card-dense)` (14px); a list, group, toolbar, tablist, menu or listbox `gap: var(--gap-floor)` (7px); and `body` `line-height: max(var(--lh-body), var(--leading-floor))` (1.5). A utility on the element (`p-6`, `gap-2`) is the author's own value and wins, so the tests hold every explicit value to its layer's floor.
+- **The layer-aware checker.** `contracts/runner.ts` and the Rust evaluator check each component against its own layer's dense floor (`SPACING_LAYER_FLOORS`, with the mapping in `COMPONENT_LAYERS`): pills 5 and 3, chips 9 and 7, controls 12, 7, 9 between controls, cards 14 and 7, containers 21 and 14, layout 17 and 21 wide. A component with no known layer keeps the fallback floors, 14px inset (`--inset-floor`) and 7px gap (`--gap-floor`), so enforcement is never weaker than before.
+- **Not enforced at class level yet.** The container gap (14), the layout section gap (28) and the label gap (5) are not checked by the class-level rule. A class like `gap-2` inside a dialog's header is an item gap, not a container gap, and a class-level check cannot tell the two apart. A label's relation to its field is not in the markup. Each needs a structural check that reads what a gap separates.
+- **A control's block axis is held by its height.** The inline padding of a control is its layer's floor, and its vertical room is decided by the drawn and hit-region floors (28px drawn, 45px hit on touch), not by the inset.
 - **Hit regions may touch, never overlap.** The gap floor is measured between visible edges; the `hit-area` overlay of the hit-region floor may reach into neighbouring space as before.
 - **No `p-0`, `gap-0` or negative margin on a text container** without an explicit exception: a `spacing-floor: exception <reason>` comment in a component, or a pinned entry with a reason in the contract runner (today a chart's 1px bars, a joined search-and-submit toolbar, an image that bleeds to a card edge, and inline code).
 - **No brand pack, density layer or component may lower a floor.** `data-mzizi-sizes="legacy"` steps out of it with the other Bundu floors.
 
-`__tests__/spacing-floor.test.ts` fails when the floor numbers differ between `BUNDU_FLOOR`, canon, `/v1/tokens` and the stylesheet, when a density layer lowers a variable, or when the base-layer rules are gone.
+`__tests__/spacing-floor.test.ts` fails when the floor numbers differ between `BUNDU_FLOOR`, canon, `/v1/tokens` and the stylesheet, when a density layer lowers a variable, when a layer value breaks the number rule, or when the TypeScript and Rust layer tables differ.
 
 ## The Bundu Order
 
@@ -179,8 +195,8 @@ The Bundu Order draws on biblical mathematical patterns and prime numbers (owner
 
 - **The unit is 7px** (`--radius-unit`). The radii are 4, 7, 12, 14 and 17px and a pill, and they do not change.
 - **P7 and P17** are prime steps of the surface-elevation ladder (`surface` is P7, `raised` is P17), and the seven experimental families are a heptagon of hues offset 17 degrees.
-- **The floors derive from the same numbers.** Body text is 17px on touch (a prime; Apple's iOS default body size) and 15px on a desktop (owner, 2026-11-12). Captions, metadata and secondary labels are 14px (2 x 7), and nothing readable is smaller. Every interactive control keeps a 49px hit region on touch (7 x 7, above Apple's 44 pt) and a 28px one on a desktop (4 x 7, Apple's macOS default control).
-- **Spacing** floors stand beside them: 14px of inset (2 x 7), 7px gaps (the unit) and 1.5 body leading (see Spacing Floor).
+- **The floors derive from the same numbers.** Body text is 17px on touch (a prime; Apple's iOS default body size) and 15px on a desktop (owner, 2026-11-12). Captions, metadata and secondary labels are 14px (2 x 7), and nothing readable is smaller. Every interactive control keeps a 45px hit region on touch (3 x 15, above Apple's 44 pt) and a 24px one on a desktop (3 x 8, WCAG 2.2 SC 2.5.8), drawn at least 28px (4 x 7, Apple's macOS default control).
+- **Spacing** floors stand beside them: one floor per layer with a dense step, built from the number rule, and 1.5 body leading (see Spacing Floor). The 14px inset and 7px gap remain the fallback for a component with no known layer.
 - **Contrast** floors stand beside them: body text 7:1, non-body text 4.5:1, UI parts 3:1 (see Contrast Minimums).
 
 `__tests__/bundu-floor.test.ts` fails when a default type step, a size role or a desktop control breaks any of these.

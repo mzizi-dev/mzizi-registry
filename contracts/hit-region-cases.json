@@ -44,7 +44,7 @@
       "violations": 1
     },
     {
-      "name": "a native field drawn at 36px on a desktop is fine (28px floor)",
+      "name": "a native field drawn at 36px on a desktop is fine (24px hit floor)",
       "html": "<input class=\"h-field\">",
       "fine": 36,
       "coarse": 49,
