@@ -45,7 +45,7 @@ which still need Dioxus. Turn them off to take only the core:
 
 ```toml
 [dependencies]
-mzizi-roots = { version = "0.7", default-features = false }
+mzizi-roots = { version = "0.8", default-features = false }
 ```
 
 ## Tests
