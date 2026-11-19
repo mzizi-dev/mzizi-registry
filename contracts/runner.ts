@@ -208,8 +208,9 @@ export const ROLE_HEIGHTS: Readonly<Record<string, readonly [number, number]>> =
  * fails when the two disagree, and mzizi-rs/contract-eval holds the same numbers.
  * The floor has two pointer tiers (owner ruling 2026-11-12, #660): `HIT_AREA_PX` is the hit region every
  * interactive control keeps on touch (a coarse pointer); `HIT_AREA_FINE_PX` is the one it keeps on a desktop (a
- * fine pointer with hover), where the drawn box is the hit region; `VISIBLE_FINE_MIN_PX` is the smallest a control
- * is DRAWN at desktop density (equal to `HIT_AREA_FINE_PX`).
+ * fine pointer with hover), where the drawn box is the hit region; `VISIBLE_FINE_MIN_PX` (28px) is the smallest any
+ * interactive element is DRAWN at desktop density. It is larger than `HIT_AREA_FINE_PX`, so a box drawn under it fails
+ * even where its hit region would pass.
  */
 export const HIT_AREA_PX = 45;
 export const HIT_AREA_FINE_PX = 24;
@@ -303,7 +304,7 @@ export function hitViolations(
     under.push(
       `hit region is ${hitRegion(el, at)}px on a coarse pointer, below the ${HIT_AREA_PX}px Bundu floor`,
     );
-  if (carriesHitArea(el) && !clips(el) && fine < VISIBLE_FINE_MIN_PX)
+  if (fine < VISIBLE_FINE_MIN_PX)
     under.push(
       `drawn at ${fine}px on a fine pointer, below the ${VISIBLE_FINE_MIN_PX}px smallest a control is drawn`,
     );
@@ -694,8 +695,9 @@ export function evaluateDensity(
         );
       // The Bundu floor (owner rulings 2026-11-02 and 2026-11-12, #660): every interactive control keeps a
       // HIT_AREA_PX hit region on touch and a HIT_AREA_FINE_PX one on a desktop. A button-like control keeps
-      // it through the `hit-area` pseudo-element; a native field or a link has only its box, so it is drawn
-      // at the tier's floor (a desktop box is never drawn under VISIBLE_FINE_MIN_PX, which is that floor).
+      // it through the `hit-area` pseudo-element; a native field or a link has only its box, so its box is its
+      // hit region. Every interactive element is also drawn at least VISIBLE_FINE_MIN_PX on a desktop (checked in
+      // hitViolations, not here).
       const gap = HIT_AREA_GAPS.includes(`${contract.name}:${row.part}`);
       if (!gap)
         for (const u of hitViolations(el, fine, coarse))
@@ -907,6 +909,8 @@ function childrenAreControls(el: Element): boolean {
  * `contracts/spacing-cases.json` is the shared table both are tested against.
  */
 export function spacingViolations(el: Element, layer?: SpacingLayer): string[] {
+  if (layer !== undefined && !(layer in SPACING_LAYER_FLOORS))
+    throw new Error(`unknown spacing layer "${layer}"`);
   const out: string[] = [];
   const tokens = classOf(el).split(/\s+/).filter(Boolean);
   const text = ownText(el);
@@ -925,7 +929,9 @@ export function spacingViolations(el: Element, layer?: SpacingLayer): string[] {
   const insetFloor = elementLayer
     ? SPACING_LAYER_FLOORS[elementLayer].padding!
     : INSET_FLOOR_PX;
-  // Between adjacent controls is 9px when the children are controls; a pill's gap is 3px; everything else keeps 7px.
+  // Between adjacent controls is 9px when the children are controls, for a component with a layer. A component with
+  // no layer keeps 7 between its children: a 9px rule there would flag a form's label-to-field gap (a 7px gap), so the
+  // control rule stops at the layers. A pill's gap is 3px; everything else keeps the 7px fallback.
   const gapFloor =
     layer && childrenAreControls(el)
       ? SPACING_LAYER_FLOORS.controls.between!

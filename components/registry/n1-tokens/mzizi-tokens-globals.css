@@ -359,7 +359,7 @@
   ); /* the hit-area floor: 45px on touch, 24px on a desktop; no brand can lower it */
   --spacing-inset-floor: var(
     --inset-floor
-  ); /* the inset floor (alias): 14px, the least of any layer; no brand can lower it */
+  ); /* the inset floor (alias): 14px, the fallback for a component with no known layer; no brand can lower it */
   --spacing-gap-floor: var(
     --gap-floor
   ); /* the gap floor: 7px; no brand can lower it */
@@ -984,8 +984,8 @@
   --h-button-sm: 3.0625rem; /* 49px — componentSpecs.button.heights.sm */
   --h-input: 3.0625rem; /* 49px — inputs match the default button */
   --target-floor: 2.8125rem; /* 45px — the Bundu hit region (3 x 15) on touch. The desktop density block lowers it to 24px; nothing else does. */
-  --inset-floor: 0.875rem; /* 14px — the least padding between text and the edge of its container, of any layer (the control chip, 3 x 4). Density never lowers it. */
-  --gap-floor: 0.4375rem; /* 7px — the least gap of any layer (the card stack, the 7px unit). Gaps between controls are 9px. */
+  --inset-floor: 0.875rem; /* 14px — the fallback padding between text and the edge of its container, for a component with no known layer. Density never lowers it. */
+  --gap-floor: 0.4375rem; /* 7px — the fallback gap for a component with no known layer (the 7px unit). Gaps between controls are 9px. */
   --leading-floor: 1.5; /* body line height, never tighter (WCAG 1.4.12). */
   --control-floor: 2.8125rem; /* 45px: the smallest a floored control is drawn; desktop density lowers it to 28px. */
   /* Size roles (#484) — `h-touch`, `min-h-touch-min`, `h-control`… The touch floor is
@@ -1025,8 +1025,8 @@
   --space-pill-x-dense: 0.3125rem; /* 5px — Layer: Pills and badges inline inset. Dense 5px (prime); reference: M3 badge 4. The absolute floor: nothing goes below it. Owner 2026-11-19. */
   --space-pill-gap: 0.3125rem; /* 5px — Layer: Pills and badges gap. Default 5px (prime); reference: 4. The default-density floor. Owner 2026-11-19. */
   --space-pill-gap-dense: 0.1875rem; /* 3px — Layer: Pills and badges gap. Dense 3px (prime and 3 x 1); reference: 2. The absolute floor: nothing goes below it. Owner 2026-11-19. */
-  --space-label-gap: 0.4375rem; /* 7px — Layer: Controls, gap between a label and its field. Default 7px (7); reference: label to field 6 to 8. The default-density floor. Owner 2026-11-19 (the coordinator's derivation from the number rule, for the owner to confirm). */
-  --space-label-gap-dense: 0.3125rem; /* 5px — Layer: Controls, gap between a label and its field. Dense 5px (prime); reference: M3 4. The absolute floor: nothing goes below it. Owner 2026-11-19 (the coordinator's derivation from the number rule, for the owner to confirm). */
+  --space-label-gap: 0.4375rem; /* 7px — Layer: Controls, gap between a label and its field. Default 7px (7); reference: label to field 6 to 8. The default-density floor. Derived from the number rule; pending the owner's confirmation. */
+  --space-label-gap-dense: 0.3125rem; /* 5px — Layer: Controls, gap between a label and its field. Dense 5px (prime); reference: M3 4. The absolute floor: nothing goes below it. Derived from the number rule; pending the owner's confirmation. */
   --size-control: 3.0625rem; /* 49px — Default control height. componentSpecs.button.heights.default. */
   --size-control-sm: 3.0625rem; /* 49px — Small control height. componentSpecs.button.heights.sm. */
   --size-control-lg: 3.5rem; /* 56px — Large control height. componentSpecs.button.heights.lg. */
@@ -1470,7 +1470,7 @@
  * THE SPACING FLOOR (owner, 2026-11-04, #617; one floor per layer with a dense step, owner 2026-11-19; `BUNDU_FLOOR.spacing`):
  * minimums that nothing can go under, even a component that sets no padding at all. A bare control is inset at its dense
  * floor, 12px (`--space-control-x-dense`), a bare card 14px (`--space-card-dense`), a bare
- * dialog, sheet or popover 21px (`--space-container-dense`); the least dense gap of any layer is 7px
+ * dialog, sheet or popover 21px (`--space-container-dense`); the fallback gap for a component with no known layer is 7px
  * (`--gap-floor`), and body leading is 1.5.
  * These are DEFAULTS in the base layer, like the hit-area rule above: a bare element gets the floor, and a utility
  * on it (`p-6`, `gap-2`) is the author's own value, which `__tests__/spacing-floor.test.ts` holds to the floor

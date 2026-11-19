@@ -51,9 +51,9 @@
       "violations": 0
     },
     {
-      "name": "a native field drawn at 23px on a desktop is under the 24px hit floor",
-      "html": "<input class=\"h-5\">",
-      "fine": 23,
+      "name": "a native field drawn at 24px on a desktop is under the 28px drawn floor",
+      "html": "<input class=\"h-6\">",
+      "fine": 24,
       "coarse": 49,
       "violations": 1
     },

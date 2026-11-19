@@ -50,7 +50,7 @@
  * structural, not brand decisions. The scale itself stays structural; its MINIMUMS are not: the spacing floor
  * (`BUNDU_FLOOR.spacing`: a floor per spacing layer, owner ruling 2026-11-19; body leading 1.5) is an invariant no
  * pack can lower. The layer values are the fixed size roles `spacing-control-x` … `spacing-section`, declared as
- * `--space-<name>`; the least of them stays registered as `--inset-floor` and `--gap-floor` (#617), and the
+ * `--space-<name>`; the fallback floors for a component with no known layer stay registered as `--inset-floor` and `--gap-floor` (#617), and the
  * fixed size roles `spacing-inset-floor` and `spacing-gap-floor` alias those two.
  *
  * Values are READ from `brand.source.ts` and `palette.source.ts`, never retyped:
@@ -257,8 +257,9 @@ export interface Role {
  *     layer's dense floor in `SPACING_LAYER_FLOORS` (pills 5 and 3, chips 9, controls 12, cards 14 and 7, containers 21 and
  *     14, layout 17, 21 and 28). A label chip or pill is held on its inline axis by `--space-pill-x` (default 9, dense 5).
  *     `controlGapPx` 9: the gap between adjacent controls, visible edge to visible edge (hit regions may touch, never
- *     overlap). `labelGapPx` 5 and `itemGapPx` 7 are the dense floors of `--space-label-gap` (7 default) and
- *     `--space-card-gap` (14 default), which sibling items of a list, grid or toolbar use (owner 2026-11-19).
+ *     overlap). `labelGapPx` 7 is the global label-to-field floor. Its dense step, 5 (`--space-label-gap-dense`), is pending
+ *     the owner's confirmation. `itemGapPx` 7 is the dense floor of `--space-card-gap` (14 default), which sibling
+ *     items of a list, grid or toolbar use.
  *     `leadingBody` 1.5: body line height (WCAG 1.4.12). Enforced as defaults in the base layer of the stylesheet (at each
  *     layer's dense floor) and as tests on every explicit value.
  *   - `contrast`: WCAG 2 ratios (#610, owner 2026-11-02): body text 7:1, non-body text 4.5:1, UI parts 3:1.
@@ -298,8 +299,8 @@ export const BUNDU_FLOOR = {
     gapPx: 7,
     /** The gap between adjacent controls: 9 at default density, and its dense floor is also 9. */
     controlGapPx: 9,
-    /** Alias of `spacing-label-gap-dense` (`--space-label-gap`, dense 5): the least label-to-field gap. */
-    labelGapPx: 5,
+    /** The global label-to-field floor, 7px (`--space-label-gap`, the default). Its dense step (5) is pending the owner's confirmation. */
+    labelGapPx: 7,
     /** Alias of `spacing-card-gap-dense` (sibling items of a list, grid or toolbar, dense 7). */
     itemGapPx: 7,
     leadingBody: 1.5,
@@ -1892,7 +1893,7 @@ export const ROLES: readonly Role[] = [
     kind: "size",
     required: true,
     description:
-      "Layer: Controls, gap between a label and its field. Default 7px (7); reference: label to field 6 to 8. The default-density floor. Owner 2026-11-19 (the coordinator's derivation from the number rule, for the owner to confirm).",
+      "Layer: Controls, gap between a label and its field. Default 7px (7); reference: label to field 6 to 8. The default-density floor. Derived from the number rule; pending the owner's confirmation.",
     default: { px: BUNDU_FLOOR.spacing.layers.labelGap.px },
     fixed: true,
     space: true,
@@ -1904,7 +1905,7 @@ export const ROLES: readonly Role[] = [
     kind: "size",
     required: true,
     description:
-      "Layer: Controls, gap between a label and its field. Dense 5px (prime); reference: M3 4. The absolute floor: nothing goes below it. Owner 2026-11-19 (the coordinator's derivation from the number rule, for the owner to confirm).",
+      "Layer: Controls, gap between a label and its field. Dense 5px (prime); reference: M3 4. The absolute floor: nothing goes below it. Derived from the number rule; pending the owner's confirmation.",
     default: { px: BUNDU_FLOOR.spacing.layers.labelGap.dense },
     fixed: true,
     space: true,
@@ -2170,7 +2171,7 @@ export const FONTS = {
 /**
  * The hit region every interactive control keeps on touch (the Bundu floor, owner ruling 2026-11-02):
  * `BUNDU_FLOOR.hitAreaPx`, 45px (owner 2026-11-19). It replaces Apple HIG Buttons' 44 pt on a coarse pointer. A desktop keeps the
- * smaller `FLOOR_FINE_HIT_PX` (28px, owner ruling 2026-11-12, #660). Kept under the old name for importers.
+ * smaller `FLOOR_FINE_HIT_PX` (24px, owner ruling 2026-11-19; 28px under #660). Kept under the old name for importers.
  */
 export const FLOOR_COARSE_PX = BUNDU_FLOOR.hitAreaPx;
 /** The smallest a control is DRAWN under desktop density, px. */

@@ -1286,7 +1286,7 @@ export const brandMeta: BrandMeta = {
     // source; the build fails if these disagree.
     minInset: 14,
     minControlGap: 9,
-    minLabelGap: 5,
+    minLabelGap: 7,
     minItemGap: 7,
     minBodyLeading: 1.5,
     keyboardNavigation: "Full keyboard support via Radix UI primitives",
@@ -1339,29 +1339,29 @@ export const brandMeta: BrandMeta = {
       heights: {
         default: 22,
       },
-      padding: "px-pill-x (9) py-0.5",
+      padding: "px-3.5 (14) py-0.5 (2)",
       variants: ["default", "secondary", "destructive", "outline"],
       borderRadius: 9999,
       minTouchTarget: 45,
     },
     {
       name: "card",
-      note: "Cards use --radius-lg (14px) with a full 1px border and 21px padding, p-card (owner 2026-11-19; was 14px, which is below the cards layer floor).",
+      note: "Cards use --radius-lg (14px) with a full 1px border. Padding is py-6 (24) on the block axis and px-6 (24) on the header and content (px-4 at size sm), above the cards layer's 21px default.",
       heights: {
         auto: 0,
       },
-      padding: "p-card (21)",
+      padding: "py-6 (24), px-6 (24) on header and content",
       variants: ["default", "accented", "clickable"],
       borderRadius: 14,
       minTouchTarget: 45,
     },
     {
       name: "dialog",
-      note: "Dialogs use --radius-xl (17px) and the containers layer's 28px padding, p-container (owner 2026-11-19; was 20px).",
+      note: "Dialogs use --radius-xl (17px) and p-6 (24) padding, above the containers layer's 21px dense floor. The 28px containers default (p-container) is not used here yet.",
       heights: {
         auto: 0,
       },
-      padding: "p-container (28)",
+      padding: "p-6 (24)",
       variants: ["default"],
       borderRadius: 17,
       minTouchTarget: 45,

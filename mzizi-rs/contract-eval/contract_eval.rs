@@ -451,7 +451,7 @@ pub fn hit_violations(node: &Node, fine: Option<u32>, coarse: Option<u32>) -> Ve
             hit_region(node, at, HIT_AREA_PX)
         ));
     }
-    if carries_hit_area(node) && !clips(node) && fine < VISIBLE_FINE_MIN_PX {
+    if fine < VISIBLE_FINE_MIN_PX {
         under.push(format!(
             "drawn at {fine}px on a fine pointer, below the {VISIBLE_FINE_MIN_PX}px smallest a control is drawn"
         ));
@@ -763,6 +763,11 @@ fn has_siblings(node: &Node) -> bool {
 /// inline-level); a negative margin on a text container; a tight `leading-*` on body copy. A copy of
 /// `spacingViolations` in `contracts/runner.ts`; `contracts/spacing-cases.json` is the shared table.
 pub fn spacing_violations(node: &Node, layer: Option<&str>) -> Vec<(String, String)> {
+    if let Some(l) = layer {
+        if layer_padding_floor(l).is_none() {
+            panic!("unknown spacing layer \"{l}\"");
+        }
+    }
     let mut out = Vec::new();
     let classes: Vec<&str> = class_of(node).split_whitespace().collect();
     let text = own_text(node);

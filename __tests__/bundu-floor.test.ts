@@ -84,7 +84,7 @@ describe("BUNDU_FLOOR: the one definition", () => {
         insetPx: 14,
         gapPx: 7,
         controlGapPx: 9,
-        labelGapPx: 5,
+        labelGapPx: 7,
         itemGapPx: 7,
         leadingBody: 1.5,
       },

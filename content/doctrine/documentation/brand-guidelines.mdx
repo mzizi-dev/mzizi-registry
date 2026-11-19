@@ -171,12 +171,14 @@ Owner ruling, 2026-11-04 (mzizi-registry#617): the Bundu floor also sets **minim
 | Controls   | `--space-field-x`         | 17px    | 12px              | prime and 3 x 4 (M3 text field 16)          |
 | Controls   | `--space-control-gap`     | 9px     | 7px               | 3 x 3 and 7 (M3 icon to label 8)            |
 | Controls   | `--space-control-between` | 9px     | 9px               | 3 x 3 (M3 target spacing 8)                 |
-| Controls   | `--space-label-gap`       | 7px     | 5px               | 7 and prime (label to field 6 to 8)         |
+| Controls   | `--space-label-gap`       | 7px     | 5px (pending)     | 7 and prime (label to field 6 to 8)         |
 | Chips      | `--space-chip-x`          | 12px    | 9px               | 3 x 4 and 3 x 3 (M3 chip 12)                |
 | Pills      | `--space-pill-x`          | 9px     | 5px               | 3 x 3 and prime (M3 badge 4)                |
 | Pills      | `--space-pill-gap`        | 5px     | 3px               | prime (4)                                   |
 
 The default is the floor at default density. The dense step is the absolute floor for a density layer, and nothing goes below it. The dense tokens are named `<token>-dense`, for example `--space-card-dense`. The sibling-item gap (`itemGapPx`) is the dense floor of `--space-card-gap`, 7px.
+
+The label-to-field floor is 7px (`labelGapPx`), the global floor that layer-blind guards read. Its dense step, 5px, is derived from the number rule and is pending the owner's confirmation.
 
 - **The number rule.** Every spacing or size value is a multiple of 3, a multiple of 7, or a prime. A value starts from the recommended one (WCAG, Apple HIG or Material 3) and takes the nearest Mzizi number at or above it: a little larger is fine, lower never is. The hit floors follow it too: 45 is 3 x 15 and 24 is 3 x 8.
 - **Enforced as defaults.** The base layer of `mzizi-tokens-globals.css` gives a bare control (a `button`, `select`, `textarea`, a text `input`) `padding-inline: var(--space-control-x-dense)` (12px); a bare native `dialog`, `[popover]` or alert dialog `padding: var(--space-container-dense)` (21px); a bare card, alert or tooltip `padding: var(--space-card-dense)` (14px); a list, group, toolbar, tablist, menu or listbox `gap: var(--gap-floor)` (7px); and `body` `line-height: max(var(--lh-body), var(--leading-floor))` (1.5). A utility on the element (`p-6`, `gap-2`) is the author's own value and wins, so the tests hold every explicit value to its layer's floor.

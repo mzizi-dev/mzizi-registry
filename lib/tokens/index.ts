@@ -173,10 +173,10 @@ export const primitives = {
   // ─── SPACING FLOOR (owner, 2026-11-04, #617) ─
   // Minimums nothing can go under, read from BUNDU_FLOOR.spacing (lib/tokens/roles.source.ts), never retyped.
   spacingFloor: {
-    inset: { value: `${BUNDU_FLOOR.spacing.insetPx}px`, cssVar: "--inset-floor", description: "Least padding between text and the edge of its container, of any layer's dense floor (a pill, 5px). Each layer's own token is its `--space-*` default and `--space-*-dense` absolute floor: controls 17px / 12px, cards 21px / 14px, containers 28px / 21px." },
-    gap: { value: `${BUNDU_FLOOR.spacing.gapPx}px`, cssVar: "--gap-floor", description: "Least gap of any layer's dense floor (a pill's, 3px). Gaps between adjacent controls default to 9px (`--space-control-between`)." },
+    inset: { value: `${BUNDU_FLOOR.spacing.insetPx}px`, cssVar: "--inset-floor", description: "Fallback padding between text and the edge of its container, for a component with no known layer (14px, 2 x 7). A component with a layer is held to its layer's dense floor (controls 12px, cards 14px, containers 21px, pills 5px). Each layer's own token is its `--space-*` default and `--space-*-dense` absolute floor: controls 17px / 12px, cards 21px / 14px, containers 28px / 21px." },
+    gap: { value: `${BUNDU_FLOOR.spacing.gapPx}px`, cssVar: "--gap-floor", description: "Fallback gap for a component with no known layer (7px, the unit). Gaps between adjacent controls are 9px (`--space-control-between`), and a pill's gap is 3px." },
     controlGap: { value: `${BUNDU_FLOOR.spacing.controlGapPx}px`, cssVar: "--space-control-between", description: "Gap between adjacent interactive controls, visible edge to visible edge (owner 2026-11-19; was 7px). Hit regions may touch, never overlap." },
-    labelGap: { value: `${BUNDU_FLOOR.spacing.labelGapPx}px`, cssVar: "--space-label-gap-dense", description: "Least gap between a label and its field: the dense floor of `--space-label-gap` (5px; default 7px). Alias kept for consumers (owner 2026-11-19)." },
+    labelGap: { value: `${BUNDU_FLOOR.spacing.labelGapPx}px`, cssVar: "--space-label-gap", description: "The global label-to-field floor, 7px (`--space-label-gap`). Its dense step, 5px, is pending the owner's confirmation." },
     itemGap: { value: `${BUNDU_FLOOR.spacing.itemGapPx}px`, cssVar: "--space-card-gap-dense", description: "Least gap between sibling items in a list, grid, stack or toolbar: the dense floor of `--space-card-gap` (7px; default 14px). Alias kept for consumers (owner 2026-11-19)." },
     leadingBody: { value: `${BUNDU_FLOOR.spacing.leadingBody}`, cssVar: "--leading-floor", description: "Least body line height (WCAG 1.4.12). Headings and display type keep their own tighter leading." },
   },

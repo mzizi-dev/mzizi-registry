@@ -263,11 +263,11 @@ pub struct A11yAuditResult {
     pub score: u32,
 }
 
-/// The touch-target floor the `.ts` uses, and the Apple HIG figure.
+/// The touch-target floor on the hit area: the Bundu floor, 45px (owner 2026-11-19), above Apple HIG's 44 pt.
 ///
 /// Material's is 48dp. This is a floor on the HIT AREA, not on the painted
 /// control — see the module docs, defect 4.
-pub const DEFAULT_TOUCH_TARGET_MIN_PX: f64 = 44.0;
+pub const DEFAULT_TOUCH_TARGET_MIN_PX: f64 = 45.0;
 
 /// What to check and how strictly.
 #[derive(Debug, Clone, PartialEq)]

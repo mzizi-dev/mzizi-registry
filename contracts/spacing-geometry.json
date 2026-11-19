@@ -69,7 +69,7 @@
     "insetPx": 14,
     "gapPx": 7,
     "controlGapPx": 9,
-    "labelGapPx": 5,
+    "labelGapPx": 7,
     "itemGapPx": 7,
     "leadingBody": 1.5
   },
@@ -83,7 +83,7 @@
     },
     {
       "id": "label-gap",
-      "say": "A label and its field keep labelGapPx (the dense floor, 5px; default 7px).",
+      "say": "A label and its field keep labelGapPx (7px, the global floor). The controls layer dense step (5px) is pending the owner's confirmation.",
       "select": "label",
       "rule": "distance(rect(label), rect(label.control)) >= labelGapPx unless the control is inside the label",
       "min": "labelGapPx"

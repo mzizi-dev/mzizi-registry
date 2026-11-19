@@ -83,7 +83,7 @@ const hasFooter = footerLinks.length > 0 || Astro.slots.has("footer");
         <Icon name="menu" class="h-5 w-5" />
       </button>
       <div class="min-w-0 lg:hidden"><slot name="brand" /></div>
-      <div class="ml-auto flex min-w-0 items-center gap-control-between sm:gap-control-between">
+      <div class="ml-auto flex min-w-0 items-center gap-control-between">
         <slot name="actions" />
         <slot name="account" />
       </div>

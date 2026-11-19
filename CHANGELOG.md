@@ -10,20 +10,24 @@ From 2026-10-04 releases follow the org versioning policy ([nyuchi/.github#80](h
 
 ## [Unreleased]
 
-### Changed — Bundu floor 45/24 and per-layer spacing tokens (2026-11-19)
+### Changed — Bundu floor 45/24 and per-layer spacing tokens (2026-11-19, #726)
 
-For a consumer of the tokens, what changes and what it is called now:
+Ships in the next minor, **4.45.0** (a release to `main` is the next minor above the highest tag). For a consumer of the tokens, what changes and what it is called now:
 
-- **The hit-area floor is 45px on touch and 24px on a desktop** (was 49px and 28px). The tokens are `--target-floor` (`2.8125rem` and `1.5rem` under desktop density), `--touch-target-lg` and `--touch-target`, and the `minTouchTarget` and `minTouchTargetPointerFine` canon values. The desktop drawn minimum stays 28px.
-- **Spacing has one floor per layer, each with a dense step.** The new tokens are `--space-page-x` (17), `--space-page-x-wide` (28, dense 21), `--space-section` (49, dense 28), `--space-container` (28, dense 21), `--space-container-gap` (21, dense 14), `--space-card` (21, dense 14), `--space-card-gap` (14, dense 7), `--space-card-stack` (7), `--space-control-x` (17, dense 12), `--space-field-x` (17, dense 12), `--space-control-gap` (9, dense 7), `--space-control-between` (9), `--space-label-gap` (7, dense 5), `--space-chip-x` (12, dense 9), `--space-pill-x` (9, dense 5) and `--space-pill-gap` (5, dense 3). Each is also a Tailwind utility under its own name, for example `p-control-x` or `gap-card-gap`. The dense tokens are named `<token>-dense`, for example `--space-card-dense`.
-- **The single 14px inset and 7px gap are aliases now.** `--inset-floor` (14px) and `--gap-floor` (7px) stay, as the floor for a component with no known layer. Use the layer's own token where you know the layer.
-- **Gaps between adjacent controls are 9px** (was 7px). `--space-control-between` is the token.
-- **Control heights round up to the number rule:** `--size-control-sm` and `--size-control-dense` 33px on a desktop (was 32), `--size-control-lg` 41px on a desktop (was 40), `--size-field-sm` 33px on a desktop (was 32), and `--touch-target-sm` 41px (was 40). Component touch heights (49px buttons and inputs) are unchanged.
+- **The hit-area floor is 45px on touch and 24px on a desktop** (was 49px and 28px). The desktop drawn minimum is 28px, and every interactive element is checked against it. The values that move from 49 to 45 are `--target-floor` (touch), `--touch-target`, `--touch-target-lg`, `--size-touch`, the `h-touch`, `min-h-touch` and `size-touch` utilities, `spacingTouch` in the React Native build, `SPACING_TOUCH` in the Rust build, and the `minTouchTarget` canon value. A consumer that uses one of them as a height sees it 4px shorter. The desktop `--target-floor` is `1.5rem` (24px).
+- **Spacing has one floor per layer, each with a dense step.** The new tokens are `--space-page-x` (17), `--space-page-x-wide` (28, dense 21), `--space-section` (49, dense 28), `--space-container` (28, dense 21), `--space-container-gap` (21, dense 14), `--space-card` (21, dense 14), `--space-card-gap` (14, dense 7), `--space-card-stack` (7), `--space-control-x` (17, dense 12), `--space-field-x` (17, dense 12), `--space-control-gap` (9, dense 7), `--space-control-between` (9), `--space-label-gap` (7, dense 5), `--space-chip-x` (12, dense 9), `--space-pill-x` (9, dense 5) and `--space-pill-gap` (5, dense 3). Each is also a Tailwind utility under its own name, for example `p-control-x` or `gap-card-gap`. The dense tokens are named `<token>-dense`.
+- **The 14px inset and 7px gap are the fallback now.** `--inset-floor` (14px) and `--gap-floor` (7px) stay, for a component with no known layer. Use the layer's own token where you know the layer.
+- **The label-to-field floor stays 7px** (`labelGapPx`, `minLabelGap`, and the `spacing-geometry` contract), so layer-blind guards keep reading 7. The dense step of `--space-label-gap` (5px) is derived from the number rule and is pending the owner's confirmation.
+- **Base-layer defaults change:** a bare control's inline padding is 12px (was 14px), and a bare native dialog or popover's padding is 21px (was 14px).
+- **Gaps between adjacent controls are 9px** (was 7px): `minControlGap` and `controlGapPx` go from 7 to 9, and `spacingFloor.controlGap.cssVar` is now `--space-control-between`. The 9px rule applies to a component with a layer. A component with no known layer keeps 7 between its children, because a 9px rule there flags a form's label-to-field gap. That limit is stated here on purpose.
+- **Control heights round up to the number rule:** `--size-control-sm` 33px on a desktop (was 32), `--size-control-dense` 33px by default and 28px under desktop density (was 32 and 28), `--size-control-lg` 41px on a desktop (was 40), `--size-field-sm` 33px on a desktop (was 32), and `--touch-target-sm` 41px (was 40). Component touch heights (49px buttons and inputs) are unchanged.
 - **The page edge on a phone is 17px.**
-- **Status pills and badges** use `--space-pill-x` (9px, dense 5px) in place of the 14px inline inset. Chips use `--space-chip-x` (12px, dense 9px).
-- **New checker.** The contract runner and the Rust evaluator check each component against its own layer's dense floor, and a component with no known layer keeps today's 14px and 7px. Container and layout gap floors are not enforced at class level yet.
+- **Pills and badges keep their current padding.** The `--space-pill-x` token (9px, dense 5px) is available for a consumer, and `badge.tsx` does not use it.
+- **Chips** use `--space-chip-x` (12px, dense 9px) as a token; no shipped component is changed to it.
+- **The checker.** The contract runner and the Rust evaluator check each interactive element against the 28px desktop drawn minimum, and each component against its own layer's dense floor. A component with no known layer keeps today's 14px and 7px. Container and layout gap floors (14 and 28) and the label gap are not enforced at class level yet.
+- **Consumer note.** Updated components use `gap-control-between` and `p-container-dense`, so ship the token stylesheet with them. A component built against the old stylesheet will not find those classes.
 
-Not breaking: no token is removed, and the legacy opt-out (`data-mzizi-sizes="legacy"`) restores the pinned 2026-10 values.
+Not breaking for the token names: no token is removed, and the legacy opt-out (`data-mzizi-sizes="legacy"`) restores the pinned 2026-10 values. The values above do change what a consumer draws.
 
 ### Fixed — the markdown-renderer registry entry names `mzizi-roots`, not `mzizi-ui` (2026-11-17, Refs [#710](https://github.com/mzizi-dev/mzizi-registry/issues/710))
 

@@ -1820,7 +1820,7 @@ function densityLayer(): string {
  * THE SPACING FLOOR (owner, 2026-11-04, #617; one floor per layer with a dense step, owner 2026-11-19; \`BUNDU_FLOOR.spacing\`):
  * minimums that nothing can go under, even a component that sets no padding at all. A bare control is inset at its dense
  * floor, ${BUNDU_FLOOR.spacing.layers.controlX.dense}px (\`--space-control-x-dense\`), a bare card ${BUNDU_FLOOR.spacing.layers.cardPadding.dense}px (\`--space-card-dense\`), a bare
- * dialog, sheet or popover ${BUNDU_FLOOR.spacing.layers.containerPadding.dense}px (\`--space-container-dense\`); the least dense gap of any layer is ${BUNDU_FLOOR.spacing.gapPx}px
+ * dialog, sheet or popover ${BUNDU_FLOOR.spacing.layers.containerPadding.dense}px (\`--space-container-dense\`); the fallback gap for a component with no known layer is ${BUNDU_FLOOR.spacing.gapPx}px
  * (\`--gap-floor\`), and body leading is ${BUNDU_FLOOR.spacing.leadingBody}.
  * These are DEFAULTS in the base layer, like the hit-area rule above: a bare element gets the floor, and a utility
  * on it (\`p-6\`, \`gap-2\`) is the author's own value, which \`__tests__/spacing-floor.test.ts\` holds to the floor
@@ -2104,7 +2104,7 @@ export function sizeRoleTheme(
           return `  --${r.name}: ${hit}; /* the hit-area floor: ${FLOOR_COARSE_PX}px on touch, ${FLOOR_FINE_HIT_PX}px on a desktop; no brand can lower it */`;
         // The spacing floor (#617): the same variables the base layer reads, so the legacy opt-out moves both.
         if (r.name === "spacing-inset-floor")
-          return `  --${r.name}: var(--inset-floor); /* the inset floor (alias): ${BUNDU_FLOOR.spacing.insetPx}px, the least of any layer; no brand can lower it */`;
+          return `  --${r.name}: var(--inset-floor); /* the inset floor (alias): ${BUNDU_FLOOR.spacing.insetPx}px, the fallback for a component with no known layer; no brand can lower it */`;
         if (r.name === "spacing-gap-floor")
           return `  --${r.name}: var(--gap-floor); /* the gap floor: ${BUNDU_FLOOR.spacing.gapPx}px; no brand can lower it */`;
         return `  --${r.name}: ${own.css.light}; /* a literal: fixed, no brand can move it */`;
@@ -2251,10 +2251,10 @@ function invariants(resolved: Map<string, ResolvedRole>): string {
     `  --target-floor: ${FLOOR_COARSE_PX / 16}rem; /* ${FLOOR_COARSE_PX}px — the Bundu hit region (3 x 15) on touch. The desktop density block lowers it to ${FLOOR_FINE_HIT_PX}px; nothing else does. */`,
   );
   out.push(
-    `  --inset-floor: ${BUNDU_FLOOR.spacing.insetPx / 16}rem; /* ${BUNDU_FLOOR.spacing.insetPx}px — the least padding between text and the edge of its container, of any layer (the control chip, 3 x 4). Density never lowers it. */`,
+    `  --inset-floor: ${BUNDU_FLOOR.spacing.insetPx / 16}rem; /* ${BUNDU_FLOOR.spacing.insetPx}px — the fallback padding between text and the edge of its container, for a component with no known layer. Density never lowers it. */`,
   );
   out.push(
-    `  --gap-floor: ${BUNDU_FLOOR.spacing.gapPx / 16}rem; /* ${BUNDU_FLOOR.spacing.gapPx}px — the least gap of any layer (the card stack, the 7px unit). Gaps between controls are ${BUNDU_FLOOR.spacing.controlGapPx}px. */`,
+    `  --gap-floor: ${BUNDU_FLOOR.spacing.gapPx / 16}rem; /* ${BUNDU_FLOOR.spacing.gapPx}px — the fallback gap for a component with no known layer (the 7px unit). Gaps between controls are ${BUNDU_FLOOR.spacing.controlGapPx}px. */`,
   );
   out.push(
     `  --leading-floor: ${BUNDU_FLOOR.spacing.leadingBody}; /* body line height, never tighter (WCAG 1.4.12). */`,

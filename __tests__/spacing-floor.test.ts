@@ -74,15 +74,15 @@ describe("BUNDU_FLOOR.spacing: the one definition", () => {
       insetPx: 14,
       gapPx: 7,
       controlGapPx: 9,
-      labelGapPx: 5,
+      labelGapPx: 7,
       itemGapPx: 7,
       leadingBody: 1.5,
     });
     // the fallback floors for a component with no known layer are today's 14 and 7 (owner 2026-11-19: never weaker)
     expect(spacing.insetPx).toBe(14);
     expect(spacing.gapPx).toBe(7);
-    // the label and item aliases are the dense steps of their layers (owner 2026-11-19)
-    expect(spacing.labelGapPx).toBe(spacing.layers.labelGap.dense);
+    // the label floor is the global 7 (layer-blind guards read it); its dense step is pending the owner's confirmation
+    expect(spacing.labelGapPx).toBe(spacing.layers.labelGap.px);
     expect(spacing.itemGapPx).toBe(spacing.layers.cardGap.dense);
     expect(spacing.controlGapPx).toBe(spacing.layers.controlBetween.px);
     // the Mzizi number rule (owner 2026-11-19): a multiple of 3, a multiple of 7, or a prime
@@ -228,7 +228,7 @@ describe("the base layer enforces the floor on a component with no padding", () 
 });
 
 describe("the platform files carry the spacing floor", () => {
-  it("every platform file has the inset and gap roles at the least dense floors (5 and 3)", () => {
+  it("every platform file has the inset and gap roles at the fallback floors (14 and 7)", () => {
     for (const f of [
       "swift.swift",
       "kotlin.kt",
@@ -260,6 +260,10 @@ describe("the platform files carry the spacing floor", () => {
 // ─── The contract runner, and its Rust twin ─────────────────────────────────────────────────
 
 describe("the contract runner holds the spacing floor", () => {
+  it("an unknown layer is an error, not a silent fallback (the Rust evaluator panics with the same sentence)", () => {
+    const el = parseDocument('<div class="flex gap-2"><span>a</span><span>b</span></div>').children[0] as Element;
+    expect(() => spacingViolations(el, "nonsense" as SpacingLayer)).toThrow('unknown spacing layer "nonsense"');
+  });
   it("keeps a copy of BUNDU_FLOOR.spacing, equal to the source", () => {
     expect(INSET_FLOOR_PX).toBe(spacing.insetPx);
     expect(GAP_FLOOR_PX).toBe(spacing.gapPx);
@@ -526,11 +530,14 @@ describe("every registry component: gaps, zero padding and negative margins are 
     expect(stale).toEqual([]);
   });
   it("the scanner finds what it should and honours an exception comment", () => {
-    expect(scanSource('<div className="flex gap-px p-0 -mx-2">')).toEqual({
+    expect(scanSource('<div className="flex gap-1 p-0 -mx-2">')).toEqual({
       gap: 1,
       padZero: 1,
       negMargin: 1,
     });
+    // the 7px fallback floor is a boundary: 6px is under it, 8px holds
+    expect(scanSource('<div className="flex gap-1.5">')).toEqual({ gap: 1 });
+    expect(scanSource('<div className="flex gap-2">')).toEqual({});
     expect(scanSource('<div className="flex gap-2 p-3.5">')).toEqual({});
     expect(
       scanSource(

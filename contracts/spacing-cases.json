@@ -7,8 +7,13 @@
       "violations": 0
     },
     {
-      "name": "a gap of 2px between two children is under the 7px floor (no known layer)",
-      "html": "<div class=\"flex gap-0.5\"><span>a</span><span>b</span></div>",
+      "name": "a gap of 4px between two children is under the 7px floor (no known layer)",
+      "html": "<div class=\"flex gap-1\"><span>a</span><span>b</span></div>",
+      "violations": 1
+    },
+    {
+      "name": "a gap of 6px, one px under the 7px fallback floor, is a violation (no known layer)",
+      "html": "<div class=\"flex gap-1.5\"><span>a</span><span>b</span></div>",
       "violations": 1
     },
     {
@@ -67,7 +72,12 @@
       "violations": 0
     },
     {
-      "name": "a pill's block axis is its line height",
+      "name": "a pill with 12px inline padding is under the 14px fallback floor (no known layer)",
+      "html": "<span class=\"rounded-full border px-3 py-0.5\">New</span>",
+      "violations": 1
+    },
+    {
+      "name": "a pill's block axis is its line height, at 14px inline padding",
       "html": "<span class=\"rounded-full border px-3.5 py-0.5\">New</span>",
       "violations": 0
     },

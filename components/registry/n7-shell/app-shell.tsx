@@ -270,7 +270,7 @@ function AppShell({
             <Icon name="menu" className="h-5 w-5" />
           </button>
           <div className="min-w-0 lg:hidden">{brand}</div>
-          <div className="ml-auto flex min-w-0 items-center gap-control-between sm:gap-control-between">
+          <div className="ml-auto flex min-w-0 items-center gap-control-between">
             {actions}
             {account}
           </div>
