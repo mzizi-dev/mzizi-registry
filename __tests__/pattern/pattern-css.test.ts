@@ -151,15 +151,15 @@ function px(name: string, tier: "touch" | "desktop"): number {
 }
 
 describe("the Bundu floor, resolved from tokens.css", () => {
-  test("the hit region is 49px on touch and 28px on a desktop with a fine pointer", () => {
-    expect(px("--target-floor", "touch")).toBe(49)
-    expect(px("--target-floor", "desktop")).toBe(28)
+  test("the hit region is 45px on touch and 24px on a desktop with a fine pointer (owner 2026-11-19)", () => {
+    expect(px("--target-floor", "touch")).toBe(45)
+    expect(px("--target-floor", "desktop")).toBe(24)
   })
 
-  test("the control heights match the contract: 49/36 default, 49/32 sm, 56/40 lg, 49/36 icon, 49/32 icon-sm", () => {
+  test("the control heights match the contract: 49/36 default, 49/33 sm, 56/41 lg, 49/36 icon, 49/33 icon-sm", () => {
     expect([px("--size-control", "touch"), px("--size-control", "desktop")]).toEqual([49, 36])
-    expect([px("--size-control-sm", "touch"), px("--size-control-sm", "desktop")]).toEqual([49, 32])
-    expect([px("--size-control-lg", "touch"), px("--size-control-lg", "desktop")]).toEqual([56, 40])
+    expect([px("--size-control-sm", "touch"), px("--size-control-sm", "desktop")]).toEqual([49, 33])
+    expect([px("--size-control-lg", "touch"), px("--size-control-lg", "desktop")]).toEqual([56, 41])
     expect([px("--size-control-icon", "touch"), px("--size-control-icon", "desktop")]).toEqual([49, 36])
   })
 

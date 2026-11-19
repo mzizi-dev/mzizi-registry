@@ -149,14 +149,14 @@ describe("the role manifest", () => {
     expect(RESOLVED.get("destructive")!.value.light).toBe("#B3261E")
   })
 
-  it("keeps Mzizi pill, and the hit-area floor at the Bundu 49px (owner decisions 2026-10-07, 2026-11-01 and 2026-11-02)", () => {
+  it("keeps Mzizi pill, and the hit-area floor at the Bundu 45px (owner decisions 2026-10-07, 2026-11-01, 2026-11-02 and 2026-11-19)", () => {
     expect(RESOLVED.get("radius-control")!.value.light).toBe("9999px")
-    expect(RESOLVED.get("spacing-touch")!.value.light).toBe("49px")
-    expect(RESOLVED.get("spacing-touch-min")!.value.light).toBe("49px")
+    expect(RESOLVED.get("spacing-touch")!.value.light).toBe("45px")
+    expect(RESOLVED.get("spacing-touch-min")!.value.light).toBe("45px")
     const flat = CSS.replace(/\s+/g, " ")
     expect(flat).toContain("--spacing-touch-min: var( --target-floor );")
-    expect(flat).toContain("--target-floor: 3.0625rem;")
-    expect(flat).toContain("--control-floor: 3.0625rem;")
+    expect(flat).toContain("--target-floor: 2.8125rem;")
+    expect(flat).toContain("--control-floor: 2.8125rem;")
     expect(flat).toContain("--spacing-touch: max( var(--size-touch), var(--control-floor) );")
   })
 })
@@ -395,7 +395,7 @@ describe("the platform files carry the roles", () => {
     const rust = readFileSync(join(N1, "mzizi-tokens-rust.rs"), "utf8")
     expect(rust).toMatch(/pub struct Roles \{\s+\/\/\/ The light theme\.\s+pub light: RoleColors,\s+\/\/\/ The dark theme\.\s+pub dark: RoleColors,/)
     expect(rust).toMatch(/pub const fn mzizi\(\) -> Self/)
-    expect(rust).toMatch(/pub const SPACING_TOUCH_MIN: u32 = 49;/)
+    expect(rust).toMatch(/pub const SPACING_TOUCH_MIN: u32 = 45;/)
   })
 
   it("names every colour role in every platform file", () => {
@@ -441,11 +441,11 @@ describe("the touch floor holds for every floored size role", () => {
     expect(INLINE.get("--spacing-control-dense")).toBe("var(--size-control-dense)")
   })
 
-  it("still computes >= 49px when a brand lowers the bare var to 32px", () => {
+  it("still computes >= 45px when a brand lowers the bare var to 32px", () => {
     for (const r of floored) {
       for (const mode of ["light", "dark"] as const) {
         const lowered = lengthPx(computed(`--${r.name}`, mode, { [roleVar(r)]: "2rem" }))
-        expect(lowered, `${r.name} (${mode})`).toBeGreaterThanOrEqual(49)
+        expect(lowered, `${r.name} (${mode})`).toBeGreaterThanOrEqual(45)
         const raised = lengthPx(computed(`--${r.name}`, mode, { [roleVar(r)]: "4rem" }))
         expect(raised, `${r.name} (${mode}) raised`).toBe(64)
       }
@@ -455,7 +455,7 @@ describe("the touch floor holds for every floored size role", () => {
   it("keys the clamp on the flag: a floored role under any name is clamped", () => {
     const extra: Role = { name: "spacing-tap", group: "size", kind: "size", required: true, description: "test", default: { px: 50 }, floor: true, block: "invariant" }
     const roles = manifest({}, [extra])
-    expect(sizeRoleTheme(roles, resolveWith(roles))).toContain("  --spacing-tap: max(var(--size-tap), var(--control-floor)); /* never under the control floor: 49px on touch, or 28px drawn at desktop density */")
+    expect(sizeRoleTheme(roles, resolveWith(roles))).toContain("  --spacing-tap: max(var(--size-tap), var(--control-floor)); /* never under the control floor: 45px on touch, or 28px drawn at desktop density */")
   })
 })
 
@@ -464,7 +464,7 @@ describe("fixed size roles", () => {
     const second: Role = { name: "spacing-hit-min", group: "size", kind: "size", required: true, description: "test", default: { px: 60 }, fixed: true, block: "invariant" }
     const roles = manifest({}, [second])
     const lines = sizeRoleTheme(roles, resolveWith(roles))
-    expect(lines).toContain("  --spacing-touch-min: var(--target-floor); /* the hit-area floor: 49px on touch, 28px on a desktop; no brand can lower it */")
+    expect(lines).toContain("  --spacing-touch-min: var(--target-floor); /* the hit-area floor: 45px on touch, 24px on a desktop; no brand can lower it */")
     expect(lines).toContain("  --spacing-hit-min: 3.75rem; /* a literal: fixed, no brand can move it */")
   })
 })

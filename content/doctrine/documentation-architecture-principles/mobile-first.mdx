@@ -5,7 +5,7 @@ currentVersion: 2
 description: "The primary interface is a mobile device with constrained resources."
 dnaRole: "documentation"
 doctrineVersion: "4.1.0"
-implementation: "Astro + Capacitor as a thin native shell. 49px hit region on touch (the Bundu floor, above Apple HIG's 44px); on a desktop with a fine pointer, controls drawn at 28-40px with a 28px hit region and 15px body. Progressive loading. Lazy sections with memory pressure monitoring."
+implementation: "Astro + Capacitor as a thin native shell. 45px hit region on touch (the Bundu floor, above Apple HIG's 44px); on a desktop with a fine pointer, controls drawn at 28-41px with a 24px hit region and 15px body. Progressive loading. Lazy sections with memory pressure monitoring."
 kind: "architecture"
 model: "mzizi-dna-helix"
 name: "mobile-first"
@@ -20,12 +20,12 @@ Architecture is designed for small screens, limited battery, constrained data pl
 
 ## Sizes follow Apple on touch and step down as screens grow
 
-Owner decision, 2026-11-01: mobile stays the design centre, but a laptop or an iPad is not a phone. Touch sizes follow Apple's Human Interface Guidelines, raised to the Bundu floor (a 49px hit region; 17px body), and a density layer in the token layer draws controls and body text smaller for a fine pointer on a wide screen, down to the desktop tier of the floor: a 28px hit region and 15px body (owner rulings 2026-11-02 and 2026-11-12, #660: the Bundu floor has two pointer tiers). It is defined once as media queries on the size variables; a component never branches on screen size. Density is visual only: a wide screen is not evidence of a fast network, so loading strategy, lazy sections and memory-pressure behaviour above do not change with it.
+Owner decision, 2026-11-01: mobile stays the design centre, but a laptop or an iPad is not a phone. Touch sizes follow Apple's Human Interface Guidelines, raised to the Bundu floor (a 45px hit region; 17px body), and a density layer in the token layer draws controls and body text smaller for a fine pointer on a wide screen, down to the desktop tier of the floor: a 24px hit region and 15px body (owner rulings 2026-11-02, 2026-11-12 (#660) and 2026-11-19: the Bundu floor has two pointer tiers). It is defined once as media queries on the size variables; a component never branches on screen size. Density is visual only: a wide screen is not evidence of a fast network, so loading strategy, lazy sections and memory-pressure behaviour above do not change with it.
 
 | Layer        | Query                                               | Control drawn at                                | Hit region | Body | Caption |
 | ------------ | --------------------------------------------------- | ----------------------------------------------- | ---------- | ---- | ------- |
-| Phone, touch | the defaults                                        | 49px (large 56px)                               | 49px       | 17px | 14px    |
-| Tablet       | `min-width: 48rem`                                  | 49px (touched)                                  | 49px       | 17px | 14px    |
-| Desktop      | `min-width: 64rem`, `pointer: fine`, `hover: hover` | 36px (32 small, 40 large; fields 36px and 32px) | 28px       | 15px | 14px    |
+| Phone, touch | the defaults                                        | 49px (large 56px)                               | 45px       | 17px | 14px    |
+| Tablet       | `min-width: 48rem`                                  | 49px (touched)                                  | 45px       | 17px | 14px    |
+| Desktop      | `min-width: 64rem`, `pointer: fine`, `hover: hover` | 36px (33 small, 41 large; fields 36px and 33px) | 24px       | 15px | 14px    |
 
-The Bundu floor in every layer: a hit region on every interactive control (49px on touch, 28px on a desktop, where the drawn box is the hit region), body text 17px on touch and 15px on a desktop, captions and secondary labels 14px everywhere, zoom and `prefers-reduced-motion` respected.
+The Bundu floor in every layer: a hit region on every interactive control (45px on touch, 24px on a desktop; a desktop control is drawn at 28px or more, so its drawn box holds its hit region), body text 17px on touch and 15px on a desktop, captions and secondary labels 14px everywhere, zoom and `prefers-reduced-motion` respected.

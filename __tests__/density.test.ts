@@ -61,8 +61,8 @@ const decls = (block: string) =>
   );
 
 describe("touch (coarse pointer): the Bundu hit area", () => {
-  it("floors every target at 49px (above Apple's 44x44 pt hit region)", () => {
-    expect(FLOOR_COARSE_PX).toBe(49);
+  it("floors every target at 45px (3 x 15, above Apple's 44x44 pt hit region; owner 2026-11-19)", () => {
+    expect(FLOOR_COARSE_PX).toBe(45);
     for (const r of ROLES.filter((x) => x.kind === "size" && x.floor)) {
       expect((r.default as { px: number }).px, r.name).toBeGreaterThanOrEqual(
         FLOOR_COARSE_PX,
@@ -85,7 +85,7 @@ describe("desktop density (fine pointer + hover)", () => {
       /save-data|prefers-reduced-data|effective-?type|downlink|navigator\.connection/i,
     );
   });
-  it("draws controls at 28px or more, steps them down from touch, and lowers the hit region to the 28px desktop floor and no lower", () => {
+  it("draws controls at 28px or more, steps them down from touch, and lowers the hit region to the 24px desktop floor and no lower", () => {
     for (const [name, v] of Object.entries(DESKTOP_SIZES)) {
       expect(v, name).toBeGreaterThanOrEqual(FLOOR_VISIBLE_FINE_PX);
       const role = ROLES.find((r) => r.name === name)!;
@@ -98,7 +98,7 @@ describe("desktop density (fine pointer + hover)", () => {
     expect(Object.fromEntries(block)["--target-floor"]).toBe(
       `${FLOOR_FINE_HIT_PX / 16}rem`,
     );
-    expect(FLOOR_FINE_HIT_PX).toBe(28);
+    expect(FLOOR_FINE_HIT_PX).toBe(24);
     expect(block.some(([k]) => k === "--size-touch-min")).toBe(false);
     for (const [k, v] of block.filter(([k]) => k.startsWith("--size-")))
       expect(px(v), k).toBeGreaterThanOrEqual(FLOOR_VISIBLE_FINE_PX);
@@ -194,18 +194,19 @@ describe("one definition, every copy agrees", () => {
       renderGlobalsJson(minerals, heritageColors, experimentalColors),
     );
     expect(j.scale.density.floorPx).toEqual({
-      hitArea: 49,
-      hitAreaFine: 28,
+      hitArea: 45,
+      hitAreaFine: 24,
       visibleFine: 28,
       body: 17,
       bodyFine: 15,
       caption: 14,
       inset: 14,
       gap: 7,
+      controlGap: 9,
       leading: 1.5,
       // deprecated aliases of the 4.21.0 keys: the hit region on each pointer
-      coarse: 49,
-      fine: 28,
+      coarse: 45,
+      fine: 24,
     });
     expect(j.scale.density.bunduFloor).toEqual(BUNDU_FLOOR);
     expect(j.scale.density.desktopPx).toEqual(DESKTOP_SIZES);
@@ -213,7 +214,7 @@ describe("one definition, every copy agrees", () => {
   it("lib/tokens/index.ts (the /v1/tokens copy) agrees with the role source", () => {
     const idx = readFileSync(join(ROOT, "lib/tokens/index.ts"), "utf8");
     expect(idx).toMatch(
-      /default: \{ value: "49px", description: "Default interactive element height/,
+      /default: \{ value: `\$\{BUNDU_FLOOR\.hitAreaPx\}px`, description: "Default interactive element height/,
     );
     expect(idx).toMatch(
       /button: \{ height: "49px", heightSm: "49px", heightLg: "56px" \}/,
@@ -232,7 +233,7 @@ describe("the runner and the Rust evaluator hold the Bundu floor too", () => {
   it("the runner copies BUNDU_FLOOR", () => {
     expect(HIT_AREA_PX).toBe(BUNDU_FLOOR.hitAreaPx);
     expect(HIT_AREA_FINE_PX).toBe(BUNDU_FLOOR.pointerFine.hitAreaPx);
-    expect(HIT_AREA_FINE_PX).toBe(VISIBLE_FINE_MIN_PX);
+    expect(HIT_AREA_FINE_PX).toBeLessThan(VISIBLE_FINE_MIN_PX);
     expect(VISIBLE_FINE_MIN_PX).toBe(BUNDU_FLOOR.visibleControlMinPx);
   });
   it("the Rust evaluator copies BUNDU_FLOOR", () => {
@@ -288,10 +289,10 @@ describe("hit-region rules: the runner and the Rust evaluator answer the same ca
       );
     });
   it("a covered button is raised to the floor, a link is its drawn box", () => {
-    expect(hitRegion(first('<button class="h-9">x</button>'), 36)).toBe(49);
+    expect(hitRegion(first('<button class="h-9">x</button>'), 36)).toBe(45);
     expect(
       hitRegion(first('<button class="h-5">x</button>'), 20, HIT_AREA_FINE_PX),
-    ).toBe(28);
+    ).toBe(24);
     expect(hitRegion(first('<a href="/" class="h-9">x</a>'), 36)).toBe(36);
   });
   it("the Rust evaluator's table is this file", () => {

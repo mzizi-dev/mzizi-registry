@@ -1673,7 +1673,7 @@ fn a_conformant_button_counts_as_a_pass() {
     // interactive element cannot reach, so a page of correct buttons scored
     // LOWER than a page of divs — the number moved the wrong way as
     // accessibility improved.
-    let good = button(Some("Save"), Some((44.0, 44.0)));
+    let good = button(Some("Save"), Some((45.0, 45.0)));
     let result = audit(
         "/wallet",
         &[good.clone(), good.clone(), good],
@@ -1689,8 +1689,8 @@ fn a_conformant_button_counts_as_a_pass() {
 
 #[test]
 fn the_score_falls_only_as_violations_rise() {
-    let good = button(Some("Save"), Some((44.0, 44.0)));
-    let bad = button(None, Some((44.0, 44.0)));
+    let good = button(Some("Save"), Some((45.0, 45.0)));
+    let bad = button(None, Some((45.0, 45.0)));
     let result = audit(
         "/wallet",
         &[good.clone(), good, bad],
@@ -1735,7 +1735,7 @@ fn the_touch_target_floor_measures_the_hit_area_not_the_painted_box() {
         "an h-9 control with real padding around it is not a violation"
     );
 
-    let genuinely_small = button(Some("Save"), Some((44.0, 30.0)));
+    let genuinely_small = button(Some("Save"), Some((45.0, 30.0)));
     let found = check_node(
         &genuinely_small,
         None,
@@ -1745,7 +1745,7 @@ fn the_touch_target_floor_measures_the_hit_area_not_the_painted_box() {
     assert_eq!(found[0].rule, Rule::TouchTarget);
     assert_eq!(found[0].level, A11yLevel::Moderate);
     assert!(
-        found[0].message.contains("44×30px"),
+        found[0].message.contains("45×30px"),
         "the message names the measured size: {}",
         found[0].message
     );
@@ -1947,7 +1947,7 @@ fn worst_level_gives_one_go_no_go_answer() {
     let page = vec![
         node("IMG"),
         button(Some("Save"), Some((20.0, 20.0))),
-        button(Some("Save"), Some((44.0, 44.0))),
+        button(Some("Save"), Some((45.0, 45.0))),
     ];
     let result = audit("/wallet", &page, &A11yConfig::default(), &no_registry());
     assert_eq!(worst_level(&result.violations), Some(A11yLevel::Critical));
@@ -1989,7 +1989,7 @@ fn the_wire_spellings_match_the_typescript() {
         "the .ts still states the rule it does not implement"
     );
     assert!(
-        ts.contains("44"),
+        ts.contains("45"),
         "the touch-target floor drifted from the sibling"
     );
 }

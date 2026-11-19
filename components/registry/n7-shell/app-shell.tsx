@@ -220,7 +220,7 @@ function AppShell({
         {CSS}
       </style>
       <aside id={drawerId} popover="" aria-label={sidebarLabel} data-slot="app-sidebar">
-        <div className="flex items-center gap-2 px-2 pt-1.5" data-slot="sidebar-head">
+        <div className="flex items-center gap-control-between px-2 pt-1.5" data-slot="sidebar-head">
           <div className="min-w-0 flex-1">{workspace}</div>
           <button
             type="button"
@@ -240,7 +240,7 @@ function AppShell({
         <div className="min-h-0 flex-1 overflow-y-auto overscroll-contain px-2 pt-1 pb-4" data-slot="sidebar-body">
           {nav}
         </div>
-        <div className="hidden items-center gap-2 border-t border-border px-2 py-1.5 lg:flex" data-slot="sidebar-foot">
+        <div className="hidden items-center gap-control-between border-t border-border px-2 py-1.5 lg:flex" data-slot="sidebar-foot">
           <input type="checkbox" id={collapseId} data-shell-collapse defaultChecked={collapsed} className="peer sr-only" />
           <label
             htmlFor={collapseId}
@@ -258,7 +258,7 @@ function AppShell({
 
       <div className="flex min-h-dvh min-w-0 flex-col" data-slot="app-main">
         <header
-          className="sticky top-0 z-30 flex h-12 shrink-0 items-center gap-2 border-b border-border bg-background/95 px-2 backdrop-blur supports-[backdrop-filter]:bg-background/80 sm:px-4 lg:px-6"
+          className="sticky top-0 z-30 flex h-12 shrink-0 items-center gap-control-between border-b border-border bg-background/95 px-2 backdrop-blur supports-[backdrop-filter]:bg-background/80 sm:px-4 lg:px-6"
           data-slot="app-topbar"
         >
           <button
@@ -270,7 +270,7 @@ function AppShell({
             <Icon name="menu" className="h-5 w-5" />
           </button>
           <div className="min-w-0 lg:hidden">{brand}</div>
-          <div className="ml-auto flex min-w-0 items-center gap-2 sm:gap-2">
+          <div className="ml-auto flex min-w-0 items-center gap-control-between">
             {actions}
             {account}
           </div>
@@ -282,9 +282,9 @@ function AppShell({
 
         {hasFooter && (
           <footer className="border-t border-border px-4 py-3 text-caption text-muted-foreground sm:px-6 lg:px-8" data-slot="app-footer">
-            <div className="flex flex-wrap items-center justify-center gap-x-4 gap-y-2">
+            <div className="flex flex-wrap items-center justify-center gap-x-4 gap-y-control-between">
               {footerLinks.length > 0 && (
-                <ul role="list" className="flex flex-wrap items-center justify-center gap-x-4 gap-y-2">
+                <ul role="list" className="flex flex-wrap items-center justify-center gap-x-4 gap-y-control-between">
                   {footerLinks.map((l) => (
                     <li key={l.href}>
                       <a

@@ -179,7 +179,7 @@
     {
       "part": "share link",
       "select": "[data-slot=\"detail-actions-share\"] a",
-      "fine": 32,
+      "fine": 33,
       "coarse": 49
     }
   ],
