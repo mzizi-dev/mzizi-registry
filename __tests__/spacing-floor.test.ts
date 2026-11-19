@@ -7,6 +7,9 @@ import { parseDocument } from "htmlparser2";
 import { join } from "node:path";
 import { describe, expect, it } from "vitest";
 import {
+  type SpacingLayer,
+  COMPONENT_LAYERS,
+  SPACING_LAYER_FLOORS,
   GAP_FLOOR_PX,
   INSET_FLOOR_PX,
   LEADING_FLOOR,
@@ -44,19 +47,54 @@ function body(header: string): string {
   return CSS.slice(start, CSS.indexOf("\n}", start));
 }
 const { spacing } = BUNDU_FLOOR;
+/** The controls layer's dense inline floor (`--space-control-x-dense`, 12px): the least a control's label is inset. */
+const CONTROL_DENSE_PX = BUNDU_FLOOR.spacing.layers.controlX.dense;
 
 describe("BUNDU_FLOOR.spacing: the one definition", () => {
   it("holds the owner's numbers, all on the 7px unit", () => {
     expect(spacing).toEqual({
+      layers: {
+        pageX: { px: 17 },
+        pageXWide: { px: 28, dense: 21 },
+        section: { px: 49, dense: 28 },
+        containerPadding: { px: 28, dense: 21 },
+        containerGap: { px: 21, dense: 14 },
+        cardPadding: { px: 21, dense: 14 },
+        cardGap: { px: 14, dense: 7 },
+        cardStack: { px: 7, dense: 7 },
+        controlX: { px: 17, dense: 12 },
+        fieldX: { px: 17, dense: 12 },
+        controlGap: { px: 9, dense: 7 },
+        controlBetween: { px: 9, dense: 9 },
+        chipX: { px: 12, dense: 9 },
+        pillX: { px: 9, dense: 5 },
+        pillGap: { px: 5, dense: 3 },
+        labelGap: { px: 7, dense: 5 },
+      },
       insetPx: 14,
-      controlGapPx: 7,
+      gapPx: 7,
+      controlGapPx: 9,
       labelGapPx: 7,
       itemGapPx: 7,
       leadingBody: 1.5,
     });
-    expect(spacing.insetPx).toBe(2 * BUNDU_FLOOR.unitPx);
-    for (const k of ["controlGapPx", "labelGapPx", "itemGapPx"] as const)
-      expect(spacing[k]).toBe(BUNDU_FLOOR.unitPx);
+    // the fallback floors for a component with no known layer are today's 14 and 7 (owner 2026-11-19: never weaker)
+    expect(spacing.insetPx).toBe(14);
+    expect(spacing.gapPx).toBe(7);
+    // the label floor is the global 7 (layer-blind guards read it); its dense step is pending the owner's confirmation
+    expect(spacing.labelGapPx).toBe(spacing.layers.labelGap.px);
+    expect(spacing.itemGapPx).toBe(spacing.layers.cardGap.dense);
+    expect(spacing.controlGapPx).toBe(spacing.layers.controlBetween.px);
+    // the Mzizi number rule (owner 2026-11-19): a multiple of 3, a multiple of 7, or a prime
+    const isPrime = (n: number) => n > 1 && [...Array(Math.floor(Math.sqrt(n)) - 1)].every((_, i) => n % (i + 2) !== 0);
+    const mzizi = (n: number) => n % 3 === 0 || n % 7 === 0 || isPrime(n);
+    for (const [name, l] of Object.entries(spacing.layers)) {
+      expect(mzizi(l.px), `${name} default ${l.px}`).toBe(true);
+      if ("dense" in l) {
+        expect(mzizi(l.dense), `${name} dense ${l.dense}`).toBe(true);
+        expect(l.dense, `${name}: dense never above default`).toBeLessThanOrEqual(l.px);
+      }
+    }
   });
   it("is what canon (/v1/brand accessibility) carries", () => {
     const a = brandMeta.accessibility;
@@ -75,6 +113,7 @@ describe("BUNDU_FLOOR.spacing: the one definition", () => {
   it("is what /v1/tokens (lib/tokens primitives) carries", () => {
     const f = primitives.spacingFloor;
     expect(f.inset.value).toBe(`${spacing.insetPx}px`);
+    expect(f.gap.value).toBe(`${spacing.gapPx}px`);
     expect(f.controlGap.value).toBe(`${spacing.controlGapPx}px`);
     expect(f.labelGap.value).toBe(`${spacing.labelGapPx}px`);
     expect(f.itemGap.value).toBe(`${spacing.itemGapPx}px`);
@@ -84,7 +123,7 @@ describe("BUNDU_FLOOR.spacing: the one definition", () => {
     const by = Object.fromEntries(ROLES.map((r) => [r.name, r]));
     for (const [name, want] of [
       ["spacing-inset-floor", spacing.insetPx],
-      ["spacing-gap-floor", spacing.controlGapPx],
+      ["spacing-gap-floor", spacing.gapPx],
     ] as const) {
       expect((by[name]!.default as { px: number }).px, name).toBe(want);
       expect(by[name]!.fixed, name).toBe(true);
@@ -96,7 +135,7 @@ describe("the stylesheet: --inset-floor, --gap-floor, --leading-floor", () => {
   const root = decls(body(":root {"));
   it("declares the three variables at the floor", () => {
     expect(px(root["--inset-floor"]!)).toBe(spacing.insetPx);
-    expect(px(root["--gap-floor"]!)).toBe(spacing.controlGapPx);
+    expect(px(root["--gap-floor"]!)).toBe(spacing.gapPx);
     expect(Number(root["--leading-floor"]!.split(" ")[0])).toBe(
       spacing.leadingBody,
     );
@@ -165,15 +204,16 @@ describe("the base layer enforces the floor on a component with no padding", () 
       /body \{ line-height: max\(var\(--lh-body\), var\(--leading-floor\)\);/,
     );
   });
-  it("insets a bare control's label, inline axis, from --inset-floor", () => {
+  it("insets a bare control's label, inline axis, at the controls layer's dense floor", () => {
     expect(normalised).toMatch(
-      /\) \{ padding-inline: var\(--inset-floor\); \}/,
+      /\) \{ padding-inline: var\(--space-control-x-dense\); \}/,
     );
     for (const sel of ["button", '[role="button"]', "select", "textarea"])
       expect(normalised, sel).toContain(sel);
   });
-  it("insets a bare text surface (no structured children), both axes", () => {
-    expect(normalised).toMatch(/\) \{ padding: var\(--inset-floor\); \}/);
+  it("insets a bare text surface (no structured children), both axes, at the cards and containers dense floors", () => {
+    expect(normalised).toMatch(/\) \{ padding: var\(--space-card-dense\); \}/);
+    expect(normalised).toMatch(/\) \{ padding: var\(--space-container-dense\); \}/);
     expect(normalised).toContain('[data-slot="card"]');
   });
   it("gives list, group and toolbar containers a --gap-floor gap", () => {
@@ -188,7 +228,7 @@ describe("the base layer enforces the floor on a component with no padding", () 
 });
 
 describe("the platform files carry the spacing floor", () => {
-  it("every platform file has the inset and gap roles at 14 and 7", () => {
+  it("every platform file has the inset and gap roles at the fallback floors (14 and 7)", () => {
     for (const f of [
       "swift.swift",
       "kotlin.kt",
@@ -209,7 +249,7 @@ describe("the platform files carry the spacing floor", () => {
       );
       expect(src, `${f} gap`).toMatch(
         new RegExp(
-          `spacing_?gap_?floor\\W+(?:[A-Za-z0-9]+\\W+)?${spacing.controlGapPx}\\b`,
+          `spacing_?gap_?floor\\W+(?:[A-Za-z0-9]+\\W+)?${spacing.gapPx}\\b`,
           "i",
         ),
       );
@@ -220,11 +260,13 @@ describe("the platform files carry the spacing floor", () => {
 // ─── The contract runner, and its Rust twin ─────────────────────────────────────────────────
 
 describe("the contract runner holds the spacing floor", () => {
+  it("an unknown layer is an error, not a silent fallback (the Rust evaluator panics with the same sentence)", () => {
+    const el = parseDocument('<div class="flex gap-2"><span>a</span><span>b</span></div>').children[0] as Element;
+    expect(() => spacingViolations(el, "nonsense" as SpacingLayer)).toThrow('unknown spacing layer "nonsense"');
+  });
   it("keeps a copy of BUNDU_FLOOR.spacing, equal to the source", () => {
     expect(INSET_FLOOR_PX).toBe(spacing.insetPx);
-    expect(GAP_FLOOR_PX).toBe(spacing.controlGapPx);
-    expect(GAP_FLOOR_PX).toBe(spacing.labelGapPx);
-    expect(GAP_FLOOR_PX).toBe(spacing.itemGapPx);
+    expect(GAP_FLOOR_PX).toBe(spacing.gapPx);
     expect(LEADING_FLOOR).toBe(spacing.leadingBody);
   });
   it("reads spacing utilities on the 4px scale", () => {
@@ -240,20 +282,29 @@ describe("the contract runner holds the spacing floor", () => {
   it("answers every shared case as mzizi-rs/contract-eval does", () => {
     const table = JSON.parse(
       readFileSync(join(ROOT, "contracts/spacing-cases.json"), "utf8"),
-    ) as { cases: { name: string; html: string; violations: number }[] };
+    ) as {
+      cases: {
+        name: string;
+        html: string;
+        violations: number;
+        layer?: SpacingLayer;
+      }[];
+    };
     expect(table.cases.length).toBeGreaterThan(15);
     for (const c of table.cases) {
       const first = parseDocument(c.html).children.find((n): n is Element =>
         isTag(n),
       );
       expect(first, c.name).toBeDefined();
-      expect(spacingViolations(first!).length, c.name).toBe(c.violations);
+      expect(spacingViolations(first!, c.layer).length, c.name).toBe(
+        c.violations,
+      );
     }
   });
-  it("keeps the 14px inline inset on the shell and page controls #625 named", () => {
+  it("holds the shell and page controls #625 named to the control floor, dense 12px inline (owner 2026-11-19)", () => {
     // Source-level and precise: a bare `px-<n>` (no variant) under INSET_FLOOR_PX on the line that carries the control's
     // classes. The rendered contracts cannot see these (the label sits in a child span), so the source is pinned.
-    // Block-axis padding and the fixed heights (49px hit regions) are exempt, as the rule says.
+    // Block-axis padding and the fixed heights (45px touch hit regions) are exempt, as the rule says.
     const N6 = "components/registry/n6-pages";
     const N7 = "components/registry/n7-shell";
     const controls: [string, string][] = [
@@ -278,7 +329,8 @@ describe("the contract runner holds the spacing floor", () => {
           const under = (
             line.match(/(?<![\w:[-])px-(?:\d+(?:\.\d+)?|px)(?![\w.-])/g) ?? []
           ).filter(
-            (t) => (spaceOf(t.slice(3)) ?? INSET_FLOOR_PX) < INSET_FLOOR_PX,
+            (t) =>
+              (spaceOf(t.slice(3)) ?? CONTROL_DENSE_PX) < CONTROL_DENSE_PX,
           );
           expect(under, `${file}: ${anchor}`).toEqual([]);
         }
@@ -286,27 +338,34 @@ describe("the contract runner holds the spacing floor", () => {
     }
   });
   it("holds a label chip or pill on its inline axis, and says so (#625)", () => {
-    const run = (html: string) =>
+    const run = (html: string, layer?: SpacingLayer) =>
       spacingViolations(
         parseDocument(html).children.find((n): n is Element => isTag(n))!,
+        layer,
       );
-    // 14px inline with a line-height block axis (py-1) or a fixed height holds.
+    // A pill at its default inline inset (px-pill-x, 9px) with a line-height block axis, or a fixed height, holds.
     expect(
-      run('<p class="w-fit rounded-full border px-3.5 py-1">Phase 0</p>'),
+      run('<p class="w-fit rounded-full border px-2.5 py-1">Phase 0</p>', "pills"),
     ).toEqual([]);
     expect(
       run(
         '<span class="inline-flex h-6 rounded-md border px-3.5 py-0.5">B</span>',
+        "pills",
       ),
     ).toEqual([]);
-    // Under 14px inline fails, whatever the block axis.
+    // Under the pill's dense inline floor (5px) fails, whatever the block axis (owner 2026-11-19: the pills layer).
     expect(
-      run('<p class="w-fit rounded-full border px-3 py-1">Phase 0</p>'),
+      run('<p class="w-fit rounded-full border px-1 py-1">Phase 0</p>', "pills"),
     ).toHaveLength(1);
     expect(
       run(
-        '<span class="inline-flex h-6 rounded-md border px-2 py-0.5">B</span>',
+        '<span class="inline-flex h-6 rounded-md border px-0.5 py-0.5">B</span>',
+        "pills",
       ),
+    ).toHaveLength(1);
+    // With no known layer the 14px fallback applies: the same 10px pill is under it.
+    expect(
+      run('<p class="w-fit rounded-full border px-2.5 py-1">Phase 0</p>'),
     ).toHaveLength(1);
     // The rule is written where people read the floor.
     const docs = readFileSync(join(ROOT, "docs/sizes-and-density.md"), "utf8");
@@ -359,6 +418,62 @@ describe("the contract runner holds the spacing floor", () => {
         `${key} is stale: its components no longer carry the class`,
       ).toContain(rest.join(":"));
     }
+  });
+});
+
+// ─── The layer-aware checker: one table, in TypeScript and in Rust ──────────────────────────
+
+const isSpace = (c: string | undefined): boolean => c !== undefined && /\s/.test(c);
+
+/** Index of the last non-whitespace character at or before `i` (-1 when there is none). */
+function skipSpaceBack(s: string, i: number): number {
+  let j = i;
+  while (j >= 0 && isSpace(s[j])) j--;
+  return j;
+}
+
+/**
+ * Reads the `"contract" | "contract" => Some("layer")` arms of a Rust match. Each `=>` that is
+ * followed by `Some("layer")` takes the run of quoted names directly before it, walking back over
+ * whitespace and optional `|` separators. A plain loop, not a regex with a nested quantifier.
+ */
+function rustComponentLayers(fn: string): Record<string, string> {
+  const out: Record<string, string> = {};
+  for (let arrow = fn.indexOf("=>"); arrow !== -1; arrow = fn.indexOf("=>", arrow + 2)) {
+    const layer = /^\s*\{?\s*Some\("(\w+)"\)/.exec(fn.slice(arrow + 2));
+    if (!layer) continue;
+    const names: string[] = [];
+    let i = skipSpaceBack(fn, arrow - 1);
+    while (fn[i] === '"') {
+      const open = i === 0 ? -1 : fn.lastIndexOf('"', i - 1);
+      const name = open === -1 ? "" : fn.slice(open + 1, i);
+      if (!/^[\w/-]+$/.test(name)) break;
+      names.unshift(name);
+      i = skipSpaceBack(fn, open - 1);
+      if (fn[i] === "|") i = skipSpaceBack(fn, i - 1);
+    }
+    for (const name of names) out[name] = layer[1]!;
+  }
+  return out;
+}
+
+describe("the layer-aware checker holds the same table in the runner and the Rust evaluator", () => {
+  const rs = readFileSync(join(ROOT, "mzizi-rs/contract-eval/contract_eval.rs"), "utf8");
+  it("every COMPONENT_LAYERS entry is in component_layer(), with the same layer", () => {
+    const from = rs.indexOf("pub fn component_layer");
+    const fn = rs.slice(from, rs.indexOf("\n}\n", from));
+    const rustMap = rustComponentLayers(fn);
+    expect(rustMap).toEqual(COMPONENT_LAYERS);
+  });
+  it("every layer's padding floor in layer_padding_floor() is the runner's", () => {
+    for (const [layer, f] of Object.entries(SPACING_LAYER_FLOORS)) {
+      const m = new RegExp(`"${layer}" => Some\\((\\d+)\\.0\\)`).exec(rs);
+      expect(Number(m?.[1]), layer).toBe(f.padding);
+    }
+  });
+  it("the between-controls and pill gap constants are the runner's", () => {
+    expect(rs).toMatch(new RegExp(`CONTROLS_BETWEEN_PX: f32 = ${SPACING_LAYER_FLOORS.controls.between}\\.0`));
+    expect(rs).toMatch(new RegExp(`PILLS_GAP_PX: f32 = ${SPACING_LAYER_FLOORS.pills.gap}\\.0`));
   });
 });
 
@@ -450,6 +565,9 @@ describe("every registry component: gaps, zero padding and negative margins are 
       padZero: 1,
       negMargin: 1,
     });
+    // the 7px fallback floor is a boundary: 6px is under it, 8px holds
+    expect(scanSource('<div className="flex gap-1.5">')).toEqual({ gap: 1 });
+    expect(scanSource('<div className="flex gap-2">')).toEqual({});
     expect(scanSource('<div className="flex gap-2 p-3.5">')).toEqual({});
     expect(
       scanSource(

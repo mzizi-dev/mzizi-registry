@@ -511,13 +511,14 @@ export const primitives = {
   // APCA 3.0 AAA accessibility standard
   touchTarget: {
     default: {
-      value: "49px",
-      description: "Default interactive element height: the Bundu hit area",
+      value: "45px",
+      description:
+        "Default interactive element height: the Bundu hit area, 3 x 15 (owner, 2026-11-19)",
     },
     sm: {
-      value: "49px",
+      value: "41px",
       description:
-        "Minimum hit region on touch — NEVER below this on touch; 28px on a desktop with a fine pointer (owner, 2026-11-12)",
+        "Dense secondary action, drawn at 41px (prime, owner 2026-11-19; was 40). The hit region stays at least 45px on touch and 24px on a desktop with a fine pointer",
     },
   },
 
@@ -2799,14 +2800,14 @@ export const roles = {
   "spacing-touch": {
     kind: "size",
     cssVar: "--size-touch",
-    light: "49px",
-    dark: "49px",
+    light: "45px",
+    dark: "45px",
   },
   "spacing-touch-min": {
     kind: "size",
     cssVar: "--size-touch-min",
-    light: "49px",
-    dark: "49px",
+    light: "45px",
+    dark: "45px",
   },
   "spacing-inset-floor": {
     kind: "size",
@@ -2819,6 +2820,192 @@ export const roles = {
     cssVar: "--size-gap-floor",
     light: "7px",
     dark: "7px",
+  },
+  "spacing-page-x": {
+    kind: "size",
+    cssVar: "--space-page-x",
+    light: "17px",
+    dark: "17px",
+  },
+  "spacing-page-x-wide": {
+    kind: "size",
+    cssVar: "--space-page-x-wide",
+    light: "28px",
+    dark: "28px",
+  },
+  "spacing-page-x-wide-dense": {
+    kind: "size",
+    cssVar: "--space-page-x-wide-dense",
+    light: "21px",
+    dark: "21px",
+  },
+  "spacing-section": {
+    kind: "size",
+    cssVar: "--space-section",
+    light: "49px",
+    dark: "49px",
+  },
+  "spacing-section-dense": {
+    kind: "size",
+    cssVar: "--space-section-dense",
+    light: "28px",
+    dark: "28px",
+  },
+  "spacing-container": {
+    kind: "size",
+    cssVar: "--space-container",
+    light: "28px",
+    dark: "28px",
+  },
+  "spacing-container-dense": {
+    kind: "size",
+    cssVar: "--space-container-dense",
+    light: "21px",
+    dark: "21px",
+  },
+  "spacing-container-gap": {
+    kind: "size",
+    cssVar: "--space-container-gap",
+    light: "21px",
+    dark: "21px",
+  },
+  "spacing-container-gap-dense": {
+    kind: "size",
+    cssVar: "--space-container-gap-dense",
+    light: "14px",
+    dark: "14px",
+  },
+  "spacing-card": {
+    kind: "size",
+    cssVar: "--space-card",
+    light: "21px",
+    dark: "21px",
+  },
+  "spacing-card-dense": {
+    kind: "size",
+    cssVar: "--space-card-dense",
+    light: "14px",
+    dark: "14px",
+  },
+  "spacing-card-gap": {
+    kind: "size",
+    cssVar: "--space-card-gap",
+    light: "14px",
+    dark: "14px",
+  },
+  "spacing-card-gap-dense": {
+    kind: "size",
+    cssVar: "--space-card-gap-dense",
+    light: "7px",
+    dark: "7px",
+  },
+  "spacing-card-stack": {
+    kind: "size",
+    cssVar: "--space-card-stack",
+    light: "7px",
+    dark: "7px",
+  },
+  "spacing-card-stack-dense": {
+    kind: "size",
+    cssVar: "--space-card-stack-dense",
+    light: "7px",
+    dark: "7px",
+  },
+  "spacing-control-x": {
+    kind: "size",
+    cssVar: "--space-control-x",
+    light: "17px",
+    dark: "17px",
+  },
+  "spacing-control-x-dense": {
+    kind: "size",
+    cssVar: "--space-control-x-dense",
+    light: "12px",
+    dark: "12px",
+  },
+  "spacing-field-x": {
+    kind: "size",
+    cssVar: "--space-field-x",
+    light: "17px",
+    dark: "17px",
+  },
+  "spacing-field-x-dense": {
+    kind: "size",
+    cssVar: "--space-field-x-dense",
+    light: "12px",
+    dark: "12px",
+  },
+  "spacing-control-gap": {
+    kind: "size",
+    cssVar: "--space-control-gap",
+    light: "9px",
+    dark: "9px",
+  },
+  "spacing-control-gap-dense": {
+    kind: "size",
+    cssVar: "--space-control-gap-dense",
+    light: "7px",
+    dark: "7px",
+  },
+  "spacing-control-between": {
+    kind: "size",
+    cssVar: "--space-control-between",
+    light: "9px",
+    dark: "9px",
+  },
+  "spacing-control-between-dense": {
+    kind: "size",
+    cssVar: "--space-control-between-dense",
+    light: "9px",
+    dark: "9px",
+  },
+  "spacing-chip-x": {
+    kind: "size",
+    cssVar: "--space-chip-x",
+    light: "12px",
+    dark: "12px",
+  },
+  "spacing-chip-x-dense": {
+    kind: "size",
+    cssVar: "--space-chip-x-dense",
+    light: "9px",
+    dark: "9px",
+  },
+  "spacing-pill-x": {
+    kind: "size",
+    cssVar: "--space-pill-x",
+    light: "9px",
+    dark: "9px",
+  },
+  "spacing-pill-x-dense": {
+    kind: "size",
+    cssVar: "--space-pill-x-dense",
+    light: "5px",
+    dark: "5px",
+  },
+  "spacing-pill-gap": {
+    kind: "size",
+    cssVar: "--space-pill-gap",
+    light: "5px",
+    dark: "5px",
+  },
+  "spacing-pill-gap-dense": {
+    kind: "size",
+    cssVar: "--space-pill-gap-dense",
+    light: "3px",
+    dark: "3px",
+  },
+  "spacing-label-gap": {
+    kind: "size",
+    cssVar: "--space-label-gap",
+    light: "7px",
+    dark: "7px",
+  },
+  "spacing-label-gap-dense": {
+    kind: "size",
+    cssVar: "--space-label-gap-dense",
+    light: "5px",
+    dark: "5px",
   },
   "spacing-control": {
     kind: "size",
@@ -2847,8 +3034,8 @@ export const roles = {
   "spacing-control-dense": {
     kind: "size",
     cssVar: "--size-control-dense",
-    light: "32px",
-    dark: "32px",
+    light: "33px",
+    dark: "33px",
   },
   "spacing-field": {
     kind: "size",

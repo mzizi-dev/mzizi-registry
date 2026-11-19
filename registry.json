@@ -2941,7 +2941,7 @@
       "categories": ["components", "primitives"],
       "dependencies": ["radix-ui"],
       "description": "Displays a button or a component that looks like a button.",
-      "docs": "Use it for: Primary CTA (mineral accent), Secondary action (outline/ghost), Destructive action (delete, remove), Icon-only action, Link-style navigation.\nVariants: default, outline, secondary, ghost, destructive, link.\nSizes: default (56px), sm (48px), lg (56px wide), icon (56px square), icon-sm (48px square).\nIncludes: No styling class: data-slot, data-variant, data-size and data-state carry the state, Look in styles/pattern/mzizi-theme.css; minimums in styles/pattern/floor.css, asChild support via Radix Slot, Disabled is the native attribute, mirrored to data-state.\nAccessibility: Focus-visible ring with --ring token, aria-invalid styling, Bundu hit region: 49px on touch, 28px on a desktop (floor.css), Keyboard accessible (Enter/Space).\nInstall: npx shadcn@latest add https://api.mzizi.dev/v1/ui/button",
+      "docs": "Use it for: Primary CTA (mineral accent), Secondary action (outline/ghost), Destructive action (delete, remove), Icon-only action, Link-style navigation.\nVariants: default, outline, secondary, ghost, destructive, link.\nSizes: default (49px on touch, 36px at desktop density), sm (49px on touch, 33px at desktop density), lg (56px on touch, 41px at desktop density), icon (49px square on touch, 36px at desktop density), icon-sm (49px on touch, 33px at desktop density).\nIncludes: No styling class: data-slot, data-variant, data-size and data-state carry the state, Look in styles/pattern/mzizi-theme.css; minimums in styles/pattern/floor.css, asChild support via Radix Slot, Disabled is the native attribute, mirrored to data-state.\nAccessibility: Focus-visible ring with --ring token, aria-invalid styling, Bundu hit region: 45px on touch, 24px on a desktop (floor.css), Keyboard accessible (Enter/Space).\nInstall: npx shadcn@latest add https://api.mzizi.dev/v1/ui/button",
       "files": [
         {
           "path": "components/registry/n2-primitives/button.tsx",
@@ -2953,7 +2953,7 @@
         "a11y": [
           "Focus-visible ring with --ring token",
           "aria-invalid styling",
-          "Bundu hit region: 49px on touch, 28px on a desktop (floor.css)",
+          "Bundu hit region: 45px on touch, 24px on a desktop (floor.css)",
           "Keyboard accessible (Enter/Space)"
         ],
         "collection": "components",
@@ -2966,11 +2966,11 @@
         "hasDemo": true,
         "owner": "framework",
         "sizes": [
-          "default (56px)",
-          "sm (48px)",
-          "lg (56px wide)",
-          "icon (56px square)",
-          "icon-sm (48px square)"
+          "default (49px on touch, 36px at desktop density)",
+          "sm (49px on touch, 33px at desktop density)",
+          "lg (56px on touch, 41px at desktop density)",
+          "icon (49px square on touch, 36px at desktop density)",
+          "icon-sm (49px on touch, 33px at desktop density)"
         ],
         "useCases": [
           "Primary CTA (mineral accent)",
@@ -10415,8 +10415,8 @@
       "author": "Mzizi, operated by Nyuchi Africa (Pvt) Ltd — https://mzizi.dev",
       "categories": ["primitives"],
       "dependencies": [],
-      "description": "Markdown, safe by construction: parsed into a typed tree and drawn as elements, never through an HTML string. Raw HTML in the source is text; links pass a scheme allow-list (https-only on request) and show their address on hover, normalised (an IDN host as punycode). Ships in three builds under one contract: Mzizi Roots (.rs, mzizi-ui; Rust API: MarkdownRenderer, MarkdownRendererProps, parse_markdown, safe_href, safe_link and the Block tree), Astro (.astro) and React (.tsx).",
-      "docs": "Use it for: Untrusted user text (notes, comments, flags) on pages that hold personal data, Rendering LLM markdown output with Nyuchi typography, Documentation pages rendered from markdown source, Rich text from editors that store HTML (from=\"html\").\nVariants: safe, https.\nIncludes: cn() for className composition, data-slot attribute, Typed Markdown tree (markdown-parse), No HTML string sink in any build, Scheme allow-list for links, Link titles: the address normalised, an IDN host as punycode, GFM tables, nested lists, fenced code, Rust (mzizi-ui) and Astro siblings with one contract.\nAccessibility: Semantic HTML: headings, lists, blockquote, tables with th scope=col, Links keep a focus-visible outline in the ring token, headingBase fits the text under the page's own headings.\nInstall: npx shadcn@latest add https://api.mzizi.dev/v1/ui/markdown-renderer",
+      "description": "Markdown, safe by construction: parsed into a typed tree and drawn as elements, never through an HTML string. Raw HTML in the source is text; links pass a scheme allow-list (https-only on request) and show their address on hover, normalised (an IDN host as punycode). Ships in three builds under one contract: Mzizi Roots (.rs, mzizi-roots; Rust API: RenderProps, render, MarkdownLinks, parse_markdown, safe_href, safe_link and the Block tree), Astro (.astro) and React (.tsx).",
+      "docs": "Use it for: Untrusted user text (notes, comments, flags) on pages that hold personal data, Rendering LLM markdown output with Nyuchi typography, Documentation pages rendered from markdown source, Rich text from editors that store HTML (from=\"html\").\nVariants: safe, https.\nIncludes: cn() for className composition, data-slot attribute, Typed Markdown tree (markdown-parse), No HTML string sink in any build, Scheme allow-list for links, Link titles: the address normalised, an IDN host as punycode, GFM tables, nested lists, fenced code, Rust (mzizi-roots) and Astro siblings with one contract.\nAccessibility: Semantic HTML: headings, lists, blockquote, tables with th scope=col, Links keep a focus-visible outline in the ring token, headingBase fits the text under the page's own headings.\nInstall: npx shadcn@latest add https://api.mzizi.dev/v1/ui/markdown-renderer",
       "files": [
         {
           "path": "components/registry/n2-primitives/markdown-renderer.tsx",
@@ -10439,7 +10439,7 @@
           "Scheme allow-list for links",
           "Link titles: the address normalised, an IDN host as punycode",
           "GFM tables, nested lists, fenced code",
-          "Rust (mzizi-ui) and Astro siblings with one contract"
+          "Rust (mzizi-roots) and Astro siblings with one contract"
         ],
         "hasDemo": true,
         "owner": "mzizi",

@@ -166,17 +166,18 @@ export const primitives = {
   // ─── TOUCH TARGETS (canonical) ──────────────
   // APCA 3.0 AAA accessibility standard
   touchTarget: {
-    default: { value: "49px", description: "Default interactive element height: the Bundu hit area, 7 x 7 (above Apple's 44x44 pt)" },
-    sm: { value: "49px", description: "Minimum hit region on touch — NEVER below this on touch. On a desktop (fine pointer with hover) the minimum hit region, and the smallest a control is drawn, is 28px (owner, 2026-11-12, #660)" },
+    default: { value: `${BUNDU_FLOOR.hitAreaPx}px`, description: "Default interactive element height: the Bundu hit area, 3 x 15 (above Apple's 44x44 pt; owner, 2026-11-19)" },
+    sm: { value: "41px", description: "Dense secondary action, drawn at 41px (prime, owner 2026-11-19; was 40). The hit region stays at least 45px on touch and 24px on a desktop (fine pointer with hover). Not for primary controls" },
   },
 
   // ─── SPACING FLOOR (owner, 2026-11-04, #617) ─
   // Minimums nothing can go under, read from BUNDU_FLOOR.spacing (lib/tokens/roles.source.ts), never retyped.
   spacingFloor: {
-    inset: { value: `${BUNDU_FLOOR.spacing.insetPx}px`, cssVar: "--inset-floor", description: "Least padding between text and the edge of its container (2 x 7). A control's label on the inline axis; a card, panel, dialog, alert or popover on both axes." },
-    controlGap: { value: `${BUNDU_FLOOR.spacing.controlGapPx}px`, cssVar: "--gap-floor", description: "Least gap between adjacent interactive controls, visible edge to visible edge. Hit regions may touch, never overlap." },
-    labelGap: { value: `${BUNDU_FLOOR.spacing.labelGapPx}px`, cssVar: "--gap-floor", description: "Least gap between a label and its field." },
-    itemGap: { value: `${BUNDU_FLOOR.spacing.itemGapPx}px`, cssVar: "--gap-floor", description: "Least gap between sibling items in a list, grid, stack or toolbar." },
+    inset: { value: `${BUNDU_FLOOR.spacing.insetPx}px`, cssVar: "--inset-floor", description: "Fallback padding between text and the edge of its container, for a component with no known layer (14px, 2 x 7). A component with a layer is held to its layer's dense floor (controls 12px, cards 14px, containers 21px, pills 5px). Each layer's own token is its `--space-*` default and `--space-*-dense` absolute floor: controls 17px / 12px, cards 21px / 14px, containers 28px / 21px." },
+    gap: { value: `${BUNDU_FLOOR.spacing.gapPx}px`, cssVar: "--gap-floor", description: "Fallback gap for a component with no known layer (7px, the unit). Gaps between adjacent controls are 9px (`--space-control-between`), and a pill's gap is 3px." },
+    controlGap: { value: `${BUNDU_FLOOR.spacing.controlGapPx}px`, cssVar: "--space-control-between", description: "Gap between adjacent interactive controls, visible edge to visible edge (owner 2026-11-19; was 7px). Hit regions may touch, never overlap." },
+    labelGap: { value: `${BUNDU_FLOOR.spacing.labelGapPx}px`, cssVar: "--space-label-gap", description: "The global label-to-field floor, 7px (`--space-label-gap`). Its dense step, 5px, is pending the owner's confirmation." },
+    itemGap: { value: `${BUNDU_FLOOR.spacing.itemGapPx}px`, cssVar: "--space-card-gap-dense", description: "Least gap between sibling items in a list, grid, stack or toolbar: the dense floor of `--space-card-gap` (7px; default 14px). Alias kept for consumers (owner 2026-11-19)." },
     leadingBody: { value: `${BUNDU_FLOOR.spacing.leadingBody}`, cssVar: "--leading-floor", description: "Least body line height (WCAG 1.4.12). Headings and display type keep their own tighter leading." },
   },
 
@@ -851,7 +852,7 @@ export function generateCSSVariables(theme: ThemeMode = "dark", brand: BrandId =
 
   // Spacing floor (#617)
   lines.push(`  --inset-floor: ${primitives.spacingFloor.inset.value};`)
-  lines.push(`  --gap-floor: ${primitives.spacingFloor.controlGap.value};`)
+  lines.push(`  --gap-floor: ${primitives.spacingFloor.gap.value};`)
   lines.push(`  --leading-floor: ${primitives.spacingFloor.leadingBody.value};`)
 
   // Motion

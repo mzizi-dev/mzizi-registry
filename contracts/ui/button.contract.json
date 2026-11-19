@@ -45,7 +45,7 @@
       "required": false,
       "default": "default",
       "values": ["default", "sm", "lg", "icon", "icon-sm"],
-      "description": "Heights are set by the stylesheet from the size roles: default 49px on touch and 36px drawn at desktop density, sm 49 / 32, lg 56 / 40, icon 49 / 36, icon-sm 49 / 32; each keeps the 49px (touch) or 28px (desktop) hit region."
+      "description": "Heights are set by the stylesheet from the size roles: default 49px on touch and 36px drawn at desktop density, sm 49 / 33, lg 56 / 41, icon 49 / 36, icon-sm 49 / 33; each keeps the 45px (touch) or 24px (desktop) hit region (owner 2026-11-19)."
     },
     {
       "name": "type",
@@ -75,7 +75,7 @@
   ],
   "behaviour": [
     "data-variant, data-size and data-state carry the variant, size and state. The component sets no styling class; `class` is a pass-through for the adopter's own classes.",
-    "Never below the Bundu hit region: 49px on touch, 28px on a desktop with a fine pointer, held by floor.css (the hit-area pseudo-element), not by the markup.",
+    "Never below the Bundu hit region: 45px on touch, 24px on a desktop with a fine pointer (owner 2026-11-19), held by floor.css (the hit-area pseudo-element), not by the markup.",
     "data-state is `disabled` when the native disabled attribute is set, `enabled` otherwise."
   ],
   "states": {

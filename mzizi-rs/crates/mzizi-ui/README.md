@@ -1,29 +1,19 @@
 # mzizi-ui
 
 Primitives from the [Mzizi](https://mzizi.dev) component registry — **node N2,
-primitives** — the second node of the DNA-helix architecture. They are Dioxus components today.
-Mzizi is replacing Dioxus with its own `render(props) -> String` path; the `render` functions that
-exist so far are on `skeleton`, `badge`, `progress`, `separator`, `status-badge`, `safe-area-frame`
-and `chart`.
+primitives** — the second node of the DNA-helix architecture. They are Dioxus components.
+Mzizi is replacing Dioxus with its own `render(props) -> String` path, and that path lives in
+[`mzizi-roots`](https://crates.io/crates/mzizi-roots), not here.
 
-The primitives ported so far: `Alert`, `Avatar`, `Badge`, `Button`, `Card`, `Chart`,
-`DeviceCode`, `Input`, `Label`, `MarkdownRenderer`, `Progress`, `SafeAreaFrame`, `Separator`,
-`Skeleton` and `StatusBadge`. That is the whole of this crate; N2 has many more components, and the
-rest exist only as React and Astro today.
+This crate exports these primitives: `Avatar`, `Button`, `DeviceCode`, `Input`, `Label`,
+`Skeleton` and `StatusBadge`. N2 has more components, and the rest exist only as React and
+Astro today.
 
-`MarkdownRenderer` is safe by construction: it parses Markdown into a typed tree
-(`parse_markdown`, `MarkdownBlock`, `MarkdownInline`) and renders elements, with no HTML
-string anywhere. Raw HTML in the text shows as text, and links pass `safe_link`, a scheme
-allow-list (`MarkdownLinks::Https` keeps https only). Each kept link shows its address on
-hover (`title`), normalised the way the URL parser writes it: the scheme and host lower-cased
-and an internationalised host as punycode (a `mailto:` address's domain too), so a look-alike
-host shows for what it is.
-
-```rust
-use mzizi_ui::{MarkdownLinks, MarkdownRenderer};
-
-rsx! { MarkdownRenderer { content: "**Hi** [docs](https://mzizi.dev)", links: MarkdownLinks::Https } }
-```
+The unstyled components moved to `mzizi-roots`, at `mzizi_roots::components::*`, and this crate
+no longer exports them: `Alert`, `Badge`, `Card`, `Chart`, `MarkdownRenderer`, `Progress`,
+`SafeAreaFrame` and `Separator`. For those, depend on `mzizi-roots` instead. Its
+`components::markdown_renderer` module holds the Markdown renderer (`RenderProps`, `render`,
+`MarkdownLinks`, `parse_markdown` and the `Block` tree).
 
 `DeviceCode` is the device side of an RFC 8628 pairing: the user code, the short address, a
 QR code drawn on the device (the `qrcode` crate, encoder only) and the time left. It renders
@@ -46,7 +36,7 @@ rsx! {
 
 ```toml
 [dependencies]
-mzizi-ui = "0.4"
+mzizi-ui = "0.9"
 ```
 
 The registry's `publish-crates` workflow releases each new version to crates.io. Before

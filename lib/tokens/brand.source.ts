@@ -1270,17 +1270,22 @@ export const brandMeta: BrandMeta = {
       "APCA 3.0 AAA, with WCAG 2 minimums: body text 7:1, non-body text 4.5:1, UI parts 3:1",
     screenReaders: "Semantic HTML with ARIA attributes where needed",
     focusIndicator: "2px ring with ring-offset-2, using --ring token",
-    minTouchTarget: 49,
-    defaultTouchTarget: 49,
-    // The pointer-aware tier (owner, 2026-11-12): on a desktop with a fine pointer and hover, and no coarse
-    // pointer anywhere, the hit region is 28px and body text 15px. Touch, and any narrow viewport, keep 49 and
-    // 17. `BUNDU_FLOOR.pointerFine` in roles.source.ts is the one source; the build fails if these disagree.
-    minTouchTargetPointerFine: 28,
+    minTouchTarget: 45,
+    defaultTouchTarget: 45,
+    // The pointer-aware tier (owner, 2026-11-12; hit region lowered to 24 by the owner, 2026-11-19): on a desktop with a
+    // fine pointer and hover, and no coarse pointer anywhere, the hit region is 24px and body text 15px. Touch, and any
+    // narrow viewport, keep 45 and 17. `BUNDU_FLOOR.pointerFine` in roles.source.ts is the one source; the build fails if
+    // these disagree.
+    minTouchTargetPointerFine: 24,
     bodyPxPointerFine: 15,
-    // The spacing floor (owner, 2026-11-04, #617): minimums nothing can go under. `BUNDU_FLOOR.spacing` in
-    // roles.source.ts is the one source; the build fails if these disagree.
+    // The spacing floor (owner, 2026-11-04, #617; one floor per layer with a dense step, owner 2026-11-19): minimums
+    // nothing can go under. `minInset` is the floor for a component with no known layer (14, today's value; each layer's
+    // own dense floor is checked by the layer-aware checker), `minControlGap` the gap between
+    // adjacent controls
+    // (9), `minLabelGap` and `minItemGap` 7, and `minBodyLeading` 1.5. `BUNDU_FLOOR.spacing` in roles.source.ts is the one
+    // source; the build fails if these disagree.
     minInset: 14,
-    minControlGap: 7,
+    minControlGap: 9,
     minLabelGap: 7,
     minItemGap: 7,
     minBodyLeading: 1.5,
@@ -1298,10 +1303,10 @@ export const brandMeta: BrandMeta = {
         icon: 49,
         default: 49,
       },
-      padding: "px-4 (sm), px-5 (default), px-6 (lg)",
+      padding: "px-control-x (sm, 17), px-5 (default), px-6 (lg)",
       variants: ["default", "destructive", "outline", "secondary", "ghost", "link"],
       borderRadius: 9999,
-      minTouchTarget: 49,
+      minTouchTarget: 45,
     },
     {
       name: "input",
@@ -1310,10 +1315,10 @@ export const brandMeta: BrandMeta = {
         sm: 49,
         default: 49,
       },
-      padding: "px-4",
+      padding: "px-field-x (17)",
       variants: ["default", "error"],
       borderRadius: 9999,
-      minTouchTarget: 49,
+      minTouchTarget: 45,
     },
     {
       name: "avatar",
@@ -1327,39 +1332,39 @@ export const brandMeta: BrandMeta = {
       padding: "none",
       variants: ["image", "fallback"],
       borderRadius: 9999,
-      minTouchTarget: 49,
+      minTouchTarget: 45,
     },
     {
       name: "badge",
       heights: {
         default: 22,
       },
-      padding: "px-2.5 py-0.5",
+      padding: "px-3.5 (14) py-0.5 (2)",
       variants: ["default", "secondary", "destructive", "outline"],
       borderRadius: 9999,
-      minTouchTarget: 49,
+      minTouchTarget: 45,
     },
     {
       name: "card",
-      note: "Cards use --radius-lg (14px) with a full 1px border and compact 14px padding (4.2.0 density refresh).",
+      note: "Cards use --radius-lg (14px) with a full 1px border. Padding is py-6 (24) on the block axis and px-6 (24) on the header and content (px-4 at size sm), above the cards layer's 21px default.",
       heights: {
         auto: 0,
       },
-      padding: "p-3.5",
+      padding: "py-6 (24), px-6 (24) on header and content",
       variants: ["default", "accented", "clickable"],
       borderRadius: 14,
-      minTouchTarget: 49,
+      minTouchTarget: 45,
     },
     {
       name: "dialog",
-      note: "Dialogs use --radius-xl (17px).",
+      note: "Dialogs use --radius-xl (17px) and p-6 (24) padding, above the containers layer's 21px dense floor. The 28px containers default (p-container) is not used here yet.",
       heights: {
         auto: 0,
       },
-      padding: "p-5",
+      padding: "p-6 (24)",
       variants: ["default"],
       borderRadius: 17,
-      minTouchTarget: 49,
+      minTouchTarget: 45,
     },
     {
       name: "toggle",
@@ -1369,7 +1374,7 @@ export const brandMeta: BrandMeta = {
       padding: "none",
       variants: ["on", "off"],
       borderRadius: 9999,
-      minTouchTarget: 49,
+      minTouchTarget: 45,
     },
     {
       name: "checkbox",
@@ -1380,7 +1385,7 @@ export const brandMeta: BrandMeta = {
       padding: "none",
       variants: ["checked", "unchecked", "indeterminate"],
       borderRadius: 7,
-      minTouchTarget: 49,
+      minTouchTarget: 45,
     },
     {
       name: "tabs",
@@ -1388,10 +1393,10 @@ export const brandMeta: BrandMeta = {
       heights: {
         default: 49,
       },
-      padding: "px-4",
+      padding: "px-control-x (17)",
       variants: ["default", "underline"],
       borderRadius: 17,
-      minTouchTarget: 49,
+      minTouchTarget: 45,
     },
   ],
 }

@@ -4,6 +4,9 @@
 skeleton `render` (#506) and six static primitives (#510) are merged, which is PR 0 and six of the
 thirteen components in PR 1 (§5). Dioxus is still a dependency of `mzizi-ui`, `mzizi-brand`,
 `mzizi-shell`, `mzizi-docs` and the two umbrellas, and nothing is published or version-bumped. **Tracking:** [#503](https://github.com/mzizi-dev/mzizi-registry/issues/503).
+**Later (#710, 2026-11-17):** `alert`, `badge`, `card`, `chart`, `markdown-renderer`, `progress`,
+`safe-area-frame` and `separator` moved from `mzizi-ui` to `mzizi-roots`, which no longer depends on
+Dioxus. Where this RFC names `mzizi-ui` for those components, it describes the state before that move.
 **Amends:** [RFC-roots](./RFC-roots.md) §2.1 ("UI components are Dioxus") and §3 (the Dioxus
 islands). The server half of Roots (`mzizi-roots-server`, `mzizi-assurance`, `mzizi-fundi`,
 `mzizi-discovery`, `mzizi-activitypub`) is not affected, except the `docs` feature it inherits
