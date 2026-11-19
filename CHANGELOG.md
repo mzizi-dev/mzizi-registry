@@ -25,6 +25,12 @@ For a consumer of the tokens, what changes and what it is called now:
 
 Not breaking: no token is removed, and the legacy opt-out (`data-mzizi-sizes="legacy"`) restores the pinned 2026-10 values.
 
+### Fixed — the markdown-renderer registry entry names `mzizi-roots`, not `mzizi-ui` (2026-11-17, Refs [#710](https://github.com/mzizi-dev/mzizi-registry/issues/710))
+
+- **The `markdown-renderer` item in `registry.json` now says its Rust build is in `mzizi-roots`** (`mzizi_roots::components::markdown_renderer`: `RenderProps`, `render`, `MarkdownLinks`, `parse_markdown`, `safe_href`, `safe_link` and the `Block` tree). Its description, docs and feature line still named `mzizi-ui` and the `MarkdownRenderer` and `MarkdownRendererProps` items that #710 moved out of it. The other seven components moved in #710 carried no such reference in the manifest.
+- **The `mzizi-ui` README lists only what that crate exports** (`Avatar`, `Button`, `DeviceCode`, `Input`, `Label`, `Skeleton`, `StatusBadge`) and points readers to `mzizi-roots` for `Alert`, `Badge`, `Card`, `Chart`, `MarkdownRenderer`, `Progress`, `SafeAreaFrame` and `Separator`. The `mzizi-roots` README's install pin moves to 0.8.
+- **The shared markdown test cases and the Roots renderer RFC point at `mzizi-roots`.** The fixture's comment names `mzizi-roots` `tests/markdown_parity.rs` as the Rust consumer, and the RFC carries a note that #710 moved the eight components out of `mzizi-ui`.
+
 ### Added — the seven engineering constraints join the Ubuntu doctrine (2026-11-17, Refs [#722](https://github.com/mzizi-dev/mzizi-registry/issues/722))
 
 - **New doctrine collection `genetic-code-engineering-constraints`**, beside the Ubuntu pillars and principles: outdoor-readability, connectivity-gradient-design, multilingual-parity, shared-device-awareness, personal-data-sovereignty, no-surveillance-business-model and bundu-floor, in that order. Each record names the Ubuntu principles it serves, what it looks like in a build (`expression`) and the `check` that fails a surface which does not meet it. The ids and order match the canonical ecosystem record (bundu-labs/bundu-standards#105).
