@@ -771,6 +771,7 @@ export interface ResolvedRole {
 /** The bare custom property a role is declared as. */
 export function roleVar(r: Role): string {
   if (r.kind === "radius") return `--r-${r.name.replace(/^radius-/, "")}`;
+  if (r.kind === "size" && r.space) return `--space-${r.name.replace(/^spacing-/, "")}`;
   if (r.kind === "size") return `--size-${r.name.replace(/^spacing-/, "")}`;
   return `--${r.name}`;
 }
@@ -1741,14 +1742,14 @@ export function renderGlobalsCss(
  * component never branches on screen size. Density is about visual size only:
  * it is not a network-quality signal, because laptops and iPads are usually on wifi.
  *
- *   phone / coarse pointer   the :root values: 49px targets (the Bundu hit area), 17px body
- *   tablet (>= 48rem)        display type steps down; targets stay 49px, body 17px (an iPad is still touched)
- *   desktop                  fine pointer + hover + >= 64rem: controls are DRAWN 28-40px, hit region 28px, body 15px
+ *   phone / coarse pointer   the :root values: 45px targets (the Bundu hit area), 17px body
+ *   tablet (>= 48rem)        display type steps down; targets stay 45px, body 17px (an iPad is still touched)
+ *   desktop                  fine pointer + hover + >= 64rem: controls are DRAWN 28-40px, hit region 24px, body 15px
  *
  * THE BUNDU FLOOR has two pointer tiers (owner ruling 2026-11-12, #660; \`BUNDU_FLOOR.pointerFine\`). Touch (every
- * device that is not a desktop): body 17px, captions 14px, and a 49px HIT REGION on every interactive control.
- * Desktop (the media query below): body 15px, captions still 14px, and a 28px hit region, so a control's drawn
- * box is its hit region and \`--target-floor\` is lowered here to ${FLOOR_FINE_HIT_PX}px. No type step lives in these media queries below
+ * device that is not a desktop): body 17px, captions 14px, and a 45px HIT REGION on every interactive control.
+ * Desktop (the media query below): body 15px, captions still 14px, and a ${FLOOR_FINE_HIT_PX}px hit region, inside a control's drawn
+ * box (at least ${FLOOR_VISIBLE_FINE_PX}px), and \`--target-floor\` is lowered here to ${FLOOR_FINE_HIT_PX}px. No type step lives in these media queries below
  * the tier's floor. Native form fields step down with the rest. Zoom and
  * prefers-reduced-motion are untouched. Gaps between targets are spacing tokens, which density does
  * not change.
@@ -1816,8 +1817,11 @@ function densityLayer(): string {
 }
 
 /* ════════════════════════════════════════════════════════════════════════════
- * THE SPACING FLOOR (owner, 2026-11-04, #617; \`BUNDU_FLOOR.spacing\`): minimums that nothing can go under, even a
- * component that sets no padding at all. Inset ${BUNDU_FLOOR.spacing.insetPx}px, gaps ${BUNDU_FLOOR.spacing.controlGapPx}px, body leading ${BUNDU_FLOOR.spacing.leadingBody}.
+ * THE SPACING FLOOR (owner, 2026-11-04, #617; one floor per layer with a dense step, owner 2026-11-19; \`BUNDU_FLOOR.spacing\`):
+ * minimums that nothing can go under, even a component that sets no padding at all. A bare control is inset at its dense
+ * floor, ${BUNDU_FLOOR.spacing.layers.controlX.dense}px (\`--space-control-x-dense\`), a bare card ${BUNDU_FLOOR.spacing.layers.cardPadding.dense}px (\`--space-card-dense\`), a bare
+ * dialog, sheet or popover ${BUNDU_FLOOR.spacing.layers.containerPadding.dense}px (\`--space-container-dense\`); the least dense gap of any layer is ${BUNDU_FLOOR.spacing.gapPx}px
+ * (\`--gap-floor\`), and body leading is ${BUNDU_FLOOR.spacing.leadingBody}.
  * These are DEFAULTS in the base layer, like the hit-area rule above: a bare element gets the floor, and a utility
  * on it (\`p-6\`, \`gap-2\`) is the author's own value, which \`__tests__/spacing-floor.test.ts\` holds to the floor
  * for every registry component. They step aside, by design, for:
@@ -1845,16 +1849,25 @@ function densityLayer(): string {
       textarea,
       input:not([type="checkbox"], [type="radio"], [type="range"], [type="hidden"], [type="file"], [type="color"], [type="image"])
     ):not(:has(> svg:only-child, > img:only-child), :empty, [class^="size-"], [class*=" size-"], [data-day]) {
-    padding-inline: var(--inset-floor);
+    padding-inline: var(--space-control-x-dense);
   }
-  :where(dialog, [popover], [role="alertdialog"], [role="tooltip"], [data-slot="card"], [data-slot="alert"]):not(
+  :where(dialog, [popover], [role="alertdialog"]):not(
       :has(> [data-slot*="header"], > [data-slot*="content"], > [data-slot*="footer"], > [data-slot*="title"], > [data-slot*="description"]),
       svg,
       :empty,
       [class^="size-"],
       [class*=" size-"]
     ) {
-    padding: var(--inset-floor);
+    padding: var(--space-container-dense);
+  }
+  :where([role="tooltip"], [data-slot="card"], [data-slot="alert"]):not(
+      :has(> [data-slot*="header"], > [data-slot*="content"], > [data-slot*="footer"], > [data-slot*="title"], > [data-slot*="description"]),
+      svg,
+      :empty,
+      [class^="size-"],
+      [class*=" size-"]
+    ) {
+    padding: var(--space-card-dense);
   }
   :where([role="toolbar"], [role="tablist"], [role="radiogroup"], [role="group"], [role="menu"], [role="listbox"], [role="list"], ul, ol, menu, fieldset) {
     gap: var(--gap-floor);
@@ -1887,6 +1900,9 @@ ${typeLines(TYPE_STEPS.desktop).join("\n")}
   --target-floor: ${LEGACY_FLOOR_PX / 16}rem; /* ${LEGACY_FLOOR_PX}px */
   --inset-floor: 0px; /* no spacing floor (steps out of #617) */
   --gap-floor: 0px;
+  --space-control-x-dense: 0px; /* the dense floors the base layer reads (owner 2026-11-19) */
+  --space-card-dense: 0px;
+  --space-container-dense: 0px;
   --leading-floor: 1;
   --control-floor: ${LEGACY_FLOOR_PX / 16}rem; /* ${LEGACY_FLOOR_PX}px */
   --touch-target-lg: 56px;
@@ -2057,7 +2073,7 @@ function themeBlock(
  *   - `fixed`: the role's OWN value, as a literal no brand can override;
  *   - `floor`: `max(var(--size-<name>), <floor>)`, where the floor is
  *     `--target-floor`, so a brand that lowers the bare var still
- *     paints at least the control floor (49px, or 28px drawn at desktop density);
+ *     paints at least the control floor (45px, or 28px drawn at desktop density);
  *   - otherwise: `var(--size-<name>)`, which a brand moves freely
  *     (`spacing-control-dense`, fine pointer only).
  */
@@ -2070,11 +2086,11 @@ export function sizeRoleTheme(
     throw new Error(
       `"spacing-touch-min" must be a fixed size role: it is the touch floor`,
     );
-  // The floors are variables, not literals: `--target-floor` is 49px everywhere and `--control-floor` is 49px, or
+  // The floors are variables, not literals: `--target-floor` is 45px everywhere and `--control-floor` is 45px, or
   // 28px under desktop density (see `densityLayer()`). They are declared in :root's invariants,
   // not in a brand block, so a brand pack that moves a size role cannot lower it.
-  // `--target-floor` is the hit region: 49px on touch, 28px on a desktop (`BUNDU_FLOOR.pointerFine`); a brand
-  // cannot lower either. A floored size role is clamped to `--control-floor` instead: 49px on touch, or the 28px a
+  // `--target-floor` is the hit region: 45px on touch, 24px on a desktop (`BUNDU_FLOOR.pointerFine`); a brand
+  // cannot lower either. A floored size role is clamped to `--control-floor` instead: 45px on touch, or the 28px a
   // desktop control may be DRAWN at.
   const floor = "var(--control-floor)";
   const hit = "var(--target-floor)";
@@ -2088,9 +2104,9 @@ export function sizeRoleTheme(
           return `  --${r.name}: ${hit}; /* the hit-area floor: ${FLOOR_COARSE_PX}px on touch, ${FLOOR_FINE_HIT_PX}px on a desktop; no brand can lower it */`;
         // The spacing floor (#617): the same variables the base layer reads, so the legacy opt-out moves both.
         if (r.name === "spacing-inset-floor")
-          return `  --${r.name}: var(--inset-floor); /* the inset floor: ${BUNDU_FLOOR.spacing.insetPx}px; no brand can lower it */`;
+          return `  --${r.name}: var(--inset-floor); /* the inset floor (alias): ${BUNDU_FLOOR.spacing.insetPx}px, the least of any layer; no brand can lower it */`;
         if (r.name === "spacing-gap-floor")
-          return `  --${r.name}: var(--gap-floor); /* the gap floor: ${BUNDU_FLOOR.spacing.controlGapPx}px; no brand can lower it */`;
+          return `  --${r.name}: var(--gap-floor); /* the gap floor: ${BUNDU_FLOOR.spacing.gapPx}px; no brand can lower it */`;
         return `  --${r.name}: ${own.css.light}; /* a literal: fixed, no brand can move it */`;
       }
       if (r.floor)
@@ -2232,13 +2248,13 @@ function invariants(resolved: Map<string, ResolvedRole>): string {
   out.push(box("TOUCH TARGETS AND CONTROL HEIGHTS"));
   for (const [n, v, why] of SIZING) out.push(`  --${n}: ${v}; /* ${why} */`);
   out.push(
-    `  --target-floor: ${FLOOR_COARSE_PX / 16}rem; /* ${FLOOR_COARSE_PX}px — the Bundu hit region (7 x 7) on touch. The desktop density block lowers it to ${FLOOR_FINE_HIT_PX}px; nothing else does. */`,
+    `  --target-floor: ${FLOOR_COARSE_PX / 16}rem; /* ${FLOOR_COARSE_PX}px — the Bundu hit region (3 x 15) on touch. The desktop density block lowers it to ${FLOOR_FINE_HIT_PX}px; nothing else does. */`,
   );
   out.push(
-    `  --inset-floor: ${BUNDU_FLOOR.spacing.insetPx / 16}rem; /* ${BUNDU_FLOOR.spacing.insetPx}px — the least padding between text and the edge of its container (2 x 7). Density never lowers it. */`,
+    `  --inset-floor: ${BUNDU_FLOOR.spacing.insetPx / 16}rem; /* ${BUNDU_FLOOR.spacing.insetPx}px — the least padding between text and the edge of its container, of any layer (the control chip, 3 x 4). Density never lowers it. */`,
   );
   out.push(
-    `  --gap-floor: ${BUNDU_FLOOR.spacing.controlGapPx / 16}rem; /* ${BUNDU_FLOOR.spacing.controlGapPx}px — the least gap between adjacent controls, a label and its field, and sibling items (the 7px unit). */`,
+    `  --gap-floor: ${BUNDU_FLOOR.spacing.gapPx / 16}rem; /* ${BUNDU_FLOOR.spacing.gapPx}px — the least gap of any layer (the card stack, the 7px unit). Gaps between controls are ${BUNDU_FLOOR.spacing.controlGapPx}px. */`,
   );
   out.push(
     `  --leading-floor: ${BUNDU_FLOOR.spacing.leadingBody}; /* body line height, never tighter (WCAG 1.4.12). */`,
@@ -2720,7 +2736,8 @@ export function renderGlobalsJson(
           bodyFine: BODY_FLOOR_FINE_PX,
           caption: CAPTION_FLOOR_PX,
           inset: BUNDU_FLOOR.spacing.insetPx,
-          gap: BUNDU_FLOOR.spacing.controlGapPx,
+          gap: BUNDU_FLOOR.spacing.gapPx,
+          controlGap: BUNDU_FLOOR.spacing.controlGapPx,
           leading: BUNDU_FLOOR.spacing.leadingBody,
           // Deprecated aliases of the 4.21.0 keys: `coarse` and `fine` are the hit region on each pointer. Read
           // `hitArea` and `hitAreaFine` above.
@@ -2732,9 +2749,9 @@ export function renderGlobalsJson(
         typeSteps: TYPE_STEPS,
         apple: {
           buttons:
-            "https://developer.apple.com/design/human-interface-guidelines/buttons: a hit region of at least 44x44 pt (Bundu keeps 49 on touch)",
+            "https://developer.apple.com/design/human-interface-guidelines/buttons: a hit region of at least 44x44 pt (Bundu keeps 45 on touch, owner 2026-11-19)",
           accessibility:
-            "https://developer.apple.com/design/human-interface-guidelines/accessibility: iOS and iPadOS control size, default 44x44 pt, minimum 28x28 pt; macOS default 28x28 pt, minimum 20x20 pt (Bundu keeps 28 on a desktop)",
+            "https://developer.apple.com/design/human-interface-guidelines/accessibility: iOS and iPadOS control size, default 44x44 pt, minimum 28x28 pt; macOS default 28x28 pt, minimum 20x20 pt (Bundu keeps 28 drawn and a 24 hit region on a desktop)",
           typography:
             "https://developer.apple.com/design/human-interface-guidelines/typography: iOS and iPadOS default 17 pt, minimum 11 pt; macOS default 13 pt, minimum 10 pt (Bundu: 17 on touch, 15 on a desktop); Large (default) text styles",
           readOn: "2026-11-12",

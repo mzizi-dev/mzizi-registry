@@ -7,8 +7,8 @@
       "violations": 0
     },
     {
-      "name": "a gap of 4px between two children is under the 7px floor",
-      "html": "<div class=\"flex gap-1\"><span>a</span><span>b</span></div>",
+      "name": "a gap of 2px between two children is under the 7px floor (no known layer)",
+      "html": "<div class=\"flex gap-0.5\"><span>a</span><span>b</span></div>",
       "violations": 1
     },
     {
@@ -82,8 +82,8 @@
       "violations": 0
     },
     {
-      "name": "a hero status pill with 12px inline inset is under the inset",
-      "html": "<p class=\"flex w-fit items-center gap-2 rounded-full border bg-card px-3 py-1\">Phase 0</p>",
+      "name": "a hero status pill with 2px inline inset is under the 14px fallback floor (no known layer)",
+      "html": "<p class=\"flex w-fit items-center gap-2 rounded-full border bg-card px-0.5 py-1\">Phase 0</p>",
       "violations": 1
     },
     {
@@ -135,6 +135,71 @@
       "name": "a malformed arbitrary leading is not read",
       "html": "<p class=\"leading-[1.]\">a</p>",
       "violations": 0
+    },
+    {
+      "name": "a pill with 4px inline padding is under the pills layer's 5px dense floor",
+      "layer": "pills",
+      "html": "<p class=\"w-fit rounded-full border px-1 py-1\">Phase 0</p>",
+      "violations": 1
+    },
+    {
+      "name": "a pill with 10px inline padding holds the pills layer's 5px dense floor",
+      "layer": "pills",
+      "html": "<p class=\"w-fit rounded-full border px-2.5 py-1\">Phase 0</p>",
+      "violations": 0
+    },
+    {
+      "name": "a chip with 8px inline padding is under the chips layer's 9px dense floor",
+      "layer": "chips",
+      "html": "<span class=\"inline-flex rounded-md border px-2\">Beta</span>",
+      "violations": 1
+    },
+    {
+      "name": "a button with 12px inline padding holds the controls layer's 12px dense floor",
+      "layer": "controls",
+      "html": "<button class=\"inline-flex rounded-full border px-3\">Save</button>",
+      "violations": 0
+    },
+    {
+      "name": "a button with 8px inline padding is under the controls layer's 12px dense floor",
+      "layer": "controls",
+      "html": "<button class=\"inline-flex rounded-full border px-2\">Save</button>",
+      "violations": 1
+    },
+    {
+      "name": "two buttons 8px apart are under the controls layer's 9px between-controls floor",
+      "layer": "controls",
+      "html": "<div class=\"flex gap-2\"><button>a</button><button>b</button></div>",
+      "violations": 1
+    },
+    {
+      "name": "two spans 8px apart hold the controls layer's 7px icon gap",
+      "layer": "controls",
+      "html": "<div class=\"flex gap-2\"><span>a</span><span>b</span></div>",
+      "violations": 0
+    },
+    {
+      "name": "a card with 12px padding is under the cards layer's 14px dense floor",
+      "layer": "cards",
+      "html": "<div class=\"rounded-lg border p-3\">Card title</div>",
+      "violations": 1
+    },
+    {
+      "name": "a container with 20px padding is under the containers layer's 21px dense floor",
+      "layer": "containers",
+      "html": "<div class=\"rounded-lg border p-5\">Dialog title</div>",
+      "violations": 1
+    },
+    {
+      "name": "a container with 24px gap is above the containers layer's 14px gap floor",
+      "layer": "containers",
+      "html": "<div class=\"flex gap-6\"><span>a</span><span>b</span></div>",
+      "violations": 0
+    },
+    {
+      "name": "a card with 12px padding is under the 14px fallback floor (no known layer)",
+      "html": "<div class=\"rounded-lg border p-3\">Card title</div>",
+      "violations": 1
     }
   ]
 }

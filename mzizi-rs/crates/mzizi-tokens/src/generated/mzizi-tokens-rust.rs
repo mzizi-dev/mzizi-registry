@@ -1408,14 +1408,76 @@ impl Roles {
         }
     }
 
-    /// 49px. The default touch target (`h-touch`, `min-h-touch`). brandMeta.accessibility.defaultTouchTarget.
-    pub const SPACING_TOUCH: u32 = 49;
-    /// 49px. The hit-area floor (`min-h-touch-min`), registered as `--target-floor`, in two pointer tiers: 49px on touch (`BUNDU_FLOOR.hitAreaPx`, 7 x 7, above Apple HIG Buttons' 44x44 pt) and 28px on a desktop, a fine pointer with hover (`BUNDU_FLOOR.pointerFine.hitAreaPx`, 4 x 7, Apple's macOS default control). Only the desktop density layer lowers it, and not below 28px (owner rulings 2026-11-02 and 2026-11-12, #660; the 2026-11-02 ruling replaced the 24px desktop floor and the 44px touch floor of 2026-11-01). No brand pack can move it.
-    pub const SPACING_TOUCH_MIN: u32 = 49;
-    /// 14px. The inset floor (`p-inset-floor`, `px-inset-floor`): 14px (`BUNDU_FLOOR.spacing.insetPx`, 2 x 7), the least padding between text and the edge of its container, registered as `--inset-floor`. No component, density layer or brand pack can lower it (owner 2026-11-04, #617).
+    /// 45px. The default touch target (`h-touch`, `min-h-touch`). brandMeta.accessibility.defaultTouchTarget.
+    pub const SPACING_TOUCH: u32 = 45;
+    /// 45px. The hit-area floor (`min-h-touch-min`), registered as `--target-floor`, in two pointer tiers: 45px on touch (`BUNDU_FLOOR.hitAreaPx`, 3 x 15: WCAG 2.5.5 and Apple ask for 44, rounded up to the Mzizi number rule; owner 2026-11-19) and 24px on a desktop, a fine pointer with hover (`BUNDU_FLOOR.pointerFine.hitAreaPx`, 3 x 8, WCAG 2.5.8). Only the desktop density layer lowers it, and not below 24px (owner rulings 2026-11-02, 2026-11-12 and 2026-11-19; the 2026-11-19 ruling replaced the 49px touch and 28px desktop floors of #660). No brand pack can move it.
+    pub const SPACING_TOUCH_MIN: u32 = 45;
+    /// 14px. ALIAS, kept for consumers that name the floor (owner 2026-11-19 replaced the single 14px floor with a floor per spacing layer and a dense step, see the `space-*` layer roles). The floor for a component with no known layer: 14px (`BUNDU_FLOOR.spacing.insetPx`, today's value, owner 2026-11-19), registered as `--inset-floor`. A component with a known layer is held to its own layer's dense floor (`p-pill-x` 5, `p-control-x` 12, `p-card` 14, `p-container` 21), never below it. No component, density layer or brand pack can lower it (owner 2026-11-04, #617; the value is the owner's 2026-11-19 ruling).
     pub const SPACING_INSET_FLOOR: u32 = 14;
-    /// 7px. The gap floor (`gap-gap-floor`, `p-gap-floor`): 7px (`BUNDU_FLOOR.spacing.controlGapPx`, the unit), the least gap between adjacent controls, a label and its field, and sibling items, registered as `--gap-floor`. No component, density layer or brand pack can lower it (owner 2026-11-04, #617).
+    /// 7px. ALIAS, kept for consumers that name the floor (owner 2026-11-19). The floor for a component with no known layer: 7px (`BUNDU_FLOOR.spacing.gapPx`, today's value, owner 2026-11-19), registered as `--gap-floor`. A component with a known layer is held to its own layer's dense gap; gaps between adjacent controls are 9px (`spacing-control-between`). No component, density layer or brand pack can lower it (owner 2026-11-04, #617).
     pub const SPACING_GAP_FLOOR: u32 = 7;
+    /// 17px. Layer: Layout (page edge, phone). Default 17px (prime); reference: Apple and M3 compact 16. The default-density floor. Owner 2026-11-19.
+    pub const SPACING_PAGE_X: u32 = 17;
+    /// 28px. Layer: Layout (page edge, medium and expanded). Default 28px (7 x 4); reference: M3 medium and expanded 24. The default-density floor. Owner 2026-11-19.
+    pub const SPACING_PAGE_X_WIDE: u32 = 28;
+    /// 21px. Layer: Layout (page edge, medium and expanded). Dense 21px (7 x 3); reference: 16 to 24. The absolute floor: nothing goes below it. Owner 2026-11-19.
+    pub const SPACING_PAGE_X_WIDE_DENSE: u32 = 21;
+    /// 49px. Layer: Layout (gap between sections). Default 49px (7 x 7); reference: 48. The default-density floor. Owner 2026-11-19.
+    pub const SPACING_SECTION: u32 = 49;
+    /// 28px. Layer: Layout (gap between sections). Dense 28px (7 x 4); reference: 24. The absolute floor: nothing goes below it. Owner 2026-11-19.
+    pub const SPACING_SECTION_DENSE: u32 = 28;
+    /// 28px. Layer: Containers (dialogs, sheets, panels) padding. Default 28px (7 x 4); reference: M3 dialog 24. The default-density floor. Owner 2026-11-19.
+    pub const SPACING_CONTAINER: u32 = 28;
+    /// 21px. Layer: Containers (dialogs, sheets, panels) padding. Dense 21px (7 x 3); reference: M3 sheet 16. The absolute floor: nothing goes below it. Owner 2026-11-19.
+    pub const SPACING_CONTAINER_DENSE: u32 = 21;
+    /// 21px. Layer: Containers gap. Default 21px (7 x 3); reference: M3 dialog 16. The default-density floor. Owner 2026-11-19.
+    pub const SPACING_CONTAINER_GAP: u32 = 21;
+    /// 14px. Layer: Containers gap. Dense 14px (7 x 2); reference: 12. The absolute floor: nothing goes below it. Owner 2026-11-19.
+    pub const SPACING_CONTAINER_GAP_DENSE: u32 = 14;
+    /// 21px. Layer: Cards (cards, list items, tiles) padding. Default 21px (7 x 3); reference: M3 card 16. The default-density floor. Owner 2026-11-19.
+    pub const SPACING_CARD: u32 = 21;
+    /// 14px. Layer: Cards (cards, list items, tiles) padding. Dense 14px (7 x 2); reference: M3 list item 12. The absolute floor: nothing goes below it. Owner 2026-11-19.
+    pub const SPACING_CARD_DENSE: u32 = 14;
+    /// 14px. Layer: Cards gap. Default 14px (7 x 2); reference: M3 card gap 8. The default-density floor. Owner 2026-11-19.
+    pub const SPACING_CARD_GAP: u32 = 14;
+    /// 7px. Layer: Cards gap. Dense 7px (7); reference: 4. The absolute floor: nothing goes below it. Owner 2026-11-19.
+    pub const SPACING_CARD_GAP_DENSE: u32 = 7;
+    /// 7px. Layer: Cards title to body. Default 7px (7); reference: title to body 4. The default-density floor. Owner 2026-11-19.
+    pub const SPACING_CARD_STACK: u32 = 7;
+    /// 7px. Layer: Cards title to body. Dense 7px (7); reference: 4. The absolute floor: nothing goes below it. Owner 2026-11-19.
+    pub const SPACING_CARD_STACK_DENSE: u32 = 7;
+    /// 17px. Layer: Controls (buttons, chips, inputs) inline inset. Default 17px (prime); reference: M3 small button 16. The default-density floor. Owner 2026-11-19.
+    pub const SPACING_CONTROL_X: u32 = 17;
+    /// 12px. Layer: Controls (buttons, chips, inputs) inline inset. Dense 12px (3 x 4); reference: M3 dense button 12. The absolute floor: nothing goes below it. Owner 2026-11-19.
+    pub const SPACING_CONTROL_X_DENSE: u32 = 12;
+    /// 17px. Layer: Controls, text field inline inset. Default 17px (prime); reference: M3 text field 16. The default-density floor. Owner 2026-11-19.
+    pub const SPACING_FIELD_X: u32 = 17;
+    /// 12px. Layer: Controls, text field inline inset. Dense 12px (3 x 4); reference: 12. The absolute floor: nothing goes below it. Owner 2026-11-19.
+    pub const SPACING_FIELD_X_DENSE: u32 = 12;
+    /// 9px. Layer: Controls, icon to label. Default 9px (3 x 3); reference: M3 icon to label 8. The default-density floor. Owner 2026-11-19.
+    pub const SPACING_CONTROL_GAP: u32 = 9;
+    /// 7px. Layer: Controls, icon to label. Dense 7px (7); reference: 6. The absolute floor: nothing goes below it. Owner 2026-11-19.
+    pub const SPACING_CONTROL_GAP_DENSE: u32 = 7;
+    /// 9px. Layer: Controls, gap between adjacent controls. Default 9px (3 x 3); reference: M3 target spacing 8. The default-density floor. Owner 2026-11-19.
+    pub const SPACING_CONTROL_BETWEEN: u32 = 9;
+    /// 9px. Layer: Controls, gap between adjacent controls. Dense 9px (3 x 3); reference: 8 (no dense step; the dense floor equals the default). The absolute floor: nothing goes below it. Owner 2026-11-19.
+    pub const SPACING_CONTROL_BETWEEN_DENSE: u32 = 9;
+    /// 12px. Layer: Chips inline inset. Default 12px (3 x 4); reference: M3 chip 12. The default-density floor. Owner 2026-11-19.
+    pub const SPACING_CHIP_X: u32 = 12;
+    /// 9px. Layer: Chips inline inset. Dense 9px (3 x 3); reference: M3 chip 8. The absolute floor: nothing goes below it. Owner 2026-11-19.
+    pub const SPACING_CHIP_X_DENSE: u32 = 9;
+    /// 9px. Layer: Pills and badges inline inset. Default 9px (3 x 3); reference: 8. The default-density floor. Owner 2026-11-19.
+    pub const SPACING_PILL_X: u32 = 9;
+    /// 5px. Layer: Pills and badges inline inset. Dense 5px (prime); reference: M3 badge 4. The absolute floor: nothing goes below it. Owner 2026-11-19.
+    pub const SPACING_PILL_X_DENSE: u32 = 5;
+    /// 5px. Layer: Pills and badges gap. Default 5px (prime); reference: 4. The default-density floor. Owner 2026-11-19.
+    pub const SPACING_PILL_GAP: u32 = 5;
+    /// 3px. Layer: Pills and badges gap. Dense 3px (prime and 3 x 1); reference: 2. The absolute floor: nothing goes below it. Owner 2026-11-19.
+    pub const SPACING_PILL_GAP_DENSE: u32 = 3;
+    /// 7px. Layer: Controls, gap between a label and its field. Default 7px (7); reference: label to field 6 to 8. The default-density floor. Owner 2026-11-19 (the coordinator's derivation from the number rule, for the owner to confirm).
+    pub const SPACING_LABEL_GAP: u32 = 7;
+    /// 5px. Layer: Controls, gap between a label and its field. Dense 5px (prime); reference: M3 4. The absolute floor: nothing goes below it. Owner 2026-11-19 (the coordinator's derivation from the number rule, for the owner to confirm).
+    pub const SPACING_LABEL_GAP_DENSE: u32 = 5;
     /// 49px. Default control height. componentSpecs.button.heights.default.
     pub const SPACING_CONTROL: u32 = 49;
     /// 49px. Small control height. componentSpecs.button.heights.sm.
@@ -1424,8 +1486,8 @@ impl Roles {
     pub const SPACING_CONTROL_LG: u32 = 56;
     /// 49px. Icon-button size. componentSpecs.button.heights.icon.
     pub const SPACING_CONTROL_ICON: u32 = 49;
-    /// 32px. Dense control height for a fine pointer only (`pointer-fine:h-control-dense`); drawn below the hit-area floor on purpose (#484 §2a), its 49px hit region kept by the `hit-area` pseudo-element; 28px under desktop density.
-    pub const SPACING_CONTROL_DENSE: u32 = 32;
+    /// 33px. Dense control height for a fine pointer only (`pointer-fine:h-control-dense`); drawn below the hit-area floor on purpose (#484 §2a), its 45px hit region kept by the `hit-area` pseudo-element; 28px under desktop density. 33px (3 x 11), rounded up from 32 by the number rule (owner 2026-11-19).
+    pub const SPACING_CONTROL_DENSE: u32 = 33;
     /// 49px. Input height. componentSpecs.input.heights.default.
     pub const SPACING_FIELD: u32 = 49;
     /// 49px. Small input height. componentSpecs.input.heights.sm.

@@ -145,7 +145,7 @@
       "part": "see all",
       "state": "seeall",
       "select": "[data-slot=\"related-rail\"] > div > div > a",
-      "fine": 32,
+      "fine": 33,
       "coarse": 49
     }
   ],

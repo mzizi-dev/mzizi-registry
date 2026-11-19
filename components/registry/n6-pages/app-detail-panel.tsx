@@ -59,7 +59,7 @@ function DetailPanel({
         )}
         data-slot="card"
       >
-        <div className="flex flex-col gap-2 border-b border-border px-4 py-3">
+        <div className="flex flex-col gap-control-between border-b border-border px-4 py-3">
           <Heading id={headingId} className="text-h6 font-semibold">
             {title}
           </Heading>
@@ -71,7 +71,7 @@ function DetailPanel({
           {items.map((item, i) => (
             <div
               key={i}
-              className="grid gap-2 px-4 py-2.5 @lg:grid-cols-[11rem_minmax(0,1fr)] @lg:gap-6"
+              className="grid gap-control-between px-4 py-2.5 @lg:grid-cols-[11rem_minmax(0,1fr)] @lg:gap-6"
             >
               <dt className="text-body-sm font-medium text-muted-foreground">
                 {item.label}
@@ -96,13 +96,13 @@ function DetailPanel({
             <summary className="min-h-8 cursor-pointer py-1.5 text-body-sm font-medium pointer-coarse:min-h-11">
               Full record
             </summary>
-            <pre className="mt-3 max-h-[32rem] overflow-auto rounded-md bg-muted p-4 font-mono text-body-sm whitespace-pre-wrap break-all">
+            <pre className="mt-3 max-h-[32rem] overflow-auto rounded-md bg-muted p-container-dense font-mono text-body-sm whitespace-pre-wrap break-all">
               {JSON.stringify(record, null, 2)}
             </pre>
           </details>
         )}
         {hasActions && (
-          <div className="flex flex-wrap gap-2 border-t border-border px-4 py-3">
+          <div className="flex flex-wrap gap-control-between border-t border-border px-4 py-3">
             {actions}
           </div>
         )}

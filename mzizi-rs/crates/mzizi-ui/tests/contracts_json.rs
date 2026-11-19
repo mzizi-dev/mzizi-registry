@@ -23,8 +23,9 @@ use serde_json::Value;
 #[path = "../../../contract-eval/contract_eval.rs"]
 mod contract_eval;
 use contract_eval::{
-    Case, HIT_AREA_GAPS, Rendered, SPACING_GAPS, declared_height, declared_height_at, hit_region,
-    hit_violations, holds, inline_styles, parse, render, select, spacing_violations, tokens,
+    Case, HIT_AREA_GAPS, Rendered, SPACING_GAPS, component_layer, declared_height,
+    declared_height_at, hit_region, hit_violations, holds, inline_styles, parse, render, select,
+    spacing_violations, tokens,
 };
 
 fn repo() -> PathBuf {
@@ -543,7 +544,7 @@ fn every_contract_identity_rust_build_keeps_its_contract() {
         // The spacing floor (#617): nothing under the 14px inset, the 7px gap or the 1.5 body leading.
         for (state, rendered) in &case.states {
             for el in rendered.elements() {
-                for (token, sentence) in spacing_violations(el) {
+                for (token, sentence) in spacing_violations(el, component_layer(&name)) {
                     assert!(
                         SPACING_GAPS.contains(&format!("{name}:{token}").as_str()),
                         "{name}: spacing [{state}] <{}>: {sentence}",
@@ -799,7 +800,7 @@ fn spacing_cases_match_the_typescript_runner() {
             .iter()
             .find(|n| !n.tag().is_empty())
             .unwrap_or_else(|| panic!("{name}: no element"));
-        let got = spacing_violations(node);
+        let got = spacing_violations(node, case["layer"].as_str());
         assert_eq!(
             got.len() as u64,
             case["violations"].as_u64().unwrap(),
@@ -833,8 +834,8 @@ fn hit_region_cases_match_the_typescript_runner() {
     }
     // A `hit_region` of a covered button is raised to the floor; a link is its drawn box.
     let button = &parse("<button class=\"h-9\">x</button>")[0];
-    assert_eq!(hit_region(button, 36, 49), 49);
-    assert_eq!(hit_region(button, 20, 28), 28);
+    assert_eq!(hit_region(button, 36, 45), 45);
+    assert_eq!(hit_region(button, 20, 24), 24);
     let link = &parse("<a href=\"/\" class=\"h-9\">x</a>")[0];
-    assert_eq!(hit_region(link, 36, 49), 36);
+    assert_eq!(hit_region(link, 36, 45), 36);
 }

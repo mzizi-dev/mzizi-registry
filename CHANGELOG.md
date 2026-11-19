@@ -10,6 +10,21 @@ From 2026-10-04 releases follow the org versioning policy ([nyuchi/.github#80](h
 
 ## [Unreleased]
 
+### Changed — Bundu floor 45/24 and per-layer spacing tokens (2026-11-19)
+
+For a consumer of the tokens, what changes and what it is called now:
+
+- **The hit-area floor is 45px on touch and 24px on a desktop** (was 49px and 28px). The tokens are `--target-floor` (`2.8125rem` and `1.5rem` under desktop density), `--touch-target-lg` and `--touch-target`, and the `minTouchTarget` and `minTouchTargetPointerFine` canon values. The desktop drawn minimum stays 28px.
+- **Spacing has one floor per layer, each with a dense step.** The new tokens are `--space-page-x` (17), `--space-page-x-wide` (28, dense 21), `--space-section` (49, dense 28), `--space-container` (28, dense 21), `--space-container-gap` (21, dense 14), `--space-card` (21, dense 14), `--space-card-gap` (14, dense 7), `--space-card-stack` (7), `--space-control-x` (17, dense 12), `--space-field-x` (17, dense 12), `--space-control-gap` (9, dense 7), `--space-control-between` (9), `--space-label-gap` (7, dense 5), `--space-chip-x` (12, dense 9), `--space-pill-x` (9, dense 5) and `--space-pill-gap` (5, dense 3). Each is also a Tailwind utility under its own name, for example `p-control-x` or `gap-card-gap`. The dense tokens are named `<token>-dense`, for example `--space-card-dense`.
+- **The single 14px inset and 7px gap are aliases now.** `--inset-floor` (14px) and `--gap-floor` (7px) stay, as the floor for a component with no known layer. Use the layer's own token where you know the layer.
+- **Gaps between adjacent controls are 9px** (was 7px). `--space-control-between` is the token.
+- **Control heights round up to the number rule:** `--size-control-sm` and `--size-control-dense` 33px on a desktop (was 32), `--size-control-lg` 41px on a desktop (was 40), `--size-field-sm` 33px on a desktop (was 32), and `--touch-target-sm` 41px (was 40). Component touch heights (49px buttons and inputs) are unchanged.
+- **The page edge on a phone is 17px** (was 21px in the first draft of the spec; the shipped value is 17).
+- **Status pills and badges** use `--space-pill-x` (9px, dense 5px) in place of the 14px inline inset. Chips use `--space-chip-x` (12px, dense 9px).
+- **New checker.** The contract runner and the Rust evaluator check each component against its own layer's dense floor, and a component with no known layer keeps today's 14px and 7px. Container and layout gap floors are not enforced at class level yet.
+
+Not breaking: no token is removed, and the legacy opt-out (`data-mzizi-sizes="legacy"`) restores the pinned 2026-10 values.
+
 ### Added — the seven engineering constraints join the Ubuntu doctrine (2026-11-17, Refs [#722](https://github.com/mzizi-dev/mzizi-registry/issues/722))
 
 - **New doctrine collection `genetic-code-engineering-constraints`**, beside the Ubuntu pillars and principles: outdoor-readability, connectivity-gradient-design, multilingual-parity, shared-device-awareness, personal-data-sovereignty, no-surveillance-business-model and bundu-floor, in that order. Each record names the Ubuntu principles it serves, what it looks like in a build (`expression`) and the `check` that fails a surface which does not meet it. The ids and order match the canonical ecosystem record (bundu-labs/bundu-standards#105).
