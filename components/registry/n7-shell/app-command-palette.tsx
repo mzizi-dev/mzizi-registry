@@ -185,11 +185,11 @@ function CommandPalette({
         {CSS}
       </style>
       {action ? (
-        <form method="get" action={action} role="search" data-cmdk-form className="flex items-center gap-2 border-b border-border px-3">
+        <form method="get" action={action} role="search" data-cmdk-form className="flex items-center gap-control-between border-b border-border px-3">
           {box}
         </form>
       ) : (
-        <div className="flex items-center gap-2 border-b border-border px-3" data-cmdk-form>
+        <div className="flex items-center gap-control-between border-b border-border px-3" data-cmdk-form>
           {box}
         </div>
       )}
@@ -199,7 +199,7 @@ function CommandPalette({
             <p aria-hidden="true" className="px-3.5 pt-2 pb-1 text-caption font-medium text-muted-foreground">
               {s.label}
             </p>
-            <ul role="list" className="grid gap-2">
+            <ul role="list" className="grid gap-control-between">
               {s.items.map((i) => (
                 <li
                   key={i.href}

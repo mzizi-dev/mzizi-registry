@@ -24,9 +24,9 @@ const { title, description, crumbs = [], docsHref, docsLabel = "View docs" } = A
     {
       crumbs.length > 0 && (
         <nav aria-label="Breadcrumb" class="mb-1">
-          <ol class="flex flex-wrap items-center gap-2 text-caption text-muted-foreground">
+          <ol class="flex flex-wrap items-center gap-control-between text-caption text-muted-foreground">
             {crumbs.map((c, i) => (
-              <li class="flex items-center gap-2">
+              <li class="flex items-center gap-control-between">
                 {i > 0 && <span aria-hidden="true">/</span>}
                 {c.href ? (
                   <a class="underline-offset-4 hover:text-foreground hover:underline" href={c.href}>
@@ -41,7 +41,7 @@ const { title, description, crumbs = [], docsHref, docsLabel = "View docs" } = A
         </nav>
       )
     }
-    <div class="flex flex-wrap items-center gap-x-2.5 gap-y-2">
+    <div class="flex flex-wrap items-center gap-x-2.5 gap-y-control-between">
       <h1 class="text-h5 font-semibold tracking-tight">{title}</h1>
       {
         docsHref && (
@@ -54,5 +54,5 @@ const { title, description, crumbs = [], docsHref, docsLabel = "View docs" } = A
     </div>
     {description && <p class="mt-1 max-w-prose text-body-sm text-muted-foreground">{description}</p>}
   </div>
-  {Astro.slots.has("actions") && <div class="flex shrink-0 flex-wrap gap-2"><slot name="actions" /></div>}
+  {Astro.slots.has("actions") && <div class="flex shrink-0 flex-wrap gap-control-between"><slot name="actions" /></div>}
 </header>

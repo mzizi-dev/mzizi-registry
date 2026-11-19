@@ -32,7 +32,7 @@
  *     sit on (owner decision 2026-10-20, #484). `input`, the edge controls draw today, is
  *     pending until slice 4 moves them
  * The bars are `BODY`, `NON_BODY` and `UI` below; the gate reads them from here.
- *   - every size marked `floor` >= `spacing-touch-min` (the 49px Bundu hit area, a floor no pack can lower), and the
+ *   - every size marked `floor` >= `spacing-touch-min` (the 45px Bundu hit area, a floor no pack can lower), and the
  *     smallest size a desktop density layer draws >= `BUNDU_FLOOR.visibleControlMinPx` (28px)
  *   - a `derive` that no walk can satisfy is a violation naming the roles, never #000/#FFF
  * A rule may carry `pending` instead of passing only where the shortfall is a
@@ -48,9 +48,10 @@
  * WHAT IS NOT A ROLE: icon sizes, the numeric spacing scale, layout widths and
  * grid templates, z-index, the focus-ring width and border widths. Those are
  * structural, not brand decisions. The scale itself stays structural; its MINIMUMS are not: the spacing floor
- * (`BUNDU_FLOOR.spacing`: inset 14px, gaps 7px, body leading 1.5) is an invariant no pack can lower, registered
- * as `--inset-floor`, `--gap-floor` and `--leading-floor` and as the fixed size roles `spacing-inset-floor` and
- * `spacing-gap-floor` (#617).
+ * (`BUNDU_FLOOR.spacing`: a floor per spacing layer, owner ruling 2026-11-19; body leading 1.5) is an invariant no
+ * pack can lower. The layer values are the fixed size roles `spacing-control-x` … `spacing-section`, declared as
+ * `--space-<name>`; the fallback floors for a component with no known layer stay registered as `--inset-floor` and `--gap-floor` (#617), and the
+ * fixed size roles `spacing-inset-floor` and `spacing-gap-floor` alias those two.
  *
  * Values are READ from `brand.source.ts` and `palette.source.ts`, never retyped:
  * this file replaced the second copies of the status colours, the radius ladder
@@ -202,6 +203,11 @@ export interface Role {
   /** size: registered with Tailwind as its own literal value, which no pack can override. */
   fixed?: true;
   /**
+   * size: a spacing layer (owner ruling 2026-11-19). Declared as `--space-<name>`, the layer token itself, not
+   * `--size-<name>`; the Tailwind key stays `--spacing-<name>` (`p-control-x`, `gap-card-gap`). Always `fixed`.
+   */
+  space?: true;
+  /**
    * size: must not be smaller than `spacing-touch-min`. The stylesheet registers
    * it as `max(var(--size-<name>), <floor>)`, so a pack that lowers the bare var
    * still paints the floor, and the gate fails a default under it.
@@ -211,36 +217,51 @@ export interface Role {
 }
 
 /**
- * THE BUNDU FLOOR (owner rulings, 2026-11-02): the hard minimums Bundu stands behind, as high as possible, because
- * Bundu sets the standard for outdoor reading and for people who find technology hard (older users, African and
- * emerging markets). ONE definition: the token generators, the contract runner, the Rust evaluator and every
- * test read these numbers, and `__tests__/bundu-floor.test.ts` fails when any default breaks one.
+ * THE BUNDU FLOOR (owner rulings, 2026-11-02; hit-area and spacing-layer rulings, 2026-11-19): the hard minimums Bundu
+ * stands behind, as high as possible, because Bundu sets the standard for outdoor reading and for people who find
+ * technology hard (older users, African and emerging markets). ONE definition: the token generators, the contract
+ * runner, the Rust evaluator and every test read these numbers, and `__tests__/bundu-floor.test.ts` fails when any
+ * default breaks one.
  *
- * Where each number comes from (The Bundu Order draws on biblical mathematical patterns and prime numbers;
- * owner, 2026-11-02):
+ * THE NUMBER RULE (owner, 2026-11-19): every Mzizi spacing or size value is a multiple of 3, a multiple of 7, or a
+ * prime number. Start from the recommended value (WCAG, Apple HIG or Material 3) and take the nearest Mzizi number at
+ * or above it. A little larger is fine; lower never is. Cards, containers and page layout use multiples of 7. Controls
+ * may use any Mzizi number. The derivations below say which rung each number is; they are not the reason for it.
+ *
+ * Where each number comes from:
  *   - `unitPx` 7: the radius unit (`brand.source.ts`, `--radius-unit`); the radii are 4/7/12/14/17 and a pill.
  *   - `bodyPx` 17: body text on touch (every device that is not a desktop). It is Apple's iOS default body size, and a prime.
  *   - `captionPx` 14: captions, metadata and secondary labels; 2 x 7. Nothing readable is smaller.
- *   - `hitAreaPx` 49: every interactive control keeps a hit region this size on touch; 7 x 7, above Apple's 44 pt.
- *     (On a desktop the tier below applies: the drawn box is the hit region.)
+ *   - `hitAreaPx` 45: every interactive control keeps a hit region this size on touch. WCAG 2.5.5 and Apple ask for 44;
+ *     44 is 4 x 11, so the floor is 45 (3 x 15). Owner ruling 2026-11-19, replacing the 49px of 2026-11-02 (#660 and its
+ *     predecessors). (On a desktop the tier below applies: the drawn box is the hit region.)
  *   - `visibleControlMinPx` 28: the smallest a control is DRAWN, at desktop density; 4 x 7 (Apple macOS default 28 pt).
  *   - `pointerFine`: THE DESKTOP TIER (owner ruling, 2026-11-12, #660: "yes do the device-based floor, desktop body
- *     15px"). A fine pointer with hover (`DENSITY_DESKTOP_QUERY`) is not a finger: Apple's own defaults drop to 28 pt
- *     controls and 13 pt body on macOS, and a 49px hit region with 17px body on every desktop screen cost a great deal
- *     of scrolling. So the floor has two tiers. Touch (a coarse pointer, and every device that is not a desktop) keeps
- *     the numbers above untouched. Desktop: `hitAreaPx` 28 (4 x 7, Apple's macOS default control, above WCAG 2.2 SC
- *     2.5.8's 24px), so a desktop control's drawn box IS its hit region and needs no pseudo-element; `bodyPx` 15 (the
- *     owner's number; Apple's macOS default is 13 pt). Unchanged on both tiers: captions 14px, the spacing floor, contrast.
- *   - `spacing`: the SPACING FLOOR (owner, 2026-11-04, #617): minimums nothing can go under, even a component that
- *     sets no padding at all. All on the 7px unit. `insetPx` 14 (2 x 7): padding between text and the edge of its
- *     container (a control's label on the inline axis; a card, panel, dialog, alert or popover on both axes; a
- *     control's block axis is held by its height floors instead; a one-line label chip or pill, such as a badge or a hero
- *     status pill, is held by the 14px inline inset and its block axis is its line height or fixed height, owner,
- *     2026-11-04, #625). `controlGapPx` 7: the gap between adjacent
- *     interactive controls, visible edge to visible edge (hit regions may touch, never overlap).
- *     `labelGapPx` 7: a label and its field. `itemGapPx` 7: sibling items of a list, grid, stack or toolbar.
- *     `leadingBody` 1.5: body line height (WCAG 1.4.12). Enforced as defaults in the base layer of the stylesheet
- *     (`--inset-floor`, `--gap-floor`, `--leading-floor`) and as tests on every explicit value.
+ *     15px"; hit region lowered to 24 by the owner, 2026-11-19). A fine pointer with hover (`DENSITY_DESKTOP_QUERY`) is
+ *     not a finger. Touch (a coarse pointer, and every device that is not a desktop) keeps `hitAreaPx`. Desktop:
+ *     `hitAreaPx` 24 (3 x 8, WCAG 2.2 SC 2.5.8's 24px), so a desktop control's drawn box (at least
+ *     `visibleControlMinPx`) is larger than its hit region; `bodyPx` 15 (the owner's number; Apple's macOS default is 13
+ *     pt). Unchanged on both tiers: captions 14px, the spacing floor, contrast.
+ *   - `spacing`: THE SPACING FLOOR, one floor per layer with a dense step (owner rulings 2026-11-19; the single 14px inset
+ *     and 7px gap of 2026-11-04, #617, are replaced). Each layer has a default value (the floor at default density) and a
+ *     dense value (the absolute floor: nothing goes below it). Dense controls are drawn smaller and keep the full hit
+ *     area (45 touch, 24 desktop). `layers` holds each layer's `px` and `dense`:
+ *       layout      page-x 17 (prime), page-x-wide 28 / 21 (7 x 4, 7 x 3), section 49 / 28 (7 x 7, 7 x 4)
+ *       containers  padding 28 / 21 (7 x 4, 7 x 3), gap 21 / 14 (7 x 3, 7 x 2)
+ *       cards       padding 21 / 14 (7 x 3, 7 x 2), gap 14 / 7, stack 7 / 7
+ *       controls    x 17 / 12 (prime, 3 x 4), field-x 17 / 12, gap 9 / 7 (3 x 3), between 9 / 9 (3 x 3)
+ *       chips       chip-x 12 / 9 (3 x 4, 3 x 3)
+ *       pills       pill-x 9 / 5 (3 x 3, prime), pill-gap 5 / 3 (prime, prime)
+ *     `insetPx` (14) and `gapPx` (7) are the floors for a component or class whose layer is unknown: today's values, kept so
+ *     enforcement is never weaker than before (owner 2026-11-19). A component with a known layer is checked against its own
+ *     layer's dense floor in `SPACING_LAYER_FLOORS` (pills 5 and 3, chips 9, controls 12, cards 14 and 7, containers 21 and
+ *     14, layout 17, 21 and 28). A label chip or pill is held on its inline axis by `--space-pill-x` (default 9, dense 5).
+ *     `controlGapPx` 9: the gap between adjacent controls, visible edge to visible edge (hit regions may touch, never
+ *     overlap). `labelGapPx` 7 is the global label-to-field floor. Its dense step, 5 (`--space-label-gap-dense`), is pending
+ *     the owner's confirmation. `itemGapPx` 7 is the dense floor of `--space-card-gap` (14 default), which sibling
+ *     items of a list, grid or toolbar use.
+ *     `leadingBody` 1.5: body line height (WCAG 1.4.12). Enforced as defaults in the base layer of the stylesheet (at each
+ *     layer's dense floor) and as tests on every explicit value.
  *   - `contrast`: WCAG 2 ratios (#610, owner 2026-11-02): body text 7:1, non-body text 4.5:1, UI parts 3:1.
  *   - `apca`: the APCA Lc bars that stand beside them.
  */
@@ -248,19 +269,108 @@ export const BUNDU_FLOOR = {
   unitPx: 7,
   bodyPx: 17,
   captionPx: 14,
-  hitAreaPx: 49,
+  hitAreaPx: 45,
   visibleControlMinPx: 28,
-  pointerFine: { hitAreaPx: 28, bodyPx: 15 },
+  pointerFine: { hitAreaPx: 24, bodyPx: 15 },
   spacing: {
+    // Each layer: `px` is the default-density floor, `dense` the absolute floor (owner, 2026-11-19, second ruling).
+    // Nothing goes below `dense`. A layer with no dense step has no `dense` key.
+    layers: {
+      pageX: { px: 17 },
+      pageXWide: { px: 28, dense: 21 },
+      section: { px: 49, dense: 28 },
+      containerPadding: { px: 28, dense: 21 },
+      containerGap: { px: 21, dense: 14 },
+      cardPadding: { px: 21, dense: 14 },
+      cardGap: { px: 14, dense: 7 },
+      cardStack: { px: 7, dense: 7 },
+      controlX: { px: 17, dense: 12 },
+      fieldX: { px: 17, dense: 12 },
+      controlGap: { px: 9, dense: 7 },
+      controlBetween: { px: 9, dense: 9 },
+      chipX: { px: 12, dense: 9 },
+      pillX: { px: 9, dense: 5 },
+      pillGap: { px: 5, dense: 3 },
+      labelGap: { px: 7, dense: 5 },
+    },
+    /** The inset floor for a component with no known layer: 14px, today's value (owner 2026-11-19). What `--inset-floor` holds. */
     insetPx: 14,
-    controlGapPx: 7,
+    /** The gap floor for a component with no known layer: 7px, today's value (owner 2026-11-19). What `--gap-floor` holds. */
+    gapPx: 7,
+    /** The gap between adjacent controls: 9 at default density, and its dense floor is also 9. */
+    controlGapPx: 9,
+    /** The global label-to-field floor, 7px (`--space-label-gap`, the default). Its dense step (5) is pending the owner's confirmation. */
     labelGapPx: 7,
+    /** Alias of `spacing-card-gap-dense` (sibling items of a list, grid or toolbar, dense 7). */
     itemGapPx: 7,
     leadingBody: 1.5,
   },
   contrast: { body: 7, nonBody: 4.5, ui: 3 },
   apca: { body: 75, nonBody: 60, ui: 30 },
 } as const;
+
+/**
+ * THE LAYER-AWARE CHECKER (owner ruling 2026-11-19, enforcement). Each component is checked against its own
+ * layer's DENSE floor, the absolute minimum nothing may go below. The floors, in px:
+ *   - pills:      padding 5, gap 3                 (`pill-x` dense, `pill-gap` dense)
+ *   - chips:      padding 9, gap 7                 (`chip-x` dense; the owner set no chip gap, so today's 7 stands)
+ *   - controls:   padding 12, gap 7, between 9, label 5  (`control-x` / `field-x` dense; icon gap; between controls; label gap)
+ *   - cards:      padding 14, gap 7                (`card` dense, `card-stack` / `card-gap` dense)
+ *   - containers: padding 21, gap 14               (`container` dense, `container-gap` dense)
+ *   - layout:     page edge 17, wide page edge 21, section gap 28
+ * A component with NO known layer (`COMPONENT_LAYERS` has no entry) is held to `BUNDU_FLOOR.spacing.insetPx` (14) and
+ * `gapPx` (7): today's floors, so enforcement is never weaker than before. The checker reads each class's own
+ * value; `label` is the owner's floor for a label and its field, which the markup check cannot see and is not enforced
+ * by it. `contracts/runner.ts` and mzizi-rs/contract-eval hold copies, pinned by `__tests__/spacing-floor.test.ts`.
+ */
+export type SpacingLayer = "pills" | "chips" | "controls" | "cards" | "containers" | "layout";
+export const SPACING_LAYER_FLOORS = {
+  pills: { padding: 5, gap: 3 },
+  chips: { padding: 9, gap: 7 },
+  controls: { padding: 12, gap: 7, between: 9, label: 5 },
+  cards: { padding: 14, gap: 7 },
+  containers: { padding: 21, gap: 14 },
+  layout: { padding: 17, wide: 21, gap: 28 },
+} as const satisfies Record<SpacingLayer, Record<string, number>>;
+/**
+ * The layer of each contract that has one, keyed by contract name (`contracts/index.json`). A component whose layer
+ * is not in this map is checked at the fallback floor (14 inset, 7 gap). The mapping is from each component's role:
+ * N2 primitives that take input or are pressed are `controls`; chips and pill-shaped badges are `chips` and `pills`;
+ * N3 composites that hold content in a box are `cards`; dialogs, popovers and toasts are `containers`; page and
+ * section frames are `layout`.
+ */
+export const COMPONENT_LAYERS: Readonly<Record<string, SpacingLayer>> = {
+  "app/badge": "pills",
+  "ui/status-badge": "pills",
+  "ui/mzizi-verified-badge": "pills",
+  "discover/category-chip": "chips",
+  "discover/category-chips": "chips",
+  "app/button": "controls",
+  "ui/button": "controls",
+  "app/input": "controls",
+  "ui/input": "controls",
+  "ui/native-select": "controls",
+  "ui/segmented-control": "controls",
+  "app/toolbar-menu": "controls",
+  "app/top-bar-action": "controls",
+  "app/quick-search": "controls",
+  "app/card": "cards",
+  "ui/card": "cards",
+  "app/stat-tile": "cards",
+  "discover/discover-card": "cards",
+  "app/alert": "cards",
+  "ui/alert": "cards",
+  "app/confirm-action": "containers",
+  "app/detail-panel": "containers",
+  "app/command-palette": "containers",
+  "app/account-menu": "containers",
+  "ui/toaster": "containers",
+  "app/app-shell": "layout",
+  "app/page-header": "layout",
+  "site/container": "layout",
+  "site/section": "layout",
+  "discover/discover-shell": "layout",
+};
 
 /** APCA Lc 75: body text, and a foreground on its fill. The gate's text floor. */
 export const BODY = BUNDU_FLOOR.apca.body;
@@ -1402,7 +1512,7 @@ export const ROLES: readonly Role[] = [
     kind: "size",
     required: true,
     description:
-      "The hit-area floor (`min-h-touch-min`), registered as `--target-floor`, in two pointer tiers: 49px on touch (`BUNDU_FLOOR.hitAreaPx`, 7 x 7, above Apple HIG Buttons' 44x44 pt) and 28px on a desktop, a fine pointer with hover (`BUNDU_FLOOR.pointerFine.hitAreaPx`, 4 x 7, Apple's macOS default control). Only the desktop density layer lowers it, and not below 28px (owner rulings 2026-11-02 and 2026-11-12, #660; the 2026-11-02 ruling replaced the 24px desktop floor and the 44px touch floor of 2026-11-01). No brand pack can move it.",
+      "The hit-area floor (`min-h-touch-min`), registered as `--target-floor`, in two pointer tiers: 45px on touch (`BUNDU_FLOOR.hitAreaPx`, 3 x 15: WCAG 2.5.5 and Apple ask for 44, rounded up to the Mzizi number rule; owner 2026-11-19) and 24px on a desktop, a fine pointer with hover (`BUNDU_FLOOR.pointerFine.hitAreaPx`, 3 x 8, WCAG 2.5.8). Only the desktop density layer lowers it, and not below 24px (owner rulings 2026-11-02, 2026-11-12 and 2026-11-19; the 2026-11-19 ruling replaced the 49px touch and 28px desktop floors of #660). No brand pack can move it.",
     default: { px: access("minTouchTarget") },
     fixed: true,
     block: "invariant",
@@ -1413,7 +1523,7 @@ export const ROLES: readonly Role[] = [
     kind: "size",
     required: true,
     description:
-      "The inset floor (`p-inset-floor`, `px-inset-floor`): 14px (`BUNDU_FLOOR.spacing.insetPx`, 2 x 7), the least padding between text and the edge of its container, registered as `--inset-floor`. No component, density layer or brand pack can lower it (owner 2026-11-04, #617).",
+      "ALIAS, kept for consumers that name the floor (owner 2026-11-19 replaced the single 14px floor with a floor per spacing layer and a dense step, see the `space-*` layer roles). The floor for a component with no known layer: 14px (`BUNDU_FLOOR.spacing.insetPx`, today's value, owner 2026-11-19), registered as `--inset-floor`. A component with a known layer is held to its own layer's dense floor (`p-pill-x` 5, `p-control-x` 12, `p-card` 14, `p-container` 21), never below it. No component, density layer or brand pack can lower it (owner 2026-11-04, #617; the value is the owner's 2026-11-19 ruling).",
     default: { px: BUNDU_FLOOR.spacing.insetPx },
     fixed: true,
     block: "invariant",
@@ -1424,9 +1534,381 @@ export const ROLES: readonly Role[] = [
     kind: "size",
     required: true,
     description:
-      "The gap floor (`gap-gap-floor`, `p-gap-floor`): 7px (`BUNDU_FLOOR.spacing.controlGapPx`, the unit), the least gap between adjacent controls, a label and its field, and sibling items, registered as `--gap-floor`. No component, density layer or brand pack can lower it (owner 2026-11-04, #617).",
-    default: { px: BUNDU_FLOOR.spacing.controlGapPx },
+      "ALIAS, kept for consumers that name the floor (owner 2026-11-19). The floor for a component with no known layer: 7px (`BUNDU_FLOOR.spacing.gapPx`, today's value, owner 2026-11-19), registered as `--gap-floor`. A component with a known layer is held to its own layer's dense gap; gaps between adjacent controls are 9px (`spacing-control-between`). No component, density layer or brand pack can lower it (owner 2026-11-04, #617).",
+    default: { px: BUNDU_FLOOR.spacing.gapPx },
     fixed: true,
+    block: "invariant",
+  },
+  {
+    name: "spacing-page-x",
+    group: "size",
+    kind: "size",
+    required: true,
+    description:
+      "Layer: Layout (page edge, phone). Default 17px (prime); reference: Apple and M3 compact 16. The default-density floor. Owner 2026-11-19.",
+    default: { px: BUNDU_FLOOR.spacing.layers.pageX.px },
+    fixed: true,
+    space: true,
+    block: "invariant",
+  },
+  {
+    name: "spacing-page-x-wide",
+    group: "size",
+    kind: "size",
+    required: true,
+    description:
+      "Layer: Layout (page edge, medium and expanded). Default 28px (7 x 4); reference: M3 medium and expanded 24. The default-density floor. Owner 2026-11-19.",
+    default: { px: BUNDU_FLOOR.spacing.layers.pageXWide.px },
+    fixed: true,
+    space: true,
+    block: "invariant",
+  },
+  {
+    name: "spacing-page-x-wide-dense",
+    group: "size",
+    kind: "size",
+    required: true,
+    description:
+      "Layer: Layout (page edge, medium and expanded). Dense 21px (7 x 3); reference: 16 to 24. The absolute floor: nothing goes below it. Owner 2026-11-19.",
+    default: { px: BUNDU_FLOOR.spacing.layers.pageXWide.dense },
+    fixed: true,
+    space: true,
+    block: "invariant",
+  },
+  {
+    name: "spacing-section",
+    group: "size",
+    kind: "size",
+    required: true,
+    description:
+      "Layer: Layout (gap between sections). Default 49px (7 x 7); reference: 48. The default-density floor. Owner 2026-11-19.",
+    default: { px: BUNDU_FLOOR.spacing.layers.section.px },
+    fixed: true,
+    space: true,
+    block: "invariant",
+  },
+  {
+    name: "spacing-section-dense",
+    group: "size",
+    kind: "size",
+    required: true,
+    description:
+      "Layer: Layout (gap between sections). Dense 28px (7 x 4); reference: 24. The absolute floor: nothing goes below it. Owner 2026-11-19.",
+    default: { px: BUNDU_FLOOR.spacing.layers.section.dense },
+    fixed: true,
+    space: true,
+    block: "invariant",
+  },
+  {
+    name: "spacing-container",
+    group: "size",
+    kind: "size",
+    required: true,
+    description:
+      "Layer: Containers (dialogs, sheets, panels) padding. Default 28px (7 x 4); reference: M3 dialog 24. The default-density floor. Owner 2026-11-19.",
+    default: { px: BUNDU_FLOOR.spacing.layers.containerPadding.px },
+    fixed: true,
+    space: true,
+    block: "invariant",
+  },
+  {
+    name: "spacing-container-dense",
+    group: "size",
+    kind: "size",
+    required: true,
+    description:
+      "Layer: Containers (dialogs, sheets, panels) padding. Dense 21px (7 x 3); reference: M3 sheet 16. The absolute floor: nothing goes below it. Owner 2026-11-19.",
+    default: { px: BUNDU_FLOOR.spacing.layers.containerPadding.dense },
+    fixed: true,
+    space: true,
+    block: "invariant",
+  },
+  {
+    name: "spacing-container-gap",
+    group: "size",
+    kind: "size",
+    required: true,
+    description:
+      "Layer: Containers gap. Default 21px (7 x 3); reference: M3 dialog 16. The default-density floor. Owner 2026-11-19.",
+    default: { px: BUNDU_FLOOR.spacing.layers.containerGap.px },
+    fixed: true,
+    space: true,
+    block: "invariant",
+  },
+  {
+    name: "spacing-container-gap-dense",
+    group: "size",
+    kind: "size",
+    required: true,
+    description:
+      "Layer: Containers gap. Dense 14px (7 x 2); reference: 12. The absolute floor: nothing goes below it. Owner 2026-11-19.",
+    default: { px: BUNDU_FLOOR.spacing.layers.containerGap.dense },
+    fixed: true,
+    space: true,
+    block: "invariant",
+  },
+  {
+    name: "spacing-card",
+    group: "size",
+    kind: "size",
+    required: true,
+    description:
+      "Layer: Cards (cards, list items, tiles) padding. Default 21px (7 x 3); reference: M3 card 16. The default-density floor. Owner 2026-11-19.",
+    default: { px: BUNDU_FLOOR.spacing.layers.cardPadding.px },
+    fixed: true,
+    space: true,
+    block: "invariant",
+  },
+  {
+    name: "spacing-card-dense",
+    group: "size",
+    kind: "size",
+    required: true,
+    description:
+      "Layer: Cards (cards, list items, tiles) padding. Dense 14px (7 x 2); reference: M3 list item 12. The absolute floor: nothing goes below it. Owner 2026-11-19.",
+    default: { px: BUNDU_FLOOR.spacing.layers.cardPadding.dense },
+    fixed: true,
+    space: true,
+    block: "invariant",
+  },
+  {
+    name: "spacing-card-gap",
+    group: "size",
+    kind: "size",
+    required: true,
+    description:
+      "Layer: Cards gap. Default 14px (7 x 2); reference: M3 card gap 8. The default-density floor. Owner 2026-11-19.",
+    default: { px: BUNDU_FLOOR.spacing.layers.cardGap.px },
+    fixed: true,
+    space: true,
+    block: "invariant",
+  },
+  {
+    name: "spacing-card-gap-dense",
+    group: "size",
+    kind: "size",
+    required: true,
+    description:
+      "Layer: Cards gap. Dense 7px (7); reference: 4. The absolute floor: nothing goes below it. Owner 2026-11-19.",
+    default: { px: BUNDU_FLOOR.spacing.layers.cardGap.dense },
+    fixed: true,
+    space: true,
+    block: "invariant",
+  },
+  {
+    name: "spacing-card-stack",
+    group: "size",
+    kind: "size",
+    required: true,
+    description:
+      "Layer: Cards title to body. Default 7px (7); reference: title to body 4. The default-density floor. Owner 2026-11-19.",
+    default: { px: BUNDU_FLOOR.spacing.layers.cardStack.px },
+    fixed: true,
+    space: true,
+    block: "invariant",
+  },
+  {
+    name: "spacing-card-stack-dense",
+    group: "size",
+    kind: "size",
+    required: true,
+    description:
+      "Layer: Cards title to body. Dense 7px (7); reference: 4. The absolute floor: nothing goes below it. Owner 2026-11-19.",
+    default: { px: BUNDU_FLOOR.spacing.layers.cardStack.dense },
+    fixed: true,
+    space: true,
+    block: "invariant",
+  },
+  {
+    name: "spacing-control-x",
+    group: "size",
+    kind: "size",
+    required: true,
+    description:
+      "Layer: Controls (buttons, chips, inputs) inline inset. Default 17px (prime); reference: M3 small button 16. The default-density floor. Owner 2026-11-19.",
+    default: { px: BUNDU_FLOOR.spacing.layers.controlX.px },
+    fixed: true,
+    space: true,
+    block: "invariant",
+  },
+  {
+    name: "spacing-control-x-dense",
+    group: "size",
+    kind: "size",
+    required: true,
+    description:
+      "Layer: Controls (buttons, chips, inputs) inline inset. Dense 12px (3 x 4); reference: M3 dense button 12. The absolute floor: nothing goes below it. Owner 2026-11-19.",
+    default: { px: BUNDU_FLOOR.spacing.layers.controlX.dense },
+    fixed: true,
+    space: true,
+    block: "invariant",
+  },
+  {
+    name: "spacing-field-x",
+    group: "size",
+    kind: "size",
+    required: true,
+    description:
+      "Layer: Controls, text field inline inset. Default 17px (prime); reference: M3 text field 16. The default-density floor. Owner 2026-11-19.",
+    default: { px: BUNDU_FLOOR.spacing.layers.fieldX.px },
+    fixed: true,
+    space: true,
+    block: "invariant",
+  },
+  {
+    name: "spacing-field-x-dense",
+    group: "size",
+    kind: "size",
+    required: true,
+    description:
+      "Layer: Controls, text field inline inset. Dense 12px (3 x 4); reference: 12. The absolute floor: nothing goes below it. Owner 2026-11-19.",
+    default: { px: BUNDU_FLOOR.spacing.layers.fieldX.dense },
+    fixed: true,
+    space: true,
+    block: "invariant",
+  },
+  {
+    name: "spacing-control-gap",
+    group: "size",
+    kind: "size",
+    required: true,
+    description:
+      "Layer: Controls, icon to label. Default 9px (3 x 3); reference: M3 icon to label 8. The default-density floor. Owner 2026-11-19.",
+    default: { px: BUNDU_FLOOR.spacing.layers.controlGap.px },
+    fixed: true,
+    space: true,
+    block: "invariant",
+  },
+  {
+    name: "spacing-control-gap-dense",
+    group: "size",
+    kind: "size",
+    required: true,
+    description:
+      "Layer: Controls, icon to label. Dense 7px (7); reference: 6. The absolute floor: nothing goes below it. Owner 2026-11-19.",
+    default: { px: BUNDU_FLOOR.spacing.layers.controlGap.dense },
+    fixed: true,
+    space: true,
+    block: "invariant",
+  },
+  {
+    name: "spacing-control-between",
+    group: "size",
+    kind: "size",
+    required: true,
+    description:
+      "Layer: Controls, gap between adjacent controls. Default 9px (3 x 3); reference: M3 target spacing 8. The default-density floor. Owner 2026-11-19.",
+    default: { px: BUNDU_FLOOR.spacing.layers.controlBetween.px },
+    fixed: true,
+    space: true,
+    block: "invariant",
+  },
+  {
+    name: "spacing-control-between-dense",
+    group: "size",
+    kind: "size",
+    required: true,
+    description:
+      "Layer: Controls, gap between adjacent controls. Dense 9px (3 x 3); reference: 8 (no dense step; the dense floor equals the default). The absolute floor: nothing goes below it. Owner 2026-11-19.",
+    default: { px: BUNDU_FLOOR.spacing.layers.controlBetween.dense },
+    fixed: true,
+    space: true,
+    block: "invariant",
+  },
+  {
+    name: "spacing-chip-x",
+    group: "size",
+    kind: "size",
+    required: true,
+    description:
+      "Layer: Chips inline inset. Default 12px (3 x 4); reference: M3 chip 12. The default-density floor. Owner 2026-11-19.",
+    default: { px: BUNDU_FLOOR.spacing.layers.chipX.px },
+    fixed: true,
+    space: true,
+    block: "invariant",
+  },
+  {
+    name: "spacing-chip-x-dense",
+    group: "size",
+    kind: "size",
+    required: true,
+    description:
+      "Layer: Chips inline inset. Dense 9px (3 x 3); reference: M3 chip 8. The absolute floor: nothing goes below it. Owner 2026-11-19.",
+    default: { px: BUNDU_FLOOR.spacing.layers.chipX.dense },
+    fixed: true,
+    space: true,
+    block: "invariant",
+  },
+  {
+    name: "spacing-pill-x",
+    group: "size",
+    kind: "size",
+    required: true,
+    description:
+      "Layer: Pills and badges inline inset. Default 9px (3 x 3); reference: 8. The default-density floor. Owner 2026-11-19.",
+    default: { px: BUNDU_FLOOR.spacing.layers.pillX.px },
+    fixed: true,
+    space: true,
+    block: "invariant",
+  },
+  {
+    name: "spacing-pill-x-dense",
+    group: "size",
+    kind: "size",
+    required: true,
+    description:
+      "Layer: Pills and badges inline inset. Dense 5px (prime); reference: M3 badge 4. The absolute floor: nothing goes below it. Owner 2026-11-19.",
+    default: { px: BUNDU_FLOOR.spacing.layers.pillX.dense },
+    fixed: true,
+    space: true,
+    block: "invariant",
+  },
+  {
+    name: "spacing-pill-gap",
+    group: "size",
+    kind: "size",
+    required: true,
+    description:
+      "Layer: Pills and badges gap. Default 5px (prime); reference: 4. The default-density floor. Owner 2026-11-19.",
+    default: { px: BUNDU_FLOOR.spacing.layers.pillGap.px },
+    fixed: true,
+    space: true,
+    block: "invariant",
+  },
+  {
+    name: "spacing-pill-gap-dense",
+    group: "size",
+    kind: "size",
+    required: true,
+    description:
+      "Layer: Pills and badges gap. Dense 3px (prime and 3 x 1); reference: 2. The absolute floor: nothing goes below it. Owner 2026-11-19.",
+    default: { px: BUNDU_FLOOR.spacing.layers.pillGap.dense },
+    fixed: true,
+    space: true,
+    block: "invariant",
+  },
+  {
+    name: "spacing-label-gap",
+    group: "size",
+    kind: "size",
+    required: true,
+    description:
+      "Layer: Controls, gap between a label and its field. Default 7px (7); reference: label to field 6 to 8. The default-density floor. Derived from the number rule; pending the owner's confirmation.",
+    default: { px: BUNDU_FLOOR.spacing.layers.labelGap.px },
+    fixed: true,
+    space: true,
+    block: "invariant",
+  },
+  {
+    name: "spacing-label-gap-dense",
+    group: "size",
+    kind: "size",
+    required: true,
+    description:
+      "Layer: Controls, gap between a label and its field. Dense 5px (prime); reference: M3 4. The absolute floor: nothing goes below it. Derived from the number rule; pending the owner's confirmation.",
+    default: { px: BUNDU_FLOOR.spacing.layers.labelGap.dense },
+    fixed: true,
+    space: true,
     block: "invariant",
   },
   {
@@ -1476,8 +1958,8 @@ export const ROLES: readonly Role[] = [
     kind: "size",
     required: true,
     description:
-      "Dense control height for a fine pointer only (`pointer-fine:h-control-dense`); drawn below the hit-area floor on purpose (#484 §2a), its 49px hit region kept by the `hit-area` pseudo-element; 28px under desktop density.",
-    default: { px: 32 },
+      "Dense control height for a fine pointer only (`pointer-fine:h-control-dense`); drawn below the hit-area floor on purpose (#484 §2a), its 45px hit region kept by the `hit-area` pseudo-element; 28px under desktop density. 33px (3 x 11), rounded up from 32 by the number rule (owner 2026-11-19).",
+    default: { px: 33 },
     block: "invariant",
   },
   {
@@ -1634,7 +2116,7 @@ const rem = (px: number) => `${px / 16}rem`;
 
 /**
  * Touch targets and control heights, under the names the stylesheet has always
- * declared, from `brandMeta`. `touch-target-sm` (40px) is the one value canon
+ * declared, from `brandMeta`. `touch-target-sm` (41px) is the one value canon
  * does not hold: a dense secondary action drawn below the floor, never a primary control.
  */
 export const SIZING: ReadonlyArray<readonly [string, string, string]> = [
@@ -1650,8 +2132,8 @@ export const SIZING: ReadonlyArray<readonly [string, string, string]> = [
   ],
   [
     "touch-target-sm",
-    "40px",
-    "Dense secondary actions: drawn at 40px, the 49px hit region kept by the hit-area pseudo-element; not for primary controls",
+    "41px",
+    "Dense secondary actions: drawn at 41px (prime; owner 2026-11-19; was 40), the 45px hit region kept by the hit-area pseudo-element; not for primary controls",
   ],
   [
     "h-button-default",
@@ -1688,13 +2170,13 @@ export const FONTS = {
 
 /**
  * The hit region every interactive control keeps on touch (the Bundu floor, owner ruling 2026-11-02):
- * `BUNDU_FLOOR.hitAreaPx`, 49px. It replaces Apple HIG Buttons' 44 pt on a coarse pointer. A desktop keeps the
- * smaller `FLOOR_FINE_HIT_PX` (28px, owner ruling 2026-11-12, #660). Kept under the old name for importers.
+ * `BUNDU_FLOOR.hitAreaPx`, 45px (owner 2026-11-19). It replaces Apple HIG Buttons' 44 pt on a coarse pointer. A desktop keeps the
+ * smaller `FLOOR_FINE_HIT_PX` (24px, owner ruling 2026-11-19; 28px under #660). Kept under the old name for importers.
  */
 export const FLOOR_COARSE_PX = BUNDU_FLOOR.hitAreaPx;
 /** The smallest a control is DRAWN under desktop density, px. */
 export const FLOOR_VISIBLE_FINE_PX = BUNDU_FLOOR.visibleControlMinPx;
-/** The hit region every interactive control keeps on a desktop (a fine pointer with hover), px: 28 (#660). Equal to FLOOR_VISIBLE_FINE_PX, so a desktop control needs no hit-area pseudo-element. */
+/** The hit region every interactive control keeps on a desktop (a fine pointer with hover), px: 24 (owner 2026-11-19; 28 under #660). Below FLOOR_VISIBLE_FINE_PX, so a desktop control's drawn box is its whole hit region and more. */
 export const FLOOR_FINE_HIT_PX = BUNDU_FLOOR.pointerFine.hitAreaPx;
 /** The type steps that are secondary text (floor `captionPx`, 14px); every other step is body or a heading (floor `bodyPx`, 17px). */
 export const CAPTION_STEPS: readonly string[] = ["small", "caption", "code"];
@@ -1712,20 +2194,21 @@ export const DENSITY_DESKTOP_QUERY =
 export const DENSITY_TABLET_QUERY = "(min-width: 48rem)";
 
 /**
- * Size roles under desktop density, in px: what a control is DRAWN at. Every one must be >= FLOOR_FINE_HIT_PX
- * (= FLOOR_VISIBLE_FINE_PX, 28), the desktop hit region: the drawn box IS the hit region, so a desktop control needs no
- * pseudo-element. (Before #660 a desktop kept a 49px hit region, and the native field roles could not step down
- * because an input or select cannot carry a pseudo-element; they now step down with the rest.)
+ * Size roles under desktop density, in px: what a control is DRAWN at. Every one must be >= FLOOR_VISIBLE_FINE_PX
+ * (FLOOR_VISIBLE_FINE_PX, 28): the drawn box is at least the 24px desktop hit region, so a desktop control's own box
+ * already covers its hit region. (Before 2026-11-19 a desktop kept a 49px touch and 28px hit region, and the native
+ * field roles could not step down because an input or select cannot carry a pseudo-element; they now step down with
+ * the rest.)
  */
 export const DESKTOP_SIZES: Readonly<Record<string, number>> = {
   "spacing-touch": 36,
   "spacing-control": 36,
-  "spacing-control-sm": 32,
-  "spacing-control-lg": 40,
+  "spacing-control-sm": 33,
+  "spacing-control-lg": 41,
   "spacing-control-icon": 36,
   "spacing-control-dense": 28,
   "spacing-field": 36,
-  "spacing-field-sm": 32,
+  "spacing-field-sm": 33,
 };
 
 /**

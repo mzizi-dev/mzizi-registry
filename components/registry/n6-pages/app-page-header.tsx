@@ -41,9 +41,9 @@ function PageHeader({
       <div className="min-w-0">
         {crumbs.length > 0 && (
           <nav aria-label="Breadcrumb" className="mb-1">
-            <ol className="flex flex-wrap items-center gap-2 text-caption text-muted-foreground">
+            <ol className="flex flex-wrap items-center gap-control-between text-caption text-muted-foreground">
               {crumbs.map((c, i) => (
-                <li key={`${i}-${c.label}`} className="flex items-center gap-2">
+                <li key={`${i}-${c.label}`} className="flex items-center gap-control-between">
                   {i > 0 && <span aria-hidden="true">/</span>}
                   {c.href ? (
                     <a
@@ -60,7 +60,7 @@ function PageHeader({
             </ol>
           </nav>
         )}
-        <div className="flex flex-wrap items-center gap-x-2.5 gap-y-2">
+        <div className="flex flex-wrap items-center gap-x-2.5 gap-y-control-between">
           <h1 className="text-h5 font-semibold tracking-tight">{title}</h1>
           {docsHref && (
             <a
@@ -80,7 +80,7 @@ function PageHeader({
         )}
       </div>
       {hasActions && (
-        <div className="flex shrink-0 flex-wrap gap-2">{actions}</div>
+        <div className="flex shrink-0 flex-wrap gap-control-between">{actions}</div>
       )}
     </header>
   );

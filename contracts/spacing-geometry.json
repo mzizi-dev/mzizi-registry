@@ -1,8 +1,74 @@
 {
   "$comment": "The rendered geometry guard for the spacing floor (owner, 2026-11-04, #617), as data a browser audit reads (mzizi-site's scripts/audit-ui.mjs --guard, the CLI's check). This registry has no browser harness of its own (scripts/kitesurf.ts is a remote text probe), so the guard is specified here once and run where a browser exists. Numbers equal BUNDU_FLOOR.spacing (pinned by __tests__/spacing-floor.test.ts).",
   "floor": {
+    "layers": {
+      "pageX": {
+        "px": 17
+      },
+      "pageXWide": {
+        "px": 28,
+        "dense": 21
+      },
+      "section": {
+        "px": 49,
+        "dense": 28
+      },
+      "containerPadding": {
+        "px": 28,
+        "dense": 21
+      },
+      "containerGap": {
+        "px": 21,
+        "dense": 14
+      },
+      "cardPadding": {
+        "px": 21,
+        "dense": 14
+      },
+      "cardGap": {
+        "px": 14,
+        "dense": 7
+      },
+      "cardStack": {
+        "px": 7,
+        "dense": 7
+      },
+      "controlX": {
+        "px": 17,
+        "dense": 12
+      },
+      "fieldX": {
+        "px": 17,
+        "dense": 12
+      },
+      "controlGap": {
+        "px": 9,
+        "dense": 7
+      },
+      "controlBetween": {
+        "px": 9,
+        "dense": 9
+      },
+      "chipX": {
+        "px": 12,
+        "dense": 9
+      },
+      "pillX": {
+        "px": 9,
+        "dense": 5
+      },
+      "pillGap": {
+        "px": 5,
+        "dense": 3
+      },
+      "labelGap": {
+        "px": 7,
+        "dense": 5
+      }
+    },
     "insetPx": 14,
-    "controlGapPx": 7,
+    "gapPx": 7,
+    "controlGapPx": 9,
     "labelGapPx": 7,
     "itemGapPx": 7,
     "leadingBody": 1.5
@@ -10,28 +76,28 @@
   "measure": [
     {
       "id": "control-gap",
-      "say": "Neighbouring interactive controls keep 7px between their VISIBLE edges. Hit regions (the ::after of the hit-area rule) may touch but must not overlap a sibling's visible box.",
+      "say": "Neighbouring interactive controls keep controlBetween (9px) between their VISIBLE edges. Hit regions (the ::after of the hit-area rule) may touch but must not overlap a sibling's visible box.",
       "select": "button, [role=button], [role=tab], a[href], input:not([type=hidden]), select, textarea, summary",
       "rule": "for each pair of controls that share a parent, distance(visibleRect(a), visibleRect(b)) >= controlGapPx unless they are one joined group ([role=group] / [role=toolbar] with data-joined)",
       "min": "controlGapPx"
     },
     {
       "id": "label-gap",
-      "say": "A label and its field keep 7px.",
+      "say": "A label and its field keep labelGapPx (7px, the global floor). The controls layer dense step (5px) is pending the owner's confirmation.",
       "select": "label",
       "rule": "distance(rect(label), rect(label.control)) >= labelGapPx unless the control is inside the label",
       "min": "labelGapPx"
     },
     {
       "id": "item-gap",
-      "say": "Sibling items of a list, grid, stack or toolbar keep 7px.",
+      "say": "Sibling items of a list, grid, stack or toolbar keep itemGapPx (the dense floor, 7px; default 14px, --space-card-gap).",
       "select": "ul, ol, [role=list], [role=toolbar], [role=tablist], [role=radiogroup], [role=menu], [role=listbox]",
       "rule": "distance between consecutive children's rects >= itemGapPx, unless the container sets data-spacing-exception",
       "min": "itemGapPx"
     },
     {
       "id": "text-inset",
-      "say": "Text keeps 14px from the edge of its container: inline for a control's label, both axes for a card, panel, dialog, alert or popover.",
+      "say": "Text keeps at least insetPx (14px, the floor for a component with no known layer; a known layer keeps its own dense floor, checked by the layer-aware checker) of its container: inline for a control's label, both axes for a card, panel, dialog, alert or popover.",
       "select": "button, [role=button], [role=tab], input, select, textarea, [data-slot=card], dialog, [popover], [role=alert], [role=dialog], [role=tooltip]",
       "rule": "min distance from the text range's rect to the content-box edge of the nearest ancestor that draws an edge (background, border, ring or shadow) >= insetPx, inline axis only for a control",
       "min": "insetPx"

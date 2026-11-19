@@ -1,5 +1,5 @@
 {
-  "$comment": "Markdown (or rich text, with `from`) → tree cases shared by markdown-parse.ts (__tests__/components/markdown-renderer.test.tsx) and markdown-renderer.rs (mzizi-ui tests/contract.rs). Both builds must produce exactly these trees.",
+  "$comment": "Markdown (or rich text, with `from`) → tree cases shared by markdown-parse.ts (__tests__/components/markdown-renderer.test.tsx) and markdown-renderer.rs (mzizi-roots tests/markdown_parity.rs). Both builds must produce exactly these trees.",
   "cases": [
     {
       "say": "one line, one paragraph",

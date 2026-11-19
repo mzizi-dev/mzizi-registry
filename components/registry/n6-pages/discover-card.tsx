@@ -182,7 +182,7 @@ export function DiscoverCard({
           </div>
           {summary !== undefined && <p className="line-clamp-3 text-body-sm text-muted-foreground empty:hidden">{summary}</p>}
           {hasMeta && (
-            <ul className="mt-auto flex flex-wrap gap-x-3 gap-y-2 text-caption text-muted-foreground" data-slot="discover-card-meta">
+            <ul className="mt-auto flex flex-wrap gap-x-3 gap-y-control-between text-caption text-muted-foreground" data-slot="discover-card-meta">
               {place !== undefined && <li className="empty:hidden">{place}</li>}
               {meta.map((m, i) => (
                 <li key={`${i}|${m}`} className="empty:hidden">
@@ -192,7 +192,7 @@ export function DiscoverCard({
             </ul>
           )}
           {hasActions && (
-            <div className="relative z-10 flex flex-wrap items-center gap-2" data-slot="discover-card-actions">
+            <div className="relative z-10 flex flex-wrap items-center gap-control-between" data-slot="discover-card-actions">
               {appHref !== undefined && (
                 <a href={appHref} className={buttonVariants({ variant: "outline", size: "sm" })} data-slot="discover-card-app">
                   {appLabel}

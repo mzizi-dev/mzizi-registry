@@ -34,3 +34,6 @@ pnpm-lock.yaml
 # Formatting them here would make them differ from the published package.
 plugin/skills/
 plugin-dev/skills/
+
+# Local cargo build output (mzizi-rs/target), which prettier would otherwise scan
+mzizi-rs/target/

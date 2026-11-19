@@ -59,12 +59,31 @@ describe("BUNDU_FLOOR: the one definition", () => {
       unitPx: 7,
       bodyPx: 17,
       captionPx: 14,
-      hitAreaPx: 49,
+      hitAreaPx: 45,
       visibleControlMinPx: 28,
-      pointerFine: { hitAreaPx: 28, bodyPx: 15 },
+      pointerFine: { hitAreaPx: 24, bodyPx: 15 },
       spacing: {
+        layers: {
+          pageX: { px: 17 },
+          pageXWide: { px: 28, dense: 21 },
+          section: { px: 49, dense: 28 },
+          containerPadding: { px: 28, dense: 21 },
+          containerGap: { px: 21, dense: 14 },
+          cardPadding: { px: 21, dense: 14 },
+          cardGap: { px: 14, dense: 7 },
+          cardStack: { px: 7, dense: 7 },
+          controlX: { px: 17, dense: 12 },
+          fieldX: { px: 17, dense: 12 },
+          controlGap: { px: 9, dense: 7 },
+          controlBetween: { px: 9, dense: 9 },
+          chipX: { px: 12, dense: 9 },
+          pillX: { px: 9, dense: 5 },
+          pillGap: { px: 5, dense: 3 },
+          labelGap: { px: 7, dense: 5 },
+        },
         insetPx: 14,
-        controlGapPx: 7,
+        gapPx: 7,
+        controlGapPx: 9,
         labelGapPx: 7,
         itemGapPx: 7,
         leadingBody: 1.5,
@@ -73,19 +92,18 @@ describe("BUNDU_FLOOR: the one definition", () => {
       apca: { body: 75, nonBody: 60, ui: 30 },
     });
     expect(BUNDU_FLOOR.captionPx).toBe(2 * BUNDU_FLOOR.unitPx);
-    expect(BUNDU_FLOOR.hitAreaPx).toBe(BUNDU_FLOOR.unitPx ** 2);
+    // 45 = 3 x 15 (WCAG 2.5.5's 44, rounded up by the number rule); 24 = 3 x 8 (WCAG 2.5.8)
+    expect(BUNDU_FLOOR.hitAreaPx).toBe(3 * 15);
+    expect(BUNDU_FLOOR.pointerFine.hitAreaPx).toBe(3 * 8);
     expect(BUNDU_FLOOR.visibleControlMinPx).toBe(4 * BUNDU_FLOOR.unitPx);
-    // the desktop tier: the drawn box is the hit region, so the two minimums are the same 28px
-    expect(BUNDU_FLOOR.pointerFine.hitAreaPx).toBe(
+    // the desktop tier: the drawn box (at least 28px) holds the 24px hit region
+    expect(BUNDU_FLOOR.pointerFine.hitAreaPx).toBeLessThan(
       BUNDU_FLOOR.visibleControlMinPx,
     );
     expect(BUNDU_FLOOR.pointerFine.bodyPx).toBeLessThan(BUNDU_FLOOR.bodyPx);
     expect(BUNDU_FLOOR.pointerFine.bodyPx).toBeGreaterThan(
       BUNDU_FLOOR.captionPx,
     );
-    expect(BUNDU_FLOOR.spacing.insetPx).toBe(2 * BUNDU_FLOOR.unitPx);
-    for (const k of ["controlGapPx", "labelGapPx", "itemGapPx"] as const)
-      expect(BUNDU_FLOOR.spacing[k]).toBe(BUNDU_FLOOR.unitPx);
   });
   it("is what the contrast constants read", () => {
     expect([WCAG_BODY, WCAG_NON_BODY, WCAG_UI]).toEqual([
@@ -253,6 +271,12 @@ describe("hit region: 49px on touch, 28px on a desktop, on every interactive con
     for (const [suffix, [coarse, fine]] of Object.entries(ROLE_HEIGHTS)) {
       const name = `spacing-${suffix}`;
       if (suffix === "control-dense") continue; // fine pointer only; the hit region comes from the rule
+      if (suffix === "touch-min") {
+        // the hit-area floor itself: its desktop value is the 24px hit region, not a drawn size
+        expect(coarse, "touch-min coarse").toBe(BUNDU_FLOOR.hitAreaPx);
+        expect(fine, "touch-min fine").toBe(BUNDU_FLOOR.pointerFine.hitAreaPx);
+        continue;
+      }
       expect(coarse, `${suffix} coarse`).toBeGreaterThanOrEqual(
         BUNDU_FLOOR.hitAreaPx,
       );
@@ -412,12 +436,12 @@ describe("canon and the hand-kept token files carry the floor", () => {
     expect(src).toMatch(
       new RegExp(`default: \\{ value: "${BUNDU_FLOOR.hitAreaPx}px"`),
     );
-    expect(src).toMatch(
-      new RegExp(`sm: \\{ value: "${BUNDU_FLOOR.hitAreaPx}px"`),
-    );
-    expect(src).toContain(`input: { height: "${BUNDU_FLOOR.hitAreaPx}px" }`);
+    // the dense touch target, 41px (prime, owner 2026-11-19)
+    expect(src).toMatch(/sm: \{ value: "41px"/);
+    // control heights (componentSpecs.button and input) are 49px, a valid Mzizi number; the touch floor is 45px
+    expect(src).toContain(`input: { height: "49px" }`);
     expect(src).toContain(
-      `button: { height: "${BUNDU_FLOOR.hitAreaPx}px", heightSm: "${BUNDU_FLOOR.hitAreaPx}px"`,
+      `button: { height: "49px", heightSm: "49px"`,
     );
     expect(src).toContain(`fontSize: "${BUNDU_FLOOR.captionPx}px" }`);
   });

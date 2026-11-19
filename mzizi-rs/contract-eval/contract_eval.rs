@@ -316,23 +316,23 @@ fn allows(allowed: &str, property: &str) -> bool {
 /// `h-control` is `--spacing-control`. A copy of `lib/tokens/roles.source.ts`;
 /// `__tests__/density.test.ts` holds it equal to the TypeScript runner's table and the roles.
 pub const ROLE_HEIGHTS: &[(&str, u32, u32)] = &[
-    ("touch", 49, 36),
-    ("touch-min", 49, 28),
+    ("touch", 45, 36),
+    ("touch-min", 45, 24),
     ("control", 49, 36),
-    ("control-sm", 49, 32),
-    ("control-lg", 56, 40),
+    ("control-sm", 49, 33),
+    ("control-lg", 56, 41),
     ("control-icon", 49, 36),
-    ("control-dense", 32, 28),
+    ("control-dense", 33, 28),
     ("field", 49, 36),
-    ("field-sm", 49, 32),
+    ("field-sm", 49, 33),
 ];
 
 /// THE BUNDU FLOOR (owner ruling 2026-11-02), a copy of `BUNDU_FLOOR` in `lib/tokens/roles.source.ts`:
 /// the hit region every interactive control keeps on touch (a coarse pointer), in px; a desktop keeps `HIT_AREA_FINE_PX`.
 /// `__tests__/density.test.ts` holds it equal to the source.
-pub const HIT_AREA_PX: u32 = 49;
-/// The hit region on a desktop (a fine pointer with hover), owner ruling 2026-11-12, #660. Equal to `VISIBLE_FINE_MIN_PX`.
-pub const HIT_AREA_FINE_PX: u32 = 28;
+pub const HIT_AREA_PX: u32 = 45;
+/// The hit region on a desktop (a fine pointer with hover), owner ruling 2026-11-19 (was 28 under 2026-11-12, #660).
+pub const HIT_AREA_FINE_PX: u32 = 24;
 /// The smallest a control is DRAWN at desktop density, in px (the Bundu floor again).
 pub const VISIBLE_FINE_MIN_PX: u32 = 28;
 
@@ -451,7 +451,7 @@ pub fn hit_violations(node: &Node, fine: Option<u32>, coarse: Option<u32>) -> Ve
             hit_region(node, at, HIT_AREA_PX)
         ));
     }
-    if carries_hit_area(node) && !clips(node) && fine < VISIBLE_FINE_MIN_PX {
+    if fine < VISIBLE_FINE_MIN_PX {
         under.push(format!(
             "drawn at {fine}px on a fine pointer, below the {VISIBLE_FINE_MIN_PX}px smallest a control is drawn"
         ));
@@ -504,8 +504,9 @@ pub const HIT_AREA_GAPS: &[&str] = &[
 
 /// THE SPACING FLOOR (owner, 2026-11-04, #617), a copy of `BUNDU_FLOOR.spacing` in
 /// `lib/tokens/roles.source.ts`; `__tests__/spacing-floor.test.ts` holds it equal to the source.
+/// The inset floor for a component with no known layer, in px (today's 14; owner 2026-11-19: never weaker).
 pub const INSET_FLOOR_PX: f32 = 14.0;
-/// The least gap between controls, a label and its field, and sibling items, in px.
+/// The gap floor for a component with no known layer, in px (today's 7): `--gap-floor`.
 pub const GAP_FLOOR_PX: f32 = 7.0;
 /// The least body line height.
 pub const LEADING_FLOOR: f32 = 1.5;
@@ -675,6 +676,69 @@ fn own_text(node: &Node) -> bool {
     }
 }
 
+/// The dense padding floor of a layer, px: a copy of `SPACING_LAYER_FLOORS[layer].padding` in roles.source.ts.
+pub fn layer_padding_floor(layer: &str) -> Option<f32> {
+    match layer {
+        "pills" => Some(5.0),
+        "chips" => Some(9.0),
+        "controls" => Some(12.0),
+        "cards" => Some(14.0),
+        "containers" => Some(21.0),
+        "layout" => Some(17.0),
+        _ => None,
+    }
+}
+
+/// The layer of a contract that has one: a copy of `COMPONENT_LAYERS` in lib/tokens/roles.source.ts. `None` is checked
+/// at the fallback floors (14 inset, 7 gap).
+pub fn component_layer(contract: &str) -> Option<&'static str> {
+    match contract {
+        "app/badge" | "ui/status-badge" | "ui/mzizi-verified-badge" => Some("pills"),
+        "discover/category-chip" | "discover/category-chips" => Some("chips"),
+        "app/button"
+        | "ui/button"
+        | "app/input"
+        | "ui/input"
+        | "ui/native-select"
+        | "ui/segmented-control"
+        | "app/toolbar-menu"
+        | "app/top-bar-action"
+        | "app/quick-search" => Some("controls"),
+        "app/card"
+        | "ui/card"
+        | "app/stat-tile"
+        | "discover/discover-card"
+        | "app/alert"
+        | "ui/alert" => Some("cards"),
+        "app/confirm-action"
+        | "app/detail-panel"
+        | "app/command-palette"
+        | "app/account-menu"
+        | "ui/toaster" => Some("containers"),
+        "app/app-shell"
+        | "app/page-header"
+        | "site/container"
+        | "site/section"
+        | "discover/discover-shell" => Some("layout"),
+        _ => None,
+    }
+}
+
+/// Between adjacent controls, px: `SPACING_LAYER_FLOORS.controls.between`.
+pub const CONTROLS_BETWEEN_PX: f32 = 9.0;
+/// A pill's gap, px: `SPACING_LAYER_FLOORS.pills.gap`.
+pub const PILLS_GAP_PX: f32 = 3.0;
+
+/// Whether a node has a direct child that is an interactive control (a copy of `childrenAreControls` in runner.ts).
+fn children_are_controls(node: &Node) -> bool {
+    match node {
+        Node::Element { children, .. } => children
+            .iter()
+            .any(|c| matches!(c, Node::Element { .. }) && is_interactive(c)),
+        Node::Text(_) => false,
+    }
+}
+
 fn has_siblings(node: &Node) -> bool {
     match node {
         Node::Element { children, .. } => {
@@ -698,24 +762,41 @@ fn has_siblings(node: &Node) -> bool {
 /// of its own that draws an edge (inline axis; block axis too unless it is a control, fixes its own height or is
 /// inline-level); a negative margin on a text container; a tight `leading-*` on body copy. A copy of
 /// `spacingViolations` in `contracts/runner.ts`; `contracts/spacing-cases.json` is the shared table.
-pub fn spacing_violations(node: &Node) -> Vec<(String, String)> {
+pub fn spacing_violations(node: &Node, layer: Option<&str>) -> Vec<(String, String)> {
+    if let Some(l) = layer {
+        if layer_padding_floor(l).is_none() {
+            panic!("unknown spacing layer \"{l}\"");
+        }
+    }
     let mut out = Vec::new();
     let classes: Vec<&str> = class_of(node).split_whitespace().collect();
     let text = own_text(node);
     let edge = draws_edge(&classes);
     let control = is_interactive(node) || fixes_height(&classes) || inline_level(node, &classes);
     let siblings = has_siblings(node);
+    // Each element against its OWN layer's dense floor (owner 2026-11-19), a copy of `spacingViolations` in runner.ts:
+    // an interactive element is a control whatever its component; a component with no known layer keeps 14 and 7.
+    let element_layer = layer.map(|l| if is_interactive(node) { "controls" } else { l });
+    let inset_floor = element_layer
+        .and_then(layer_padding_floor)
+        .unwrap_or(INSET_FLOOR_PX);
+    let gap_floor = if layer.is_some() && children_are_controls(node) {
+        CONTROLS_BETWEEN_PX
+    } else if layer == Some("pills") {
+        PILLS_GAP_PX
+    } else {
+        GAP_FLOOR_PX
+    };
     let body_copy = ["p", "li", "dd", "blockquote", "figcaption", "td", "th"].contains(&node.tag());
     for t in &classes {
         let u = utility_of(t);
         if let Some((neg, kind, v)) = spacing_utility(u) {
             let px = space_of(v);
-            if let Some(p) =
-                px.filter(|p| is_gap_kind(kind) && !neg && *p < GAP_FLOOR_PX && siblings)
+            if let Some(p) = px.filter(|p| is_gap_kind(kind) && !neg && *p < gap_floor && siblings)
             {
                 out.push((
                     t.to_string(),
-                    format!("`{t}` is a {p}px gap, below the {GAP_FLOOR_PX}px Bundu spacing floor"),
+                    format!("`{t}` is a {p}px gap, below the {gap_floor}px Bundu spacing floor"),
                 ));
             } else if text && neg && kind.starts_with('m') && px.is_some_and(|p| p > 0.0) {
                 out.push((
@@ -725,11 +806,11 @@ pub fn spacing_violations(node: &Node) -> Vec<(String, String)> {
             } else if let Some(p) = px.filter(|_| text && edge && !neg) {
                 let inline = ["p", "px", "pl", "pr", "ps", "pe"].contains(&kind);
                 let block = ["p", "py", "pt", "pb"].contains(&kind) && !control;
-                if (inline || block) && p < INSET_FLOOR_PX {
+                if (inline || block) && p < inset_floor {
                     out.push((
                         t.to_string(),
                         format!(
-                            "`{t}` is {p}px of {} padding on a text container, below the {INSET_FLOOR_PX}px Bundu inset floor",
+                            "`{t}` is {p}px of {} padding on a text container, below the {inset_floor}px Bundu inset floor",
                             if inline { "inline" } else { "block" }
                         ),
                     ));

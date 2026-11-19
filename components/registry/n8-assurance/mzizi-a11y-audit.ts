@@ -83,23 +83,23 @@ export function runA11yAudit(config: MziziA11yAuditConfig = {}): A11yAuditResult
         fix: "Add aria-label, aria-labelledby, or visible text",
       })
     }
-    // Rule: Touch targets must be at least 44px
+    // Rule: Touch targets must be at least 45px (the Bundu floor, owner 2026-11-19)
     else if (
       (el.tagName === "BUTTON" || el.tagName === "A" || htmlEl.getAttribute("role") === "button") &&
       htmlEl.offsetHeight > 0
     ) {
       const rect = htmlEl.getBoundingClientRect()
-      if (rect.height < 44 || rect.width < 44) {
+      if (rect.height < 45 || rect.width < 45) {
         violations.push({
           rule: "touch-target",
           level: "moderate",
-          message: `Touch target too small (${Math.round(rect.width)}×${Math.round(rect.height)}px, min 44×44)`,
+          message: `Touch target too small (${Math.round(rect.width)}×${Math.round(rect.height)}px, min 45×45)`,
           element: el.tagName,
           selector: cssSelector(el),
           node,
           componentName: slot || undefined,
           portalUrl: portal || undefined,
-          fix: "Set min-h-[44px] min-w-[44px] or equivalent",
+          fix: "Set min-h-[45px] min-w-[45px] or equivalent",
         })
       }
     }
