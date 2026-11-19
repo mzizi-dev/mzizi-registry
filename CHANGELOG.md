@@ -35,6 +35,8 @@ Not breaking for the token names: no token is removed, and the legacy opt-out (`
 - **The `mzizi-ui` README lists only what that crate exports** (`Avatar`, `Button`, `DeviceCode`, `Input`, `Label`, `Skeleton`, `StatusBadge`) and points readers to `mzizi-roots` for `Alert`, `Badge`, `Card`, `Chart`, `MarkdownRenderer`, `Progress`, `SafeAreaFrame` and `Separator`. The `mzizi-roots` README's install pin moves to 0.8.
 - **The shared markdown test cases and the Roots renderer RFC point at `mzizi-roots`.** The fixture's comment names `mzizi-roots` `tests/markdown_parity.rs` as the Rust consumer, and the RFC carries a note that #710 moved the eight components out of `mzizi-ui`.
 
+## [4.44.0] - 2026-11-17
+
 ### Added — the seven engineering constraints join the Ubuntu doctrine (2026-11-17, Refs [#722](https://github.com/mzizi-dev/mzizi-registry/issues/722))
 
 - **New doctrine collection `genetic-code-engineering-constraints`**, beside the Ubuntu pillars and principles: outdoor-readability, connectivity-gradient-design, multilingual-parity, shared-device-awareness, personal-data-sovereignty, no-surveillance-business-model and bundu-floor, in that order. Each record names the Ubuntu principles it serves, what it looks like in a build (`expression`) and the `check` that fails a surface which does not meet it. The ids and order match the canonical ecosystem record (bundu-labs/bundu-standards#105).
@@ -42,9 +44,13 @@ Not breaking for the token names: no token is removed, and the legacy opt-out (`
 - `getEngineeringConstraints()` in `lib/db` and `DOCTRINE.engineeringConstraints` read them. A test holds the seven ids and their order, and checks that every principle named is a real one.
 - Not changed yet: the `get_doctrine` MCP topic and an `/api/v1` route that serve them, and the `bundu-design` skill's move to four pillars. Both are tracked on #722.
 
+## [4.43.0] - 2026-11-17
+
 ### Fixed — the crate publish skips crates marked `publish = false` (2026-11-17, No issue: 4.42.0 publish run failed)
 
 - **`publish-crates.yml` compares the publish order with the publishable workspace members only.** The 4.42.0 run stopped before uploading anything, because `mzizi-css` (the Lightning CSS build tool from #716, `publish = false`) is a workspace member that the publish order rightly leaves out. Members whose `cargo metadata` `publish` is `[]` are now excluded from that check and from the release notes' crate list. No crate was published, so the 0.8.0 crates go out with the next release to `main`.
+
+## [4.42.0] - 2026-11-17
 
 ### Changed — Mzizi Roots is the Dioxus-free core, and eight components render unstyled (2026-11-17, Refs [#710](https://github.com/mzizi-dev/mzizi-registry/issues/710))
 
@@ -81,6 +87,8 @@ Not breaking for the token names: no token is removed, and the legacy opt-out (`
 - **Lightning CSS build.** `mzizi-rs/crates/mzizi-css` (a bin in the Rust workspace, on the `lightningcss` crate) minifies the three sheets into `styles/pattern/dist/`. `pnpm pattern:build:check` and the CI Rust job run `--check`.
 - **Tests.** The button's source and rendered output (React, Astro and Dioxus) are held to carry no class attribute; the stylesheets are held to their rules (tokens are values only, the floor reads only tokens and sets no colour, the sizes resolve to the contract's heights).
 - **Still Tailwind.** `tailwindcss`, `tailwind-merge` and `prettier-plugin-tailwindcss` stay for every other component. `buttonVariants` is re-exported from `button.tsx` for `calendar.tsx`, which still uses the Tailwind recipe in `ui-variants.ts`; it leaves when that component moves.
+
+## [4.41.0] - 2026-11-14
 
 ### Changed — the chat and prompt boxes grow by CSS, and an IME's confirming Enter no longer submits (2026-11-14, [#693](https://github.com/mzizi-dev/mzizi-registry/issues/693))
 
