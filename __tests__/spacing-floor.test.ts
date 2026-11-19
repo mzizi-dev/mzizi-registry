@@ -423,16 +423,46 @@ describe("the contract runner holds the spacing floor", () => {
 
 // ─── The layer-aware checker: one table, in TypeScript and in Rust ──────────────────────────
 
+const isSpace = (c: string | undefined): boolean => c !== undefined && /\s/.test(c);
+
+/** Index of the last non-whitespace character at or before `i` (-1 when there is none). */
+function skipSpaceBack(s: string, i: number): number {
+  let j = i;
+  while (j >= 0 && isSpace(s[j])) j--;
+  return j;
+}
+
+/**
+ * Reads the `"contract" | "contract" => Some("layer")` arms of a Rust match. Each `=>` that is
+ * followed by `Some("layer")` takes the run of quoted names directly before it, walking back over
+ * whitespace and optional `|` separators. A plain loop, not a regex with a nested quantifier.
+ */
+function rustComponentLayers(fn: string): Record<string, string> {
+  const out: Record<string, string> = {};
+  for (let arrow = fn.indexOf("=>"); arrow !== -1; arrow = fn.indexOf("=>", arrow + 2)) {
+    const layer = /^\s*\{?\s*Some\("(\w+)"\)/.exec(fn.slice(arrow + 2));
+    if (!layer) continue;
+    const names: string[] = [];
+    let i = skipSpaceBack(fn, arrow - 1);
+    while (fn[i] === '"') {
+      const open = i === 0 ? -1 : fn.lastIndexOf('"', i - 1);
+      const name = open === -1 ? "" : fn.slice(open + 1, i);
+      if (!/^[\w/-]+$/.test(name)) break;
+      names.unshift(name);
+      i = skipSpaceBack(fn, open - 1);
+      if (fn[i] === "|") i = skipSpaceBack(fn, i - 1);
+    }
+    for (const name of names) out[name] = layer[1]!;
+  }
+  return out;
+}
+
 describe("the layer-aware checker holds the same table in the runner and the Rust evaluator", () => {
   const rs = readFileSync(join(ROOT, "mzizi-rs/contract-eval/contract_eval.rs"), "utf8");
   it("every COMPONENT_LAYERS entry is in component_layer(), with the same layer", () => {
     const from = rs.indexOf("pub fn component_layer");
     const fn = rs.slice(from, rs.indexOf("\n}\n", from));
-    const rustMap = Object.fromEntries(
-      [...fn.matchAll(/((?:"[\w/-]+"\s*\|?\s*)+)=>\s*\{?\s*Some\("(\w+)"\)/g)].flatMap((m) =>
-        [...m[1]!.matchAll(/"([\w/-]+)"/g)].map((x) => [x[1]!, m[2]!] as const),
-      ),
-    );
+    const rustMap = rustComponentLayers(fn);
     expect(rustMap).toEqual(COMPONENT_LAYERS);
   });
   it("every layer's padding floor in layer_padding_floor() is the runner's", () => {
