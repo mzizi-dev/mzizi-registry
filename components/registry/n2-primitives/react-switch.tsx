@@ -66,7 +66,7 @@ export function Switch({
       onClick={toggle}
       className={cn(
         // spacing-floor: exception the switch holds no text; the negative margin cancels the padding that grows its hit area, so layout is unchanged.
-        "group relative box-content inline-flex h-6 w-11 shrink-0 cursor-pointer items-center rounded-full p-3 -m-3 outline-none transition-colors focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background disabled:cursor-not-allowed disabled:opacity-50",
+        "group relative box-content inline-flex h-7 w-11 shrink-0 cursor-pointer items-center rounded-full p-3 -m-3 outline-none transition-colors focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background disabled:cursor-not-allowed disabled:opacity-50",
         astroClass,
         className,
       )}
@@ -74,7 +74,7 @@ export function Switch({
       <span
         aria-hidden="true"
         className={cn(
-          "pointer-events-none inline-flex h-6 w-11 items-center rounded-full transition-colors",
+          "pointer-events-none inline-flex h-7 w-11 items-center rounded-full transition-colors",
           isOn ? "bg-primary" : "bg-muted",
         )}
       >

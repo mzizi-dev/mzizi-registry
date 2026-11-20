@@ -102,7 +102,7 @@ function CaptionEditor({
               aria-label={`Color ${c}`}
               aria-pressed={textColor === c}
               className={cn(
-                "size-6 rounded-full border transition-transform",
+                "size-7 rounded-full border transition-transform",
                 textColor === c ? "scale-125 border-ring" : "border-transparent"
               )}
               style={{ backgroundColor: c }}
@@ -120,7 +120,7 @@ function CaptionEditor({
               max={48}
               value={fontSize}
               onChange={(e) => onFontSizeChange(parseInt(e.target.value))}
-              className="h-1 w-16 accent-primary"
+              className="h-7 pointer-coarse:h-touch-min w-16 accent-primary"
               aria-label="Font size"
             />
             <span className="text-sm text-muted-foreground">A</span>

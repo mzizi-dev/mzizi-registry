@@ -92,7 +92,7 @@ function BookingConfirmation({
         {onAddToCalendar && (
           <button
             onClick={onAddToCalendar}
-            className="h-10 flex-1 rounded-full border border-border text-xs font-medium transition-colors hover:bg-muted"
+            className="h-control-lg pointer-coarse:h-touch-min flex-1 rounded-full border border-border text-xs font-medium transition-colors hover:bg-muted"
           >
             Add to Calendar
           </button>
@@ -100,7 +100,7 @@ function BookingConfirmation({
         {onShare && (
           <button
             onClick={onShare}
-            className="h-10 flex-1 rounded-full border border-border text-xs font-medium transition-colors hover:bg-muted"
+            className="h-control-lg pointer-coarse:h-touch-min flex-1 rounded-full border border-border text-xs font-medium transition-colors hover:bg-muted"
           >
             Share
           </button>

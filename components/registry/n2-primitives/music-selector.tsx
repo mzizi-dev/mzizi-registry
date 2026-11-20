@@ -48,7 +48,7 @@ function MusicSelector({
           value={search}
           onChange={(e) => setSearch(e.target.value)}
           placeholder="Search music…"
-          className="h-10 w-full rounded-full border border-input bg-input/30 px-4 text-sm outline-none placeholder:text-muted-foreground focus:border-ring"
+          className="h-control-lg pointer-coarse:h-touch-min w-full rounded-full border border-input bg-input/30 px-4 text-sm outline-none placeholder:text-muted-foreground focus:border-ring"
         />
       )}
       <div className="max-h-60 space-y-2 overflow-y-auto">

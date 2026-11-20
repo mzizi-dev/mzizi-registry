@@ -47,7 +47,7 @@ function CommentOnParagraph({
         data-portal="https://mzizi.dev/components/comment-on-paragraph"
         onClick={() => onOpenChange?.(true)}
         className={cn(
-          "inline-flex size-6 items-center justify-center rounded-full bg-[var(--color-cobalt,#00B0FF)]/15 text-sm font-bold text-[var(--color-cobalt-text,#00B0FF)] transition-colors hover:bg-[var(--color-cobalt,#00B0FF)]/25",
+          "inline-flex size-7 items-center justify-center rounded-full bg-[var(--color-cobalt,#00B0FF)]/15 text-sm font-bold text-[var(--color-cobalt-text,#00B0FF)] transition-colors hover:bg-[var(--color-cobalt,#00B0FF)]/25",
           className
         )}
         aria-label={`${comments.length} comment${comments.length !== 1 ? "s" : ""} on this passage`}
@@ -107,7 +107,7 @@ function CommentOnParagraph({
           onChange={(e) => setDraft(e.target.value)}
           onKeyDown={(e) => e.key === "Enter" && handleSubmit()}
           placeholder="Add a comment…"
-          className="h-8 flex-1 rounded-full border border-input bg-input/30 px-3 text-xs outline-none focus:border-ring"
+          className="h-8 pointer-coarse:h-touch-min flex-1 rounded-full border border-input bg-input/30 px-3 text-xs outline-none focus:border-ring"
         />
         <button
           onClick={handleSubmit}
@@ -121,7 +121,7 @@ function CommentOnParagraph({
       {/* Close */}
       <button
         onClick={() => onOpenChange?.(false)}
-        className="absolute -top-2 -right-2 flex h-6 min-w-6 px-1 items-center justify-center rounded-full bg-muted text-sm text-muted-foreground shadow hover:text-foreground leading-none"
+        className="absolute -top-2 -right-2 flex h-7 min-w-7 px-1 items-center justify-center rounded-full bg-muted text-sm text-muted-foreground shadow hover:text-foreground leading-none"
       >
         ×
       </button>

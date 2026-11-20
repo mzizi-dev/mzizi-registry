@@ -43,7 +43,7 @@ function TimeSlotPicker({
             disabled={!slot.available}
             onClick={() => slot.available && onSelect(slot.time)}
             className={cn(
-              "inline-flex h-10 items-center justify-center rounded-[var(--radius-lg,14px)] text-sm font-medium tabular-nums transition-colors outline-none focus-visible:border-ring focus-visible:ring-[3px] focus-visible:ring-ring/50",
+              "inline-flex h-control-lg pointer-coarse:h-touch-min items-center justify-center rounded-[var(--radius-lg,14px)] text-sm font-medium tabular-nums transition-colors outline-none focus-visible:border-ring focus-visible:ring-[3px] focus-visible:ring-ring/50",
               isSelected
                 ? "bg-[var(--color-primary,var(--color-cobalt,#00B0FF))] text-white"
                 : slot.available

@@ -69,7 +69,7 @@ function EnvEditor({
             value={variable.key}
             onChange={(e) => updateVariable(index, "key", e.target.value)}
             placeholder="KEY"
-            className="h-9 w-40 min-w-0 rounded-[var(--radius-lg,14px)] border border-input bg-input/30 px-3 font-mono text-sm transition-colors outline-none focus-visible:border-ring focus-visible:ring-[3px] focus-visible:ring-ring/50"
+            className="h-9 pointer-coarse:h-touch-min w-40 min-w-0 rounded-[var(--radius-lg,14px)] border border-input bg-input/30 px-3 font-mono text-sm transition-colors outline-none focus-visible:border-ring focus-visible:ring-[3px] focus-visible:ring-ring/50"
           />
           <div className="relative flex-1">
             <input
@@ -77,7 +77,7 @@ function EnvEditor({
               value={variable.value}
               onChange={(e) => updateVariable(index, "value", e.target.value)}
               placeholder="value"
-              className="h-9 w-full min-w-0 rounded-[var(--radius-lg,14px)] border border-input bg-input/30 px-3 pr-9 font-mono text-sm transition-colors outline-none focus-visible:border-ring focus-visible:ring-[3px] focus-visible:ring-ring/50"
+              className="h-9 pointer-coarse:h-touch-min w-full min-w-0 rounded-[var(--radius-lg,14px)] border border-input bg-input/30 px-3 pr-9 font-mono text-sm transition-colors outline-none focus-visible:border-ring focus-visible:ring-[3px] focus-visible:ring-ring/50"
             />
             {variable.secret && (
               <button

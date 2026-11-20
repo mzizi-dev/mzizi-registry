@@ -459,46 +459,9 @@ pub fn hit_violations(node: &Node, fine: Option<u32>, coarse: Option<u32>) -> Ve
     under
 }
 
-/// Density rows pinned as known gaps against the Bundu floor, `<contract name>:<row part>`. A copy of
-/// `HIT_AREA_GAPS` in `contracts/runner.ts`; `__tests__/density.test.ts` holds them equal.
-pub const HIT_AREA_GAPS: &[&str] = &[
-    "app/button:sm",
-    "app/command-palette:result row",
-    "app/command-palette:search box",
-    "app/confirm-action:typed confirm box",
-    "app/data-table:menu item",
-    "app/filter-bar:field",
-    "app/form-field:input",
-    "app/form-field:select",
-    "app/info-tip:button",
-    "app/input:input",
-    "app/page-header:docs pill",
-    "app/pagination:page link",
-    "app/plan-summary:action link",
-    "app/side-nav:nav row",
-    "app/tier-status:evidence link",
-    "app/toolbar-menu:choice",
-    "app/toolbar:search box",
-    "app/top-bar-action:action",
-    "app/workspace-switcher:menu item",
-    "discover/breadcrumb:crumb link",
-    "discover/category-chip:chip",
-    "discover/category-chips:chip",
-    "discover/detail-actions:secondary action",
-    "discover/detail-actions:share link",
-    "discover/discover-card:app link",
-    "discover/discover-section:see all",
-    "discover/discover-shell:home link",
-    "discover/discover-shell:nav link",
-    "discover/load-more:link",
-    "discover/meta-list:linked value",
-    "discover/open-in-app:link",
-    "discover/related-rail:see all",
-    "site/hero:call to action",
-    "site/hero:call to action (centred)",
-    "site/social-icon:link",
-    "ui/address-share-card:link",
-];
+/// Density rows excused from the Bundu floor, `<contract name>:<row part>`. EMPTY since the 2026-11-20 floor sweep.
+/// A copy of `HIT_AREA_GAPS` in `contracts/runner.ts`; `__tests__/density.test.ts` holds them equal.
+pub const HIT_AREA_GAPS: &[&str] = &[];
 
 /// THE SPACING FLOOR (owner, 2026-11-04, #617), a copy of `BUNDU_FLOOR.spacing` in
 /// `lib/tokens/roles.source.ts`; `__tests__/spacing-floor.test.ts` holds it equal to the source.

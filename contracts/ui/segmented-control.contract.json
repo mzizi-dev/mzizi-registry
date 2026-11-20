@@ -57,7 +57,7 @@
       "required": false,
       "default": "default",
       "values": ["sm", "default"],
-      "description": "Segment height: 48px (default) or 40px (sm)."
+      "description": "Segment height: 48px (default) or 41px (sm; 45px on touch)."
     },
     {
       "name": "class",
@@ -99,7 +99,7 @@
       }
     },
     "small": {
-      "description": "The 40px size.",
+      "description": "The 41px size (45px on touch).",
       "props": {
         "name": "view",
         "legend": "View",
@@ -137,8 +137,8 @@
       "part": "segment (sm)",
       "state": "small",
       "select": "[data-slot=\"segmented-control-segment\"]",
-      "fine": 40,
-      "coarse": 40
+      "fine": 41,
+      "coarse": 45
     }
   ],
   "theming": {
@@ -216,8 +216,5 @@
       "text": "View"
     }
   ],
-  "gaps": [
-    "The `sm` size is 40px on every pointer: on touch it is under the 44px target (WCAG 2.5.8 is met; 2.5.5 is not).",
-    "No disabled segments, and no way to mark the group required."
-  ]
+  "gaps": ["No disabled segments, and no way to mark the group required."]
 }

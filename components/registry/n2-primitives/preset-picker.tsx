@@ -90,7 +90,7 @@ function PresetPicker({
                       checked={included.includes(p.id)}
                       onChange={(e) => toggle(p.id, e.currentTarget.checked)}
                       aria-label={`Include ${p.name} in the set`}
-                      className="size-5 cursor-pointer rounded-[7px] accent-[var(--primary)]"
+                      className="size-7 pointer-coarse:size-touch-min cursor-pointer rounded-[7px] accent-[var(--primary)]"
                     />
                   </label>
                 </li>

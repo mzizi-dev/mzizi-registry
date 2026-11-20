@@ -67,7 +67,7 @@ export function AddressSelector({
             name={name}
             value={a.id}
             defaultChecked={a.id === value}
-            className="size-5 shrink-0 accent-primary outline-none"
+            className="size-7 pointer-coarse:size-touch-min shrink-0 accent-primary outline-none"
           />
           <span className="flex min-w-0 flex-1 flex-col gap-2">
             <span className="flex items-center gap-2">

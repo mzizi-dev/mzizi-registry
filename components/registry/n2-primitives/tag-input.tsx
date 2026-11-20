@@ -72,7 +72,7 @@ function TagInput({
               e.stopPropagation()
               removeTag(index)
             }}
-            className="inline-flex size-4 items-center justify-center rounded-full transition-colors hover:bg-foreground/10"
+            className="inline-flex size-7 items-center justify-center rounded-full transition-colors hover:bg-foreground/10"
             aria-label={`Remove ${tag}`}
           >
             <XIcon className="size-3" />

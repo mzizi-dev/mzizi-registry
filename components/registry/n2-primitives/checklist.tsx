@@ -104,7 +104,7 @@ function Checklist({
             onChange={(e) => setNewText(e.target.value)}
             onKeyDown={(e) => e.key === "Enter" && handleAdd()}
             placeholder="Add item..."
-            className="h-8 min-w-0 flex-1 rounded-[var(--radius-lg,14px)] border border-input bg-input/30 px-3 text-sm transition-colors outline-none focus-visible:border-ring focus-visible:ring-[3px] focus-visible:ring-ring/50"
+            className="h-8 pointer-coarse:h-touch-min min-w-0 flex-1 rounded-[var(--radius-lg,14px)] border border-input bg-input/30 px-3 text-sm transition-colors outline-none focus-visible:border-ring focus-visible:ring-[3px] focus-visible:ring-ring/50"
           />
           <button
             type="button"

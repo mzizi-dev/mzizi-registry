@@ -100,7 +100,7 @@ function NoteEditor({
               }
             }}
             placeholder={tags.length === 0 ? "Add tags…" : "+"}
-            className="h-6 w-16 bg-transparent text-sm outline-none placeholder:text-muted-foreground"
+            className="h-7 pointer-coarse:h-touch-min w-16 bg-transparent text-sm outline-none placeholder:text-muted-foreground"
           />
         </div>
         {autoSave && (

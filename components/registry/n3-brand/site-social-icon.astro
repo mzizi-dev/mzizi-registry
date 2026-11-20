@@ -86,7 +86,7 @@ const key = platform?.key ?? 'generic';
   rel="me noopener noreferrer"
   aria-label={displayLabel}
   title={displayLabel}
-  class="inline-flex items-center justify-center w-9 h-9 rounded-full text-muted-foreground hover:text-foreground hover:bg-muted transition-colors"
+  class="inline-flex items-center justify-center w-9 h-9 rounded-full text-muted-foreground hover:text-foreground hover:bg-muted transition-colors pointer-coarse:h-touch-min pointer-coarse:w-touch-min"
   data-social-platform={key}
 >
   {key === 'linkedin' && (

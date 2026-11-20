@@ -5,7 +5,7 @@
   "version": "1.0.1",
   "node": 6,
   "kind": "pattern",
-  "summary": "One category link in a CategoryChips row: a 44px pill with the name and an optional count. A link, never a button.",
+  "summary": "One category link in a CategoryChips row: a 33px pill (45px on touch) with the name and an optional count. A link, never a button.",
   "implementations": {
     "astro": {
       "registry": "discover-category-chip",

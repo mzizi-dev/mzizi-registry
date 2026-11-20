@@ -312,49 +312,11 @@ export function hitViolations(
 }
 
 /**
- * Density rows whose control is a known, pinned gap against the Bundu floor: `<contract name>:<row part>`.
- * Each is a link, or a control drawn on a literal Tailwind height (`h-12`, 48px) or smaller than the desktop
- * minimum, that predates the floor. The set is pinned by `__tests__/density.test.ts`, which also holds it equal to the Rust copy;
- * the follow-up moves each onto a size role.
+ * Density rows excused from the Bundu floor: `<contract name>:<row part>`. EMPTY since the 2026-11-20 floor sweep
+ * (every density row meets the floor: 45px hit region on touch, 24px on a desktop, a desktop drawn 28px). A new entry
+ * is a regression and needs an owner ruling; `__tests__/density.test.ts` pins this list equal to the Rust copy.
  */
-export const HIT_AREA_GAPS: readonly string[] = [
-  "app/button:sm",
-  "app/command-palette:result row",
-  "app/command-palette:search box",
-  "app/confirm-action:typed confirm box",
-  "app/data-table:menu item",
-  "app/filter-bar:field",
-  "app/form-field:input",
-  "app/form-field:select",
-  "app/info-tip:button",
-  "app/input:input",
-  "app/page-header:docs pill",
-  "app/pagination:page link",
-  "app/plan-summary:action link",
-  "app/side-nav:nav row",
-  "app/tier-status:evidence link",
-  "app/toolbar-menu:choice",
-  "app/toolbar:search box",
-  "app/top-bar-action:action",
-  "app/workspace-switcher:menu item",
-  "discover/breadcrumb:crumb link",
-  "discover/category-chip:chip",
-  "discover/category-chips:chip",
-  "discover/detail-actions:secondary action",
-  "discover/detail-actions:share link",
-  "discover/discover-card:app link",
-  "discover/discover-section:see all",
-  "discover/discover-shell:home link",
-  "discover/discover-shell:nav link",
-  "discover/load-more:link",
-  "discover/meta-list:linked value",
-  "discover/open-in-app:link",
-  "discover/related-rail:see all",
-  "site/hero:call to action",
-  "site/hero:call to action (centred)",
-  "site/social-icon:link",
-  "ui/address-share-card:link",
-];
+export const HIT_AREA_GAPS: readonly string[] = [];
 
 type Outcome = { ok: true } | { ok: false; say: string };
 const pass: Outcome = { ok: true };
@@ -714,7 +676,8 @@ export const INSET_FLOOR_PX = 14;
 export const GAP_FLOOR_PX = 7;
 
 /** The layers the layer-aware checker knows (owner ruling 2026-11-19). A copy of `SpacingLayer` in roles.source.ts. */
-export type SpacingLayer = "pills" | "chips" | "controls" | "cards" | "containers" | "layout";
+export type SpacingLayer =
+  "pills" | "chips" | "controls" | "cards" | "containers" | "layout";
 
 /**
  * Each layer's dense floors, px: the absolute minimum a component of that layer may use. A copy of

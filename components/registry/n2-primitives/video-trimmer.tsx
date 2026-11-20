@@ -143,7 +143,7 @@ function VideoTrimmer({
             step={0.1}
             value={startTime}
             onChange={(e) => onStartChange?.(parseFloat(e.target.value))}
-            className="mt-0.5 h-1 w-full accent-[var(--color-malachite,#64FFDA)]"
+            className="mt-0.5 h-7 pointer-coarse:h-touch-min w-full accent-[var(--color-malachite,#64FFDA)]"
           />
         </label>
         <label className="flex-1 text-sm text-muted-foreground">
@@ -155,7 +155,7 @@ function VideoTrimmer({
             step={0.1}
             value={end}
             onChange={(e) => onEndChange?.(parseFloat(e.target.value))}
-            className="mt-0.5 h-1 w-full accent-[var(--color-malachite,#64FFDA)]"
+            className="mt-0.5 h-7 pointer-coarse:h-touch-min w-full accent-[var(--color-malachite,#64FFDA)]"
           />
         </label>
       </div>

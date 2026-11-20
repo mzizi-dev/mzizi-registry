@@ -50,7 +50,7 @@ function TimePicker({ value = "12:00", onChange, use12Hour = false, className }:
           value={displayHour}
           onChange={(e) => update(Number(e.target.value), minute)}
           aria-label="Hour"
-          className="h-9 w-14 rounded-[var(--radius-lg,14px)] border border-border bg-background px-1 text-center text-sm transition-colors outline-none focus:border-ring focus:ring-[3px] focus:ring-ring/50"
+          className="h-9 pointer-coarse:h-touch-min w-14 rounded-[var(--radius-lg,14px)] border border-border bg-background px-1 text-center text-sm transition-colors outline-none focus:border-ring focus:ring-[3px] focus:ring-ring/50"
         >
           {hours.map((h) => (
             <option key={h} value={h}>
@@ -66,7 +66,7 @@ function TimePicker({ value = "12:00", onChange, use12Hour = false, className }:
           value={minute}
           onChange={(e) => update(use12Hour ? displayHour : hour, Number(e.target.value))}
           aria-label="Minute"
-          className="h-9 w-14 rounded-[var(--radius-lg,14px)] border border-border bg-background px-1 text-center text-sm transition-colors outline-none focus:border-ring focus:ring-[3px] focus:ring-ring/50"
+          className="h-9 pointer-coarse:h-touch-min w-14 rounded-[var(--radius-lg,14px)] border border-border bg-background px-1 text-center text-sm transition-colors outline-none focus:border-ring focus:ring-[3px] focus:ring-ring/50"
         >
           {minutes.map((m) => (
             <option key={m} value={m}>
