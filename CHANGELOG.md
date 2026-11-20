@@ -19,7 +19,7 @@ Ships in the next minor. Nothing here is breaking: class names, tokens and props
 - **Stale floor wording is corrected.** About 114 registry descriptions read "48px minimum touch target" and now read "45px minimum touch target" (`registry.json`, and the generated copies). The `mzizi-ai-context` rule 8 text (TypeScript, Rust and the fixtures) states the current floor: a 45px hit region on touch, 24px on a desktop, and desktop controls drawn at least 28px. The design system README, CONTRIBUTING, the doctrine pages, the agents file, the Rust doc comments and the tests' titles say 45px and 24px. The app button's description reads "33 / 36 / 40px fine, 48 / 49px on touch" (it said 32 and 44).
 - **Consumer note.** Drawn sizes of links and fields move on touch to 45px and on a desktop to 28px. A screen built on the old values gets slightly larger controls and nothing else changes.
 
-### Fixed — the 45px and 24px floor reaches the 44px hit areas, the 32px controls, the Kweli links and the stale floor wording (2026-11-20, #732)
+### Fixed — the 45px and 24px floor reaches the 44px hit areas, the 32px controls, the Kweli links and the stale floor wording (2026-11-20, #733)
 
 Ships in the next minor. Nothing here is breaking: class names and tokens are unchanged, and the only moves are to sizes the floor already requires.
 
@@ -33,32 +33,9 @@ Ships in the next minor. Nothing here is breaking: class names and tokens are un
 - **Plugin skills.** `@nyuchi/mzizi-skills` is `^0.24.0` (was `>=0.20.0`), and the plugin manifests and marketplace entry name 0.24.0, and the public plugin's skills (`plugin/skills/`) and the dev plugin's (`plugin-dev/skills/`) are regenerated from it. They state the 45px touch and 24px desktop floors and the spacing layers.
 - **Tests.** The Rust divergence tests pin the new touch floor (`pointer-coarse:min-h-touch-min`) instead of `min-h-[44px]`, and the trust-meter and spacing-floor tests pin the new classes.
 
-### Added — unstyled components: decisions, hook vocabulary and the structure gate (2026-11-20, #730)
+## [4.46.0] - 2026-11-20
 
-Nothing a consumer installs changes in this release. It adds the plan for moving component styling into a pack, and a gate that stops new styling entering components.
-
-- **`docs/unstyled/decisions.md`** records the owner's decisions for the unstyled work. Batches ship as minors and are additive: hooks, the mzizi pack and aliases, with the look unchanged. Removing classes from components is held for a major release the owner coordinates across products. It also names the hook vocabulary components will use instead of classes (`data-slot`, `data-variant`, `data-size`, `data-state`, `data-orientation`, `data-mineral` and `data-own-after`), the pack layout, and where the Bundu floor is enforced.
-- **The structure gate** (`__tests__/unstyled/structure.test.ts`) fails when a component source under `components/registry/` carries styling (a class, an inline style, a colour or length literal, or a brand reference) and is not listed in `contracts/unstyled-baseline.json`. The list may only shrink: a file leaves it when it is unstyled, and a listed file that no longer styles fails the test until it is removed.
-- The floor figures in `docs/unstyled/decisions.md` are checked against `BUNDU_FLOOR` (`__tests__/unstyled/decisions.test.ts`). They are not copied into tests.
-
-### Changed — Bundu floor 45/24 and per-layer spacing tokens (2026-11-19, #726)
-
-Ships in the next minor, **4.45.0** (a release to `main` is the next minor above the highest tag). For a consumer of the tokens, what changes and what it is called now:
-
-- **The hit-area floor is 45px on touch and 24px on a desktop** (was 49px and 28px). The desktop drawn minimum is 28px, and every interactive element is checked against it. The values that move from 49 to 45 are `--target-floor` (touch), `--touch-target`, `--touch-target-lg`, `--size-touch`, the `h-touch`, `min-h-touch` and `size-touch` utilities, `spacingTouch` in the React Native build, `SPACING_TOUCH` in the Rust build, and the `minTouchTarget` canon value. A consumer that uses one of them as a height sees it 4px shorter. The desktop `--target-floor` is `1.5rem` (24px).
-- **Spacing has one floor per layer, each with a dense step.** The new tokens are `--space-page-x` (17), `--space-page-x-wide` (28, dense 21), `--space-section` (49, dense 28), `--space-container` (28, dense 21), `--space-container-gap` (21, dense 14), `--space-card` (21, dense 14), `--space-card-gap` (14, dense 7), `--space-card-stack` (7), `--space-control-x` (17, dense 12), `--space-field-x` (17, dense 12), `--space-control-gap` (9, dense 7), `--space-control-between` (9), `--space-label-gap` (7, dense 5), `--space-chip-x` (12, dense 9), `--space-pill-x` (9, dense 5) and `--space-pill-gap` (5, dense 3). Each is also a Tailwind utility under its own name, for example `p-control-x` or `gap-card-gap`. The dense tokens are named `<token>-dense`.
-- **The 14px inset and 7px gap are the fallback now.** `--inset-floor` (14px) and `--gap-floor` (7px) stay, for a component with no known layer. Use the layer's own token where you know the layer.
-- **The label-to-field floor stays 7px** (`labelGapPx`, `minLabelGap`, and the `spacing-geometry` contract), so layer-blind guards keep reading 7. The dense step of `--space-label-gap` (5px) is derived from the number rule and is confirmed by the owner (2026-11-20).
-- **Base-layer defaults change:** a bare control's inline padding is 12px (was 14px), and a bare native dialog or popover's padding is 21px (was 14px).
-- **Gaps between adjacent controls are 9px** (was 7px): `minControlGap` and `controlGapPx` go from 7 to 9, and `spacingFloor.controlGap.cssVar` is now `--space-control-between`. The 9px rule applies to a component with a layer. A component with no known layer keeps 7 between its children, because a 9px rule there flags a form's label-to-field gap. That limit is stated here on purpose.
-- **Control heights round up to the number rule:** `--size-control-sm` 33px on a desktop (was 32), `--size-control-dense` 33px by default and 28px under desktop density (was 32 and 28), `--size-control-lg` 41px on a desktop (was 40), `--size-field-sm` 33px on a desktop (was 32), and `--touch-target-sm` 41px (was 40). Component touch heights (49px buttons and inputs) are unchanged.
-- **The page edge on a phone is 17px.**
-- **Pills and badges keep their current padding.** The `--space-pill-x` token (9px, dense 5px) is available for a consumer, and `badge.tsx` does not use it.
-- **Chips** use `--space-chip-x` (12px, dense 9px) as a token; no shipped component is changed to it.
-- **The checker.** The contract runner and the Rust evaluator check each interactive element against the 28px desktop drawn minimum, and each component against its own layer's dense floor. A component with no known layer keeps today's 14px and 7px. Container and layout gap floors (14 and 28) and the label gap are not enforced at class level yet.
-- **Consumer note.** Updated components use `gap-control-between` and `p-container-dense`, so ship the token stylesheet with them. A component built against the old stylesheet will not find those classes.
-
-Not breaking for the token names: no token is removed, and the legacy opt-out (`data-mzizi-sizes="legacy"`) restores the pinned 2026-10 values. The values above do change what a consumer draws.
+Releases staging to main as the next minor above 4.45.0. Nothing a consumer installs changes shape: the unstyled plan and its structure gate land (#730), and the Bundu floor reaches the remaining 32px controls and the Kweli address links (#731).
 
 ### Fixed — the 45px and 24px floor reaches the 32px controls, the Kweli links and the spacing wording (2026-11-20, #731)
 
@@ -67,11 +44,43 @@ Not breaking for the token names: no token is removed, and the legacy opt-out (`
 - **"Pending" is gone from the label-gap descriptions.** The owner confirmed the label gap (7px default, 5px dense) and that list items use the card gap (14px default, 7px dense) on 2026-11-20. The token descriptions, `docs/sizes-and-density.md`, the brand-guidelines page and the `spacing-geometry` contract now say so.
 - **The AI-context guidance states the floor as 45px on touch and a 24px desktop hit region** (was 44px and 36px).
 
+### Added — unstyled components: decisions, hook vocabulary and the structure gate (2026-11-20, #730)
+
+Nothing a consumer installs changes in this release. It adds the plan for moving component styling into a pack, and a gate that stops new styling entering components.
+
+- **`docs/unstyled/decisions.md`** records the owner's decisions for the unstyled work. Batches ship as minors and are additive: hooks, the mzizi pack and aliases, with the look unchanged. Removing classes from components is held for a major release the owner coordinates across products. It also names the hook vocabulary components will use instead of classes (`data-slot`, `data-variant`, `data-size`, `data-state`, `data-orientation`, `data-mineral` and `data-own-after`), the pack layout, and where the Bundu floor is enforced.
+- **The structure gate** (`__tests__/unstyled/structure.test.ts`) fails when a component source under `components/registry/` carries styling (a class, an inline style, a colour or length literal, or a brand reference) and is not listed in `contracts/unstyled-baseline.json`. The list may only shrink: a file leaves it when it is unstyled, and a listed file that no longer styles fails the test until it is removed.
+- The floor figures in `docs/unstyled/decisions.md` are checked against `BUNDU_FLOOR` (`__tests__/unstyled/decisions.test.ts`). They are not copied into tests.
+
+## [4.45.0] - 2026-11-19
+
+### Changed — Bundu floor 45/24 and per-layer spacing tokens (2026-11-19, #726)
+
+Ships in **4.45.0** (the next minor above the highest tag). For a consumer of the tokens, what changes and what it is called now:
+
+- **The hit-area floor is 45px on touch and 24px on a desktop** (was 49px and 28px). The desktop drawn minimum is 28px, and every interactive element is checked against it. The values that move from 49 to 45 are `--target-floor` (touch), `--touch-target`, `--touch-target-lg`, `--size-touch`, the `h-touch`, `min-h-touch` and `size-touch` utilities, `spacingTouch` in the React Native build, `SPACING_TOUCH` in the Rust build, and the `minTouchTarget` canon value. A consumer that uses one of them as a height sees it 4px shorter. The desktop `--target-floor` is `1.5rem` (24px).
+- **Spacing has one floor per layer, each with a dense step.** The new tokens are `--space-page-x` (17), `--space-page-x-wide` (28, dense 21), `--space-section` (49, dense 28), `--space-container` (28, dense 21), `--space-container-gap` (21, dense 14), `--space-card` (21, dense 14), `--space-card-gap` (14, dense 7), `--space-card-stack` (7), `--space-control-x` (17, dense 12), `--space-field-x` (17, dense 12), `--space-control-gap` (9, dense 7), `--space-control-between` (9), `--space-label-gap` (7, dense 5), `--space-chip-x` (12, dense 9), `--space-pill-x` (9, dense 5) and `--space-pill-gap` (5, dense 3). Each is also a Tailwind utility under its own name, for example `p-control-x` or `gap-card-gap`. The dense tokens are named `<token>-dense`.
+- **The 14px inset and 7px gap are the fallback now.** `--inset-floor` (14px) and `--gap-floor` (7px) stay, for a component with no known layer. Use the layer's own token where you know the layer.
+- **The label-to-field floor stays 7px** (`labelGapPx`, `minLabelGap`, and the `spacing-geometry` contract), so layer-blind guards keep reading 7. The dense step of `--space-label-gap` (5px) is derived from the number rule and is pending the owner's confirmation.
+- **Base-layer defaults change:** a bare control's inline padding is 12px (was 14px), and a bare native dialog or popover's padding is 21px (was 14px).
+- **Gaps between adjacent controls are 9px** (was 7px): `minControlGap` and `controlGapPx` go from 7 to 9, and `spacingFloor.controlGap.cssVar` is now `--space-control-between`. The 9px rule applies to a component with a layer. A component with no known layer keeps 7 between its children, because a 9px rule there flags a form's label-to-field gap. That limit is stated here on purpose.
+- **Control heights round up to the number rule:** `--size-control-sm` 33px on a desktop (was 32), `--size-control-dense` 33px by default and 28px under desktop density (was 32 and 28), `--size-control-lg` 41px on a desktop (was 40), `--size-field-sm` 33px on a desktop (was 32), and `--touch-target-sm` 41px (was 40). Component touch heights (49px buttons and inputs) are unchanged.
+- **The page edge on a phone is 17px.**
+- **Pills and badges keep their current padding.** The `--space-pill-x` token (9px, dense 5px) is available for a consumer, and `badge.tsx` does not use it.
+- **Chips** use `--space-chip-x` (12px, dense 9px) as a token; no shipped component is changed to it.
+- **The checker.** The contract runner and the Rust evaluator check each interactive element against the 28px desktop drawn minimum, and each component against its own layer's dense floor. A component with no known layer keeps today's 14px and 7px. Container and layout gap floors (14 and 28) and the label gap are not enforced at class level yet.
+- **Consumer note.** Updated components use `gap-control-between` and `p-container-dense`, so ship the token stylesheet with them. A component built against the old stylesheet will not find those classes.
+- `mzizi-a11y-audit` now flags touch targets under 45×45 (was 44×44).
+
+Not breaking for the token names: no token is removed, and the legacy opt-out (`data-mzizi-sizes="legacy"`) restores the pinned 2026-10 values. The values above do change what a consumer draws.
+
 ### Fixed — the markdown-renderer registry entry names `mzizi-roots`, not `mzizi-ui` (2026-11-17, Refs [#710](https://github.com/mzizi-dev/mzizi-registry/issues/710))
 
 - **The `markdown-renderer` item in `registry.json` now says its Rust build is in `mzizi-roots`** (`mzizi_roots::components::markdown_renderer`: `RenderProps`, `render`, `MarkdownLinks`, `parse_markdown`, `safe_href`, `safe_link` and the `Block` tree). Its description, docs and feature line still named `mzizi-ui` and the `MarkdownRenderer` and `MarkdownRendererProps` items that #710 moved out of it. The other seven components moved in #710 carried no such reference in the manifest.
-- **The `mzizi-ui` README lists only what that crate exports** (`Avatar`, `Button`, `DeviceCode`, `Input`, `Label`, `Skeleton`, `StatusBadge`) and points readers to `mzizi-roots` for `Alert`, `Badge`, `Card`, `Chart`, `MarkdownRenderer`, `Progress`, `SafeAreaFrame` and `Separator`. The `mzizi-roots` README's install pin moves to 0.8.
+- **The `mzizi-ui` README lists only what that crate exports** (`Avatar`, `Button`, `DeviceCode`, `Input`, `Label`, `Skeleton`, `StatusBadge`) and points readers to `mzizi-roots` for `Alert`, `Badge`, `Card`, `Chart`, `MarkdownRenderer`, `Progress`, `SafeAreaFrame` and `Separator`. The `mzizi-roots` README's install pin moves to 0.9.
 - **The shared markdown test cases and the Roots renderer RFC point at `mzizi-roots`.** The fixture's comment names `mzizi-roots` `tests/markdown_parity.rs` as the Rust consumer, and the RFC carries a note that #710 moved the eight components out of `mzizi-ui`.
+
+The Rust crates move to 0.9.0 (shared workspace version); all publishable crates publish at 0.9.0.
 
 ## [4.44.0] - 2026-11-17
 
