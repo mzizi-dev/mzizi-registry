@@ -177,7 +177,7 @@ describe("accessibility", () => {
     expect(timer.closest('[role="status"]')).toBeNull()
   })
 
-  it.each(["expired", "denied", "error"] as const)("%s: the refresh control has a name, a focus ring and a 48px floor", (status) => {
+  it.each(["expired", "denied", "error"] as const)("%s: the refresh control has a name, a focus ring and a 45px touch floor", (status) => {
     const host = markup({ status })
     const control = host.querySelector("[data-device-code-refresh]")!
     expect(control.textContent).toBe("Get a new code")

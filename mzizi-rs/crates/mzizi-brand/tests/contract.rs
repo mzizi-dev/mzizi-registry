@@ -620,8 +620,8 @@ fn every_variant_value_appears_in_the_typescript() {
 fn alert_banner_details_button_is_raised_to_the_touch_floor() {
     let ts = tsx("mzizi-alert-banner");
     assert!(
-        ts.contains("h-10 rounded-full px-4"),
-        "the .tsx no longer ships the 40px details button — remove this divergence"
+        ts.contains("h-control pointer-coarse:h-touch-min rounded-full px-4"),
+        "the .tsx no longer ships the 45px touch details button — remove this divergence"
     );
 }
 

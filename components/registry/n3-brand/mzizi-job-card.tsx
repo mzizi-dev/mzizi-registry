@@ -8,7 +8,7 @@ import { useMziziHarness } from "@/lib/harness"
    NYUCHI JOB CARD — Brand Component (Pre-Wired)
    Mineral: Gold (employment, commerce, economics).
    Job listing with employer verification and skill matching.
-   ✅ HARNESS  ✅ TOKENS  ✅ STRICT MINERAL RULES  ✅ TOUCH 48px+
+   ✅ HARNESS  ✅ TOKENS  ✅ STRICT MINERAL RULES  ✅ TOUCH 45px+
    ═══════════════════════════════════════════════════════════════ */
 
 interface MziziJobCardProps {

@@ -150,14 +150,14 @@
     {
       "part": "nav link",
       "select": "nav[aria-label=\"Main\"] a",
-      "fine": 44,
-      "coarse": 44
+      "fine": 33,
+      "coarse": 45
     },
     {
       "part": "home link",
       "select": "[data-slot=\"discover-home\"]",
-      "fine": 44,
-      "coarse": 44
+      "fine": 33,
+      "coarse": 45
     }
   ],
   "theming": {
@@ -180,7 +180,7 @@
     "From 320px: the brand and the action share the first row; the navigation wraps onto a full-width row below 40rem.",
     "The footer is one column, then three from 48rem."
   ],
-  "contract": "contract\n  slot is \"discover-shell\"\n  uses mineral-strip\n  a \"All circles\" min_height 44\n  when default shows a \"Create a circle\"\n  when default shows a \"Skip to content\"\n  when bare shows h1 \"Page\"\nend",
+  "contract": "contract\n  slot is \"discover-shell\"\n  uses mineral-strip\n  a \"All circles\" min_height 45\n  when default shows a \"Create a circle\"\n  when default shows a \"Skip to content\"\n  when bare shows h1 \"Page\"\nend",
   "checks": [
     {
       "say": "One main, the skip link's target.",

@@ -37,7 +37,7 @@ export function AddressCode({ code, href, linkLabel = "Open", label = "Address",
           href={href}
           data-slot="address-code-link"
           aria-label={`${linkLabel} ${label.toLowerCase()} ${code}`}
-          className="inline-flex min-h-touch-min shrink-0 items-center rounded-full px-3.5 text-body-sm font-medium text-primary no-underline outline-none hover:bg-muted focus-visible:ring-[3px] focus-visible:ring-ring/50"
+          className="inline-flex min-h-control-dense pointer-coarse:min-h-touch-min max-lg:min-h-touch-min shrink-0 items-center rounded-full px-3.5 text-body-sm font-medium text-primary no-underline outline-none hover:bg-muted focus-visible:ring-[3px] focus-visible:ring-ring/50"
         >
           {linkLabel}
         </a>

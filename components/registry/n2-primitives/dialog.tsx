@@ -16,7 +16,7 @@ import { XIcon } from "@/lib/icons"
    ✅ Radius: rounded-[var(--radius-xl,17px)] — large surfaces use xl
    ✅ Colors: uses semantic tokens (background, foreground)
    ✅ Overlay: consistent bg-black/80 with backdrop blur
-   ✅ Close button: uses Button primitive (48px min touch target)
+   ✅ Close button: uses Button primitive (45px min touch target)
    ✅ data-slot: present on all sub-components
    ═══════════════════════════════════════════════════════════════ */
 

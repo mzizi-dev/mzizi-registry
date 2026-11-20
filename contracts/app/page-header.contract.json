@@ -163,6 +163,6 @@
     }
   ],
   "gaps": [
-    "The docs pill is 24px on touch: it meets WCAG 2.5.8 (24px) but not the 44px the other app controls keep."
+    "The docs pill is 24px on touch: a known gap against the 45px touch floor the other app controls keep (listed in HIT_AREA_GAPS)."
   ]
 }

@@ -288,15 +288,15 @@
       "part": "row actions menu button",
       "state": "team",
       "select": "details[data-slot=\"row-actions-menu\"] > summary",
-      "fine": 32,
-      "coarse": 44
+      "fine": 33,
+      "coarse": 45
     },
     {
       "part": "menu item",
       "state": "team",
       "select": "details[data-slot=\"row-actions-menu\"] li button, details[data-slot=\"row-actions-menu\"] li a",
-      "fine": 32,
-      "coarse": 44
+      "fine": 33,
+      "coarse": 45
     },
     {
       "part": "inline row action",

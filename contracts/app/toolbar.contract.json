@@ -110,8 +110,8 @@
     {
       "part": "search box",
       "select": "input[type=\"search\"]",
-      "fine": 32,
-      "coarse": 44
+      "fine": 33,
+      "coarse": 45
     }
   ],
   "theming": {

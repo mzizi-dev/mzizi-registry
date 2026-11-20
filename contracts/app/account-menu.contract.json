@@ -85,14 +85,14 @@
     {
       "part": "trigger",
       "select": "summary",
-      "fine": 32,
-      "coarse": 44
+      "fine": 33,
+      "coarse": 45
     },
     {
       "part": "sign out",
       "select": "form button",
-      "fine": 32,
-      "coarse": 44
+      "fine": 33,
+      "coarse": 45
     }
   ],
   "theming": {
@@ -116,7 +116,7 @@
   "responsive": [
     "The name shows from xl; the panel is min(18rem, 100vw − 1rem) wide, right-aligned."
   ],
-  "contract": "contract\n  slot is \"account-menu\"\n  summary \"Tendai Moyo\" min_height 32\n  when default shows button \"Sign out\"\n  when anonymous shows summary \"Your account\"\nend",
+  "contract": "contract\n  slot is \"account-menu\"\n  summary \"Tendai Moyo\" min_height 45\n  when default shows button \"Sign out\"\n  when anonymous shows summary \"Your account\"\nend",
   "checks": [
     {
       "say": "Sign-out posts.",

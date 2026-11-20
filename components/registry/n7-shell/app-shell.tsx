@@ -226,7 +226,7 @@ function AppShell({
             type="button"
             popoverTarget={drawerId}
             popoverTargetAction="hide"
-            className="inline-flex h-11 w-11 shrink-0 items-center justify-center rounded-sm text-muted-foreground hover:bg-muted lg:hidden"
+            className="inline-flex size-control-sm pointer-coarse:size-touch-min shrink-0 items-center justify-center rounded-sm text-muted-foreground hover:bg-muted lg:hidden"
             aria-label={`Close ${noun}`}
           >
             <Icon name="close" className="h-5 w-5" />
@@ -245,7 +245,7 @@ function AppShell({
           <label
             htmlFor={collapseId}
             title={`Collapse ${noun}`}
-            className="inline-flex h-8 w-8 cursor-pointer items-center justify-center rounded-sm text-muted-foreground hover:bg-muted hover:text-foreground peer-focus-visible:ring-2 peer-focus-visible:ring-ring"
+            className="inline-flex size-control-sm pointer-coarse:size-touch-min cursor-pointer items-center justify-center rounded-sm text-muted-foreground hover:bg-muted hover:text-foreground peer-focus-visible:ring-2 peer-focus-visible:ring-ring"
           >
             <Icon name="panel-left" className="h-4 w-4" />
             <span className="sr-only">{`Collapse ${noun}`}</span>
@@ -264,7 +264,7 @@ function AppShell({
           <button
             type="button"
             popoverTarget={drawerId}
-            className="inline-flex h-11 w-11 shrink-0 items-center justify-center rounded-sm hover:bg-muted lg:hidden"
+            className="inline-flex size-control-sm pointer-coarse:size-touch-min shrink-0 items-center justify-center rounded-sm hover:bg-muted lg:hidden"
             aria-label={`Open ${noun}`}
           >
             <Icon name="menu" className="h-5 w-5" />
@@ -289,7 +289,7 @@ function AppShell({
                     <li key={l.href}>
                       <a
                         href={l.href}
-                        className="inline-flex min-h-8 items-center hover:text-foreground hover:underline underline-offset-4 pointer-coarse:min-h-11"
+                        className="inline-flex min-h-control-sm items-center hover:text-foreground hover:underline underline-offset-4 pointer-coarse:min-h-touch-min"
                       >
                         {l.label}
                       </a>

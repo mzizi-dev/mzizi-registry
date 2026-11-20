@@ -9,7 +9,7 @@ import { useMziziHarness } from "@/lib/harness"
    Mineral: Cobalt (education, language).
    Word/phrase flashcard with pronunciation and usage examples.
    "Never treat African languages as an afterthought" — Covenant 6
-   ✅ HARNESS  ✅ TOKENS  ✅ STRICT MINERAL RULES  ✅ TOUCH 48px+
+   ✅ HARNESS  ✅ TOKENS  ✅ STRICT MINERAL RULES  ✅ TOUCH 45px+
    ═══════════════════════════════════════════════════════════════ */
 
 interface MziziPhraseCardProps {

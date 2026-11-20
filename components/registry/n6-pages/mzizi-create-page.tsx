@@ -8,7 +8,7 @@ import { cn } from "@/lib/utils"
    
    Standard creation flow. Cancel/Title/Submit header pattern.
    Stepped or single-form layout with section cards.
-   ✅ HARNESS  ✅ TOKENS  ✅ RESPONSIVE  ✅ TOUCH 48px+
+   ✅ HARNESS  ✅ TOKENS  ✅ RESPONSIVE  ✅ TOUCH 45px+
    ═══════════════════════════════════════════════════════════════ */
 
 interface MziziCreatePageProps {

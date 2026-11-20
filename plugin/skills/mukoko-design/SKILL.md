@@ -16,7 +16,7 @@ byte-identical copies pinned by hash tests. `SOURCES.md` names each file's sourc
 SHA-256, and `scripts/mukoko-design.test.sh` fails when a file here stops matching it. To change
 an icon, change it in mukoko-news first and then copy it here. Never redraw one.
 
-The colours come from the Mzizi palette (`mzizi_get_tokens` on the Mzizi MCP, and
+The colours come from the Mzizi palette (`mzizi_execute get_tokens` on the Mzizi MCP, and
 `palette.canonical.json` in this package). Tokens, stylesheets, the 21 families and UI rules are
 in the `mzizi-design` skill. This skill does not duplicate them.
 
@@ -33,7 +33,7 @@ and the meaning. mukoko's mark is the hive, never a bee; the bee is nyuchi's.
 
 ## The seven minerals of the mark
 
-The meanings are `symbolism` from `mzizi_get_tokens`. The `light` value is used on light
+The meanings are `symbolism` from `mzizi_execute get_tokens`. The `light` value is used on light
 surfaces, and the `dark` value on dark ones:
 
 | Mineral       | Light     | Dark      | Meaning                             |
@@ -109,7 +109,7 @@ override every earlier version of this skill.
 
 The honeycomb backgrounds and the splash come from this skill's last version before 0.8.0. No
 live surface ships them, so they are carried over unchanged. Their ground colours predate today's
-Mzizi surface scale (`mzizi_get_tokens`, `backgrounds`). When one sits behind content, check its
+Mzizi surface scale (`mzizi_execute get_tokens`, `backgrounds`). When one sits behind content, check its
 ground against the surface it replaces. Where it clashes, set the pattern over
 `var(--background)` and do not hand-pick a hex. If a background needs a new ground, change it
 here in a reviewed PR and record the reason in `SOURCES.md`.

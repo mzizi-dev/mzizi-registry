@@ -105,8 +105,8 @@
     {
       "part": "link",
       "select": "a",
-      "fine": 44,
-      "coarse": 44
+      "fine": 33,
+      "coarse": 45
     }
   ],
   "theming": {
@@ -132,7 +132,7 @@
   "responsive": [
     "The card is at most max-w-sm and fills a narrower container; the link breaks anywhere rather than overflowing."
   ],
-  "contract": "contract\n  slot is \"address-share-card\"\n  portal is \"https://mzizi.dev/components/address-share-card\"\n  uses address-code\n  a \"kweli.mukoko.com/a/NYU-7K2Q\" min_height 44\n  when default shows h3 \"Tendai's stall\"\n  when default shows p \"Green gate with the bee sign\"\nend",
+  "contract": "contract\n  slot is \"address-share-card\"\n  portal is \"https://mzizi.dev/components/address-share-card\"\n  uses address-code\n  a \"kweli.mukoko.com/a/NYU-7K2Q\" min_height 45\n  when default shows h3 \"Tendai's stall\"\n  when default shows p \"Green gate with the bee sign\"\nend",
   "checks": [
     {
       "say": "One QR image, named for its link.",

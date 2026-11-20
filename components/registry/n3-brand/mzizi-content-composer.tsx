@@ -12,7 +12,7 @@ import { useMziziHarness } from "@/lib/harness"
    Structured data creation uses mzizi-create-listing instead.
    
    Dynamic mineral accent via --brand-accent.
-   ✅ HARNESS  ✅ TOKENS  ✅ STRICT MINERAL RULES  ✅ TOUCH 48px+
+   ✅ HARNESS  ✅ TOKENS  ✅ STRICT MINERAL RULES  ✅ TOUCH 45px+
    ═══════════════════════════════════════════════════════════════ */
 
 interface MziziContentComposerProps {

@@ -78,7 +78,7 @@ export function APIExplorerPage({
             <button
               key={i}
               className={cn(
-                "flex min-h-[44px] w-full items-center gap-2 rounded-[var(--radius-sm,7px)] px-2 py-1.5 text-left text-sm transition-colors hover:bg-muted",
+                "flex min-h-control-sm pointer-coarse:min-h-touch-min w-full items-center gap-2 rounded-[var(--radius-sm,7px)] px-2 py-1.5 text-left text-sm transition-colors hover:bg-muted",
                 selectedEndpoint?.path === ep.path && "bg-muted"
               )}
             >

@@ -89,8 +89,8 @@
     {
       "part": "chip",
       "select": "a",
-      "fine": 44,
-      "coarse": 44
+      "fine": 33,
+      "coarse": 45
     }
   ],
   "theming": {
@@ -112,7 +112,7 @@
   "responsive": [
     "Chips never shrink their text; the row wraps (CategoryChips)."
   ],
-  "contract": "contract\n  slot is \"category-chip\"\n  a \"Running\" min_height 44\n  when template shows a \"{{name}}\"\n  when current shows span \"12\"\nend",
+  "contract": "contract\n  slot is \"category-chip\"\n  a \"Running\" min_height 45\n  when template shows a \"{{name}}\"\n  when current shows span \"12\"\nend",
   "checks": [
     {
       "say": "One link in the item.",

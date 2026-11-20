@@ -59,7 +59,7 @@ const hasFooter = footerLinks.length > 0 || Astro.slots.has("footer");
   <aside id={drawerId} popover aria-label={sidebarLabel} data-slot="app-sidebar">
     <div class="flex items-center gap-control-between px-2 pt-1.5" data-slot="sidebar-head">
       <div class="min-w-0 flex-1"><slot name="workspace" /></div>
-      <button type="button" popovertarget={drawerId} popovertargetaction="hide" class="inline-flex h-11 w-11 shrink-0 items-center justify-center rounded-sm text-muted-foreground hover:bg-muted lg:hidden" aria-label={`Close ${navLabel.toLowerCase()}`}>
+      <button type="button" popovertarget={drawerId} popovertargetaction="hide" class="inline-flex size-control-sm pointer-coarse:size-touch-min shrink-0 items-center justify-center rounded-sm text-muted-foreground hover:bg-muted lg:hidden" aria-label={`Close ${navLabel.toLowerCase()}`}>
         <Icon name="close" class="h-5 w-5" />
       </button>
     </div>
@@ -69,7 +69,7 @@ const hasFooter = footerLinks.length > 0 || Astro.slots.has("footer");
     </div>
     <div class="hidden items-center gap-control-between border-t border-border px-2 py-1.5 lg:flex" data-slot="sidebar-foot">
       <input type="checkbox" id={collapseId} data-shell-collapse checked={collapsed} class="peer sr-only" />
-      <label for={collapseId} title={`Collapse ${navLabel.toLowerCase()}`} class="inline-flex h-8 w-8 cursor-pointer items-center justify-center rounded-sm text-muted-foreground hover:bg-muted hover:text-foreground peer-focus-visible:ring-2 peer-focus-visible:ring-ring">
+      <label for={collapseId} title={`Collapse ${navLabel.toLowerCase()}`} class="inline-flex size-control-sm pointer-coarse:size-touch-min cursor-pointer items-center justify-center rounded-sm text-muted-foreground hover:bg-muted hover:text-foreground peer-focus-visible:ring-2 peer-focus-visible:ring-ring">
         <Icon name="panel-left" class="h-4 w-4" />
         <span class="sr-only">Collapse {navLabel.toLowerCase()}</span>
       </label>
@@ -79,7 +79,7 @@ const hasFooter = footerLinks.length > 0 || Astro.slots.has("footer");
 
   <div class="flex min-h-dvh min-w-0 flex-col" data-slot="app-main">
     <header class="sticky top-0 z-30 flex h-12 shrink-0 items-center gap-control-between border-b border-border bg-background/95 px-2 backdrop-blur supports-[backdrop-filter]:bg-background/80 sm:px-4 lg:px-6" data-slot="app-topbar">
-      <button type="button" popovertarget={drawerId} class="inline-flex h-11 w-11 shrink-0 items-center justify-center rounded-sm hover:bg-muted lg:hidden" aria-label={`Open ${navLabel.toLowerCase()}`}>
+      <button type="button" popovertarget={drawerId} class="inline-flex size-control-sm pointer-coarse:size-touch-min shrink-0 items-center justify-center rounded-sm hover:bg-muted lg:hidden" aria-label={`Open ${navLabel.toLowerCase()}`}>
         <Icon name="menu" class="h-5 w-5" />
       </button>
       <div class="min-w-0 lg:hidden"><slot name="brand" /></div>
@@ -103,7 +103,7 @@ const hasFooter = footerLinks.length > 0 || Astro.slots.has("footer");
               <ul role="list" class="flex flex-wrap items-center justify-center gap-x-4 gap-y-control-between">
                 {footerLinks.map((l) => (
                   <li>
-                    <a href={l.href} class="inline-flex min-h-8 items-center hover:text-foreground hover:underline underline-offset-4 pointer-coarse:min-h-11">
+                    <a href={l.href} class="inline-flex min-h-control-sm items-center hover:text-foreground hover:underline underline-offset-4 pointer-coarse:min-h-touch-min">
                       {l.label}
                     </a>
                   </li>

@@ -74,7 +74,7 @@ export function MziziConnectivityBar({
       {state === "offline" && onRetry && (
         <button
           onClick={onRetry}
-          className="ml-2 min-h-[44px] underline hover:no-underline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-white"
+          className="ml-2 min-h-control-sm pointer-coarse:min-h-touch-min underline hover:no-underline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-white"
         >
           Retry
         </button>

@@ -126,8 +126,8 @@
       "author": "Mzizi, operated by Nyuchi Africa (Pvt) Ltd — https://mzizi.dev",
       "categories": ["primitives"],
       "dependencies": [],
-      "description": "A Kweli address code as a chip: the code (NYU-7K2Q) in the mono face as a <code>, and a 44px link that opens the address, whose accessible name names the code. Without href the chip is the code alone. Semantic colour only, so a brand overlay (Kweli's malachite) colours the link. Astro and React builds under contract ui/address-code.",
-      "docs": "Use it for: Showing a Kweli address code on a place, ticket or venue card, Linking a code to its directions page.\nIncludes: Mono code, wide tracking, 44px link with a code-specific accessible name, Astro and React builds, one contract.\nAccessibility: The link's aria-label names the code it opens, Visually hidden label says what the code is.\nInstall: npx shadcn@latest add https://api.mzizi.dev/v1/ui/address-code",
+      "description": "A Kweli address code as a chip: the code (NYU-7K2Q) in the mono face as a <code>, and a link that opens the address (45px on touch, drawn 28px on a desktop), whose accessible name names the code. Without href the chip is the code alone. Semantic colour only, so a brand overlay (Kweli's malachite) colours the link. Astro and React builds under contract ui/address-code.",
+      "docs": "Use it for: Showing a Kweli address code on a place, ticket or venue card, Linking a code to its directions page.\nIncludes: Mono code, wide tracking, Link (45px on touch, 28px on a desktop) with a code-specific accessible name, Astro and React builds, one contract.\nAccessibility: The link's aria-label names the code it opens, Visually hidden label says what the code is.\nInstall: npx shadcn@latest add https://api.mzizi.dev/v1/ui/address-code",
       "files": [
         {
           "path": "components/registry/n2-primitives/address-code.tsx",
@@ -143,7 +143,7 @@
         "collection": "primitives",
         "features": [
           "Mono code, wide tracking",
-          "44px link with a code-specific accessible name",
+          "Link (45px on touch, 28px on a desktop) with a code-specific accessible name",
           "Astro and React builds, one contract"
         ],
         "owner": "mzizi",
@@ -194,8 +194,8 @@
       "author": "Mzizi, operated by Nyuchi Africa (Pvt) Ltd — https://mzizi.dev",
       "categories": ["primitives"],
       "dependencies": [],
-      "description": "One of the owner's private addresses in a list: a decorative lock, the name, the Kweli code in the mono face, who can open it (\"Private\" or \"Link only\") written out, an optional detail line, and a 44px manage link whose accessible name names the address. Astro and React builds under contract ui/address-private-row.",
-      "docs": "Use it for: The owner's list of private and link-only addresses, Address settings in Kweli and Mukoko ID.\nIncludes: Visibility as text and data-visibility, 44px manage link named for the address, Astro and React builds, one contract.\nAccessibility: The lock icon is aria-hidden; visibility is written out, The manage link's aria-label names the address.\nInstall: npx shadcn@latest add https://api.mzizi.dev/v1/ui/address-private-row",
+      "description": "One of the owner's private addresses in a list: a decorative lock, the name, the Kweli code in the mono face, who can open it (\"Private\" or \"Link only\") written out, an optional detail line, and a manage link (45px on touch, 28px on a desktop) whose accessible name names the address. Astro and React builds under contract ui/address-private-row.",
+      "docs": "Use it for: The owner's list of private and link-only addresses, Address settings in Kweli and Mukoko ID.\nIncludes: Visibility as text and data-visibility, Manage link (45px on touch, 28px on a desktop) named for the address, Astro and React builds, one contract.\nAccessibility: The lock icon is aria-hidden; visibility is written out, The manage link's aria-label names the address.\nInstall: npx shadcn@latest add https://api.mzizi.dev/v1/ui/address-private-row",
       "files": [
         {
           "path": "components/registry/n2-primitives/address-private-row.tsx",
@@ -211,7 +211,7 @@
         "collection": "primitives",
         "features": [
           "Visibility as text and data-visibility",
-          "44px manage link named for the address",
+          "Manage link (45px on touch, 28px on a desktop) named for the address",
           "Astro and React builds, one contract"
         ],
         "owner": "mzizi",
@@ -1711,8 +1711,8 @@
       "author": "Mzizi, operated by Nyuchi Africa (Pvt) Ltd — https://mzizi.dev",
       "categories": ["app", "shell"],
       "dependencies": [],
-      "description": "An app's navigation, dense like a product console: quiet group labels, one 32px row per item (44px on touch) with an icon and the label, a badge, nested items under a disclosure, and the current item filled with a brand-coloured indicator. Descriptions are tooltips and accessible descriptions, never printed.",
-      "docs": "Use it for: An app's navigation, dense like a product console: quiet group labels, one 32px row per item (44px on touch) with an icon and the label, a badge, nested items under a disclosure, and the current item filled with a brand-coloured indicator (Mzizi Dashboard Standard).\nIncludes: Exactly one item, the current one, carries aria-current=\"page\" and the filled row with a 2px `--primary` indicator., An item with children is a <details> disclosure, open when it contains the current page. A parent that is a page itself is listed first among its children (\"Overview\", or `overviewLabel`)., An item's `description` (0.3: `summary`) is a role=\"tooltip\" element and the link's aria-describedby; it is shown on hover and keyboard focus from 64rem, and never printed in the list., In AppShell's collapsed rail each tooltip also shows the label, and a nested group is replaced by one rail link to its first item..\nAccessibility: aria-current=\"page\" on exactly one link., aria-describedby from a link to its description., aria-labelledby from each group list to its label..\nInstall: npx shadcn@latest add https://api.mzizi.dev/v1/ui/app-side-nav",
+      "description": "An app's navigation, dense like a product console: quiet group labels, one 32px row per item (45px on touch) with an icon and the label, a badge, nested items under a disclosure, and the current item filled with a brand-coloured indicator. Descriptions are tooltips and accessible descriptions, never printed.",
+      "docs": "Use it for: An app's navigation, dense like a product console: quiet group labels, one 32px row per item (45px on touch) with an icon and the label, a badge, nested items under a disclosure, and the current item filled with a brand-coloured indicator (Mzizi Dashboard Standard).\nIncludes: Exactly one item, the current one, carries aria-current=\"page\" and the filled row with a 2px `--primary` indicator., An item with children is a <details> disclosure, open when it contains the current page. A parent that is a page itself is listed first among its children (\"Overview\", or `overviewLabel`)., An item's `description` (0.3: `summary`) is a role=\"tooltip\" element and the link's aria-describedby; it is shown on hover and keyboard focus from 64rem, and never printed in the list., In AppShell's collapsed rail each tooltip also shows the label, and a nested group is replaced by one rail link to its first item..\nAccessibility: aria-current=\"page\" on exactly one link., aria-describedby from a link to its description., aria-labelledby from each group list to its label..\nInstall: npx shadcn@latest add https://api.mzizi.dev/v1/ui/app-side-nav",
       "files": [
         {
           "path": "components/registry/n7-shell/app-side-nav.tsx",
@@ -1738,7 +1738,7 @@
         "owner": "mzizi",
         "targets": ["astro", "tsx"],
         "useCases": [
-          "An app's navigation, dense like a product console: quiet group labels, one 32px row per item (44px on touch) with an icon and the label, a badge, nested items under a disclosure, and the current item filled with a brand-coloured indicator (Mzizi Dashboard Standard)"
+          "An app's navigation, dense like a product console: quiet group labels, one 32px row per item (45px on touch) with an icon and the label, a badge, nested items under a disclosure, and the current item filled with a brand-coloured indicator (Mzizi Dashboard Standard)"
         ]
       },
       "name": "app-side-nav",
@@ -7367,8 +7367,8 @@
       "author": "Mzizi, operated by Nyuchi Africa (Pvt) Ltd — https://mzizi.dev",
       "categories": ["discover", "pages"],
       "dependencies": [],
-      "description": "One category link in a CategoryChips row: a 44px pill with the name and an optional count. A link, never a button. linkComponent (React build) renders the link with the app's router link, as on mzizi-place-card.",
-      "docs": "Use it for: One category link in a CategoryChips row: a 44px pill with the name and an optional count (Mzizi Discover Standard).\nIncludes: Renders its own <li>, so it can be repeated as a fragment., The current chip is filled (foreground on background) and has aria-current., linkComponent renders the link with the app's router link (React build)..\nAccessibility: aria-current=\"page\" on the current category; the state is never colour alone..\nInstall: npx shadcn@latest add https://api.mzizi.dev/v1/ui/discover-category-chip",
+      "description": "One category link in a CategoryChips row: a 45px-on-touch pill with the name and an optional count. A link, never a button. linkComponent (React build) renders the link with the app's router link, as on mzizi-place-card.",
+      "docs": "Use it for: One category link in a CategoryChips row: a 45px-on-touch pill with the name and an optional count (Mzizi Discover Standard).\nIncludes: Renders its own <li>, so it can be repeated as a fragment., The current chip is filled (foreground on background) and has aria-current., linkComponent renders the link with the app's router link (React build)..\nAccessibility: aria-current=\"page\" on the current category; the state is never colour alone..\nInstall: npx shadcn@latest add https://api.mzizi.dev/v1/ui/discover-category-chip",
       "files": [
         {
           "path": "components/registry/n6-pages/discover-category-chip.tsx",
@@ -7391,7 +7391,7 @@
         "owner": "mzizi",
         "targets": ["astro", "tsx"],
         "useCases": [
-          "One category link in a CategoryChips row: a 44px pill with the name and an optional count (Mzizi Discover Standard)"
+          "One category link in a CategoryChips row: a 45px-on-touch pill with the name and an optional count (Mzizi Discover Standard)"
         ]
       },
       "name": "discover-category-chip",
@@ -8578,7 +8578,7 @@
       "categories": ["primitives"],
       "dependencies": [],
       "description": "A horizontal bar of toggleable filter chips with optional counts and a clear button. Each chip is a real <button type=\"button\"> with aria-pressed, styled as a badge, in a role=\"group\" named by label (\"Filters\"), so the bar works fully from the keyboard and announces each chip's state.",
-      "docs": "Use it for: Search result filtering with active indicators, Marketplace listing filters, Inbox and feed filtering, Analytics dashboard filter bar, Content library category filters.\nVariants: default, outline, ghost, destructive.\nIncludes: cn() for className composition, data-slot attribute.\nAccessibility: role=group with an aria-label (label, \"Filters\" by default), Every chip is a <button type=\"button\"> with aria-pressed: in the tab order, operated with Enter and Space, Chips and Clear are at least 44px tall.\nInstall: npx shadcn@latest add https://api.mzizi.dev/v1/ui/filter-bar",
+      "docs": "Use it for: Search result filtering with active indicators, Marketplace listing filters, Inbox and feed filtering, Analytics dashboard filter bar, Content library category filters.\nVariants: default, outline, ghost, destructive.\nIncludes: cn() for className composition, data-slot attribute.\nAccessibility: role=group with an aria-label (label, \"Filters\" by default), Every chip is a <button type=\"button\"> with aria-pressed: in the tab order, operated with Enter and Space, Chips and Clear are at least 45px tall on touch.\nInstall: npx shadcn@latest add https://api.mzizi.dev/v1/ui/filter-bar",
       "files": [
         {
           "path": "components/registry/n2-primitives/filter-bar.tsx",
@@ -8590,7 +8590,7 @@
         "a11y": [
           "role=group with an aria-label (label, \"Filters\" by default)",
           "Every chip is a <button type=\"button\"> with aria-pressed: in the tab order, operated with Enter and Space",
-          "Chips and Clear are at least 44px tall"
+          "Chips and Clear are at least 45px tall on touch"
         ],
         "collection": "primitives",
         "features": ["cn() for className composition", "data-slot attribute"],
@@ -17345,7 +17345,7 @@
       "categories": ["brand"],
       "dependencies": [],
       "description": "Full trust score visualization showing the three-signal breakdown: Verification Tier (are you real?), Platform Status (are you active?), and Ubuntu Contribution (are you helpful?). Displays the composite score as a meter bar with individual signal breakdowns. Used on profile detail pages, admin views, and trust audit screens. This is the expanded view of trust — the verified badge is the compact view. Counted signals: pass `signals` ({ label, count, detail? }) and a `title` and the meter lists one row per signal with its count instead of the three-signal breakdown, for address, place and venue trust (Kweli's \"Address trust\": check-ins at the entrance, deliveries completed, neighbours who vouched). Raw scores are hidden by default: the header names the level (Strong, Growing, Low, None) and showScore writes the score to three decimals and each signal's value, matching the verified badge. The meter exposes aria-valuenow/min/max and, without showScore, aria-valuetext with the level. --status-error is a canonical token. Astro and React builds under contract ui/mzizi-trust-meter: server-rendered with no script, bars drawn as SVG geometry (no inline style), colour from the --status-* tokens (the Ubuntu signal is tanzanite in every brand). With `tier` (the verification tier code), the Verification signal takes that tier's --tier-* role; without it the signal stays --status-warning. With `assurance` (the assurance level, #577), the Verification signal takes that level's --assurance-* role instead.",
-      "docs": "Use it for: Full trust score breakdown on profiles, Trust audit screens in admin, Three-signal trust visualization, Trust detail views, Verification tier displays with context.\nVariants: default.\nIncludes: Astro and React builds, one contract (ui/mzizi-trust-meter), Server-rendered, no script, no inline style: bars are SVG rect widths, Score coloured by level from the --status-* tokens, data-slot + data-portal DOM attributes, Counted signal list (signals prop) for address and place trust, showScore writes the raw scores; off by default, the level is named instead.\nAccessibility: role=meter with aria-valuemin, aria-valuemax and aria-valuenow; aria-valuetext names the level when scores are hidden, aria-label is the title, Bars and icons are aria-hidden; the level (or every value, with showScore) is also written as text, Counted signal rows are at least 44px.\nInstall: npx shadcn@latest add https://api.mzizi.dev/v1/ui/mzizi-trust-meter",
+      "docs": "Use it for: Full trust score breakdown on profiles, Trust audit screens in admin, Three-signal trust visualization, Trust detail views, Verification tier displays with context.\nVariants: default.\nIncludes: Astro and React builds, one contract (ui/mzizi-trust-meter), Server-rendered, no script, no inline style: bars are SVG rect widths, Score coloured by level from the --status-* tokens, data-slot + data-portal DOM attributes, Counted signal list (signals prop) for address and place trust, showScore writes the raw scores; off by default, the level is named instead.\nAccessibility: role=meter with aria-valuemin, aria-valuemax and aria-valuenow; aria-valuetext names the level when scores are hidden, aria-label is the title, Bars and icons are aria-hidden; the level (or every value, with showScore) is also written as text, Counted signal rows are at least 45px on touch.\nInstall: npx shadcn@latest add https://api.mzizi.dev/v1/ui/mzizi-trust-meter",
       "files": [
         {
           "path": "components/registry/n3-brand/mzizi-trust-meter.tsx",
@@ -17358,7 +17358,7 @@
           "role=meter with aria-valuemin, aria-valuemax and aria-valuenow; aria-valuetext names the level when scores are hidden",
           "aria-label is the title",
           "Bars and icons are aria-hidden; the level (or every value, with showScore) is also written as text",
-          "Counted signal rows are at least 44px"
+          "Counted signal rows are at least 45px on touch"
         ],
         "collection": "brand",
         "features": [
@@ -18799,7 +18799,7 @@
       "categories": ["primitives"],
       "dependencies": [],
       "description": "Choose output sizes from groups of presets, each a true-aspect SafeAreaFrame thumbnail. Two separate actions per size: select the card to make it the active size (aria-pressed, one at a time) and tick its checkbox to include it in a batch (any number). Built for nyuchi-tools' Studio.",
-      "docs": "Use it for: Pick the sizes for a campaign or launch set, Switch the size a live preview shows, Batch export selection.\nVariants: default.\nSizes: 2-4 columns, responsive.\nIncludes: Grouped by platform, Active vs included kept distinct, Safe-area thumbnails.\nAccessibility: aria-pressed on the active card, Labelled checkboxes (Include <size> in the set), 44px+ targets for both actions, Visible focus ring.\nInstall: npx shadcn@latest add https://api.mzizi.dev/v1/ui/preset-picker",
+      "docs": "Use it for: Pick the sizes for a campaign or launch set, Switch the size a live preview shows, Batch export selection.\nVariants: default.\nSizes: 2-4 columns, responsive.\nIncludes: Grouped by platform, Active vs included kept distinct, Safe-area thumbnails.\nAccessibility: aria-pressed on the active card, Labelled checkboxes (Include <size> in the set), 45px+ targets for both actions, Visible focus ring.\nInstall: npx shadcn@latest add https://api.mzizi.dev/v1/ui/preset-picker",
       "files": [
         {
           "path": "components/registry/n2-primitives/preset-picker.tsx",
@@ -18811,7 +18811,7 @@
         "a11y": [
           "aria-pressed on the active card",
           "Labelled checkboxes (Include <size> in the set)",
-          "44px+ targets for both actions",
+          "45px+ targets for both actions",
           "Visible focus ring"
         ],
         "collection": "primitives",

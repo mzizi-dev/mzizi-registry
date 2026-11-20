@@ -257,7 +257,7 @@ function CalendarSkeleton({ className }: { className?: string }) {
       <div className="rounded-[var(--radius-card,14px)] bg-card p-2 ring-1 ring-foreground/10">
         <div className="grid grid-cols-7 gap-[2px]">
           {Array.from({ length: 35 }).map((_, i) => (
-            <Bone key={i} className="h-11 rounded-[var(--radius-inner,7px)]" />
+            <Bone key={i} className="h-control-sm rounded-[var(--radius-inner,7px)]" />
           ))}
         </div>
       </div>

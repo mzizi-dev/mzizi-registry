@@ -28,7 +28,7 @@ import { cn } from "@/lib/utils"
    - 14px card radius for the calendar container
    - 7px inner radius for day cells
    - Compact square day cells (aspect-ratio:1) — the 4.2.0 change,
-     replacing the fixed 44px (h-11) rows
+     replacing the fixed-height rows
    - Mineral (var(--color-malachite,#64FFDA) default) for today/selected
    - 4px mineral-colored dots for event indicators
    - Day headers in 11px uppercase Noto Sans

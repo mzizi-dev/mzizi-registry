@@ -25,7 +25,7 @@ mzizi-registry main (a release, e.g. v4.25.0)
    +--> mzizi-docs        facts checked against the API  -> docs.mzizi.dev  (check-freshness.mjs)
    |
    +--> skills            agent-tools mzizi-skills (npm) -> the registry's skills:generate and plugin:skills
-                                                            -> api /v1/skills, mcp mzizi_get_skills, the plugin
+                                                            -> api /v1/skills, mcp mzizi_execute get_skills, the plugin
 ```
 
 Each arrow is a PR on `staging` of the receiving repo, then a release of that repo to `main`
@@ -119,8 +119,9 @@ Each arrow is a PR on `staging` of the receiving repo, then a release of that re
 | Docs    | `check-freshness.mjs` reports no drift against the live sources                                  |
 
 For the Bundu floor in 4.23.0 and the spacing floor in 4.24.0, the signal in `/v1/brand` is the
-`accessibility` block: `minTouchTarget`, `defaultTouchTarget`, `minInset`, `minControlGap`,
-`minLabelGap`, `minItemGap` and `minBodyLeading` present and not null.
+`accessibility` block: `minTouchTarget`, `minTouchTargetPointerFine` (the desktop hit region, from
+4.37.0), `bodyPxPointerFine`, `defaultTouchTarget`, `minInset`, `minControlGap`, `minLabelGap`,
+`minItemGap` and `minBodyLeading` present and not null.
 
 ## Live alignment check
 

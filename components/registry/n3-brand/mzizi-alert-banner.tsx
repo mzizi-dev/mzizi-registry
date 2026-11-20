@@ -7,7 +7,7 @@ import { cn } from "@/lib/utils"
    NYUCHI ALERT BANNER — Brand Component (Pre-Wired)
    Universal mineral-coded severity alert. Used for weather, security, trust, system alerts.
    Cross-app alert displayed across the entire ecosystem.
-   ✅ HARNESS  ✅ TOKENS  ✅ STRICT MINERAL RULES  ✅ TOUCH 48px+
+   ✅ HARNESS  ✅ TOKENS  ✅ STRICT MINERAL RULES  ✅ TOUCH 45px+
    ═══════════════════════════════════════════════════════════════ */
 
 interface MziziWeatherAlertProps {
@@ -116,7 +116,7 @@ export function MziziWeatherAlert({
       {onDetails && (
         <button
           onClick={onDetails}
-          className="h-10 rounded-full px-4 text-sm font-medium transition-opacity hover:opacity-80"
+          className="h-control pointer-coarse:h-touch-min rounded-full px-4 text-sm font-medium transition-opacity hover:opacity-80"
           style={{ backgroundColor: config.mineral, color: "var(--foreground, #0A0A0A)" }}
         >
           View Details

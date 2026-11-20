@@ -374,17 +374,21 @@ The gates are tests, not a live drift check:
    and asserts that what a tool serves is byte-identical to the file it came from
    (`registry-bundle.test.ts`, `rust-first.test.ts`, `skills-bundle.test.ts`, `no-database.test.ts`).
 
-**Federating another MCP.** `mzizi-mcp` lists the docs MCP's tools under a `docs_` prefix and
-forwards each call, with a cached tool list and a clear tool error when the upstream fails
+**Federating another MCP.** `mzizi-mcp` offers the docs MCP's tools as `docs_`-prefixed
+operations and forwards each call, with a cached tool list and a clear tool error when the upstream fails
 (`src/docs-federation.ts`). Prefer that to copying another server's content.
 
 ### Tool naming and annotations
 
-Tools are `snake_case`, prefixed with the server (`mzizi_`), and named for the action:
-`mzizi_search`, `mzizi_get_component`, `mzizi_list_components`, `mzizi_get_tokens`,
-`mzizi_get_architecture`, `mzizi_get_doctrine`, `mzizi_get_skills`,
-`mzizi_check_accessibility`, `mzizi_report_issue`, `mzizi_fundi`, `mzizi_mcp_describe`. Read the
-live list with `tools/list` rather than trusting a copy, this one included. Inputs take plain
+Tools are `snake_case`, prefixed with the server (`mzizi_`), and named for the action. Keep the
+tool list short: `mzizi-mcp` has exactly three (owner, 2026-11-17, agent-tools#413),
+`mzizi_search`, `mzizi_execute` and `mzizi_feedback`. Everything else is an **operation**:
+`mzizi_search` returns the operations that match, each with its arguments, the permission it
+needs and whether the caller may run it, and `mzizi_execute {operation, arguments}` runs one
+(`get_component`, `list_components`, `get_tokens`, `get_architecture`, `get_doctrine`,
+`get_skills`, `check_accessibility`, `list_crates`, `describe`, `fundi`, `docs_*`). This is the
+Nyuchi Data MCP's search-and-execute pattern. Read the live list with `mzizi_search` rather than
+trusting a copy, this one included. Inputs take plain
 names (`{ "name": "button" }`); the old `p_`-prefixed database parameters are gone.
 
 Every tool carries a `title`, an `outputSchema`, and honest behaviour hints:
@@ -429,8 +433,9 @@ Release checklist:
 ## Access: free, except what acts as a person (every service)
 
 Owner decision, 2026-09-29: **the MCP server and the CLI are free, with no gate.** An anonymous
-session can `initialize`, `tools/list` and call every tool except the Fundi ones. Gating starts
-at **Fundi**: `mzizi_fundi` and `mzizi_report_issue` act as a Mzizi console user.
+session can `initialize`, `tools/list` and run every operation except the Fundi ones. Gating
+starts at **Fundi**: the `fundi` operation and the `mzizi_feedback` issue desk act as a Mzizi
+console user. A refused call names the permission it needs.
 
 How `mzizi-mcp` does it (`src/worker.ts`, `src/access.ts`):
 
