@@ -10,6 +10,14 @@ From 2026-10-04 releases follow the org versioning policy ([nyuchi/.github#80](h
 
 ## [Unreleased]
 
+### Added — unstyled components: decisions, hook vocabulary and the structure gate (2026-11-20, #PR)
+
+Nothing a consumer installs changes in this release. It adds the plan for moving component styling into a pack, and a gate that stops new styling entering components.
+
+- **`docs/unstyled/decisions.md`** records the owner's decisions for the unstyled work. Batches ship as minors and are additive: hooks, the mzizi pack and aliases, with the look unchanged. Removing classes from components is held for a major release the owner coordinates across products. It also names the hook vocabulary components will use instead of classes (`data-slot`, `data-variant`, `data-size`, `data-state`, `data-orientation`, `data-mineral` and `data-own-after`), the pack layout, and where the Bundu floor is enforced.
+- **The structure gate** (`__tests__/unstyled/structure.test.ts`) fails when a component source under `components/registry/` carries styling (a class, an inline style, a colour or length literal, or a brand reference) and is not listed in `contracts/unstyled-baseline.json`. The list may only shrink: a file leaves it when it is unstyled, and a listed file that no longer styles fails the test until it is removed.
+- The floor figures in `docs/unstyled/decisions.md` are checked against `BUNDU_FLOOR` (`__tests__/unstyled/decisions.test.ts`). They are not copied into tests.
+
 ### Changed — Bundu floor 45/24 and per-layer spacing tokens (2026-11-19, #726)
 
 Ships in the next minor, **4.45.0** (a release to `main` is the next minor above the highest tag). For a consumer of the tokens, what changes and what it is called now:
