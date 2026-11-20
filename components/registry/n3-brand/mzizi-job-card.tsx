@@ -159,7 +159,7 @@ export function MziziJobCard({
                 e.stopPropagation()
                 onSave()
               }}
-              className="h-10 rounded-full border border-border bg-muted px-4 text-sm font-medium text-foreground hover:opacity-80"
+              className="h-control-lg pointer-coarse:h-touch-min rounded-full border border-border bg-muted px-4 text-sm font-medium text-foreground hover:opacity-80"
             >
               Save
             </button>
@@ -170,7 +170,7 @@ export function MziziJobCard({
                 e.stopPropagation()
                 onApply()
               }}
-              className="h-10 rounded-full bg-[var(--color-gold,#FFD740)] px-4 text-sm font-medium text-[var(--brand-accent-foreground,#0A0A0A)] hover:opacity-80"
+              className="h-control-lg pointer-coarse:h-touch-min rounded-full bg-[var(--color-gold,#FFD740)] px-4 text-sm font-medium text-[var(--brand-accent-foreground,#0A0A0A)] hover:opacity-80"
             >
               Apply
             </button>

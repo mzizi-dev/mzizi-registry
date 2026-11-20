@@ -1,7 +1,7 @@
 // THE BUNDU FLOOR (owner rulings, 2026-11-02): hard minimums in the token layer. Bundu sets the standard for
 // outdoor reading and for people who find technology hard, so these are as high as they can be:
-// body text 17px, captions and secondary labels 14px, a 49px hit region on every interactive control on
-// touch, contrast 7:1 / 4.5:1 / 3:1. The floor has two pointer tiers (owner ruling 2026-11-12, #660): a desktop
+// body text 17px, captions and secondary labels 14px, a 45px hit region on every interactive control on
+// touch (owner ruling 2026-11-19), contrast 7:1 / 4.5:1 / 3:1. The floor has two pointer tiers (owner ruling 2026-11-12, #660): a desktop
 // (a fine pointer with hover) keeps a 28px hit region and 15px body, captions still 14px. One definition,
 // `BUNDU_FLOOR` in lib/tokens/roles.source.ts; every test here reads it and fails when a default breaks it.
 import { readdirSync, readFileSync, statSync } from "node:fs";
@@ -202,14 +202,14 @@ describe("type: nothing readable under the floor, in any layer", () => {
   });
 });
 
-describe("hit region: 49px on touch, 28px on a desktop, on every interactive control", () => {
-  it("every floored size role is at least 49px on touch", () => {
+describe("hit region: 45px on touch, 24px on a desktop, on every interactive control", () => {
+  it("every floored size role is at least 45px on touch", () => {
     for (const r of ROLES.filter((x) => x.kind === "size" && x.floor))
       expect((r.default as { px: number }).px, r.name).toBeGreaterThanOrEqual(
         BUNDU_FLOOR.hitAreaPx,
       );
   });
-  it("--target-floor is 49px, and only the desktop density layer lowers it, to 28px", () => {
+  it("--target-floor is 45px, and only the desktop density layer lowers it, to 24px", () => {
     expect(Object.fromEntries(decls(body(":root {")))["--target-floor"]).toBe(
       `${BUNDU_FLOOR.hitAreaPx / 16}rem`,
     );
@@ -241,7 +241,7 @@ describe("hit region: 49px on touch, 28px on a desktop, on every interactive con
       BUNDU_FLOOR.visibleControlMinPx,
     );
   });
-  it("every desktop control keeps a 28px hit region (and touch keeps 49px)", () => {
+  it("every desktop control keeps a 24px hit region (and touch keeps 45px)", () => {
     // Button-like controls: the hit-area pseudo-element, at least --target-floor, in the base layer.
     expect(normalised).toMatch(/@layer base \{/);
     expect(normalised).toMatch(

@@ -13,7 +13,10 @@
       "export": "@bundu/ui/app/PageHeader.astro",
       "since": "0.3.0"
     },
-    "tsx": { "registry": "app-page-header", "identity": "contract" },
+    "tsx": {
+      "registry": "app-page-header",
+      "identity": "contract"
+    },
     "rs": null,
     "related": ["page-header"]
   },
@@ -106,8 +109,8 @@
     {
       "part": "docs pill",
       "select": "[data-slot=\"docs-pill\"]",
-      "fine": 24,
-      "coarse": 24
+      "fine": 28,
+      "coarse": 45
     }
   ],
   "theming": {
@@ -161,8 +164,5 @@
       "count": 1,
       "text": "for People"
     }
-  ],
-  "gaps": [
-    "The docs pill is 24px on touch: a known gap against the 45px touch floor the other app controls keep (listed in HIT_AREA_GAPS)."
   ]
 }

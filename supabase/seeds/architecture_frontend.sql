@@ -109,7 +109,7 @@ SELECT * FROM (VALUES
       'One CVA ``variants`` block per primitive; no inline conditional classes.',
       'Expose ``asChild`` / Slot where composition matters.',
       'Use Radix UI for focus, keyboard, and screen-reader behaviour.',
-      '56px default / 48px minimum touch target.'
+      '56px default / 45px touch hit region.'
     ]::text[],
     2
   ),

@@ -72,7 +72,7 @@ function FeatureFlagToggle({
             max={100}
             value={rolloutPct}
             onChange={(e) => onRolloutChange(parseInt(e.target.value))}
-            className="h-1 w-16 accent-[var(--color-malachite,#64FFDA)]"
+            className="h-7 pointer-coarse:h-touch-min w-16 accent-[var(--color-malachite,#64FFDA)]"
             aria-label="Rollout percentage"
           />
           <span className="w-8 text-right font-mono text-sm tabular-nums">{rolloutPct}%</span>

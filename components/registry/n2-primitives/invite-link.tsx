@@ -51,7 +51,7 @@ function InviteLink({
         </div>
         <button
           onClick={handleCopy}
-          className="h-10 shrink-0 rounded-full bg-primary px-4 text-xs font-medium text-primary-foreground"
+          className="h-control-lg pointer-coarse:h-touch-min shrink-0 rounded-full bg-primary px-4 text-xs font-medium text-primary-foreground"
         >
           {copied ? "Copied!" : "Copy"}
         </button>

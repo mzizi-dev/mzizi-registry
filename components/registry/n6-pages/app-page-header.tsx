@@ -65,7 +65,7 @@ function PageHeader({
           {docsHref && (
             <a
               href={String(docsHref)}
-              className="inline-flex h-6 items-center rounded-full border border-border px-3.5 text-caption font-medium hover:bg-muted focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
+              className="inline-flex h-7 items-center rounded-full border border-border px-3.5 text-caption font-medium hover:bg-muted focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring pointer-coarse:h-touch-min"
               data-slot="docs-pill"
             >
               {docsLabel}

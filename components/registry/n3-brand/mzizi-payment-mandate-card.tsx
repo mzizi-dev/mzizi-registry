@@ -108,7 +108,7 @@ export function MziziPaymentMandateCard({
                 value={h.id}
                 checked={active}
                 onChange={() => setHandler(h.id)}
-                className="size-4 accent-[var(--brand-accent,var(--primary))] focus-visible:ring-2 focus-visible:ring-[var(--brand-accent,var(--ring))] focus-visible:outline-none"
+                className="size-7 pointer-coarse:size-touch-min accent-[var(--brand-accent,var(--primary))] focus-visible:ring-2 focus-visible:ring-[var(--brand-accent,var(--ring))] focus-visible:outline-none"
               />
             </label>
           )

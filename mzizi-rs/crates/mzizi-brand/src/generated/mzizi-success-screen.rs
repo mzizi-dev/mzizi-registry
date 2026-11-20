@@ -11,7 +11,7 @@
 //!
 //! The Rust sibling of `mzizi-success-screen.tsx`: the confirmation shown after a payment,
 //! a booking or a submission. Same `data-slot`, same polite live `role="status"`, same default
-//! check mark in the success mineral, same pill actions at the 48px floor.
+//! check mark in the success mineral, same pill actions drawn 48px tall, above the 45px touch floor.
 //!
 //! # The harness's motion preference is a prop
 //!

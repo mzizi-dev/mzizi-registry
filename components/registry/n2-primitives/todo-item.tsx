@@ -69,7 +69,7 @@ function TodoItem({
         aria-checked={completed}
         onClick={onToggle}
         className={cn(
-          "flex size-5 shrink-0 items-center justify-center rounded-[var(--radius-md,12px)] border-2 transition-colors",
+          "flex size-7 shrink-0 items-center justify-center rounded-[var(--radius-md,12px)] border-2 transition-colors",
           completed
             ? "border-primary bg-primary text-primary-foreground"
             : "border-border hover:border-foreground/30"

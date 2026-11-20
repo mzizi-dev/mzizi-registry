@@ -27,7 +27,7 @@ is the last one.
 5. N6 pages: pure composition, semantic CSS vars only, accept children/slots.
 6. All interactive components: data-slot + data-portal attributes required.
 7. Status colors use semantic tokens: --status-success, --status-error, --status-warning.
-8. Touch targets: 45px on touch, 24px hit region on a desktop (size roles, never h-12 or h-14). Focus rings: focus-visible:outline-2.
+8. Touch targets: a 45px hit region on touch and 24px on a desktop with a fine pointer; desktop controls are drawn at least 28px (size roles, never h-12 or h-14). Focus rings: focus-visible:outline-2.
 9. No hardcoded numbers in code or copy. Query the live counts.
 10. Shona terms come from the Ubuntu doctrine. Never translate or invent them.
 

@@ -30,7 +30,7 @@ export interface MetaListProps {
 }
 
 const link =
-  "inline-flex min-h-6 items-center text-foreground underline decoration-border underline-offset-4 hover:decoration-foreground pointer-coarse:min-h-touch-min"
+  "inline-flex min-h-7 items-center text-foreground underline decoration-border underline-offset-4 hover:decoration-foreground pointer-coarse:min-h-touch-min"
 
 export function MetaList({ items, columns = 2 }: MetaListProps) {
   if (items.length === 0) return null

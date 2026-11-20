@@ -119,7 +119,7 @@ export const appButtonVariants = cva(
       size: {
         sm: "h-control-sm px-3.5 text-body-sm pointer-coarse:px-4",
         md: "h-9 px-3.5 text-body-sm pointer-coarse:h-12 pointer-coarse:px-5 pointer-coarse:text-body",
-        lg: "h-10 px-4 text-body pointer-coarse:h-12 pointer-coarse:px-6",
+        lg: "h-control-lg px-4 text-body pointer-coarse:h-12 pointer-coarse:px-6",
       },
       fullWidth: {
         true: "w-full",

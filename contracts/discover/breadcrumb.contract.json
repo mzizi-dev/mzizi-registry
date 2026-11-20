@@ -13,7 +13,10 @@
       "export": "@bundu/ui/discover/DiscoverBreadcrumb.astro",
       "since": "0.3.0"
     },
-    "tsx": { "registry": "discover-breadcrumb", "identity": "contract" },
+    "tsx": {
+      "registry": "discover-breadcrumb",
+      "identity": "contract"
+    },
     "rs": null,
     "related": ["site-breadcrumb", "discover-hero"]
   },
@@ -58,9 +61,18 @@
       "description": "An event's page.",
       "props": {
         "crumbs": [
-          { "label": "Events", "href": "/" },
-          { "label": "Harare", "href": "/harare" },
-          { "label": "Jacaranda Music Festival", "href": "/jacaranda-2026" }
+          {
+            "label": "Events",
+            "href": "/"
+          },
+          {
+            "label": "Harare",
+            "href": "/harare"
+          },
+          {
+            "label": "Jacaranda Music Festival",
+            "href": "/jacaranda-2026"
+          }
         ],
         "origin": "https://events.mukoko.com"
       }
@@ -68,15 +80,28 @@
     "relative": {
       "description": "No origin and no href on the current page: both come from the request.",
       "props": {
-        "crumbs": [{ "label": "Circles", "href": "/" }, { "label": "Running" }]
+        "crumbs": [
+          {
+            "label": "Circles",
+            "href": "/"
+          },
+          {
+            "label": "Running"
+          }
+        ]
       }
     },
     "nojsonld": {
       "description": "The page's DiscoverMeta carries the BreadcrumbList.",
       "props": {
         "crumbs": [
-          { "label": "News", "href": "https://news.mukoko.com/" },
-          { "label": "Rains arrive early in Mashonaland" }
+          {
+            "label": "News",
+            "href": "https://news.mukoko.com/"
+          },
+          {
+            "label": "Rains arrive early in Mashonaland"
+          }
         ],
         "jsonLd": false
       }
@@ -103,13 +128,13 @@
     {
       "part": "crumb link",
       "select": "a",
-      "fine": 24,
+      "fine": 28,
       "coarse": 45
     },
     {
       "part": "current page",
       "select": "[aria-current=\"page\"]",
-      "fine": 24,
+      "fine": 28,
       "coarse": 45
     }
   ],

@@ -26,7 +26,7 @@ function InfoTip({ text, about, id }: InfoTipProps) {
         type="button"
         aria-label={`About ${about}`}
         aria-describedby={id}
-        className="peer inline-flex h-5 w-5 items-center justify-center rounded-full text-muted-foreground outline-none hover:text-foreground focus-visible:ring-2 focus-visible:ring-ring pointer-coarse:h-touch-min pointer-coarse:w-touch-min"
+        className="peer inline-flex h-7 w-7 items-center justify-center rounded-full text-muted-foreground outline-none hover:text-foreground focus-visible:ring-2 focus-visible:ring-ring pointer-coarse:h-touch-min pointer-coarse:w-touch-min"
       >
         <Icon name="info" className="h-3.5 w-3.5" />
       </button>
