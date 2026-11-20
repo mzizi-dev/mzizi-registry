@@ -6,7 +6,7 @@ import { appButtonVariants } from "@/lib/ui-variants"
 /**
  * Button — the Dashboard Standard button (`contracts/app/button`), held to that whole
  * contract: an <a> when `href` is set, otherwise a <button type="button"> (so it never
- * submits by accident), at app density (36px, 44–48px on touch) with small corners.
+ * submits by accident), at app density (36px, 48–49px on touch) with small corners.
  * `destructive` and `destructive-outline` read only the destructive tokens. The React
  * twin of `app-button.astro`; a server component. The registry primitive is `button`.
  */

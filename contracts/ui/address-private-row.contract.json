@@ -71,7 +71,7 @@
   "behaviour": [
     "data-visibility names the visibility, the default included.",
     "Who can open the address is written out (\"Private\", \"Link only\"); the lock icon is decorative.",
-    "The manage link is 44px and its accessible name names the address."
+    "The manage link is at the 45px touch floor and its accessible name names the address."
   ],
   "states": {
     "default": {
@@ -114,8 +114,8 @@
     {
       "part": "link",
       "select": "a",
-      "fine": 44,
-      "coarse": 44
+      "fine": 24,
+      "coarse": 45
     }
   ],
   "theming": {
@@ -136,7 +136,7 @@
     "without": "Everything: the component is server-rendered HTML with no script."
   },
   "responsive": ["The name, code and detail truncate; the link never shrinks."],
-  "contract": "contract\n  slot is \"address-private-row\"\n  portal is \"https://mzizi.dev/components/address-private-row\"\n  when default shows code \"NYU-7K2Q\"\n  a \"Manage\" min_height 44\n  when default shows span \"Private\"\n  when link shows span \"Link only\"\n  when link shows span \"Opened 3 times this week\"\nend",
+  "contract": "contract\n  slot is \"address-private-row\"\n  portal is \"https://mzizi.dev/components/address-private-row\"\n  when default shows code \"NYU-7K2Q\"\n  a \"Manage\" min_height 45\n  when default shows span \"Private\"\n  when link shows span \"Link only\"\n  when link shows span \"Opened 3 times this week\"\nend",
   "checks": [
     {
       "say": "data-visibility names the default.",

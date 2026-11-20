@@ -302,8 +302,8 @@
       "part": "inline row action",
       "state": "team",
       "select": "td[data-slot=\"row-actions\"] > form > button",
-      "fine": 32,
-      "coarse": 44
+      "fine": 33,
+      "coarse": 49
     }
   ],
   "theming": {

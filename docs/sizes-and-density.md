@@ -29,24 +29,24 @@ The contract runner and the Rust evaluator count a control's hit region as the t
 
 Each layer has a default value (the floor at default density) and a dense value (the absolute floor). Nothing goes below dense. Dense is for content that needs it, and white space is used where it serves.
 
-| Layer            | Token                     | Default | Dense       | Built from                                  |
-| ---------------- | ------------------------- | ------- | ----------- | ------------------------------------------- |
-| Layout           | `--space-page-x`          | 17      | none        | prime (Apple and M3 compact 16)             |
-| Layout           | `--space-page-x-wide`     | 28      | 21          | 7 x 4 and 7 x 3 (M3 medium and expanded 24) |
-| Layout           | `--space-section`         | 49      | 28          | 7 x 7 and 7 x 4 (48)                        |
-| Containers       | `--space-container`       | 28      | 21          | 7 x 4 and 7 x 3 (M3 dialog 24)              |
-| Containers       | `--space-container-gap`   | 21      | 14          | 7 x 3 and 7 x 2 (M3 dialog 16)              |
-| Cards            | `--space-card`            | 21      | 14          | 7 x 3 and 7 x 2 (M3 card 16)                |
-| Cards            | `--space-card-gap`        | 14      | 7           | 7 x 2 and 7 (M3 card gap 8)                 |
-| Cards            | `--space-card-stack`      | 7       | 7           | 7 (title to body 4)                         |
-| Controls         | `--space-control-x`       | 17      | 12          | prime and 3 x 4 (M3 small button 16)        |
-| Controls         | `--space-field-x`         | 17      | 12          | prime and 3 x 4 (M3 text field 16)          |
-| Controls         | `--space-control-gap`     | 9       | 7           | 3 x 3 and 7 (M3 icon to label 8)            |
-| Controls         | `--space-control-between` | 9       | 9           | 3 x 3 (M3 target spacing 8)                 |
-| Controls         | `--space-label-gap`       | 7       | 5 (pending) | 7 and prime (label to field 6 to 8)         |
-| Chips            | `--space-chip-x`          | 12      | 9           | 3 x 4 and 3 x 3 (M3 chip 12)                |
-| Pills and badges | `--space-pill-x`          | 9       | 5           | 3 x 3 and prime (M3 badge 4)                |
-| Pills and badges | `--space-pill-gap`        | 5       | 3           | prime (4)                                   |
+| Layer            | Token                     | Default | Dense | Built from                                  |
+| ---------------- | ------------------------- | ------- | ----- | ------------------------------------------- |
+| Layout           | `--space-page-x`          | 17      | none  | prime (Apple and M3 compact 16)             |
+| Layout           | `--space-page-x-wide`     | 28      | 21    | 7 x 4 and 7 x 3 (M3 medium and expanded 24) |
+| Layout           | `--space-section`         | 49      | 28    | 7 x 7 and 7 x 4 (48)                        |
+| Containers       | `--space-container`       | 28      | 21    | 7 x 4 and 7 x 3 (M3 dialog 24)              |
+| Containers       | `--space-container-gap`   | 21      | 14    | 7 x 3 and 7 x 2 (M3 dialog 16)              |
+| Cards            | `--space-card`            | 21      | 14    | 7 x 3 and 7 x 2 (M3 card 16)                |
+| Cards            | `--space-card-gap`        | 14      | 7     | 7 x 2 and 7 (M3 card gap 8)                 |
+| Cards            | `--space-card-stack`      | 7       | 7     | 7 (title to body 4)                         |
+| Controls         | `--space-control-x`       | 17      | 12    | prime and 3 x 4 (M3 small button 16)        |
+| Controls         | `--space-field-x`         | 17      | 12    | prime and 3 x 4 (M3 text field 16)          |
+| Controls         | `--space-control-gap`     | 9       | 7     | 3 x 3 and 7 (M3 icon to label 8)            |
+| Controls         | `--space-control-between` | 9       | 9     | 3 x 3 (M3 target spacing 8)                 |
+| Controls         | `--space-label-gap`       | 7       | 5     | 7 and prime (label to field 6 to 8)         |
+| Chips            | `--space-chip-x`          | 12      | 9     | 3 x 4 and 3 x 3 (M3 chip 12)                |
+| Pills and badges | `--space-pill-x`          | 9       | 5     | 3 x 3 and prime (M3 badge 4)                |
+| Pills and badges | `--space-pill-gap`        | 5       | 3     | prime (4)                                   |
 
 The dense tokens are named `<token>-dense`, for example `--space-card-dense`. The label-gap and card-gap values for sibling items are derived from the number rule, not stated by the owner, so the owner may still override them.
 
@@ -56,12 +56,12 @@ The base layer applies the dense floor to a bare element. A bare control's inlin
 
 `BUNDU_FLOOR.spacing` in `lib/tokens/roles.source.ts` is the one source. Four names are kept for consumers that depend on them:
 
-| Name         | Value | Token           | Meaning                                                                                                                |
-| ------------ | ----- | --------------- | ---------------------------------------------------------------------------------------------------------------------- |
-| `insetPx`    | 14px  | `--inset-floor` | The floor for a component with no known layer (today's value)                                                          |
-| `gapPx`      | 7px   | `--gap-floor`   | The floor for a component with no known layer (today's value)                                                          |
-| `labelGapPx` | 7px   | none            | The global label-to-field floor (layer-blind guards read it); its dense step, 5px, is pending the owner's confirmation |
-| `itemGapPx`  | 7px   | none            | The dense floor of `--space-card-gap` for sibling items                                                                |
+| Name         | Value | Token           | Meaning                                                                                                                   |
+| ------------ | ----- | --------------- | ------------------------------------------------------------------------------------------------------------------------- |
+| `insetPx`    | 14px  | `--inset-floor` | The floor for a component with no known layer (today's value)                                                             |
+| `gapPx`      | 7px   | `--gap-floor`   | The floor for a component with no known layer (today's value)                                                             |
+| `labelGapPx` | 7px   | none            | The global label-to-field floor (layer-blind guards read it); its dense step, 5px, is confirmed by the owner (2026-11-20) |
+| `itemGapPx`  | 7px   | none            | The dense floor of `--space-card-gap` for sibling items                                                                   |
 
 The `--inset-floor` and `--gap-floor` values are never lowered for a component with no known layer. A density layer never lowers them, and the legacy opt-out sets them to 0.
 
