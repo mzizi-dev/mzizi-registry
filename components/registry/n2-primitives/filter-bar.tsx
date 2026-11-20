@@ -33,8 +33,8 @@ interface FilterBarProps {
 /* Each chip is a real <button type="button"> with aria-pressed (#543): it is in the tab order,
    answers Enter and Space, and announces whether it is on. It was a <span> with onClick, which
    no keyboard could reach and no screen reader could name as a control. The chip keeps the
-   badge's look through `asChild`, at the 44px chip height `discover-category-chip` uses. */
-const CHIP = "h-11 cursor-pointer rounded-full px-4 text-sm select-none"
+   badge's look through `asChild`, at the chip height `discover-category-chip` uses. */
+const CHIP = "h-control-sm pointer-coarse:h-touch-min cursor-pointer rounded-full px-4 text-sm select-none"
 
 function FilterBar({
   options,
@@ -107,7 +107,7 @@ function FilterBar({
         <Button
           variant="ghost"
           size="sm"
-          className="min-h-11 gap-2 px-3 text-xs text-muted-foreground"
+          className="min-h-control-sm pointer-coarse:min-h-touch-min gap-2 px-3 text-xs text-muted-foreground"
           onClick={() => setSelected([])}
         >
           <X className="size-3" aria-hidden="true" />

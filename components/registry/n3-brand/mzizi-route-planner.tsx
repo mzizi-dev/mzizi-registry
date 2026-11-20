@@ -8,7 +8,7 @@ import { useMziziHarness } from "@/lib/harness"
    NYUCHI ROUTE PLANNER — Brand Component (Pre-Wired)
    Mineral: Gold (commerce, transport, movement).
    Composes route-card + stop-card + itinerary-timeline + fare-calculator.
-   ✅ HARNESS  ✅ TOKENS  ✅ STRICT MINERAL RULES  ✅ TOUCH 48px+
+   ✅ HARNESS  ✅ TOKENS  ✅ STRICT MINERAL RULES  ✅ TOUCH 45px+
    ═══════════════════════════════════════════════════════════════ */
 
 interface RouteStop {

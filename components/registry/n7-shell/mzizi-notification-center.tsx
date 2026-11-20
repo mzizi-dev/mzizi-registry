@@ -75,7 +75,7 @@ export function MziziNotificationCenter({
             {onMarkAllRead && unreadCount > 0 && (
               <button
                 onClick={onMarkAllRead}
-                className="min-h-[44px] px-2 text-xs text-muted-foreground transition-colors hover:text-foreground"
+                className="min-h-control-sm pointer-coarse:min-h-touch-min px-2 text-xs text-muted-foreground transition-colors hover:text-foreground"
               >
                 Mark all read
               </button>
@@ -83,7 +83,7 @@ export function MziziNotificationCenter({
             <button
               onClick={() => onOpenChange(false)}
               aria-label="Close"
-              className="flex size-8 min-h-[44px] min-w-[44px] items-center justify-center rounded-full transition-colors hover:bg-muted focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary"
+              className="flex size-control-sm pointer-coarse:size-touch-min items-center justify-center rounded-full transition-colors hover:bg-muted focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary"
             >
               <svg
                 width="16"
@@ -140,7 +140,7 @@ export function MziziNotificationCenter({
                   <button
                     onClick={() => onDismiss(n.id)}
                     aria-label="Dismiss"
-                    className="flex min-h-[44px] min-w-[44px] shrink-0 items-center justify-center self-start text-muted-foreground/40 hover:text-muted-foreground"
+                    className="flex size-control-sm pointer-coarse:size-touch-min shrink-0 items-center justify-center self-start text-muted-foreground/40 hover:text-muted-foreground"
                   >
                     <svg
                       width="12"

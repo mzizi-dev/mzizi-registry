@@ -43,7 +43,7 @@ function Toast({ flash, dismissLabel = "Dismiss" }: ToastProps) {
             <p className="flex-1 text-body font-medium">{flash.text}</p>
             <label
               htmlFor="toast-dismiss"
-              className="inline-flex min-h-11 min-w-11 cursor-pointer items-center justify-center rounded-full text-body-sm underline underline-offset-4"
+              className="inline-flex size-control-sm pointer-coarse:size-touch-min cursor-pointer items-center justify-center rounded-full text-body-sm underline underline-offset-4"
             >
               {dismissLabel}
             </label>

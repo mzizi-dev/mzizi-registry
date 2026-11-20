@@ -71,7 +71,7 @@
   "behaviour": [
     "data-visibility names the visibility, the default included.",
     "Who can open the address is written out (\"Private\", \"Link only\"); the lock icon is decorative.",
-    "The manage link is at the 45px touch floor and its accessible name names the address."
+    "The manage link is at the 45px touch floor (drawn 28px on a desktop) and its accessible name names the address."
   ],
   "states": {
     "default": {
@@ -114,7 +114,7 @@
     {
       "part": "link",
       "select": "a",
-      "fine": 24,
+      "fine": 28,
       "coarse": 45
     }
   ],

@@ -72,7 +72,7 @@ export function AdminPage({
               key={item.key}
               onClick={() => onNavChange?.(item.key)}
               className={cn(
-                "flex min-h-[44px] w-full items-center justify-between rounded-[var(--radius-sm,7px)] px-3 py-2 text-sm transition-colors",
+                "flex min-h-control-sm pointer-coarse:min-h-touch-min w-full items-center justify-between rounded-[var(--radius-sm,7px)] px-3 py-2 text-sm transition-colors",
                 activeNav === item.key
                   ? "bg-muted font-medium text-foreground"
                   : "text-muted-foreground hover:bg-muted hover:text-foreground"

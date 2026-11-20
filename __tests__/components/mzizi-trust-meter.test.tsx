@@ -61,9 +61,9 @@ describe("MziziTrustMeter signal counts", () => {
     expect(root.textContent).not.toContain("Ubuntu")
   })
 
-  it("each row is at least 44px (min-h-11)", () => {
+  it("each row keeps the 45px touch floor (pointer-coarse:min-h-touch-min)", () => {
     const root = html(<MziziTrustMeter trustScore={0.5} signals={signals} />)
-    for (const li of root.querySelectorAll('[data-slot="trust-signal"]')) expect(li.className).toContain("min-h-11")
+    for (const li of root.querySelectorAll('[data-slot="trust-signal"]')) expect(li.className).toContain("pointer-coarse:min-h-touch-min")
   })
 
   it("compact shows no list", () => {

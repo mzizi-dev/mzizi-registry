@@ -262,8 +262,8 @@
     {
       "part": "figures disclosure",
       "select": "summary",
-      "fine": 44,
-      "coarse": 44
+      "fine": 33,
+      "coarse": 45
     }
   ],
   "theming": {
@@ -289,7 +289,7 @@
     "Scales from 320px to 1920px without distorting text; the plot is 12rem tall, 14rem from sm.",
     "Axis labels: at most 6 from sm up; first, middle and last below sm."
   ],
-  "contract": "contract\n  slot is \"bar-chart\"\n  summary \"Show the figures\" min_height 44\n  when default shows h3 \"Sign-ups\"\n  when empty shows p \"Nothing to chart in this range.\"\n  when rows shows th \"Admin\"\n  when suppressed shows td \"At least 11\"\n  when suppressed-all shows p \"No figure in this range can be shown: fewer than 5 for every point.\"\nend",
+  "contract": "contract\n  slot is \"bar-chart\"\n  summary \"Show the figures\" min_height 45\n  when default shows h3 \"Sign-ups\"\n  when empty shows p \"Nothing to chart in this range.\"\n  when rows shows th \"Admin\"\n  when suppressed shows td \"At least 11\"\n  when suppressed-all shows p \"No figure in this range can be shown: fewer than 5 for every point.\"\nend",
   "checks": [
     {
       "say": "Labelled figure.",

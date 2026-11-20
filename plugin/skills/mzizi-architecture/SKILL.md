@@ -1,6 +1,6 @@
 ---
 name: mzizi-architecture
-description: "Use this skill before you start a new Mzizi app, site, console or page, before you add a page to one, and whenever you decide where code, data or a component belongs. Design architecture is the DNA helix (8 nodes, 4 rungs, 6 strands), read live from api.mzizi.dev/v1/architecture or mzizi_get_architecture, with what each placement obliges. App architecture puts the shell first: every app or page mounts exactly one shell before anything else (AppShell for a signed-in app, the Dashboard Standard; DiscoverShell for a public browse site, the Discover Standard), then the page patterns, the five application layers, and the rule that a missing component goes upstream. System architecture covers Rust first, Astro as the default UI, Cloudflare Workers, the four API gateways, files as the registry's data layer at a pinned commit, one service per domain database, and what is decided versus built. Use it when an app lacks a shell, a page invents its own chrome, or someone asks how the pieces fit."
+description: "Use this skill before you start a new Mzizi app, site, console or page, before you add a page to one, and whenever you decide where code, data or a component belongs. Design architecture is the DNA helix (8 nodes, 4 rungs, 6 strands), read live from api.mzizi.dev/v1/architecture or mzizi_execute get_architecture, with what each placement obliges. App architecture puts the shell first: every app or page mounts exactly one shell before anything else (AppShell for a signed-in app, the Dashboard Standard; DiscoverShell for a public browse site, the Discover Standard), then the page patterns, the five application layers, and the rule that a missing component goes upstream. System architecture covers Rust first, Astro as the default UI, Cloudflare Workers, the four API gateways, files as the registry's data layer at a pinned commit, one service per domain database, and what is decided versus built. Use it when an app lacks a shell, a page invents its own chrome, or someone asks how the pieces fit."
 ---
 
 # Mzizi architecture: design, app and system
@@ -31,7 +31,7 @@ curl -s https://api.mzizi.dev/v1/architecture          # nodes, rungs, strands
 curl -s https://api.mzizi.dev/v1/architecture/nodes/7  # one node, with its rules
 ```
 
-On the MCP, call `mzizi_get_architecture`, or `mzizi_get_architecture node=7` for one node. The
+On the MCP, call `mzizi_execute get_architecture`, or `mzizi_execute get_architecture node=7` for one node. The
 node number is uncapped, so never assume a range.
 
 **Eight nodes.** These are the backbone, and each owns one kind of thing:
@@ -89,7 +89,7 @@ confirm the page renders inside it.
 | A marketing site                                     | none yet: see "Gaps" below               | the `site/` components (`Hero`, `Section`, `Container`, `MineralStrip`, …) | no shell contract                   |
 
 Read the shell's contract before you wire it. The props, slots, `noJs`, `density` and `theming`
-there are the specification. On the MCP that is `mzizi_get_component app-shell`, and in the
+there are the specification. On the MCP that is `mzizi_execute get_component app-shell`, and in the
 package, `@bundu/ui/contracts/app/*`.
 
 ### 2. Install it (Astro, the default)
@@ -205,7 +205,7 @@ applies.
 - **One owner per domain.** Platform data lives in domain-separated databases (news,
   engagement, identity, entity, places, …). Each is written only by the service that owns it,
   and other services reference its records by id rather than copying them. Doctrine is data:
-  read `mzizi_get_doctrine`, never a copy in a prompt.
+  read `mzizi_execute get_doctrine`, never a copy in a prompt.
 - **Trust is two things.** Assurance levels and attestations come from the one access decision
   in nyuchi-api `gateway/lib/assurance.py`. Read that decision rather than deriving your own,
   and draw them with the `--assurance-*` and `--attestation-*` roles in `mzizi-design`.
@@ -220,7 +220,7 @@ applies.
 - [ ] Shell chosen from the surface table, its contract read, and `@bundu/ui` installed.
 - [ ] One layout mounts the shell, and every page uses it (the check in step 3 prints nothing).
 - [ ] Pages built from the Standard's patterns, with no hand-rolled header, nav or footer.
-- [ ] Tokens and brand overlay from `mzizi-design`. No local colour, radius, spacing or type. Nothing under the spacing floor (14px inset, 7px gaps between controls, labels and items, 1.5 leading); `mzizi check` passes.
+- [ ] Tokens and brand overlay from `mzizi-design`. No local colour, radius, spacing or type. Nothing under the spacing layers' default floors (or below their dense floors): the layer tokens (`--space-control-*`, `--space-label-gap`, `--space-card-*`, `--space-chip-x`, `--space-pill-*`, `--space-container-*`, `--space-page-x`, `--space-section`), 1.5 leading, hit regions of 45px on touch and 24px on a desktop; `mzizi check` passes.
 - [ ] Data read through the owning gateway. No new direct database read.
 - [ ] Anything missing or wrong in the registry raised upstream, with any local stopgap marked
       `TODO(mzizi): <PR URL>`.
@@ -228,7 +228,7 @@ applies.
 ## See also
 
 - `mzizi-design`: tokens, brand overlays, Apple HIG and where Mzizi overrides it, and the Bundu
-  floor (17px body, 14px captions, a 49px hit region, and the spacing floor: 14px inset, 7px gaps, 1.5 leading) with the desktop density layer.
+  floor (17px body and a 45px hit region on touch, 15px body and a 24px hit region on a desktop, 14px captions, the spacing layers with a default and a dense floor each, the number rule, and 1.5 leading) with the desktop density layer.
 - `mzizi-roots`: the components, Rust first. "Starting an app" covers project setup, and
   "Contributing a component" covers adding one upstream.
 - `mzizi-backend`: Workers and MCP servers.

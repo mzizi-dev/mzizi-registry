@@ -106,7 +106,7 @@ export function MziziAuthLayout({
             <button
               key={lang.code}
               onClick={() => onLanguageChange?.(lang.code)}
-              className="min-h-[44px] rounded-full px-3 py-1 text-xs text-muted-foreground transition-colors hover:bg-muted hover:text-foreground focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--color-primary,#00B0FF)]"
+              className="min-h-control-sm pointer-coarse:min-h-touch-min rounded-full px-3 py-1 text-xs text-muted-foreground transition-colors hover:bg-muted hover:text-foreground focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--color-primary,#00B0FF)]"
             >
               {lang.label}
             </button>

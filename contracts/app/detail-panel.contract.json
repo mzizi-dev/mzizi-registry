@@ -108,8 +108,8 @@
     {
       "part": "record disclosure",
       "select": "summary",
-      "fine": 32,
-      "coarse": 44
+      "fine": 33,
+      "coarse": 45
     }
   ],
   "theming": {
@@ -133,7 +133,7 @@
   "responsive": [
     "A container query: label above value when narrow; an 11rem label column from @lg."
   ],
-  "contract": "contract\n  slot is \"detail-panel\"\n  when default shows h2 \"Tendai\"\n  when default shows dd \"Not set\"\n  summary \"Full record\" min_height 32\n  uses card\nend",
+  "contract": "contract\n  slot is \"detail-panel\"\n  when default shows h2 \"Tendai\"\n  when default shows dd \"Not set\"\n  summary \"Full record\" min_height 45\n  uses card\nend",
   "checks": [
     {
       "say": "Labelled by its heading.",

@@ -140,7 +140,7 @@ export function DocsEngine({
                     onKeyDown={(e) => handleKeyDown(e, p.slug)}
                     aria-current={currentSlug === p.slug ? "page" : undefined}
                     className={cn(
-                      "block min-h-[44px] w-full rounded-[var(--radius-sm,7px)] px-2 py-1.5 text-left text-sm transition-colors focus-visible:outline-2 focus-visible:outline-[var(--ring)]",
+                      "block min-h-control-sm pointer-coarse:min-h-touch-min w-full rounded-[var(--radius-sm,7px)] px-2 py-1.5 text-left text-sm transition-colors focus-visible:outline-2 focus-visible:outline-[var(--ring)]",
                       currentSlug === p.slug
                         ? "bg-muted font-medium text-foreground"
                         : "text-muted-foreground hover:bg-muted hover:text-foreground"

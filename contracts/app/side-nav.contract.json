@@ -5,7 +5,7 @@
   "version": "1.0.0",
   "node": 7,
   "kind": "shell",
-  "summary": "An app's navigation, dense like a product console: quiet group labels, one 32px row per item (44px on touch) with an icon and the label, a badge, nested items under a disclosure, and the current item filled with a brand-coloured indicator. Descriptions are tooltips and accessible descriptions, never printed.",
+  "summary": "An app's navigation, dense like a product console: quiet group labels, one 32px row per item (45px on touch) with an icon and the label, a badge, nested items under a disclosure, and the current item filled with a brand-coloured indicator. Descriptions are tooltips and accessible descriptions, never printed.",
   "implementations": {
     "astro": {
       "registry": "app-side-nav",

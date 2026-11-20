@@ -174,7 +174,7 @@ function CommandPalette({
         autoComplete="off"
         autoFocus
         placeholder={placeholder}
-        className="h-11 min-w-0 flex-1 bg-transparent text-body outline-none placeholder:text-muted-foreground [&::-webkit-search-cancel-button]:hidden"
+        className="h-control-sm pointer-coarse:h-touch-min min-w-0 flex-1 bg-transparent text-body outline-none placeholder:text-muted-foreground [&::-webkit-search-cancel-button]:hidden"
       />
     </>
   )
@@ -208,7 +208,7 @@ function CommandPalette({
                 >
                   <a
                     href={i.href}
-                    className="flex h-9 min-w-0 items-center gap-2.5 rounded-sm px-3.5 text-body-sm outline-none hover:bg-muted focus-visible:bg-muted focus-visible:ring-2 focus-visible:ring-ring pointer-coarse:h-11"
+                    className="flex h-9 min-w-0 items-center gap-2.5 rounded-sm px-3.5 text-body-sm outline-none hover:bg-muted focus-visible:bg-muted focus-visible:ring-2 focus-visible:ring-ring pointer-coarse:h-touch-min"
                   >
                     {i.icon ? <Icon name={i.icon} className="h-4 w-4 shrink-0 text-muted-foreground" /> : <span className="w-4 shrink-0" />}
                     <span className="shrink-0">

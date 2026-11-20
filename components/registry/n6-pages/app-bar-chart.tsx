@@ -202,7 +202,7 @@ function BarChart({
       )}
 
       <details className="border-t border-border pt-2">
-        <summary className="min-h-11 cursor-pointer py-2 text-body-sm font-medium">
+        <summary className="min-h-control-sm pointer-coarse:min-h-touch-min cursor-pointer py-2 text-body-sm font-medium">
           Show the figures
         </summary>
         <table className="mt-2 w-full text-body-sm">

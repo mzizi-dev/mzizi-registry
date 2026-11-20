@@ -69,7 +69,7 @@ ground (APCA reverse polarity):
 Do **not** use dim greys like `#B2AFA8` (only Lc 50, though it measures 7.95:1 and passes WCAG 7:1, so
 the ratio alone is not enough) for OG text: it looks fine on a monitor and vanishes in a
 messaging thumbnail. Re-run both checks when changing any pair
-(`mzizi_check_accessibility` gives the WCAG ratio; APCA needs its own tool).
+(`mzizi_execute check_accessibility` gives the WCAG ratio; APCA needs its own tool).
 
 The Bundu spacing floor (inset, gaps and leading minimums; the `mzizi-design` skill has the
 numbers) applies to the pages you build around these tags, not to the image.
@@ -120,7 +120,16 @@ on Next.js:
 
 - **Title + meta description** on every route (unique, page-specific).
 - **Structured data**: schema.org JSON-LD for the page's primary entity.
-- **`llms.txt`** at the site root — the machine-readable index for LLMs.
+- **`llms.txt`** at the site root — the machine-readable index for LLMs. An agent reads it
+  **before any page**, so it must say what the site says. **It moves with the copy** (owner,
+  2026-11-17): any change to a site's pages, copy, products or structure updates that site's
+  `llms.txt` (and `llms-full.txt` where it carries the same facts) in the same pull request.
+  An out-of-date `llms.txt` is a bug, not a docs lag: agents will repeat what it says. Facts
+  about the ecosystem (pillars, products and their status, the seven engineering constraints)
+  come from the canonical record, `bundu-labs/bundu-standards` → `ecosystem/ecosystem.yaml`,
+  served as JSON-LD at `https://standards.bundu.org/ecosystem.jsonld`. Where a repo has a
+  check for this (bundu-labs/marketing's `llms.txt` workflow), it fails a PR that changes copy
+  without changing `llms.txt`.
 - **`robots.txt` + `sitemap.xml`** — generated, not hand-maintained.
 - **Canonical URLs** absolute (a set `metadataBase` / `site`).
 - **Agent-readiness**: an MCP discovery card at `/.well-known/mcp.json` pointing at the MCP
@@ -135,6 +144,7 @@ on Next.js:
 - [ ] `metadataBase` / `site` is set; canonical URL is absolute.
 - [ ] Title + meta description are unique per route.
 - [ ] `llms.txt`, `robots.txt`, `sitemap.xml` present; JSON-LD on primary entities.
+- [ ] `llms.txt` updated in this PR if any copy, product or structure changed, and it agrees with the page.
 - [ ] Validate the card in a scraper (e.g. opengraph.xyz) after deploy.
 
 _The whole helix is Mzizi — and discoverability is the convention that makes each

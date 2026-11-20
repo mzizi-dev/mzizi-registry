@@ -8,7 +8,7 @@ import { useMziziHarness } from "@/lib/harness"
    NYUCHI HEALTH DASHBOARD — Brand Component (Pre-Wired)
    Mineral: Malachite (wellness, health, vitality).
    Sovereign health data overview — all data stays in user pod.
-   ✅ HARNESS  ✅ TOKENS  ✅ STRICT MINERAL RULES  ✅ TOUCH 48px+
+   ✅ HARNESS  ✅ TOKENS  ✅ STRICT MINERAL RULES  ✅ TOUCH 45px+
    ═══════════════════════════════════════════════════════════════ */
 
 interface Vital {

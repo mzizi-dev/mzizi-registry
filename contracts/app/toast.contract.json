@@ -74,8 +74,8 @@
     {
       "part": "dismiss",
       "select": "label[for=\"toast-dismiss\"]",
-      "fine": 44,
-      "coarse": 44
+      "fine": 33,
+      "coarse": 45
     }
   ],
   "theming": {
@@ -90,7 +90,7 @@
   "responsive": [
     "Full width less 16px gutters at the bottom on phones; bottom-right, at most 28rem, from sm."
   ],
-  "contract": "contract\n  slot is \"toast-region\"\n  role is \"status\"\n  label \"Dismiss\" min_height 44\n  when default shows p \"Saved.\"\n  when empty slot is \"toast-region\"\nend",
+  "contract": "contract\n  slot is \"toast-region\"\n  role is \"status\"\n  label \"Dismiss\" min_height 45\n  when default shows p \"Saved.\"\n  when empty slot is \"toast-region\"\nend",
   "checks": [
     {
       "say": "The region is polite.",

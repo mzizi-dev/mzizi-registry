@@ -67,8 +67,8 @@
     {
       "part": "button",
       "select": "button",
-      "fine": 32,
-      "coarse": 44
+      "fine": 33,
+      "coarse": 45
     }
   ],
   "theming": {
@@ -91,7 +91,7 @@
   "responsive": [
     "Fills the sidebar's width; the ⌘K hint shows from lg; in the collapsed rail only the icon shows."
   ],
-  "contract": "contract\n  slot is \"quick-search\"\n  label is \"Quick search\"\n  button \"Quick search\" min_height 32\n  when custom label is \"Search\"\nend",
+  "contract": "contract\n  slot is \"quick-search\"\n  label is \"Quick search\"\n  button \"Quick search\" min_height 45\n  when custom label is \"Search\"\nend",
   "checks": [
     {
       "say": "Opens the palette by popovertarget.",

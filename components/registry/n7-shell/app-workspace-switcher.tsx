@@ -43,7 +43,7 @@ interface WorkspaceSwitcherProps {
 const row =
   "flex h-14 w-full min-w-0 items-center gap-2.5 rounded-sm px-3.5 text-start outline-none hover:bg-muted focus-visible:ring-2 focus-visible:ring-ring"
 const menuItem =
-  "flex min-h-8 items-center gap-2 rounded-sm px-3.5 py-1.5 text-body-sm hover:bg-muted focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring pointer-coarse:min-h-11"
+  "flex min-h-control-sm items-center gap-2 rounded-sm px-3.5 py-1.5 text-body-sm hover:bg-muted focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring pointer-coarse:min-h-touch-min"
 
 function WorkspaceSwitcher({
   name,

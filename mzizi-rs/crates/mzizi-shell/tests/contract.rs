@@ -60,11 +60,11 @@ fn connectivity_bar_colours_match_the_typescript_exactly() {
 
 #[test]
 fn connectivity_bar_touch_floor_is_raised_above_the_typescript() {
-    // Divergence: the .tsx ships min-h-[44px] on the retry control.
+    // Divergence: the .tsx ships the 45px touch floor (min-h-touch-min) on the retry control; the .rs raises it to 48.
     let ts = tsx("mzizi-connectivity-bar");
     assert!(
-        ts.contains("min-h-[44px]"),
-        "the .tsx no longer ships min-h-[44px] — remove this test"
+        ts.contains("pointer-coarse:min-h-touch-min"),
+        "the .tsx no longer ships the touch floor (pointer-coarse:min-h-touch-min) — remove this test"
     );
 }
 
@@ -190,11 +190,11 @@ fn command_palette_node_mineral_map_matches_the_typescript() {
 
 #[test]
 fn command_palette_touch_floor_is_raised_above_the_typescript() {
-    // Divergence: the .tsx ships min-h-[44px] on result rows.
+    // Divergence: the .tsx ships the 45px touch floor (min-h-touch-min) on result rows.
     let ts = tsx("mzizi-command-palette");
     assert!(
-        ts.contains("min-h-[44px]"),
-        "the .tsx no longer ships min-h-[44px] — remove this test"
+        ts.contains("pointer-coarse:min-h-touch-min"),
+        "the .tsx no longer ships the touch floor (pointer-coarse:min-h-touch-min) — remove this test"
     );
 }
 
@@ -279,11 +279,11 @@ fn notification_center_keeps_the_data_slot_and_portal() {
 
 #[test]
 fn notification_center_touch_floor_is_raised_above_the_typescript() {
-    // Divergence: the .tsx ships min-h-[44px] on the close/dismiss controls.
+    // Divergence: the .tsx ships the 45px touch floor (min-h-touch-min) on the close/dismiss controls.
     let ts = tsx("mzizi-notification-center");
     assert!(
-        ts.contains("min-h-[44px]"),
-        "the .tsx no longer ships min-h-[44px] — remove this test"
+        ts.contains("pointer-coarse:min-h-touch-min"),
+        "the .tsx no longer ships the touch floor (pointer-coarse:min-h-touch-min) — remove this test"
     );
 }
 

@@ -98,7 +98,7 @@ function MziziCredentialCard({
       )}
     >
       <div className="flex items-start gap-3">
-        <div className="flex size-11 shrink-0 items-center justify-center rounded-[var(--radius-inner,7px)] bg-[var(--color-tanzanite)]/10">
+        <div className="flex size-control-sm shrink-0 items-center justify-center rounded-[var(--radius-inner,7px)] bg-[var(--color-tanzanite)]/10">
           <Award className="size-6 text-tanzanite-text" />
         </div>
         <div className="min-w-0 flex-1">

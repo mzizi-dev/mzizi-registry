@@ -31,7 +31,7 @@ const inputId = `${id}-${name}`;
     {Object.entries(keep).map(([k, v]) => <input type="hidden" name={k} value={v} />)}
     <label for={inputId} class="sr-only">{label}</label>
     <Icon name="search" class="h-4 w-4 shrink-0 text-muted-foreground" />
-    <input id={inputId} name={name} type="search" value={value} placeholder={placeholder ?? label} autocomplete="off" class="h-8 min-w-0 flex-1 bg-transparent text-body-sm outline-none placeholder:text-muted-foreground pointer-coarse:h-11 pointer-coarse:text-body" />
+    <input id={inputId} name={name} type="search" value={value} placeholder={placeholder ?? label} autocomplete="off" class="h-control-sm min-w-0 flex-1 bg-transparent text-body-sm outline-none placeholder:text-muted-foreground pointer-coarse:h-touch-min pointer-coarse:text-body" />
     <button type="submit" class="sr-only focus:not-sr-only focus:rounded-sm focus:px-2 focus:text-body-sm">Search</button>
   </form>
   {

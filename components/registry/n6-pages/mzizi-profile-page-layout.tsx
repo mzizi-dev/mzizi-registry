@@ -8,7 +8,7 @@ import { cn } from "@/lib/utils"
    
    Standard profile screen. Cover + avatar + stats + tabs.
    Used for users, businesses, organisations, groups, creators.
-   ✅ HARNESS  ✅ TOKENS  ✅ RESPONSIVE  ✅ TOUCH 48px+
+   ✅ HARNESS  ✅ TOKENS  ✅ RESPONSIVE  ✅ TOUCH 45px+
    ═══════════════════════════════════════════════════════════════ */
 
 interface ProfileTab {

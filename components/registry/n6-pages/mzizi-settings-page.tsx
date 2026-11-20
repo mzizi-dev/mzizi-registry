@@ -8,7 +8,7 @@ import { cn } from "@/lib/utils"
    
    Standard settings layout. Sidebar nav on desktop, accordion
    on mobile. Consistent setting row patterns.
-   ✅ HARNESS  ✅ TOKENS  ✅ RESPONSIVE  ✅ TOUCH 48px+
+   ✅ HARNESS  ✅ TOKENS  ✅ RESPONSIVE  ✅ TOUCH 45px+
    ═══════════════════════════════════════════════════════════════ */
 
 interface SettingSection {

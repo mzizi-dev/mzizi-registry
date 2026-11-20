@@ -11,7 +11,7 @@ import { useMziziHarness } from "@/lib/harness"
    Renders as a bottom sheet on mobile, dropdown on desktop.
    Dynamic mineral accent via --brand-accent.
    
-   ✅ HARNESS  ✅ TOKENS  ✅ STRICT MINERAL RULES  ✅ TOUCH 48px+
+   ✅ HARNESS  ✅ TOKENS  ✅ STRICT MINERAL RULES  ✅ TOUCH 45px+
    ═══════════════════════════════════════════════════════════════ */
 
 interface ActionItem {

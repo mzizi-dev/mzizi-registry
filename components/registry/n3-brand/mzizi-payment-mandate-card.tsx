@@ -11,7 +11,7 @@ import { useMziziHarness } from "@/lib/harness"
    payment handler (rail) and authorizes an AP2 Payment Mandate — no
    browser checkout, no card details leaving the wallet.
 
-   ✅ HARNESS  ✅ TOKENS  ✅ A11Y  ✅ TOUCH 48px+
+   ✅ HARNESS  ✅ TOKENS  ✅ A11Y  ✅ TOUCH 45px+
    ═══════════════════════════════════════════════════════════════ */
 
 export interface PaymentHandlerOption {

@@ -17,7 +17,7 @@ import { MziziVerifiedBadge, type VerificationTier } from "@/components/ui/mzizi
    (whitespace-pre-line); the stars are the read-only Rating, one
    role="img" named "4 out of 5 stars"; and the reviewer's tier is the
    mzizi-verified-badge (named, mineral-coloured) instead of an emoji.
-   ✅ HARNESS  ✅ TOKENS  ✅ STRICT MINERAL RULES  ✅ TOUCH 48px+
+   ✅ HARNESS  ✅ TOKENS  ✅ STRICT MINERAL RULES  ✅ TOUCH 45px+
    ═══════════════════════════════════════════════════════════════ */
 
 interface MziziReviewCardProps {

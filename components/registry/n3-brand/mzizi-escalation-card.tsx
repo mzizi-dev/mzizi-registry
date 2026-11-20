@@ -10,7 +10,7 @@ import { useMziziHarness } from "@/lib/harness"
    The "requires escalation" mini-card: when a flow needs a human
    choice, the agent pauses and renders this; on choose it resumes.
 
-   ✅ HARNESS  ✅ TOKENS  ✅ A11Y  ✅ TOUCH 48px+
+   ✅ HARNESS  ✅ TOKENS  ✅ A11Y  ✅ TOUCH 45px+
    ═══════════════════════════════════════════════════════════════ */
 
 export interface EscalationOption {

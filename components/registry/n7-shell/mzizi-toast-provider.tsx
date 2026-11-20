@@ -111,7 +111,7 @@ export function MziziToastProvider({
                 <button
                   onClick={() => removeToast(toast.id)}
                   aria-label="Dismiss"
-                  className="flex min-h-[44px] min-w-[44px] shrink-0 items-center justify-center text-muted-foreground hover:text-foreground focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary"
+                  className="flex size-control-sm pointer-coarse:size-touch-min shrink-0 items-center justify-center text-muted-foreground hover:text-foreground focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary"
                 >
                   <svg
                     width="14"

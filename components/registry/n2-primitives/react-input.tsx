@@ -11,8 +11,8 @@ import { inputClasses } from "@/lib/ui-variants";
  *
  * Forwards every standard input prop (type, name, id, placeholder,
  * required, value, defaultValue, autocomplete, inputmode, …) via
- * `...props`. The `h-12` floor keeps the Ubuntu 48px minimum touch
- * target for outdoor, all-ages use.
+ * `...props`. The `h-12` size keeps a 48px touch target, above the 45px floor, for
+ * outdoor, all-ages use.
  */
 
 export interface InputProps extends React.InputHTMLAttributes<HTMLInputElement> {

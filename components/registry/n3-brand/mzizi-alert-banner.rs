@@ -12,9 +12,9 @@
 //!
 //! # The details button meets the touch floor here
 //!
-//! The `.tsx`'s "View Details" button is `h-10` — 40px, under the 48px floor its own header
-//! claims (`TOUCH 48px+`). This port renders it `min-h-[48px]`, and the contract asserts it.
-//! **The `.tsx` sibling still ships `h-10`.**
+//! The `.tsx`'s "View Details" button is `h-10` — 40px, under the 45px floor its own header
+//! claims (`TOUCH 45px+`). This port renders it `min-h-[48px]`, and the contract asserts it.
+//! **The `.tsx` sibling now draws `h-control` and holds the 45px touch floor (`pointer-coarse:h-touch-min`).**
 
 use dioxus::prelude::*;
 

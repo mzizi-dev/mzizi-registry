@@ -11,7 +11,7 @@ import { useMziziHarness } from "@/lib/harness"
    every feed, every list uses this when content is absent.
    Dynamic mineral accent via --brand-accent.
    
-   ✅ HARNESS  ✅ TOKENS  ✅ STRICT MINERAL RULES  ✅ TOUCH 48px+
+   ✅ HARNESS  ✅ TOKENS  ✅ STRICT MINERAL RULES  ✅ TOUCH 45px+
    
    npx shadcn@latest add https://api.mzizi.dev/v1/ui/mzizi-empty-state
    ═══════════════════════════════════════════════════════════════ */
