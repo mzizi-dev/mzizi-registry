@@ -10,6 +10,10 @@ From 2026-10-04 releases follow the org versioning policy ([nyuchi/.github#80](h
 
 ## [Unreleased]
 
+## [4.48.0] - 2026-11-20
+
+Releases staging to main as the next minor above 4.47.0. The last floor sweep lands: every interactive element meets the 45px touch and 24px desktop hit floor, the `HIT_AREA_GAPS` excuses are gone, and controls drawn 40px move to the 41px control size (#735). The Rust crates publish at 0.11.0 so that sweep reaches crates.io (#738). Nothing is breaking.
+
 ### Changed — the Rust crates move to 0.11.0 so the floor sweep reaches crates.io (2026-11-20, #738)
 
 Ships in the next minor. The workspace version and the path-dependency versions in `mzizi-rs` move from 0.10.0 to **0.11.0**, the next minor the crate policy allows, and the `mzizi-roots` and `mzizi-ui` READMEs name `0.11`. 0.10.0 is already on crates.io and a published version cannot be re-uploaded, so without this the Rust changes in #735 (the empty `HIT_AREA_GAPS` list in the contract evaluator, and the regenerated `mzizi-ai-context`, `mzizi-docs-engine`, `mzizi-success-screen` and `mzizi-connectivity-bar` copies that state the 45px touch and 24px desktop floor) would not publish. No API changes.
