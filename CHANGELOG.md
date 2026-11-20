@@ -20,6 +20,10 @@ Ships in the next minor. Nothing here is breaking: class names, tokens and props
 - **Controls drawn 40px move to the 41px control size.** The interactive `h-10` controls (the app button's `lg`, the segmented control's `sm`, the tabs, the toggle's `lg` and the card and picker buttons) draw `h-control-lg` (41px, `--size-control-lg`) and keep a 45px touch region (`pointer-coarse:h-touch-min`). 40 is not a Mzizi number. Skeletons, placeholders, avatars and table rows keep their own sizes.
 - **Consumer note.** Drawn sizes of links and fields move on touch to 45px and on a desktop to 28px. A screen built on the old values gets slightly larger controls and nothing else changes.
 
+## [4.47.0] - 2026-11-20
+
+Releases staging to main as the next minor above 4.46.0. The Bundu floor reaches every remaining 44px hit area, the 32px controls and the Kweli links (#733), and the Rust crates publish at 0.10.0 (#734).
+
 ### Fixed — the 45px and 24px floor reaches the 44px hit areas, the 32px controls, the Kweli links and the stale floor wording (2026-11-20, #733)
 
 Ships in the next minor. Nothing here is breaking: class names and tokens are unchanged, and the only moves are to sizes the floor already requires.
@@ -33,6 +37,10 @@ Ships in the next minor. Nothing here is breaking: class names and tokens are un
 - **Wording.** The wallet gate's sign-in prompt reads "Connect your wallet to continue." No behaviour changes.
 - **Plugin skills.** `@nyuchi/mzizi-skills` is `^0.24.0` (was `>=0.20.0`), and the plugin manifests and marketplace entry name 0.24.0, and the public plugin's skills (`plugin/skills/`) and the dev plugin's (`plugin-dev/skills/`) are regenerated from it. They state the 45px touch and 24px desktop floors and the spacing layers.
 - **Tests.** The Rust divergence tests pin the new touch floor (`pointer-coarse:min-h-touch-min`) instead of `min-h-[44px]`, and the trust-meter and spacing-floor tests pin the new classes.
+
+### Fixed — the Rust crates publish at 0.10.0, and main's release state is restored (2026-11-20, #734)
+
+The 4.46.0 release took staging's tree, which lacked the 4.45.0 release's main-only edits: the crates fell from 0.9.0 to 0.8.0 on main (the crate publish refused it, so nothing wrong was published), the `mzizi-roots` and `mzizi-ui` READMEs lost their Roots text, and `docs/sizes-and-density.md` lost three wording fixes. These are restored, and the crates move to **0.10.0** (the next minor the crate policy allows), carrying #731's and #733's Rust changes.
 
 ## [4.46.0] - 2026-11-20
 
