@@ -235,7 +235,7 @@ export function SocialIcon({ url, size = 18, label }: SocialIconProps) {
       rel="me noopener noreferrer"
       aria-label={displayLabel}
       title={displayLabel}
-      className="inline-flex items-center justify-center w-9 h-9 rounded-full text-muted-foreground hover:text-foreground hover:bg-muted transition-colors"
+      className="inline-flex items-center justify-center w-9 h-9 rounded-full text-muted-foreground hover:text-foreground hover:bg-muted transition-colors pointer-coarse:h-touch-min pointer-coarse:w-touch-min"
       data-social-platform={key}
     >
       {GLYPHS[key](size)}

@@ -140,7 +140,7 @@ export function MziziPhraseCard({
                 e.stopPropagation()
                 onPractice()
               }}
-              className="h-10 rounded-full bg-[var(--color-cobalt,#00B0FF)] px-4 text-sm font-medium text-[var(--brand-accent-foreground,#0A0A0A)] hover:opacity-80"
+              className="h-control-lg pointer-coarse:h-touch-min rounded-full bg-[var(--color-cobalt,#00B0FF)] px-4 text-sm font-medium text-[var(--brand-accent-foreground,#0A0A0A)] hover:opacity-80"
             >
               Practice
             </button>

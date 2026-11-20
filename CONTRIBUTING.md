@@ -64,7 +64,7 @@ git checkout -b feature/your-feature
 - The registry is the **single source of truth** for the entire bundu ecosystem. Changes here propagate to every app that consumes the registry.
 - Every component must be **independently installable** via the shadcn CLI.
 - The **Seven African Minerals palette** (minerals + heritage + status + experimental) is the only approved color system. Never introduce colors outside the token system.
-- **Accessibility is mandatory** — APCA 3.0 AAA contrast with WCAG minimums (body text 7:1, non-body text 4.5:1, UI 3:1), 56px default / 48px minimum touch targets, keyboard navigation, screen reader support.
+- **Accessibility is mandatory** — APCA 3.0 AAA contrast with WCAG minimums (body text 7:1, non-body text 4.5:1, UI 3:1), 56px default / 45px touch hit region (24px on a desktop), keyboard navigation, screen reader support.
 
 ---
 
@@ -368,7 +368,7 @@ Tier 3 terminal:  Build                             (waits on all of the above)
 - [ ] Components use CVA + cn() + data-slot pattern
 - [ ] New components are files under `components/registry/`, with their item + `meta` added to `registry.json` and `pnpm registry:normalize` run
 - [ ] Tests added for new functionality
-- [ ] Accessibility reviewed (APCA contrast, 56px default / 48px minimum touch targets, keyboard nav)
+- [ ] Accessibility reviewed (APCA contrast, 56px default / 45px touch hit region (24px on a desktop), keyboard nav)
 - [ ] Brand wordmarks are lowercase (`mzizi`, `mukoko`, `nyuchi`, `shamwari`, `bundu`)
 - [ ] Buttons are pill-shaped (`rounded-full`)
 - [ ] Any security finding from `/security-review` is fixed in this PR (per CLAUDE.md §15 rule 22 — never deferred)

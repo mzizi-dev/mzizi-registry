@@ -150,7 +150,7 @@ export function TabsTrigger({
       data-state={selected ? "active" : "inactive"}
       onClick={() => setValue(value)}
       className={cn(
-        "inline-flex h-10 items-center justify-center rounded-full px-4 text-body-sm font-medium outline-none transition-colors focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background disabled:cursor-not-allowed disabled:opacity-50",
+        "inline-flex h-control-lg pointer-coarse:h-touch-min items-center justify-center rounded-full px-4 text-body-sm font-medium outline-none transition-colors focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background disabled:cursor-not-allowed disabled:opacity-50",
         selected
           ? "bg-background text-foreground shadow-sm"
           : "text-muted-foreground hover:text-foreground",

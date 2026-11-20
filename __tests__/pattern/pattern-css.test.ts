@@ -7,7 +7,7 @@
  *                  colour, radius, font, padding or identity-bearing value.
  *   mzizi-theme.css  targets the button's attributes only, and reads only tokens.css variables.
  *
- * And the Bundu floor the sizes must keep, resolved from tokens.css: 49px on touch, 28px on a
+ * And the Bundu floor the sizes must keep, resolved from tokens.css: 45px hit region on touch, 24px on a
  * desktop with a fine pointer; the three control heights in the contract (49/56, 36/40, 32).
  */
 import { readFileSync } from "node:fs"

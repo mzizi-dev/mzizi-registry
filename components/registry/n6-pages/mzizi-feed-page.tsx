@@ -120,7 +120,7 @@ export function MziziFeedPage<T>({
                     key={f.key}
                     value={activeFilters?.[f.key] || ""}
                     onChange={(e) => onFilterChange?.(f.key, e.target.value)}
-                    className="h-9 shrink-0 rounded-full border border-border bg-muted px-3 text-xs text-muted-foreground outline-none"
+                    className="h-9 pointer-coarse:h-touch-min shrink-0 rounded-full border border-border bg-muted px-3 text-xs text-muted-foreground outline-none"
                   >
                     <option value="">{f.label}</option>
                     {f.options.map((o) => (

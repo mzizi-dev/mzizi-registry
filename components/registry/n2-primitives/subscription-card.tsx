@@ -72,7 +72,7 @@ function SubscriptionCard({
           type="button"
           onClick={onSelect}
           className={cn(
-            "inline-flex h-10 items-center justify-center rounded-full px-6 text-sm font-medium transition-colors",
+            "inline-flex h-control-lg pointer-coarse:h-touch-min items-center justify-center rounded-full px-6 text-sm font-medium transition-colors",
             highlighted
               ? "bg-[var(--color-primary,var(--color-cobalt,#00B0FF))] text-white hover:bg-[var(--color-primary,var(--color-cobalt,#00B0FF))]/90"
               : "border border-border bg-input/30 text-foreground hover:bg-input/50"

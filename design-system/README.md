@@ -72,7 +72,7 @@ There are three groups of seven, and each colour works in both themes.
 ### Spacing and density
 
 - Use the `space-*` scale from 2px to 128px. Component padding defaults to `space-base` (16px); `space-base-plus` (20px) gives a comfortable layout. Cards pad with `space-lg` (24px), or `space-base` when compact. Use `space-xl` for page margins and `space-3xl`…`space-6xl` between sections.
-- **Touch targets:** 48px minimum (`touch-min`) and 56px by default (`touch-default`). Controls extend their hit area invisibly when they are drawn smaller.
+- **Touch targets:** 45px on touch and 24px on a desktop (`touch-min`), and 56px by default (`touch-default`). Controls extend their hit area invisibly when they are drawn smaller.
 
 ### States and accessibility
 

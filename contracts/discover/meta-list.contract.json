@@ -13,7 +13,10 @@
       "export": "@bundu/ui/discover/MetaList.astro",
       "since": "0.3.0"
     },
-    "tsx": { "registry": "discover-meta-list", "identity": "contract" },
+    "tsx": {
+      "registry": "discover-meta-list",
+      "identity": "contract"
+    },
     "rs": null,
     "related": ["discover-card", "detail-panel"]
   },
@@ -58,7 +61,10 @@
             "icon": "map-pin",
             "href": "https://www.openstreetmap.org/search?query=Harare%20Gardens"
           },
-          { "label": "Price", "value": "Free" },
+          {
+            "label": "Price",
+            "value": "Free"
+          },
           {
             "label": "Organiser",
             "value": "Jacaranda Trust",
@@ -73,8 +79,14 @@
       "props": {
         "columns": 1,
         "items": [
-          { "label": "Members", "value": "1,204" },
-          { "label": "Category", "value": "Running · Sport" }
+          {
+            "label": "Members",
+            "value": "1,204"
+          },
+          {
+            "label": "Category",
+            "value": "Running · Sport"
+          }
         ]
       }
     },
@@ -83,14 +95,23 @@
       "props": {
         "columns": 3,
         "items": [
-          { "label": "When", "value": "{{when}}", "datetime": "{{starts_at}}" },
-          { "label": "Where", "value": "{{venue}}" }
+          {
+            "label": "When",
+            "value": "{{when}}",
+            "datetime": "{{starts_at}}"
+          },
+          {
+            "label": "Where",
+            "value": "{{venue}}"
+          }
         ]
       }
     },
     "empty": {
       "description": "No facts.",
-      "props": { "items": [] }
+      "props": {
+        "items": []
+      }
     }
   },
   "accessibility": {
@@ -106,7 +127,7 @@
     {
       "part": "linked value",
       "select": "dd a",
-      "fine": 24,
+      "fine": 28,
       "coarse": 45
     }
   ],
@@ -148,7 +169,9 @@
       "say": "The time is machine-readable.",
       "select": "dd time",
       "count": 1,
-      "attr": { "datetime": "2026-10-24T18:00:00+02:00" }
+      "attr": {
+        "datetime": "2026-10-24T18:00:00+02:00"
+      }
     },
     {
       "say": "Icons are decorative.",
@@ -170,7 +193,9 @@
       "say": "The columns.",
       "select": "[data-slot=\"meta-list\"].sm\\:grid-cols-2",
       "count": 1,
-      "attr": { "data-columns": "2" }
+      "attr": {
+        "data-columns": "2"
+      }
     },
     {
       "say": "One column stays one column.",

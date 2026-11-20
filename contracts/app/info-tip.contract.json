@@ -13,7 +13,10 @@
       "export": "@bundu/ui/app/InfoTip.astro",
       "since": "0.3.0"
     },
-    "tsx": { "registry": "app-info-tip", "identity": "contract" },
+    "tsx": {
+      "registry": "app-info-tip",
+      "identity": "contract"
+    },
     "rs": null,
     "related": ["tooltip"]
   },
@@ -65,7 +68,7 @@
     {
       "part": "button",
       "select": "button",
-      "fine": 20,
+      "fine": 28,
       "coarse": 45
     }
   ],
@@ -106,6 +109,6 @@
     }
   ],
   "gaps": [
-    "32px on touch: meets WCAG 2.5.8 (24px), and 45px on touch, the same hit region as the other app controls."
+    "The touch hit region is 45px (pointer-coarse:h-touch-min); on a desktop the button is drawn 28px (h-7) and its hit region is that box."
   ]
 }
