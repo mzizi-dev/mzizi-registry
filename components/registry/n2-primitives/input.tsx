@@ -9,7 +9,7 @@ import { cn } from "@/lib/utils"
    
    Token compliance:
    ✅ Radius: rounded-full (9999px) — inputs use pill radius per brand
-   ✅ Touch target: h-field — 44px on a coarse pointer (Apple HIG), 36px at desktop density
+   ✅ Touch target: h-field — 49px on a coarse pointer (the field height, its hit region 45px), 36px at desktop density
    ✅ Focus ring: uses --ring token from semantic layer
    ✅ Colors: uses semantic tokens (input, foreground, muted-foreground)
    ✅ data-slot: present for CSS targeting

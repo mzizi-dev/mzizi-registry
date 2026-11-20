@@ -117,7 +117,7 @@ export const appButtonVariants = cva(
           "border-destructive bg-card text-destructive hover:bg-destructive hover:text-destructive-foreground",
       },
       size: {
-        sm: "h-8 px-3.5 text-body-sm pointer-coarse:h-11 pointer-coarse:px-4",
+        sm: "h-control-sm px-3.5 text-body-sm pointer-coarse:px-4",
         md: "h-9 px-3.5 text-body-sm pointer-coarse:h-12 pointer-coarse:px-5 pointer-coarse:text-body",
         lg: "h-10 px-4 text-body pointer-coarse:h-12 pointer-coarse:px-6",
       },
@@ -272,10 +272,10 @@ export const buttonRecipe = cva(
         link: "text-primary underline-offset-4 hover:underline",
       },
       size: {
-        /* DEFAULT = --size-control: 44px touch, 36px desktop */
+        /* DEFAULT = --size-control: 49px touch, 36px desktop */
         default:
           "h-control gap-2 px-5 has-data-[icon=inline-end]:pr-4 has-data-[icon=inline-start]:pl-4",
-        /* SM = --size-control-sm: 44px touch (the floor), 32px desktop */
+        /* SM = --size-control-sm: 49px touch, 33px desktop */
         sm: "h-control-sm gap-2 px-4 has-data-[icon=inline-end]:pr-3.5 has-data-[icon=inline-start]:pl-3.5",
         /* LG = --size-control-lg: 48px touch, 40px desktop, wider padding */
         lg: "h-control-lg gap-2 px-6 has-data-[icon=inline-end]:pr-5 has-data-[icon=inline-start]:pl-5",

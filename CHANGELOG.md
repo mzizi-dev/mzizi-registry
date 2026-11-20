@@ -10,6 +10,25 @@ From 2026-10-04 releases follow the org versioning policy ([nyuchi/.github#80](h
 
 ## [Unreleased]
 
+## [4.46.0] - 2026-11-20
+
+Releases staging to main as the next minor above 4.45.0. Nothing a consumer installs changes shape: the unstyled plan and its structure gate land (#730), and the Bundu floor reaches the remaining 32px controls and the Kweli address links (#731).
+
+### Fixed — the 45px and 24px floor reaches the 32px controls, the Kweli links and the spacing wording (2026-11-20, #731)
+
+- **Button `sm`, the side-nav rows and the toolbar-menu draw 33px** (was 32px), from the 33px size role (`h-control-sm`). Their touch hit region is 45px (was 44px), through `pointer-coarse:h-touch-min`. The app button `sm` is 49px on touch, the size role's touch value. The contracts `app/button`, `app/side-nav`, `app/toolbar-menu`, `app/confirm-action`, `app/data-table` and `app/tier-status` follow.
+- **The Kweli `address-code` and `address-private-row` links are 45px on touch** (was 44px), from `min-h-touch-min` (the `--target-floor` token). On a desktop the link's hit region is 24px. Their contracts follow.
+- **"Pending" is gone from the label-gap descriptions.** The owner confirmed the label gap (7px default, 5px dense) and that list items use the card gap (14px default, 7px dense) on 2026-11-20. The token descriptions, `docs/sizes-and-density.md`, the brand-guidelines page and the `spacing-geometry` contract now say so.
+- **The AI-context guidance states the floor as 45px on touch and a 24px desktop hit region** (was 44px and 36px).
+
+### Added — unstyled components: decisions, hook vocabulary and the structure gate (2026-11-20, #730)
+
+Nothing a consumer installs changes in this release. It adds the plan for moving component styling into a pack, and a gate that stops new styling entering components.
+
+- **`docs/unstyled/decisions.md`** records the owner's decisions for the unstyled work. Batches ship as minors and are additive: hooks, the mzizi pack and aliases, with the look unchanged. Removing classes from components is held for a major release the owner coordinates across products. It also names the hook vocabulary components will use instead of classes (`data-slot`, `data-variant`, `data-size`, `data-state`, `data-orientation`, `data-mineral` and `data-own-after`), the pack layout, and where the Bundu floor is enforced.
+- **The structure gate** (`__tests__/unstyled/structure.test.ts`) fails when a component source under `components/registry/` carries styling (a class, an inline style, a colour or length literal, or a brand reference) and is not listed in `contracts/unstyled-baseline.json`. The list may only shrink: a file leaves it when it is unstyled, and a listed file that no longer styles fails the test until it is removed.
+- The floor figures in `docs/unstyled/decisions.md` are checked against `BUNDU_FLOOR` (`__tests__/unstyled/decisions.test.ts`). They are not copied into tests.
+
 ## [4.45.0] - 2026-11-19
 
 ### Changed — Bundu floor 45/24 and per-layer spacing tokens (2026-11-19, #726)

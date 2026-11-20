@@ -243,8 +243,8 @@
       "part": "trigger (sm)",
       "state": "typed",
       "select": "[data-slot=\"confirm-action\"] > button",
-      "fine": 32,
-      "coarse": 44
+      "fine": 33,
+      "coarse": 49
     },
     {
       "part": "submit",

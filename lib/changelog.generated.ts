@@ -16,6 +16,38 @@ import type { ChangelogRow } from "@/lib/db/types";
 
 export const CHANGELOG_RELEASES: readonly ChangelogRow[] = [
   {
+    version: "4.46.0",
+    title:
+      "v4.46.0 — the floor reaches the 32px controls and the Kweli links; the unstyled plan and its structure gate",
+    description:
+      "Releases staging to main as the next minor above v4.45.0 (nyuchi/.github#80). Fixed: button sm, side-nav rows and toolbar-menu draw 33px with a 45px hit area on touch; the Kweli address-code and address-private-row links reach the 45px touch floor; the label-gap wording no longer says pending (#731). Added: the unstyled components decisions, hook vocabulary and a structure gate that only lets the styled-file baseline shrink (#730). No component is removed; the look is unchanged.",
+    line: "public",
+    line_rank: 1,
+    major: 4,
+    minor: 46,
+    patch: 0,
+    release_kind: "minor",
+    breaking: false,
+    released_at: "2026-11-20T12:00:00.000+00:00",
+    created_at: "2026-11-20T12:00:00.000+00:00",
+    nodes_affected: null,
+    components_added: null,
+    components_modified: null,
+    components_deprecated: null,
+    components_removed: null,
+    components_touched: null,
+    tools_added: null,
+    tools_modified: null,
+    tools_deprecated: null,
+    tools_removed: null,
+    linked_issues: null,
+    total_stable: null,
+    total_deprecated: null,
+    total_alpha: null,
+    changed_by: "claude-code",
+    entry_order: 0,
+  },
+  {
     version: "4.45.0",
     title:
       "v4.45.0 — the Bundu floor is 45px on touch and 24px on a desktop, with per-layer spacing tokens",

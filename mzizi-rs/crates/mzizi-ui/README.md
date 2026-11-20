@@ -36,7 +36,7 @@ rsx! {
 
 ```toml
 [dependencies]
-mzizi-ui = "0.9"
+mzizi-ui = "0.8"
 ```
 
 The registry's `publish-crates` workflow releases each new version to crates.io. Before
