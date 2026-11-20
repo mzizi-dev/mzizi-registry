@@ -60,7 +60,7 @@ function PageHeader({
           {backHref && (
             <a
               href={backHref}
-              className="inline-flex size-9 items-center justify-center rounded-[var(--radius-lg,14px)] text-muted-foreground transition-colors hover:text-foreground"
+              className="inline-flex size-9 pointer-coarse:size-touch-min items-center justify-center rounded-[var(--radius-lg,14px)] text-muted-foreground transition-colors hover:text-foreground"
               aria-label="Go back"
             >
               <ArrowLeftIcon className="size-4" />

@@ -10,6 +10,15 @@ From 2026-10-04 releases follow the org versioning policy ([nyuchi/.github#80](h
 
 ## [Unreleased]
 
+### Fixed — the last floor sweep: every interactive element meets the 45px touch and 24px desktop hit floor, and nothing states a lower floor (2026-11-20, #735)
+
+Ships in the next minor. Nothing here is breaking: class names, tokens and props are unchanged, and the only moves are to sizes the floor already requires.
+
+- **The `HIT_AREA_GAPS` excuses are gone.** The list in `contracts/runner.ts` and `mzizi-rs/contract-eval/contract_eval.rs` is empty. The 36 entries were stale for 31 rows, which already pass; the five that did not now meet the floor: the app info tip draws 28px on a desktop (was 20), the app page header's docs pill draws 28px with a 45px touch region (was 24), the Discover breadcrumb and meta-list links draw 28px on a desktop (were 24), and the site social icon link keeps a 45px touch region (was 36). The contracts and their Astro and React builds say the same.
+- **Drawn heights below the floor on other controls are raised.** Native fields and selects drawn at 32, 36 or 40px get `pointer-coarse:h-touch-min` (45px on touch). Range tracks and the thin text fields drawn at 4 and 24px draw 28px with the same touch region. Native checkboxes and radios drawn at 16 or 20px draw 28px, with `pointer-coarse:size-touch-min` on touch. Icon buttons drawn at 16, 20 or 24px draw 28px; their 45px touch region already comes from the hit-area rule. The page header's link, the persistent player's overflow-clipped button and the react switch's track follow the same rules.
+- **Stale floor wording is corrected.** About 114 registry descriptions read "48px minimum touch target" and now read "45px minimum touch target" (`registry.json`, and the generated copies). The `mzizi-ai-context` rule 8 text (TypeScript, Rust and the fixtures) states the current floor: a 45px hit region on touch, 24px on a desktop, and desktop controls drawn at least 28px. The design system README, CONTRIBUTING, the doctrine pages, the agents file, the Rust doc comments and the tests' titles say 45px and 24px. The app button's description reads "33 / 36 / 40px fine, 48 / 49px on touch" (it said 32 and 44).
+- **Consumer note.** Drawn sizes of links and fields move on touch to 45px and on a desktop to 28px. A screen built on the old values gets slightly larger controls and nothing else changes.
+
 ### Fixed — the 45px and 24px floor reaches the 44px hit areas, the 32px controls, the Kweli links and the stale floor wording (2026-11-20, #732)
 
 Ships in the next minor. Nothing here is breaking: class names and tokens are unchanged, and the only moves are to sizes the floor already requires.

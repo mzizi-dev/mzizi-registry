@@ -94,7 +94,7 @@ function AssigneePicker({
             onChange={(e) => setSearch(e.target.value)}
             placeholder="Search..."
             autoFocus
-            className="h-9 w-full rounded-[var(--radius-md,12px)] bg-muted/30 px-3 text-sm outline-none placeholder:text-muted-foreground"
+            className="h-9 pointer-coarse:h-touch-min w-full rounded-[var(--radius-md,12px)] bg-muted/30 px-3 text-sm outline-none placeholder:text-muted-foreground"
           />
           <div className="mt-1 max-h-48 overflow-y-auto" role="listbox">
             {filtered.map((a) => (

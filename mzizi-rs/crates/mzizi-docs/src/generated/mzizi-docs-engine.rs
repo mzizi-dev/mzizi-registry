@@ -26,7 +26,7 @@
 //! semantics are real, and the buttons stay buttons.
 //!
 //! **2. The sidebar entries were below the floor this system publishes.** N10's own
-//! `mzizi-ai-context` states the rule as "Touch targets: 48px minimum", and the sidebar
+//! `mzizi-ai-context` states the rule as "Touch targets: 45px on touch", and the sidebar
 //! entries — the primary navigation of a documentation portal, on a mobile viewport — are
 //! 44. That is Apple's number, not this system's. Raised to `min-h-[48px]`; nothing else about
 //! the control changes.
@@ -492,7 +492,7 @@ mod tests {
 
     #[test]
     fn the_nav_item_meets_the_published_touch_floor() {
-        // The .tsx ships pointer-coarse:min-h-touch-min; the system publishes 48px minimum.
+        // The .tsx ships pointer-coarse:min-h-touch-min; the system publishes the 45px touch floor.
         assert!(NAV_ITEM.contains("min-h-[48px]"));
         assert!(!NAV_ITEM.contains("44px"));
     }

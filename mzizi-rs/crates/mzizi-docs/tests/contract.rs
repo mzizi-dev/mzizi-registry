@@ -180,7 +180,7 @@ fn docs_engine_category_label_matches_the_typescript_transform() {
 #[test]
 fn the_touch_target_is_raised_above_the_typescript() {
     // Divergence 1. The .tsx ships the 45px touch floor (min-h-touch-min) on the sidebar entries; this system
-    // publishes a 48px minimum (see mzizi-ai-context's rule 8). Asserted from BOTH sides so
+    // publishes the 45px touch floor (see mzizi-ai-context's rule 8). Asserted from BOTH sides so
     // the day someone fixes the .tsx, this test tells them to delete it rather than
     // silently passing on a stale premise.
     let ts = tsx("mzizi-docs-engine");

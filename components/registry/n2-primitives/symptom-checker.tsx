@@ -108,7 +108,7 @@ function SymptomChecker({
           max={5}
           value={severity}
           onChange={(e) => setSeverity(parseInt(e.target.value) as Severity)}
-          className="mt-1 h-1 w-full accent-[var(--color-terracotta)]"
+          className="mt-1 h-7 pointer-coarse:h-touch-min w-full accent-[var(--color-terracotta)]"
         />
       </div>
 
@@ -116,7 +116,7 @@ function SymptomChecker({
       <select
         value={duration}
         onChange={(e) => setDuration(e.target.value)}
-        className="h-10 w-full rounded-full border border-input bg-input/30 px-4 text-sm outline-none"
+        className="h-10 pointer-coarse:h-touch-min w-full rounded-full border border-input bg-input/30 px-4 text-sm outline-none"
         aria-label="Duration"
       >
         {durations.map((d) => (

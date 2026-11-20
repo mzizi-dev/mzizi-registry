@@ -955,7 +955,7 @@
       "categories": ["app", "primitives"],
       "dependencies": ["class-variance-authority"],
       "description": "The Dashboard Standard button (contracts/app/button): an <a> with href, otherwise a <button type=\"button\">, at app density with small corners; destructive variants read only the destructive tokens. React twin of app-button.astro; the registry primitive is button.",
-      "docs": "Use it for: Actions in a console toolbar, form or panel.\nIncludes: 32 / 36 / 40px fine, 44 / 48px on touch, data-slot attribute, Held to the whole app/button contract.\nAccessibility: Native button and link semantics.\nInstall: npx shadcn@latest add https://api.mzizi.dev/v1/ui/app-button",
+      "docs": "Use it for: Actions in a console toolbar, form or panel.\nIncludes: 33 / 36 / 40px fine, 48 / 49px on touch, data-slot attribute, Held to the whole app/button contract.\nAccessibility: Native button and link semantics.\nInstall: npx shadcn@latest add https://api.mzizi.dev/v1/ui/app-button",
       "files": [
         {
           "path": "components/registry/n2-primitives/app-button.tsx",
@@ -968,7 +968,7 @@
         "collection": "app",
         "contract": "app/button",
         "features": [
-          "32 / 36 / 40px fine, 44 / 48px on touch",
+          "33 / 36 / 40px fine, 48 / 49px on touch",
           "data-slot attribute",
           "Held to the whole app/button contract"
         ],
@@ -11085,7 +11085,7 @@
       "categories": ["brand"],
       "dependencies": [],
       "description": "Universal branded bottom action sheet for contextual actions on any content across the ecosystem. Share, save, report, copy link, block, follow — the standard set of actions available on listings, posts, profiles, and messages. Renders as a bottom sheet on mobile with mineral accent on destructive/primary actions. Composes sheet and share-dialog primitives.",
-      "docs": "Use it for: pulse, campfire, bytes, circles, novels.\nVariants: default.\nIncludes: Harness integration (log, motion, LiveRegion), animStyle with prefersReduced motion check, Mineral-colored accent via brand override, data-slot + data-portal DOM attributes.\nAccessibility: Focus-visible ring on interactive elements, 48px minimum touch targets, ARIA role attribute, aria-label for screen readers.\nInstall: npx shadcn@latest add https://api.mzizi.dev/v1/ui/mzizi-action-sheet",
+      "docs": "Use it for: pulse, campfire, bytes, circles, novels.\nVariants: default.\nIncludes: Harness integration (log, motion, LiveRegion), animStyle with prefersReduced motion check, Mineral-colored accent via brand override, data-slot + data-portal DOM attributes.\nAccessibility: Focus-visible ring on interactive elements, 45px minimum touch targets, ARIA role attribute, aria-label for screen readers.\nInstall: npx shadcn@latest add https://api.mzizi.dev/v1/ui/mzizi-action-sheet",
       "files": [
         {
           "path": "components/registry/n3-brand/mzizi-action-sheet.tsx",
@@ -11096,7 +11096,7 @@
       "meta": {
         "a11y": [
           "Focus-visible ring on interactive elements",
-          "48px minimum touch targets",
+          "45px minimum touch targets",
           "ARIA role attribute",
           "aria-label for screen readers"
         ],
@@ -11161,7 +11161,7 @@
       "categories": ["brand"],
       "dependencies": [],
       "description": "Universal branded alert banner with mineral-coded severity levels. Used across all ecosystem apps for weather alerts, system notifications, security warnings, trust advisories, and any time-sensitive information. Severity maps to minerals: watch=cobalt, moderate=terracotta, severe=gold. Renders as a prominent banner with dismiss, detail action, and safety instructions.",
-      "docs": "Use it for: wallet, campfire, circles, transport, bushtrade.\nVariants: default.\nIncludes: Harness integration (log, motion, LiveRegion), animStyle with prefersReduced motion check, Mineral-colored accent via brand override, data-slot + data-portal DOM attributes.\nAccessibility: Focus-visible ring on interactive elements, 48px minimum touch targets, ARIA role attribute, aria-label for screen readers.\nInstall: npx shadcn@latest add https://api.mzizi.dev/v1/ui/mzizi-alert-banner",
+      "docs": "Use it for: wallet, campfire, circles, transport, bushtrade.\nVariants: default.\nIncludes: Harness integration (log, motion, LiveRegion), animStyle with prefersReduced motion check, Mineral-colored accent via brand override, data-slot + data-portal DOM attributes.\nAccessibility: Focus-visible ring on interactive elements, 45px minimum touch targets, ARIA role attribute, aria-label for screen readers.\nInstall: npx shadcn@latest add https://api.mzizi.dev/v1/ui/mzizi-alert-banner",
       "files": [
         {
           "path": "components/registry/n3-brand/mzizi-alert-banner.tsx",
@@ -11172,7 +11172,7 @@
       "meta": {
         "a11y": [
           "Focus-visible ring on interactive elements",
-          "48px minimum touch targets",
+          "45px minimum touch targets",
           "ARIA role attribute",
           "aria-label for screen readers"
         ],
@@ -11263,7 +11263,7 @@
       "categories": ["brand"],
       "dependencies": [],
       "description": "Branded job application status timeline showing application stages (applied, reviewed, interview, offer, rejected) with timestamps and employer feedback. Gold mineral accent. Used in Jobs dashboard.",
-      "docs": "Use it for: jobs.\nVariants: default.\nIncludes: Harness integration (log, motion, LiveRegion), animStyle with prefersReduced motion check, Mineral-colored accent via brand override, data-slot + data-portal DOM attributes.\nAccessibility: Focus-visible ring on interactive elements, 48px minimum touch targets, ARIA role attribute, aria-label for screen readers.\nInstall: npx shadcn@latest add https://api.mzizi.dev/v1/ui/mzizi-application-tracker",
+      "docs": "Use it for: jobs.\nVariants: default.\nIncludes: Harness integration (log, motion, LiveRegion), animStyle with prefersReduced motion check, Mineral-colored accent via brand override, data-slot + data-portal DOM attributes.\nAccessibility: Focus-visible ring on interactive elements, 45px minimum touch targets, ARIA role attribute, aria-label for screen readers.\nInstall: npx shadcn@latest add https://api.mzizi.dev/v1/ui/mzizi-application-tracker",
       "files": [
         {
           "path": "components/registry/n3-brand/mzizi-application-tracker.tsx",
@@ -11274,7 +11274,7 @@
       "meta": {
         "a11y": [
           "Focus-visible ring on interactive elements",
-          "48px minimum touch targets",
+          "45px minimum touch targets",
           "ARIA role attribute",
           "aria-label for screen readers"
         ],
@@ -11303,7 +11303,7 @@
       "categories": ["brand"],
       "dependencies": [],
       "description": "News article card extending mzizi-listing-card with factcheck badge, source attribution, journalist byline, and read time. Maps to news.news_article (67 columns) and news.feed_source. Used in Mukoko News feeds, Pulse aggregation, and content discovery.",
-      "docs": "Use it for: News article feeds in Mukoko News, Pulse aggregation article listings, Content discovery feeds with journalist attribution, Feature article grids with source credibility, Cross-source news aggregation displays.\nVariants: default, compact, hero.\nIncludes: Harness integration (log, motion, LiveRegion), animStyle with prefersReduced motion check, Mineral-colored accent via brand override, data-slot + data-portal DOM attributes.\nAccessibility: Focus-visible ring on interactive elements, 48px minimum touch targets, ARIA role attribute.\nInstall: npx shadcn@latest add https://api.mzizi.dev/v1/ui/mzizi-article-card",
+      "docs": "Use it for: News article feeds in Mukoko News, Pulse aggregation article listings, Content discovery feeds with journalist attribution, Feature article grids with source credibility, Cross-source news aggregation displays.\nVariants: default, compact, hero.\nIncludes: Harness integration (log, motion, LiveRegion), animStyle with prefersReduced motion check, Mineral-colored accent via brand override, data-slot + data-portal DOM attributes.\nAccessibility: Focus-visible ring on interactive elements, 45px minimum touch targets, ARIA role attribute.\nInstall: npx shadcn@latest add https://api.mzizi.dev/v1/ui/mzizi-article-card",
       "files": [
         {
           "path": "components/registry/n3-brand/mzizi-article-card.tsx",
@@ -11314,7 +11314,7 @@
       "meta": {
         "a11y": [
           "Focus-visible ring on interactive elements",
-          "48px minimum touch targets",
+          "45px minimum touch targets",
           "ARIA role attribute"
         ],
         "collection": "brand",
@@ -11350,7 +11350,7 @@
       "categories": ["agentic-components", "brand"],
       "dependencies": [],
       "description": "Inline sign-in and registration rendered inside an AI surface (Claude, Claude Code, any MCP client) — never a browser tab. Drives the MCP inline-auth handoff (OAuth 2.1, Dynamic Client Registration, elicitation) and takes its accent from --brand-accent, so it carries the host brand's mineral.",
-      "docs": "Use it for: Authenticate a user inside Claude / Claude Code via an MCP, Register a new account inline before subscribing, First step of an inline UCP checkout flow.\nVariants: login, register.\nIncludes: Inline sign-in AND registration — never a browser tab, Mode toggle between login and register, SSO / passwordless provider buttons, Drives the MCP inline-auth handoff (OAuth 2.1 / DCR / elicitation), Dynamic mineral accent via --brand-accent, Pending + error states managed internally.\nAccessibility: Focus-visible ring on all interactive elements, 48px minimum touch targets, aria-modal dialog with aria-label, role=alert for error messaging, autoComplete + inputMode on inputs, prefers-reduced-motion honoured via the harness.\nInstall: npx shadcn@latest add https://api.mzizi.dev/v1/ui/mzizi-auth-card",
+      "docs": "Use it for: Authenticate a user inside Claude / Claude Code via an MCP, Register a new account inline before subscribing, First step of an inline UCP checkout flow.\nVariants: login, register.\nIncludes: Inline sign-in AND registration — never a browser tab, Mode toggle between login and register, SSO / passwordless provider buttons, Drives the MCP inline-auth handoff (OAuth 2.1 / DCR / elicitation), Dynamic mineral accent via --brand-accent, Pending + error states managed internally.\nAccessibility: Focus-visible ring on all interactive elements, 45px minimum touch targets, aria-modal dialog with aria-label, role=alert for error messaging, autoComplete + inputMode on inputs, prefers-reduced-motion honoured via the harness.\nInstall: npx shadcn@latest add https://api.mzizi.dev/v1/ui/mzizi-auth-card",
       "files": [
         {
           "path": "components/registry/n3-brand/mzizi-auth-card.tsx",
@@ -11361,7 +11361,7 @@
       "meta": {
         "a11y": [
           "Focus-visible ring on all interactive elements",
-          "48px minimum touch targets",
+          "45px minimum touch targets",
           "aria-modal dialog with aria-label",
           "role=alert for error messaging",
           "autoComplete + inputMode on inputs",
@@ -11476,7 +11476,7 @@
       "categories": ["brand"],
       "dependencies": [],
       "description": "Ubuntu achievement badge showcase. Displays earned badges in a grid or inline strip with mineral-colored badge icons, earned dates, and rarity indicators. Maps to ubuntu.badges and ubuntu.user_badges tables. Used on profile pages, leaderboards, and achievement notifications.",
-      "docs": "Use it for: Profile achievement showcase, Ubuntu badge grid on user profiles, Leaderboard side-panel with top badges, Achievement notifications when badges earned, Badge galleries in community pages.\nVariants: default.\nIncludes: Harness integration (log, motion, LiveRegion), animStyle with prefersReduced motion check, Mineral-colored accent via brand override, data-slot + data-portal DOM attributes.\nAccessibility: Focus-visible ring on interactive elements, 48px minimum touch targets, ARIA role attribute, aria-label for screen readers.\nInstall: npx shadcn@latest add https://api.mzizi.dev/v1/ui/mzizi-badge-display",
+      "docs": "Use it for: Profile achievement showcase, Ubuntu badge grid on user profiles, Leaderboard side-panel with top badges, Achievement notifications when badges earned, Badge galleries in community pages.\nVariants: default.\nIncludes: Harness integration (log, motion, LiveRegion), animStyle with prefersReduced motion check, Mineral-colored accent via brand override, data-slot + data-portal DOM attributes.\nAccessibility: Focus-visible ring on interactive elements, 45px minimum touch targets, ARIA role attribute, aria-label for screen readers.\nInstall: npx shadcn@latest add https://api.mzizi.dev/v1/ui/mzizi-badge-display",
       "files": [
         {
           "path": "components/registry/n3-brand/mzizi-badge-display.tsx",
@@ -11487,7 +11487,7 @@
       "meta": {
         "a11y": [
           "Focus-visible ring on interactive elements",
-          "48px minimum touch targets",
+          "45px minimum touch targets",
           "ARIA role attribute",
           "aria-label for screen readers"
         ],
@@ -11523,7 +11523,7 @@
       "categories": ["brand"],
       "dependencies": [],
       "description": "Token balance display card for the Mukoko wallet. Shows primary balance with MIT currency, secondary fiat conversion, and quick action buttons (Send, Receive, Swap). Maps to wallet.balance table. Used at the top of wallet views and in mini wallet widgets.",
-      "docs": "Use it for: Wallet home screen hero, Mini wallet widget, Payment confirmation balance check, Transaction receipt header.\nVariants: full, compact, mini.\nIncludes: MIT currency formatting, Fiat conversion display, Quick action buttons (Send, Receive, Swap), Harness integration, Maps to wallet.balance table.\nAccessibility: aria-live for balance updates, Focus-visible on action buttons, 48px touch targets.\nInstall: npx shadcn@latest add https://api.mzizi.dev/v1/ui/mzizi-balance-display",
+      "docs": "Use it for: Wallet home screen hero, Mini wallet widget, Payment confirmation balance check, Transaction receipt header.\nVariants: full, compact, mini.\nIncludes: MIT currency formatting, Fiat conversion display, Quick action buttons (Send, Receive, Swap), Harness integration, Maps to wallet.balance table.\nAccessibility: aria-live for balance updates, Focus-visible on action buttons, 45px touch targets.\nInstall: npx shadcn@latest add https://api.mzizi.dev/v1/ui/mzizi-balance-display",
       "files": [
         {
           "path": "components/registry/n3-brand/mzizi-balance-display.tsx",
@@ -11535,7 +11535,7 @@
         "a11y": [
           "aria-live for balance updates",
           "Focus-visible on action buttons",
-          "48px touch targets"
+          "45px touch targets"
         ],
         "collection": "brand",
         "features": [
@@ -11655,7 +11655,7 @@
       "categories": ["brand"],
       "dependencies": ["react-day-picker", "date-fns"],
       "description": "Brand calendar component wrapping react-day-picker with Mukoko event dot indicators, mineral-colored day highlights, and integrated agenda view for the selected day. Used by Mukoko Events, planner, and any Mukoko app that shows date-anchored content. The event dots are the key differentiator — small mineral-colored circles beneath dates that have associated content.",
-      "docs": "Use it for: events, planner, jobs, health.\nVariants: default.\nIncludes: Harness integration (log, motion, LiveRegion), animStyle with prefersReduced motion check, Mineral-colored accent via brand override, data-slot + data-portal DOM attributes.\nAccessibility: Focus-visible ring on interactive elements, 48px minimum touch targets, ARIA role attribute, aria-label for screen readers.\nInstall: npx shadcn@latest add https://api.mzizi.dev/v1/ui/mzizi-calendar",
+      "docs": "Use it for: events, planner, jobs, health.\nVariants: default.\nIncludes: Harness integration (log, motion, LiveRegion), animStyle with prefersReduced motion check, Mineral-colored accent via brand override, data-slot + data-portal DOM attributes.\nAccessibility: Focus-visible ring on interactive elements, 45px minimum touch targets, ARIA role attribute, aria-label for screen readers.\nInstall: npx shadcn@latest add https://api.mzizi.dev/v1/ui/mzizi-calendar",
       "files": [
         {
           "path": "components/registry/n3-brand/mzizi-calendar.tsx",
@@ -11666,7 +11666,7 @@
       "meta": {
         "a11y": [
           "Focus-visible ring on interactive elements",
-          "48px minimum touch targets",
+          "45px minimum touch targets",
           "ARIA role attribute",
           "aria-label for screen readers"
         ],
@@ -11883,7 +11883,7 @@
       "categories": ["brand"],
       "dependencies": [],
       "description": "Branded saved commute card showing a recurring route with estimated time, mode, and next departure. Gold mineral accent. Used in Transport home screen for quick access to daily commutes and in Planner as part of the daily schedule view. Renders inside MziziListView feeds.",
-      "docs": "Use it for: planner, transport.\nVariants: default.\nIncludes: Harness integration (log, motion, LiveRegion), animStyle with prefersReduced motion check, Mineral-colored accent via brand override, data-slot + data-portal DOM attributes.\nAccessibility: Focus-visible ring on interactive elements, 48px minimum touch targets, ARIA role attribute.\nInstall: npx shadcn@latest add https://api.mzizi.dev/v1/ui/mzizi-commute-card",
+      "docs": "Use it for: planner, transport.\nVariants: default.\nIncludes: Harness integration (log, motion, LiveRegion), animStyle with prefersReduced motion check, Mineral-colored accent via brand override, data-slot + data-portal DOM attributes.\nAccessibility: Focus-visible ring on interactive elements, 45px minimum touch targets, ARIA role attribute.\nInstall: npx shadcn@latest add https://api.mzizi.dev/v1/ui/mzizi-commute-card",
       "files": [
         {
           "path": "components/registry/n3-brand/mzizi-commute-card.tsx",
@@ -11894,7 +11894,7 @@
       "meta": {
         "a11y": [
           "Focus-visible ring on interactive elements",
-          "48px minimum touch targets",
+          "45px minimum touch targets",
           "ARIA role attribute"
         ],
         "collection": "brand",
@@ -11989,7 +11989,7 @@
       "categories": ["brand"],
       "dependencies": [],
       "description": "Universal freeform content creation component — the branded way to compose posts, updates, stories, and messages across the ecosystem. Combines text input, media attachment, mention tagging, and mineral-accented submit button. Used in Circles (posts), Pulse (updates), Campfire (messages), Novels (chapter drafts), and anywhere users create unstructured content. Distinct from mzizi-create-listing which handles structured form-based creation.",
-      "docs": "Use it for: pulse, campfire, bytes, circles, novels.\nVariants: default.\nIncludes: Harness integration (log, motion, LiveRegion), animStyle with prefersReduced motion check, Mineral-colored accent via brand override, data-slot + data-portal DOM attributes.\nAccessibility: Focus-visible ring on interactive elements, 48px minimum touch targets, aria-label for screen readers.\nInstall: npx shadcn@latest add https://api.mzizi.dev/v1/ui/mzizi-content-composer",
+      "docs": "Use it for: pulse, campfire, bytes, circles, novels.\nVariants: default.\nIncludes: Harness integration (log, motion, LiveRegion), animStyle with prefersReduced motion check, Mineral-colored accent via brand override, data-slot + data-portal DOM attributes.\nAccessibility: Focus-visible ring on interactive elements, 45px minimum touch targets, aria-label for screen readers.\nInstall: npx shadcn@latest add https://api.mzizi.dev/v1/ui/mzizi-content-composer",
       "files": [
         {
           "path": "components/registry/n3-brand/mzizi-content-composer.tsx",
@@ -12000,7 +12000,7 @@
       "meta": {
         "a11y": [
           "Focus-visible ring on interactive elements",
-          "48px minimum touch targets",
+          "45px minimum touch targets",
           "aria-label for screen readers"
         ],
         "collection": "brand",
@@ -12068,7 +12068,7 @@
       "categories": ["brand"],
       "dependencies": [],
       "description": "Chat conversation list row for Campfire messaging. Shows avatar, conversation name, last message preview, timestamp, unread count badge, and online status dot. Maps to campfire.conversation and campfire.participant tables. Used in the main chat list view.",
-      "docs": "Use it for: campfire, circles.\nVariants: default.\nIncludes: Harness integration (log, motion, LiveRegion), animStyle with prefersReduced motion check, Mineral-colored accent via brand override, data-slot + data-portal DOM attributes.\nAccessibility: Focus-visible ring on interactive elements, 48px minimum touch targets, ARIA role attribute.\nInstall: npx shadcn@latest add https://api.mzizi.dev/v1/ui/mzizi-conversation-row",
+      "docs": "Use it for: campfire, circles.\nVariants: default.\nIncludes: Harness integration (log, motion, LiveRegion), animStyle with prefersReduced motion check, Mineral-colored accent via brand override, data-slot + data-portal DOM attributes.\nAccessibility: Focus-visible ring on interactive elements, 45px minimum touch targets, ARIA role attribute.\nInstall: npx shadcn@latest add https://api.mzizi.dev/v1/ui/mzizi-conversation-row",
       "files": [
         {
           "path": "components/registry/n3-brand/mzizi-conversation-row.tsx",
@@ -12079,7 +12079,7 @@
       "meta": {
         "a11y": [
           "Focus-visible ring on interactive elements",
-          "48px minimum touch targets",
+          "45px minimum touch targets",
           "ARIA role attribute"
         ],
         "collection": "brand",
@@ -12108,7 +12108,7 @@
       "categories": ["brand"],
       "dependencies": [],
       "description": "Cover image header with overlapping avatar or logo. Used by individual and org profile pages. Branded with mineral accents and verification badge slot. Extracted from individual-profile-page and org-profile-page. The cover is a real <img> (lazy and async by default; priority loads it eagerly with fetchpriority=\"high\" for LCP; coverAlt sets its alt, empty by default), the avatar box is drawn only when an avatar is given, and role=\"banner\" is opt-in (banner), because the header usually sits inside <main>, where a second banner landmark duplicates the page's own.",
-      "docs": "Use it for: pulse, jobs, campfire, bytes, circles.\nVariants: default.\nIncludes: Harness integration (log, motion, LiveRegion), animStyle with prefersReduced motion check, Mineral-colored accent via brand override, data-slot + data-portal DOM attributes, Cover drawn as an <img>: lazy by default, priority for LCP, coverAlt, Avatar box only with an avatar, role=\"banner\" opt-in via banner.\nAccessibility: Focus-visible ring on interactive elements, 48px minimum touch targets, role=\"banner\" only with banner (no duplicate banner landmark inside <main>).\nInstall: npx shadcn@latest add https://api.mzizi.dev/v1/ui/mzizi-cover-header",
+      "docs": "Use it for: pulse, jobs, campfire, bytes, circles.\nVariants: default.\nIncludes: Harness integration (log, motion, LiveRegion), animStyle with prefersReduced motion check, Mineral-colored accent via brand override, data-slot + data-portal DOM attributes, Cover drawn as an <img>: lazy by default, priority for LCP, coverAlt, Avatar box only with an avatar, role=\"banner\" opt-in via banner.\nAccessibility: Focus-visible ring on interactive elements, 45px minimum touch targets, role=\"banner\" only with banner (no duplicate banner landmark inside <main>).\nInstall: npx shadcn@latest add https://api.mzizi.dev/v1/ui/mzizi-cover-header",
       "files": [
         {
           "path": "components/registry/n3-brand/mzizi-cover-header.tsx",
@@ -12119,7 +12119,7 @@
       "meta": {
         "a11y": [
           "Focus-visible ring on interactive elements",
-          "48px minimum touch targets",
+          "45px minimum touch targets",
           "role=\"banner\" only with banner (no duplicate banner landmark inside <main>)"
         ],
         "collection": "brand",
@@ -12188,7 +12188,7 @@
       "categories": ["brand"],
       "dependencies": ["class-variance-authority"],
       "description": "Universal create/edit form layout for all Mukoko content types — events, products, news, bush trade listings, directories. Provides the standardized brand creation flow: cover theme picker, grouped form sections in cards, toggle/dropdown rows, description editor, and sticky publish CTA. Every \"Create\" or \"Edit\" screen across the super app uses this composition.",
-      "docs": "Use it for: Event creation in Mukoko Events, Product creation in Bush Trade, News article authoring in Mukoko News, Place submission in Mukoko Places, Any create/edit flow across the super app.\nVariants: default.\nIncludes: Harness integration (log, motion, LiveRegion), animStyle with prefersReduced motion check, Mineral-colored accent via brand override, data-slot + data-portal DOM attributes.\nAccessibility: Focus-visible ring on interactive elements, 48px minimum touch targets, aria-label for screen readers.\nInstall: npx shadcn@latest add https://api.mzizi.dev/v1/ui/mzizi-create-listing",
+      "docs": "Use it for: Event creation in Mukoko Events, Product creation in Bush Trade, News article authoring in Mukoko News, Place submission in Mukoko Places, Any create/edit flow across the super app.\nVariants: default.\nIncludes: Harness integration (log, motion, LiveRegion), animStyle with prefersReduced motion check, Mineral-colored accent via brand override, data-slot + data-portal DOM attributes.\nAccessibility: Focus-visible ring on interactive elements, 45px minimum touch targets, aria-label for screen readers.\nInstall: npx shadcn@latest add https://api.mzizi.dev/v1/ui/mzizi-create-listing",
       "files": [
         {
           "path": "components/registry/n3-brand/mzizi-create-listing.tsx",
@@ -12199,7 +12199,7 @@
       "meta": {
         "a11y": [
           "Focus-visible ring on interactive elements",
-          "48px minimum touch targets",
+          "45px minimum touch targets",
           "aria-label for screen readers"
         ],
         "collection": "brand",
@@ -12281,7 +12281,7 @@
       "categories": ["brand"],
       "dependencies": [],
       "description": "Professional credential display card showing qualification name, issuing body, status (active/expired/revoked/suspended/pending), expiry date, and verification tier. Maps to identity.credential (35 columns) and system.regulatory_body. Used on profile pages, professional directory, and credential verification screens.",
-      "docs": "Use it for: Professional credential display in Nyuchi Medical, Qualification showcases on profiles, Verified practitioner directories, Credential verification workflows, Regulatory compliance displays.\nVariants: default.\nIncludes: Harness integration (log, motion, LiveRegion), animStyle with prefersReduced motion check, Mineral-colored accent via brand override, data-slot + data-portal DOM attributes.\nAccessibility: Focus-visible ring on interactive elements, 48px minimum touch targets, ARIA role attribute.\nInstall: npx shadcn@latest add https://api.mzizi.dev/v1/ui/mzizi-credential-card",
+      "docs": "Use it for: Professional credential display in Nyuchi Medical, Qualification showcases on profiles, Verified practitioner directories, Credential verification workflows, Regulatory compliance displays.\nVariants: default.\nIncludes: Harness integration (log, motion, LiveRegion), animStyle with prefersReduced motion check, Mineral-colored accent via brand override, data-slot + data-portal DOM attributes.\nAccessibility: Focus-visible ring on interactive elements, 45px minimum touch targets, ARIA role attribute.\nInstall: npx shadcn@latest add https://api.mzizi.dev/v1/ui/mzizi-credential-card",
       "files": [
         {
           "path": "components/registry/n3-brand/mzizi-credential-card.tsx",
@@ -12292,7 +12292,7 @@
       "meta": {
         "a11y": [
           "Focus-visible ring on interactive elements",
-          "48px minimum touch targets",
+          "45px minimum touch targets",
           "ARIA role attribute"
         ],
         "collection": "brand",
@@ -12864,7 +12864,7 @@
       "categories": ["brand"],
       "dependencies": [],
       "description": "Universal branded empty state with dynamic mineral accent, contextual illustration placeholder, title, description, and optional action CTA. Every screen across the ecosystem uses this when there is no content to display — \"No events yet\", \"Your wallet is empty\", \"No messages\", \"Start your first lesson\". The empty state guides users toward the creation action for that domain.",
-      "docs": "Use it for: pulse, campfire, circles, bytes, novels.\nVariants: default.\nIncludes: Harness integration (log, motion, LiveRegion), animStyle with prefersReduced motion check, Mineral-colored accent via brand override, data-slot + data-portal DOM attributes.\nAccessibility: Focus-visible ring on interactive elements, 48px minimum touch targets, ARIA role attribute.\nInstall: npx shadcn@latest add https://api.mzizi.dev/v1/ui/mzizi-empty-state",
+      "docs": "Use it for: pulse, campfire, circles, bytes, novels.\nVariants: default.\nIncludes: Harness integration (log, motion, LiveRegion), animStyle with prefersReduced motion check, Mineral-colored accent via brand override, data-slot + data-portal DOM attributes.\nAccessibility: Focus-visible ring on interactive elements, 45px minimum touch targets, ARIA role attribute.\nInstall: npx shadcn@latest add https://api.mzizi.dev/v1/ui/mzizi-empty-state",
       "files": [
         {
           "path": "components/registry/n3-brand/mzizi-empty-state.tsx",
@@ -12875,7 +12875,7 @@
       "meta": {
         "a11y": [
           "Focus-visible ring on interactive elements",
-          "48px minimum touch targets",
+          "45px minimum touch targets",
           "ARIA role attribute"
         ],
         "collection": "brand",
@@ -13015,7 +13015,7 @@
       "categories": ["agentic-components", "brand"],
       "dependencies": [],
       "description": "The UCP Embedded Checkout Protocol \"requires escalation\" mini-card: when an agentic flow needs a human choice, the agent pauses and renders this inline, then resumes on selection. Keeps a decision point in the conversation instead of handing off to a browser.",
-      "docs": "Use it for: Merchant requires a choice mid-checkout (delivery slot, add-on), Disambiguate before the agent resumes the automated flow.\nVariants: default.\nIncludes: UCP ECP \"requires escalation\" mini-card, Generic agent-needs-a-choice surface, Per-option label + description, async-safe pending state, Dynamic mineral accent via --brand-accent.\nAccessibility: role=group with aria-label, 48px minimum touch target per option, focus-visible ring on each option, prefers-reduced-motion honoured via the harness.\nInstall: npx shadcn@latest add https://api.mzizi.dev/v1/ui/mzizi-escalation-card",
+      "docs": "Use it for: Merchant requires a choice mid-checkout (delivery slot, add-on), Disambiguate before the agent resumes the automated flow.\nVariants: default.\nIncludes: UCP ECP \"requires escalation\" mini-card, Generic agent-needs-a-choice surface, Per-option label + description, async-safe pending state, Dynamic mineral accent via --brand-accent.\nAccessibility: role=group with aria-label, 45px minimum touch target per option, focus-visible ring on each option, prefers-reduced-motion honoured via the harness.\nInstall: npx shadcn@latest add https://api.mzizi.dev/v1/ui/mzizi-escalation-card",
       "files": [
         {
           "path": "components/registry/n3-brand/mzizi-escalation-card.tsx",
@@ -13026,7 +13026,7 @@
       "meta": {
         "a11y": [
           "role=group with aria-label",
-          "48px minimum touch target per option",
+          "45px minimum touch target per option",
           "focus-visible ring on each option",
           "prefers-reduced-motion honoured via the harness"
         ],
@@ -13057,7 +13057,7 @@
       "categories": ["brand"],
       "dependencies": ["lucide-react"],
       "description": "DEPRECATED: Use mzizi-ticket-card instead. This was an early pre-brand event card without harness, motion, or ARIA integration. Kweli still uses it, so it takes optional price (or free, shown as \"Free\" or freeLabel), description (two lines) and share slots, and all seven minerals: cobalt, tanzanite, malachite, gold, terracotta, sodalite and copper.",
-      "docs": "Use it for: Event listings in Mukoko Events (meetups, gatherings, ceremonies), Upcoming shows and performances, Calendar agenda items with location, RSVP-driven community events, Ticketed events with date and price.\nVariants: default, compact, hero, agenda-row.\nIncludes: Date and time display with locale formatting, Location with map link, RSVP button slot, Mineral accent per event category, Harness integration (log, motion, LiveRegion), animStyle with prefersReduced, price / free, description and share slots, All seven minerals (cobalt, tanzanite, malachite, gold, terracotta, sodalite, copper).\nAccessibility: role=article, aria-label with event title and date, Focus-visible ring, 48px minimum touch target, Screen reader announces title, date, location, RSVP count, Time elements use datetime attribute for assistive tech.\nInstall: npx shadcn@latest add https://api.mzizi.dev/v1/ui/mzizi-event-card",
+      "docs": "Use it for: Event listings in Mukoko Events (meetups, gatherings, ceremonies), Upcoming shows and performances, Calendar agenda items with location, RSVP-driven community events, Ticketed events with date and price.\nVariants: default, compact, hero, agenda-row.\nIncludes: Date and time display with locale formatting, Location with map link, RSVP button slot, Mineral accent per event category, Harness integration (log, motion, LiveRegion), animStyle with prefersReduced, price / free, description and share slots, All seven minerals (cobalt, tanzanite, malachite, gold, terracotta, sodalite, copper).\nAccessibility: role=article, aria-label with event title and date, Focus-visible ring, 45px minimum touch target, Screen reader announces title, date, location, RSVP count, Time elements use datetime attribute for assistive tech.\nInstall: npx shadcn@latest add https://api.mzizi.dev/v1/ui/mzizi-event-card",
       "files": [
         {
           "path": "components/registry/n3-brand/mzizi-event-card.tsx",
@@ -13070,7 +13070,7 @@
           "role=article",
           "aria-label with event title and date",
           "Focus-visible ring",
-          "48px minimum touch target",
+          "45px minimum touch target",
           "Screen reader announces title, date, location, RSVP count",
           "Time elements use datetime attribute for assistive tech"
         ],
@@ -13141,7 +13141,7 @@
       "categories": ["brand"],
       "dependencies": ["class-variance-authority"],
       "description": "DEPRECATED: Use mzizi-listing-card instead. This was an early pre-brand featured listing without harness, motion, or ARIA integration.",
-      "docs": "Use it for: Homepage hero spotlight, Editorial feature promotion, Curated recommendations in Mukoko feed, Sponsored placements (clearly marked), Onboarding first-use discovery surfaces.\nVariants: hero, spotlight, banner, split.\nIncludes: Larger mineral accent than standard listing card, Full-bleed media support, Optional category badge, Meta row with stats (views, reactions), Harness integration (log, motion, LiveRegion), animStyle with prefersReduced.\nAccessibility: role=article with aria-label, Focus-visible ring on entire card, 48px minimum touch target, Screen reader announces featured status and title, Media has descriptive alt text.\nInstall: npx shadcn@latest add https://api.mzizi.dev/v1/ui/mzizi-featured-card",
+      "docs": "Use it for: Homepage hero spotlight, Editorial feature promotion, Curated recommendations in Mukoko feed, Sponsored placements (clearly marked), Onboarding first-use discovery surfaces.\nVariants: hero, spotlight, banner, split.\nIncludes: Larger mineral accent than standard listing card, Full-bleed media support, Optional category badge, Meta row with stats (views, reactions), Harness integration (log, motion, LiveRegion), animStyle with prefersReduced.\nAccessibility: role=article with aria-label, Focus-visible ring on entire card, 45px minimum touch target, Screen reader announces featured status and title, Media has descriptive alt text.\nInstall: npx shadcn@latest add https://api.mzizi.dev/v1/ui/mzizi-featured-card",
       "files": [
         {
           "path": "components/registry/n3-brand/mzizi-featured-card.tsx",
@@ -13153,7 +13153,7 @@
         "a11y": [
           "role=article with aria-label",
           "Focus-visible ring on entire card",
-          "48px minimum touch target",
+          "45px minimum touch target",
           "Screen reader announces featured status and title",
           "Media has descriptive alt text"
         ],
@@ -13277,7 +13277,7 @@
       "categories": ["brand"],
       "dependencies": [],
       "description": "Branded weather forecast display with cobalt mineral accent. Shows current conditions, temperature, humidity, 5-day outlook, and farming/agriculture advisory for African rural contexts. Mineral-coded severity levels for weather alerts. Used in Weather home and as an embedded widget in Mukoko Events event pages and BushTrade logistics.",
-      "docs": "Use it for: weather.\nVariants: default.\nIncludes: Harness integration (log, motion, LiveRegion), animStyle with prefersReduced motion check, Mineral-colored accent via brand override, data-slot + data-portal DOM attributes.\nAccessibility: Focus-visible ring on interactive elements, 48px minimum touch targets, ARIA role attribute.\nInstall: npx shadcn@latest add https://api.mzizi.dev/v1/ui/mzizi-forecast-card",
+      "docs": "Use it for: weather.\nVariants: default.\nIncludes: Harness integration (log, motion, LiveRegion), animStyle with prefersReduced motion check, Mineral-colored accent via brand override, data-slot + data-portal DOM attributes.\nAccessibility: Focus-visible ring on interactive elements, 45px minimum touch targets, ARIA role attribute.\nInstall: npx shadcn@latest add https://api.mzizi.dev/v1/ui/mzizi-forecast-card",
       "files": [
         {
           "path": "components/registry/n3-brand/mzizi-forecast-card.tsx",
@@ -13288,7 +13288,7 @@
       "meta": {
         "a11y": [
           "Focus-visible ring on interactive elements",
-          "48px minimum touch targets",
+          "45px minimum touch targets",
           "ARIA role attribute"
         ],
         "collection": "brand",
@@ -13423,7 +13423,7 @@
       "categories": ["brand"],
       "dependencies": [],
       "description": "Branded metric card with radial arc gauge, value display, label, and contextual description. The universal pattern extracted from mukoko-weather MetricCard. Used for UV index, trust scores, completion percentages, health vitals, battery levels, signal strength — any bounded numeric value displayed as a gauge. Composes the arc-gauge primitive with brand styling.",
-      "docs": "Use it for: planner, lingo, wallet, transport, weather.\nVariants: default.\nIncludes: Harness integration (log, motion, LiveRegion), animStyle with prefersReduced motion check, Mineral-colored accent via brand override, data-slot + data-portal DOM attributes.\nAccessibility: Focus-visible ring on interactive elements, 48px minimum touch targets, ARIA role attribute, aria-label for screen readers.\nInstall: npx shadcn@latest add https://api.mzizi.dev/v1/ui/mzizi-gauge-card",
+      "docs": "Use it for: planner, lingo, wallet, transport, weather.\nVariants: default.\nIncludes: Harness integration (log, motion, LiveRegion), animStyle with prefersReduced motion check, Mineral-colored accent via brand override, data-slot + data-portal DOM attributes.\nAccessibility: Focus-visible ring on interactive elements, 45px minimum touch targets, ARIA role attribute, aria-label for screen readers.\nInstall: npx shadcn@latest add https://api.mzizi.dev/v1/ui/mzizi-gauge-card",
       "files": [
         {
           "path": "components/registry/n3-brand/mzizi-gauge-card.tsx",
@@ -13434,7 +13434,7 @@
       "meta": {
         "a11y": [
           "Focus-visible ring on interactive elements",
-          "48px minimum touch targets",
+          "45px minimum touch targets",
           "ARIA role attribute",
           "aria-label for screen readers"
         ],
@@ -13536,7 +13536,7 @@
       "categories": ["brand"],
       "dependencies": [],
       "description": "Universal branded group/community card with dynamic mineral accent based on the parent app. Shows group name, member count, avatar strip, activity indicator, privacy level, topic tags, and join CTA. Used across Circles (communities), Campfire (group chats), BushTrade (seller groups), Mukoko Events (event communities), and any app with group-based features.",
-      "docs": "Use it for: campfire, circles, events, lingo, bushtrade.\nVariants: default.\nIncludes: Harness integration (log, motion, LiveRegion), animStyle with prefersReduced motion check, Mineral-colored accent via brand override, data-slot + data-portal DOM attributes.\nAccessibility: Focus-visible ring on interactive elements, 48px minimum touch targets, ARIA role attribute.\nInstall: npx shadcn@latest add https://api.mzizi.dev/v1/ui/mzizi-group-card",
+      "docs": "Use it for: campfire, circles, events, lingo, bushtrade.\nVariants: default.\nIncludes: Harness integration (log, motion, LiveRegion), animStyle with prefersReduced motion check, Mineral-colored accent via brand override, data-slot + data-portal DOM attributes.\nAccessibility: Focus-visible ring on interactive elements, 45px minimum touch targets, ARIA role attribute.\nInstall: npx shadcn@latest add https://api.mzizi.dev/v1/ui/mzizi-group-card",
       "files": [
         {
           "path": "components/registry/n3-brand/mzizi-group-card.tsx",
@@ -13547,7 +13547,7 @@
       "meta": {
         "a11y": [
           "Focus-visible ring on interactive elements",
-          "48px minimum touch targets",
+          "45px minimum touch targets",
           "ARIA role attribute"
         ],
         "collection": "brand",
@@ -13695,7 +13695,7 @@
       "categories": ["brand"],
       "dependencies": [],
       "description": "Branded health overview card composing vitals-display, medication-reminder, and appointment-card primitives with malachite mineral accent. Shows key health metrics, upcoming appointments, and medication schedule at a glance. Sovereign data — all health data stays in the user pod.",
-      "docs": "Use it for: health.\nVariants: default.\nIncludes: Harness integration (log, motion, LiveRegion), animStyle with prefersReduced motion check, Mineral-colored accent via brand override, data-slot + data-portal DOM attributes.\nAccessibility: Focus-visible ring on interactive elements, 48px minimum touch targets, ARIA role attribute, aria-label for screen readers.\nInstall: npx shadcn@latest add https://api.mzizi.dev/v1/ui/mzizi-health-dashboard",
+      "docs": "Use it for: health.\nVariants: default.\nIncludes: Harness integration (log, motion, LiveRegion), animStyle with prefersReduced motion check, Mineral-colored accent via brand override, data-slot + data-portal DOM attributes.\nAccessibility: Focus-visible ring on interactive elements, 45px minimum touch targets, ARIA role attribute, aria-label for screen readers.\nInstall: npx shadcn@latest add https://api.mzizi.dev/v1/ui/mzizi-health-dashboard",
       "files": [
         {
           "path": "components/registry/n3-brand/mzizi-health-dashboard.tsx",
@@ -13706,7 +13706,7 @@
       "meta": {
         "a11y": [
           "Focus-visible ring on interactive elements",
-          "48px minimum touch targets",
+          "45px minimum touch targets",
           "ARIA role attribute",
           "aria-label for screen readers"
         ],
@@ -13738,7 +13738,7 @@
       "categories": ["brand"],
       "dependencies": [],
       "description": "Branded large primary value display with condition label, secondary stats, icon, and share button. The universal pattern extracted from mukoko-weather CurrentConditions. Used for: temperature (Weather), portfolio value (Wallet), trust score (ID), daily steps (Health), total revenue (BushTrade). Any screen that needs a single large number as its hero.",
-      "docs": "Use it for: jobs, wallet, transport, bushtrade, weather.\nVariants: default.\nIncludes: Harness integration (log, motion, LiveRegion), animStyle with prefersReduced motion check, Mineral-colored accent via brand override, data-slot + data-portal DOM attributes.\nAccessibility: Focus-visible ring on interactive elements, 48px minimum touch targets, ARIA role attribute, aria-label for screen readers.\nInstall: npx shadcn@latest add https://api.mzizi.dev/v1/ui/mzizi-hero-stat",
+      "docs": "Use it for: jobs, wallet, transport, bushtrade, weather.\nVariants: default.\nIncludes: Harness integration (log, motion, LiveRegion), animStyle with prefersReduced motion check, Mineral-colored accent via brand override, data-slot + data-portal DOM attributes.\nAccessibility: Focus-visible ring on interactive elements, 45px minimum touch targets, ARIA role attribute, aria-label for screen readers.\nInstall: npx shadcn@latest add https://api.mzizi.dev/v1/ui/mzizi-hero-stat",
       "files": [
         {
           "path": "components/registry/n3-brand/mzizi-hero-stat.tsx",
@@ -13749,7 +13749,7 @@
       "meta": {
         "a11y": [
           "Focus-visible ring on interactive elements",
-          "48px minimum touch targets",
+          "45px minimum touch targets",
           "ARIA role attribute",
           "aria-label for screen readers"
         ],
@@ -13851,7 +13851,7 @@
       "categories": ["brand"],
       "dependencies": [],
       "description": "Branded job listing card with employer verification badge, salary range, location, skill tags, and apply CTA. Gold mineral accent. Renders inside MziziListView feeds. Appears in Jobs feed, Pulse aggregation, search results, and recommended listings. The job-specific data shape (salary, skills, match score, remote flag) makes this a distinct card type rather than a mzizi-listing-card variant.",
-      "docs": "Use it for: pulse, jobs.\nVariants: default.\nIncludes: Harness integration (log, motion, LiveRegion), animStyle with prefersReduced motion check, Mineral-colored accent via brand override, data-slot + data-portal DOM attributes, I18N via Intl formatters.\nAccessibility: Focus-visible ring on interactive elements, 48px minimum touch targets, ARIA role attribute.\nInstall: npx shadcn@latest add https://api.mzizi.dev/v1/ui/mzizi-job-card",
+      "docs": "Use it for: pulse, jobs.\nVariants: default.\nIncludes: Harness integration (log, motion, LiveRegion), animStyle with prefersReduced motion check, Mineral-colored accent via brand override, data-slot + data-portal DOM attributes, I18N via Intl formatters.\nAccessibility: Focus-visible ring on interactive elements, 45px minimum touch targets, ARIA role attribute.\nInstall: npx shadcn@latest add https://api.mzizi.dev/v1/ui/mzizi-job-card",
       "files": [
         {
           "path": "components/registry/n3-brand/mzizi-job-card.tsx",
@@ -13862,7 +13862,7 @@
       "meta": {
         "a11y": [
           "Focus-visible ring on interactive elements",
-          "48px minimum touch targets",
+          "45px minimum touch targets",
           "ARIA role attribute"
         ],
         "collection": "brand",
@@ -13927,7 +13927,7 @@
       "categories": ["brand"],
       "dependencies": [],
       "description": "Ranked leaderboard row with position indicator, avatar, name, score, and trend. Maps to ubuntu.leaderboards table. Used in community rankings, Ubuntu point leaderboards, and competitive features. Top 3 positions get mineral-colored rank badges (Gold, Tanzanite, Cobalt).",
-      "docs": "Use it for: Community Ubuntu point leaderboards, Competition and challenge rankings, Top contributor displays, Weekly and monthly leaderboards, Group and circle ranking views.\nVariants: default.\nIncludes: Harness integration (log, motion, LiveRegion), animStyle with prefersReduced motion check, Mineral-colored accent via brand override, data-slot + data-portal DOM attributes.\nAccessibility: Focus-visible ring on interactive elements, 48px minimum touch targets, ARIA role attribute.\nInstall: npx shadcn@latest add https://api.mzizi.dev/v1/ui/mzizi-leaderboard-row",
+      "docs": "Use it for: Community Ubuntu point leaderboards, Competition and challenge rankings, Top contributor displays, Weekly and monthly leaderboards, Group and circle ranking views.\nVariants: default.\nIncludes: Harness integration (log, motion, LiveRegion), animStyle with prefersReduced motion check, Mineral-colored accent via brand override, data-slot + data-portal DOM attributes.\nAccessibility: Focus-visible ring on interactive elements, 45px minimum touch targets, ARIA role attribute.\nInstall: npx shadcn@latest add https://api.mzizi.dev/v1/ui/mzizi-leaderboard-row",
       "files": [
         {
           "path": "components/registry/n3-brand/mzizi-leaderboard-row.tsx",
@@ -13938,7 +13938,7 @@
       "meta": {
         "a11y": [
           "Focus-visible ring on interactive elements",
-          "48px minimum touch targets",
+          "45px minimum touch targets",
           "ARIA role attribute"
         ],
         "collection": "brand",
@@ -13973,7 +13973,7 @@
       "categories": ["brand"],
       "dependencies": [],
       "description": "Branded language lesson card for Mukoko Lingo with cobalt mineral accent. Shows lesson title, language pair, progress percentage, streak indicator, difficulty level, and estimated time. Used in Lingo course listings and learning path displays.",
-      "docs": "Use it for: lingo.\nVariants: default.\nIncludes: Harness integration (log, motion, LiveRegion), animStyle with prefersReduced motion check, Mineral-colored accent via brand override, data-slot + data-portal DOM attributes.\nAccessibility: Focus-visible ring on interactive elements, 48px minimum touch targets, ARIA role attribute.\nInstall: npx shadcn@latest add https://api.mzizi.dev/v1/ui/mzizi-lesson-card",
+      "docs": "Use it for: lingo.\nVariants: default.\nIncludes: Harness integration (log, motion, LiveRegion), animStyle with prefersReduced motion check, Mineral-colored accent via brand override, data-slot + data-portal DOM attributes.\nAccessibility: Focus-visible ring on interactive elements, 45px minimum touch targets, ARIA role attribute.\nInstall: npx shadcn@latest add https://api.mzizi.dev/v1/ui/mzizi-lesson-card",
       "files": [
         {
           "path": "components/registry/n3-brand/mzizi-lesson-card.tsx",
@@ -13984,7 +13984,7 @@
       "meta": {
         "a11y": [
           "Focus-visible ring on interactive elements",
-          "48px minimum touch targets",
+          "45px minimum touch targets",
           "ARIA role attribute"
         ],
         "collection": "brand",
@@ -14013,7 +14013,7 @@
       "categories": ["brand"],
       "dependencies": ["class-variance-authority"],
       "description": "Universal content card for all Mukoko listing types — events, products, news, bush trade, directories. Supports row, compact, and hero variants with mineral-colored category accents. The foundational brand component: every listing across the super app uses this pattern.",
-      "docs": "Use it for: Event listings (Mukoko Events), Product listings (BushTrade), News articles (News), Place listings (Places), Job listings (Jobs).\nVariants: row, compact, hero.\nIncludes: Mineral-colored category accent, Harness integration (log, motion, LiveRegion), animStyle with prefersReduced, Verified badge slot, Mini-app aware mineral accent.\nAccessibility: role=article, aria-label with title, Focus-visible ring, 48px minimum touch target, Screen reader announces category and title.\nInstall: npx shadcn@latest add https://api.mzizi.dev/v1/ui/mzizi-listing-card",
+      "docs": "Use it for: Event listings (Mukoko Events), Product listings (BushTrade), News articles (News), Place listings (Places), Job listings (Jobs).\nVariants: row, compact, hero.\nIncludes: Mineral-colored category accent, Harness integration (log, motion, LiveRegion), animStyle with prefersReduced, Verified badge slot, Mini-app aware mineral accent.\nAccessibility: role=article, aria-label with title, Focus-visible ring, 45px minimum touch target, Screen reader announces category and title.\nInstall: npx shadcn@latest add https://api.mzizi.dev/v1/ui/mzizi-listing-card",
       "files": [
         {
           "path": "components/registry/n3-brand/mzizi-listing-card.tsx",
@@ -14026,7 +14026,7 @@
           "role=article",
           "aria-label with title",
           "Focus-visible ring",
-          "48px minimum touch target",
+          "45px minimum touch target",
           "Screen reader announces category and title"
         ],
         "collection": "brand",
@@ -14204,7 +14204,7 @@
       "categories": ["brand"],
       "dependencies": ["dompurify"],
       "description": "Brand media components for the Nyuchi ecosystem. Exports MukokoMediaViewer (full-screen image/video viewer with swipe navigation, pinch-to-zoom, share), MukokoImageGallery (multi-image grid with lightbox expansion and count badge), MukokoReaderMode (long-form content reader with adjustable font size, line height, theme, and estimated reading time for articles and novel chapters), MukokoMediaMessage (standardized format for image/video/audio/document/location messages in Campfire chat), and MukokoStoryRing (ephemeral content avatar ring with gradient border and unseen indicator). Maps to bytes.video_object, novels.chapter, news.news_article, campfire.message, and content.creative_work.",
-      "docs": "Use it for: pulse, campfire, circles, bytes, novels.\nVariants: default.\nIncludes: Harness integration (log, motion, LiveRegion), animStyle with prefersReduced motion check, Mineral-colored accent via brand override, data-slot + data-portal DOM attributes.\nAccessibility: Focus-visible ring on interactive elements, 48px minimum touch targets, ARIA role attribute, aria-label for screen readers.\nInstall: npx shadcn@latest add https://api.mzizi.dev/v1/ui/mzizi-media",
+      "docs": "Use it for: pulse, campfire, circles, bytes, novels.\nVariants: default.\nIncludes: Harness integration (log, motion, LiveRegion), animStyle with prefersReduced motion check, Mineral-colored accent via brand override, data-slot + data-portal DOM attributes.\nAccessibility: Focus-visible ring on interactive elements, 45px minimum touch targets, ARIA role attribute, aria-label for screen readers.\nInstall: npx shadcn@latest add https://api.mzizi.dev/v1/ui/mzizi-media",
       "files": [
         {
           "path": "components/registry/n3-brand/mzizi-media.tsx",
@@ -14215,7 +14215,7 @@
       "meta": {
         "a11y": [
           "Focus-visible ring on interactive elements",
-          "48px minimum touch targets",
+          "45px minimum touch targets",
           "ARIA role attribute",
           "aria-label for screen readers"
         ],
@@ -14246,7 +14246,7 @@
       "categories": ["brand"],
       "dependencies": [],
       "description": "Brand-styled chat message bubble for Campfire messaging. Supports sent/received variants, delivery status indicators (sent/delivered/read), emoji reactions, reply threading, and verified sender badge. Maps to campfire.message and campfire.reaction tables. The Mukoko chat identity: pill-shaped bubbles with malachite accent on sent messages.",
-      "docs": "Use it for: shamwari, campfire, circles.\nVariants: default, compact, hero.\nIncludes: Harness integration (log, motion, LiveRegion), animStyle with prefersReduced motion check, Mineral-colored accent via brand override, data-slot + data-portal DOM attributes.\nAccessibility: Focus-visible ring on interactive elements, 48px minimum touch targets, ARIA role attribute.\nInstall: npx shadcn@latest add https://api.mzizi.dev/v1/ui/mzizi-message-bubble",
+      "docs": "Use it for: shamwari, campfire, circles.\nVariants: default, compact, hero.\nIncludes: Harness integration (log, motion, LiveRegion), animStyle with prefersReduced motion check, Mineral-colored accent via brand override, data-slot + data-portal DOM attributes.\nAccessibility: Focus-visible ring on interactive elements, 45px minimum touch targets, ARIA role attribute.\nInstall: npx shadcn@latest add https://api.mzizi.dev/v1/ui/mzizi-message-bubble",
       "files": [
         {
           "path": "components/registry/n3-brand/mzizi-message-bubble.tsx",
@@ -14257,7 +14257,7 @@
       "meta": {
         "a11y": [
           "Focus-visible ring on interactive elements",
-          "48px minimum touch targets",
+          "45px minimum touch targets",
           "ARIA role attribute"
         ],
         "collection": "brand",
@@ -14362,7 +14362,7 @@
       "categories": ["brand"],
       "dependencies": [],
       "description": "Ubuntu mission/quest card with progress bar, reward badge preview, difficulty indicator, and completion state. Maps to ubuntu.missions and ubuntu.mission_progress tables. Used in the Ubuntu gamification system to drive community contribution through structured challenges.",
-      "docs": "Use it for: Ubuntu gamification quest displays, Community contribution challenges, Onboarding mission tracking, Achievement-driven user engagement, Structured challenge surfaces.\nVariants: default.\nIncludes: Harness integration (log, motion, LiveRegion), animStyle with prefersReduced motion check, Mineral-colored accent via brand override, data-slot + data-portal DOM attributes.\nAccessibility: Focus-visible ring on interactive elements, 48px minimum touch targets, ARIA role attribute.\nInstall: npx shadcn@latest add https://api.mzizi.dev/v1/ui/mzizi-mission-card",
+      "docs": "Use it for: Ubuntu gamification quest displays, Community contribution challenges, Onboarding mission tracking, Achievement-driven user engagement, Structured challenge surfaces.\nVariants: default.\nIncludes: Harness integration (log, motion, LiveRegion), animStyle with prefersReduced motion check, Mineral-colored accent via brand override, data-slot + data-portal DOM attributes.\nAccessibility: Focus-visible ring on interactive elements, 45px minimum touch targets, ARIA role attribute.\nInstall: npx shadcn@latest add https://api.mzizi.dev/v1/ui/mzizi-mission-card",
       "files": [
         {
           "path": "components/registry/n3-brand/mzizi-mission-card.tsx",
@@ -14373,7 +14373,7 @@
       "meta": {
         "a11y": [
           "Focus-visible ring on interactive elements",
-          "48px minimum touch targets",
+          "45px minimum touch targets",
           "ARIA role attribute"
         ],
         "collection": "brand",
@@ -14515,7 +14515,7 @@
       "categories": ["brand"],
       "dependencies": [],
       "description": "Brand notification item for the Mukoko notification center. Displays a notification with action type icon, actor avatar, message, timestamp, and read/unread state. Mineral-colored icon backgrounds map to notification categories. Used across all Mukoko apps via the shared system.notifications schema.",
-      "docs": "Use it for: pulse, campfire, circles, events, wallet.\nVariants: default.\nIncludes: Harness integration (log, motion, LiveRegion), animStyle with prefersReduced motion check, Mineral-colored accent via brand override, data-slot + data-portal DOM attributes.\nAccessibility: Focus-visible ring on interactive elements, 48px minimum touch targets, ARIA role attribute.\nInstall: npx shadcn@latest add https://api.mzizi.dev/v1/ui/mzizi-notification-item",
+      "docs": "Use it for: pulse, campfire, circles, events, wallet.\nVariants: default.\nIncludes: Harness integration (log, motion, LiveRegion), animStyle with prefersReduced motion check, Mineral-colored accent via brand override, data-slot + data-portal DOM attributes.\nAccessibility: Focus-visible ring on interactive elements, 45px minimum touch targets, ARIA role attribute.\nInstall: npx shadcn@latest add https://api.mzizi.dev/v1/ui/mzizi-notification-item",
       "files": [
         {
           "path": "components/registry/n3-brand/mzizi-notification-item.tsx",
@@ -14526,7 +14526,7 @@
       "meta": {
         "a11y": [
           "Focus-visible ring on interactive elements",
-          "48px minimum touch targets",
+          "45px minimum touch targets",
           "ARIA role attribute"
         ],
         "collection": "brand",
@@ -14555,7 +14555,7 @@
       "categories": ["brand"],
       "dependencies": [],
       "description": "Commerce offer/product card for Bush Trade with price display, original/discount pricing, availability, seller verification badge, and inquiry CTA. Maps to commerce.offer and commerce.product tables. Used in Bush Trade marketplace, commerce listings, and deal displays.",
-      "docs": "Use it for: Bush Trade marketplace product cards, Commerce listing grids, Deal and offer displays, Seller marketplace listings, Inquiry-driven commerce interfaces.\nVariants: default.\nIncludes: Harness integration (log, motion, LiveRegion), animStyle with prefersReduced motion check, Mineral-colored accent via brand override, data-slot + data-portal DOM attributes, I18N via Intl formatters.\nAccessibility: Focus-visible ring on interactive elements, 48px minimum touch targets, ARIA role attribute.\nInstall: npx shadcn@latest add https://api.mzizi.dev/v1/ui/mzizi-offer-card",
+      "docs": "Use it for: Bush Trade marketplace product cards, Commerce listing grids, Deal and offer displays, Seller marketplace listings, Inquiry-driven commerce interfaces.\nVariants: default.\nIncludes: Harness integration (log, motion, LiveRegion), animStyle with prefersReduced motion check, Mineral-colored accent via brand override, data-slot + data-portal DOM attributes, I18N via Intl formatters.\nAccessibility: Focus-visible ring on interactive elements, 45px minimum touch targets, ARIA role attribute.\nInstall: npx shadcn@latest add https://api.mzizi.dev/v1/ui/mzizi-offer-card",
       "files": [
         {
           "path": "components/registry/n3-brand/mzizi-offer-card.tsx",
@@ -14566,7 +14566,7 @@
       "meta": {
         "a11y": [
           "Focus-visible ring on interactive elements",
-          "48px minimum touch targets",
+          "45px minimum touch targets",
           "ARIA role attribute"
         ],
         "collection": "brand",
@@ -14638,7 +14638,7 @@
       "categories": ["brand"],
       "dependencies": [],
       "description": "Universal branded onboarding step card used across all ecosystem app first-use experiences. Shows an illustration area, title, description, progress dots, and next/skip actions. Dynamic mineral accent. The individual step within any onboarding flow — composable with swiper or stepper primitives for multi-step sequences.",
-      "docs": "Use it for: pulse, campfire, circles, events, wallet.\nVariants: default.\nIncludes: Harness integration (log, motion, LiveRegion), animStyle with prefersReduced motion check, Mineral-colored accent via brand override, data-slot + data-portal DOM attributes.\nAccessibility: Focus-visible ring on interactive elements, 48px minimum touch targets, ARIA role attribute, aria-label for screen readers.\nInstall: npx shadcn@latest add https://api.mzizi.dev/v1/ui/mzizi-onboarding-step",
+      "docs": "Use it for: pulse, campfire, circles, events, wallet.\nVariants: default.\nIncludes: Harness integration (log, motion, LiveRegion), animStyle with prefersReduced motion check, Mineral-colored accent via brand override, data-slot + data-portal DOM attributes.\nAccessibility: Focus-visible ring on interactive elements, 45px minimum touch targets, ARIA role attribute, aria-label for screen readers.\nInstall: npx shadcn@latest add https://api.mzizi.dev/v1/ui/mzizi-onboarding-step",
       "files": [
         {
           "path": "components/registry/n3-brand/mzizi-onboarding-step.tsx",
@@ -14649,7 +14649,7 @@
       "meta": {
         "a11y": [
           "Focus-visible ring on interactive elements",
-          "48px minimum touch targets",
+          "45px minimum touch targets",
           "ARIA role attribute",
           "aria-label for screen readers"
         ],
@@ -14754,7 +14754,7 @@
       "categories": ["agentic-components", "brand"],
       "dependencies": [],
       "description": "Inline payment authorization rendered in the AI client. Selects a payment handler (rail) and authorizes an AP2 Payment Mandate — no browser checkout, and no card details leaving the wallet.",
-      "docs": "Use it for: Authorize the $1/mo fundi-tester charge inside an AI client, Final step of an inline UCP checkout, Confirm a one-time purchase via an AP2 mandate.\nVariants: default.\nIncludes: Inline AP2 payment authorization — no checkout tab, Payment-handler (rail) selection: card / bank / mobile money, Shows the AP2 mandate chain (intent/cart) for transparency, No card details leave the wallet — signs a Payment Mandate, Dynamic mineral accent via --brand-accent.\nAccessibility: radio fieldset/legend for payment handler choice, 48px minimum touch targets, focus-visible ring on all controls, role=alert for errors, prefers-reduced-motion honoured via the harness.\nInstall: npx shadcn@latest add https://api.mzizi.dev/v1/ui/mzizi-payment-mandate-card",
+      "docs": "Use it for: Authorize the $1/mo fundi-tester charge inside an AI client, Final step of an inline UCP checkout, Confirm a one-time purchase via an AP2 mandate.\nVariants: default.\nIncludes: Inline AP2 payment authorization — no checkout tab, Payment-handler (rail) selection: card / bank / mobile money, Shows the AP2 mandate chain (intent/cart) for transparency, No card details leave the wallet — signs a Payment Mandate, Dynamic mineral accent via --brand-accent.\nAccessibility: radio fieldset/legend for payment handler choice, 45px minimum touch targets, focus-visible ring on all controls, role=alert for errors, prefers-reduced-motion honoured via the harness.\nInstall: npx shadcn@latest add https://api.mzizi.dev/v1/ui/mzizi-payment-mandate-card",
       "files": [
         {
           "path": "components/registry/n3-brand/mzizi-payment-mandate-card.tsx",
@@ -14765,7 +14765,7 @@
       "meta": {
         "a11y": [
           "radio fieldset/legend for payment handler choice",
-          "48px minimum touch targets",
+          "45px minimum touch targets",
           "focus-visible ring on all controls",
           "role=alert for errors",
           "prefers-reduced-motion honoured via the harness"
@@ -14799,7 +14799,7 @@
       "categories": ["brand"],
       "dependencies": [],
       "description": "Universal branded payment summary and confirmation card. Shows what is being purchased, price breakdown, payment method, and confirm CTA. Used across all domains with financial transactions: BushTrade (product purchase), Mukoko Events (ticket purchase), Transport (ride booking), Wallet (token transfer), Health (consultation fee), Novels (chapter unlock). Supports multi-currency (ZWL, USD, ZAR, KES) and MIT token payments.",
-      "docs": "Use it for: novels, events, wallet, transport, bushtrade.\nVariants: default.\nIncludes: Harness integration (log, motion, LiveRegion), animStyle with prefersReduced motion check, Mineral-colored accent via brand override, data-slot + data-portal DOM attributes, I18N via Intl formatters.\nAccessibility: Focus-visible ring on interactive elements, 48px minimum touch targets, ARIA role attribute, aria-label for screen readers.\nInstall: npx shadcn@latest add https://api.mzizi.dev/v1/ui/mzizi-payment-summary",
+      "docs": "Use it for: novels, events, wallet, transport, bushtrade.\nVariants: default.\nIncludes: Harness integration (log, motion, LiveRegion), animStyle with prefersReduced motion check, Mineral-colored accent via brand override, data-slot + data-portal DOM attributes, I18N via Intl formatters.\nAccessibility: Focus-visible ring on interactive elements, 45px minimum touch targets, ARIA role attribute, aria-label for screen readers.\nInstall: npx shadcn@latest add https://api.mzizi.dev/v1/ui/mzizi-payment-summary",
       "files": [
         {
           "path": "components/registry/n3-brand/mzizi-payment-summary.tsx",
@@ -14810,7 +14810,7 @@
       "meta": {
         "a11y": [
           "Focus-visible ring on interactive elements",
-          "48px minimum touch targets",
+          "45px minimum touch targets",
           "ARIA role attribute",
           "aria-label for screen readers"
         ],
@@ -14950,7 +14950,7 @@
       "categories": ["brand"],
       "dependencies": [],
       "description": "Branded word/phrase learning card for Mukoko Lingo with cobalt mineral accent. Shows phrase in source and target languages, pronunciation guide, usage example, and practice/audio controls. Part of the commitment to treating African languages as first-class citizens.",
-      "docs": "Use it for: lingo.\nVariants: default.\nIncludes: Harness integration (log, motion, LiveRegion), animStyle with prefersReduced motion check, Mineral-colored accent via brand override, data-slot + data-portal DOM attributes.\nAccessibility: Focus-visible ring on interactive elements, 48px minimum touch targets, ARIA role attribute, aria-label for screen readers.\nInstall: npx shadcn@latest add https://api.mzizi.dev/v1/ui/mzizi-phrase-card",
+      "docs": "Use it for: lingo.\nVariants: default.\nIncludes: Harness integration (log, motion, LiveRegion), animStyle with prefersReduced motion check, Mineral-colored accent via brand override, data-slot + data-portal DOM attributes.\nAccessibility: Focus-visible ring on interactive elements, 45px minimum touch targets, ARIA role attribute, aria-label for screen readers.\nInstall: npx shadcn@latest add https://api.mzizi.dev/v1/ui/mzizi-phrase-card",
       "files": [
         {
           "path": "components/registry/n3-brand/mzizi-phrase-card.tsx",
@@ -14961,7 +14961,7 @@
       "meta": {
         "a11y": [
           "Focus-visible ring on interactive elements",
-          "48px minimum touch targets",
+          "45px minimum touch targets",
           "ARIA role attribute",
           "aria-label for screen readers"
         ],
@@ -15152,7 +15152,7 @@
       "categories": ["brand"],
       "dependencies": [],
       "description": "DEPRECATED: Use mzizi-offer-card instead. This was an early pre-brand product card without harness, motion, or ARIA integration.",
-      "docs": "Use it for: BushTrade marketplace product listings, Cart item display in checkout flows, Wishlist entries, Recommended products panels, Search results in commerce contexts.\nVariants: default, compact, grid, list-row.\nIncludes: Price display with locale currency formatting, Rating with star count, Availability badge (in-stock, low-stock, out-of-stock), Add-to-cart action slot, Mineral accent for category or merchant, Harness integration (log, motion, LiveRegion), animStyle with prefersReduced.\nAccessibility: role=article with aria-label including price, Focus-visible ring, 48px minimum touch target on add-to-cart, Screen reader announces title, price, availability, rating, Currency formatted via Intl.NumberFormat for locale.\nInstall: npx shadcn@latest add https://api.mzizi.dev/v1/ui/mzizi-product-card",
+      "docs": "Use it for: BushTrade marketplace product listings, Cart item display in checkout flows, Wishlist entries, Recommended products panels, Search results in commerce contexts.\nVariants: default, compact, grid, list-row.\nIncludes: Price display with locale currency formatting, Rating with star count, Availability badge (in-stock, low-stock, out-of-stock), Add-to-cart action slot, Mineral accent for category or merchant, Harness integration (log, motion, LiveRegion), animStyle with prefersReduced.\nAccessibility: role=article with aria-label including price, Focus-visible ring, 45px minimum touch target on add-to-cart, Screen reader announces title, price, availability, rating, Currency formatted via Intl.NumberFormat for locale.\nInstall: npx shadcn@latest add https://api.mzizi.dev/v1/ui/mzizi-product-card",
       "files": [
         {
           "path": "components/registry/n3-brand/mzizi-product-card.tsx",
@@ -15164,7 +15164,7 @@
         "a11y": [
           "role=article with aria-label including price",
           "Focus-visible ring",
-          "48px minimum touch target on add-to-cart",
+          "45px minimum touch target on add-to-cart",
           "Screen reader announces title, price, availability, rating",
           "Currency formatted via Intl.NumberFormat for locale"
         ],
@@ -15199,7 +15199,7 @@
       "categories": ["agentic-components", "brand"],
       "dependencies": [],
       "description": "The top 3–5 UCP product search results rendered inline in an AI surface, so a buyer can compare and choose without leaving the conversation.",
-      "docs": "Use it for: Show the agent's product search results inline, Let the user pick which product to view/buy.\nVariants: default.\nIncludes: Compact top 3–5 UCP search results, Per-result price label + description, Selecting a result hands the id back to the agent, Empty-state messaging.\nAccessibility: list semantics (ul/li), 48px minimum touch target per result, focus-visible ring on each row, truncation with title preserved.\nInstall: npx shadcn@latest add https://api.mzizi.dev/v1/ui/mzizi-product-results",
+      "docs": "Use it for: Show the agent's product search results inline, Let the user pick which product to view/buy.\nVariants: default.\nIncludes: Compact top 3–5 UCP search results, Per-result price label + description, Selecting a result hands the id back to the agent, Empty-state messaging.\nAccessibility: list semantics (ul/li), 45px minimum touch target per result, focus-visible ring on each row, truncation with title preserved.\nInstall: npx shadcn@latest add https://api.mzizi.dev/v1/ui/mzizi-product-results",
       "files": [
         {
           "path": "components/registry/n3-brand/mzizi-product-results.tsx",
@@ -15210,7 +15210,7 @@
       "meta": {
         "a11y": [
           "list semantics (ul/li)",
-          "48px minimum touch target per result",
+          "45px minimum touch target per result",
           "focus-visible ring on each row",
           "truncation with title preserved"
         ],
@@ -15241,7 +15241,7 @@
       "categories": ["brand"],
       "dependencies": [],
       "description": "Standardized profile display block used across all Mukoko apps. Centers the avatar with verification badge, name with inline verified check, platform status indicator, trust score meter, and stat counters. The three trust indicators (verified badge, status pill, trust score) are always visible on the profile header — not just badges elsewhere in the app, but the full expanded view here.",
-      "docs": "Use it for: Standardized profile header across all Mukoko apps, User profile primary identity block, Trust-signal display on profiles, Consistent identity presentation across ecosystem, Profile-first surfaces throughout Nyuchi.\nVariants: default.\nIncludes: Harness integration (log, motion, LiveRegion), animStyle with prefersReduced motion check, Mineral-colored accent via brand override, data-slot + data-portal DOM attributes.\nAccessibility: Focus-visible ring on interactive elements, 48px minimum touch targets, ARIA role attribute, aria-label for screen readers.\nInstall: npx shadcn@latest add https://api.mzizi.dev/v1/ui/mzizi-profile-block",
+      "docs": "Use it for: Standardized profile header across all Mukoko apps, User profile primary identity block, Trust-signal display on profiles, Consistent identity presentation across ecosystem, Profile-first surfaces throughout Nyuchi.\nVariants: default.\nIncludes: Harness integration (log, motion, LiveRegion), animStyle with prefersReduced motion check, Mineral-colored accent via brand override, data-slot + data-portal DOM attributes.\nAccessibility: Focus-visible ring on interactive elements, 45px minimum touch targets, ARIA role attribute, aria-label for screen readers.\nInstall: npx shadcn@latest add https://api.mzizi.dev/v1/ui/mzizi-profile-block",
       "files": [
         {
           "path": "components/registry/n3-brand/mzizi-profile-block.tsx",
@@ -15252,7 +15252,7 @@
       "meta": {
         "a11y": [
           "Focus-visible ring on interactive elements",
-          "48px minimum touch targets",
+          "45px minimum touch targets",
           "ARIA role attribute",
           "aria-label for screen readers"
         ],
@@ -15292,7 +15292,7 @@
       "categories": ["brand"],
       "dependencies": [],
       "description": "Full-width profile banner with avatar, name, bio, stats, and actions.",
-      "docs": "Use it for: Full user profile page header, Cover image with profile overlay, Full-bleed identity presentation, Social profile page heroes, Profile page top section.\nVariants: default.\nIncludes: Harness integration (log, motion, LiveRegion), animStyle with prefersReduced motion check, Mineral-colored accent via brand override, data-slot + data-portal DOM attributes.\nAccessibility: Focus-visible ring on interactive elements, 48px minimum touch targets, ARIA role attribute.\nInstall: npx shadcn@latest add https://api.mzizi.dev/v1/ui/mzizi-profile-header",
+      "docs": "Use it for: Full user profile page header, Cover image with profile overlay, Full-bleed identity presentation, Social profile page heroes, Profile page top section.\nVariants: default.\nIncludes: Harness integration (log, motion, LiveRegion), animStyle with prefersReduced motion check, Mineral-colored accent via brand override, data-slot + data-portal DOM attributes.\nAccessibility: Focus-visible ring on interactive elements, 45px minimum touch targets, ARIA role attribute.\nInstall: npx shadcn@latest add https://api.mzizi.dev/v1/ui/mzizi-profile-header",
       "files": [
         {
           "path": "components/registry/n3-brand/mzizi-profile-header.tsx",
@@ -15303,7 +15303,7 @@
       "meta": {
         "a11y": [
           "Focus-visible ring on interactive elements",
-          "48px minimum touch targets",
+          "45px minimum touch targets",
           "ARIA role attribute"
         ],
         "collection": "brand",
@@ -15334,7 +15334,7 @@
       "categories": ["brand"],
       "dependencies": [],
       "description": "Standard profile page with cover image, avatar, stats, tabs, and action buttons.",
-      "docs": "Use it for: Full user profile pages, Social feed profile destinations, Community member profile views, Creator and author profile pages, Service provider profile pages.\nVariants: default, compact, hero.\nIncludes: Harness integration (log, motion, LiveRegion), animStyle with prefersReduced motion check, Mineral-colored accent via brand override, data-slot + data-portal DOM attributes.\nAccessibility: Focus-visible ring on interactive elements, 48px minimum touch targets, ARIA role attribute.\nInstall: npx shadcn@latest add https://api.mzizi.dev/v1/ui/mzizi-profile-page",
+      "docs": "Use it for: Full user profile pages, Social feed profile destinations, Community member profile views, Creator and author profile pages, Service provider profile pages.\nVariants: default, compact, hero.\nIncludes: Harness integration (log, motion, LiveRegion), animStyle with prefersReduced motion check, Mineral-colored accent via brand override, data-slot + data-portal DOM attributes.\nAccessibility: Focus-visible ring on interactive elements, 45px minimum touch targets, ARIA role attribute.\nInstall: npx shadcn@latest add https://api.mzizi.dev/v1/ui/mzizi-profile-page",
       "files": [
         {
           "path": "components/registry/n3-brand/mzizi-profile-page.tsx",
@@ -15345,7 +15345,7 @@
       "meta": {
         "a11y": [
           "Focus-visible ring on interactive elements",
-          "48px minimum touch targets",
+          "45px minimum touch targets",
           "ARIA role attribute"
         ],
         "collection": "brand",
@@ -15427,7 +15427,7 @@
       "categories": ["brand"],
       "dependencies": [],
       "description": "Standard settings page with sidebar navigation and content sections.",
-      "docs": "Use it for: Profile settings pages, Account preferences, Notification settings, Privacy and security settings, User preference management.\nVariants: default, compact, hero.\nIncludes: Harness integration (log, motion, LiveRegion), animStyle with prefersReduced motion check, Mineral-colored accent via brand override, data-slot + data-portal DOM attributes.\nAccessibility: Focus-visible ring on interactive elements, 48px minimum touch targets, ARIA role attribute, aria-label for screen readers.\nInstall: npx shadcn@latest add https://api.mzizi.dev/v1/ui/mzizi-profile-settings",
+      "docs": "Use it for: Profile settings pages, Account preferences, Notification settings, Privacy and security settings, User preference management.\nVariants: default, compact, hero.\nIncludes: Harness integration (log, motion, LiveRegion), animStyle with prefersReduced motion check, Mineral-colored accent via brand override, data-slot + data-portal DOM attributes.\nAccessibility: Focus-visible ring on interactive elements, 45px minimum touch targets, ARIA role attribute, aria-label for screen readers.\nInstall: npx shadcn@latest add https://api.mzizi.dev/v1/ui/mzizi-profile-settings",
       "files": [
         {
           "path": "components/registry/n3-brand/mzizi-profile-settings.tsx",
@@ -15438,7 +15438,7 @@
       "meta": {
         "a11y": [
           "Focus-visible ring on interactive elements",
-          "48px minimum touch targets",
+          "45px minimum touch targets",
           "ARIA role attribute",
           "aria-label for screen readers"
         ],
@@ -15480,7 +15480,7 @@
       "categories": ["brand"],
       "dependencies": [],
       "description": "Timeline-style programme/schedule item for event agendas. Shows time slot, title, speaker/host, and mineral-colored timeline dot. Maps to events.programme_item table. Used on event detail pages for agenda/programme display.",
-      "docs": "Use it for: Event programme and schedule displays, Conference agenda timelines, Workshop session listings, Multi-day event schedules, Time-slot-based event programmes.\nVariants: default.\nIncludes: Harness integration (log, motion, LiveRegion), animStyle with prefersReduced motion check, Mineral-colored accent via brand override, data-slot + data-portal DOM attributes.\nAccessibility: Focus-visible ring on interactive elements, 48px minimum touch targets, ARIA role attribute.\nInstall: npx shadcn@latest add https://api.mzizi.dev/v1/ui/mzizi-programme-item",
+      "docs": "Use it for: Event programme and schedule displays, Conference agenda timelines, Workshop session listings, Multi-day event schedules, Time-slot-based event programmes.\nVariants: default.\nIncludes: Harness integration (log, motion, LiveRegion), animStyle with prefersReduced motion check, Mineral-colored accent via brand override, data-slot + data-portal DOM attributes.\nAccessibility: Focus-visible ring on interactive elements, 45px minimum touch targets, ARIA role attribute.\nInstall: npx shadcn@latest add https://api.mzizi.dev/v1/ui/mzizi-programme-item",
       "files": [
         {
           "path": "components/registry/n3-brand/mzizi-programme-item.tsx",
@@ -15491,7 +15491,7 @@
       "meta": {
         "a11y": [
           "Focus-visible ring on interactive elements",
-          "48px minimum touch targets",
+          "45px minimum touch targets",
           "ARIA role attribute"
         ],
         "collection": "brand",
@@ -15525,7 +15525,7 @@
       "categories": ["brand"],
       "dependencies": [],
       "description": "Branded service provider card showing a professional or business with verification badge, specialty, availability, rating, and booking CTA. Dynamic mineral accent. Used across Health (doctors), Places (businesses), BushTrade (sellers), and any domain where verified service providers need display. Renders inside MziziListView feeds.",
-      "docs": "Use it for: pulse, places, bushtrade, health.\nVariants: default.\nIncludes: Harness integration (log, motion, LiveRegion), animStyle with prefersReduced motion check, Mineral-colored accent via brand override, data-slot + data-portal DOM attributes.\nAccessibility: Focus-visible ring on interactive elements, 48px minimum touch targets, ARIA role attribute.\nInstall: npx shadcn@latest add https://api.mzizi.dev/v1/ui/mzizi-provider-card",
+      "docs": "Use it for: pulse, places, bushtrade, health.\nVariants: default.\nIncludes: Harness integration (log, motion, LiveRegion), animStyle with prefersReduced motion check, Mineral-colored accent via brand override, data-slot + data-portal DOM attributes.\nAccessibility: Focus-visible ring on interactive elements, 45px minimum touch targets, ARIA role attribute.\nInstall: npx shadcn@latest add https://api.mzizi.dev/v1/ui/mzizi-provider-card",
       "files": [
         {
           "path": "components/registry/n3-brand/mzizi-provider-card.tsx",
@@ -15536,7 +15536,7 @@
       "meta": {
         "a11y": [
           "Focus-visible ring on interactive elements",
-          "48px minimum touch targets",
+          "45px minimum touch targets",
           "ARIA role attribute"
         ],
         "collection": "brand",
@@ -15690,7 +15690,7 @@
       "categories": ["brand"],
       "dependencies": [],
       "description": "Universal branded review card with trust-verified reviewer badge, star rating, review text, and helpful vote. Used across all domains where user reviews exist: Places (business reviews), BushTrade (seller reviews), Novels (book reviews), Health (provider reviews), Mukoko Events (event reviews). The reviewer verification tier is always visible — Ubuntu principle: trust is earned and displayed. An optional headline sits above the body; the body keeps its line breaks (whitespace-pre-line); the stars are the read-only rating (one role=img named \"4 out of 5 stars\"); the reviewer's tier is the mzizi-verified-badge, not an emoji.",
-      "docs": "Use it for: novels, events, places, bushtrade, health.\nVariants: default.\nIncludes: Harness integration (log, motion, LiveRegion), animStyle with prefersReduced motion check, Mineral-colored accent via brand override, data-slot + data-portal DOM attributes, Optional headline, Body keeps line breaks (whitespace-pre-line), Stars are the read-only rating, named \"N out of 5 stars\", Reviewer tier shown with mzizi-verified-badge.\nAccessibility: Focus-visible ring on interactive elements, 48px minimum touch targets, ARIA role attribute, Stars are one role=img with an aria-label (\"4 out of 5 stars\"), The reviewer's tier badge is role=img named with the tier.\nInstall: npx shadcn@latest add https://api.mzizi.dev/v1/ui/mzizi-review-card",
+      "docs": "Use it for: novels, events, places, bushtrade, health.\nVariants: default.\nIncludes: Harness integration (log, motion, LiveRegion), animStyle with prefersReduced motion check, Mineral-colored accent via brand override, data-slot + data-portal DOM attributes, Optional headline, Body keeps line breaks (whitespace-pre-line), Stars are the read-only rating, named \"N out of 5 stars\", Reviewer tier shown with mzizi-verified-badge.\nAccessibility: Focus-visible ring on interactive elements, 45px minimum touch targets, ARIA role attribute, Stars are one role=img with an aria-label (\"4 out of 5 stars\"), The reviewer's tier badge is role=img named with the tier.\nInstall: npx shadcn@latest add https://api.mzizi.dev/v1/ui/mzizi-review-card",
       "files": [
         {
           "path": "components/registry/n3-brand/mzizi-review-card.tsx",
@@ -15701,7 +15701,7 @@
       "meta": {
         "a11y": [
           "Focus-visible ring on interactive elements",
-          "48px minimum touch targets",
+          "45px minimum touch targets",
           "ARIA role attribute",
           "Stars are one role=img with an aria-label (\"4 out of 5 stars\")",
           "The reviewer's tier badge is role=img named with the tier"
@@ -15815,7 +15815,7 @@
       "categories": ["brand"],
       "dependencies": [],
       "description": "Branded route planning display composing route-card, stop-card, and itinerary-timeline primitives with gold mineral accent. Shows origin, destination, transit mode, duration, fare estimate, and step-by-step route. Integrates with Harare Metro data backbone and Nyuchi Logistics fleet.",
-      "docs": "Use it for: transport.\nVariants: default.\nIncludes: Harness integration (log, motion, LiveRegion), animStyle with prefersReduced motion check, Mineral-colored accent via brand override, data-slot + data-portal DOM attributes, I18N via Intl formatters.\nAccessibility: Focus-visible ring on interactive elements, 48px minimum touch targets, ARIA role attribute, aria-label for screen readers.\nInstall: npx shadcn@latest add https://api.mzizi.dev/v1/ui/mzizi-route-planner",
+      "docs": "Use it for: transport.\nVariants: default.\nIncludes: Harness integration (log, motion, LiveRegion), animStyle with prefersReduced motion check, Mineral-colored accent via brand override, data-slot + data-portal DOM attributes, I18N via Intl formatters.\nAccessibility: Focus-visible ring on interactive elements, 45px minimum touch targets, ARIA role attribute, aria-label for screen readers.\nInstall: npx shadcn@latest add https://api.mzizi.dev/v1/ui/mzizi-route-planner",
       "files": [
         {
           "path": "components/registry/n3-brand/mzizi-route-planner.tsx",
@@ -15826,7 +15826,7 @@
       "meta": {
         "a11y": [
           "Focus-visible ring on interactive elements",
-          "48px minimum touch targets",
+          "45px minimum touch targets",
           "ARIA role attribute",
           "aria-label for screen readers"
         ],
@@ -15859,7 +15859,7 @@
       "categories": ["brand"],
       "dependencies": [],
       "description": "Stateful RSVP button with confirmation status variants: pending, confirmed, waitlisted, declined. Pill-shaped with mineral accent, loading state, and capacity indicator. Maps to events.rsvp_action table. The standardized way to handle event registration across Mukoko Events.",
-      "docs": "Use it for: circles, events, planner.\nVariants: default.\nIncludes: Harness integration (log, motion, LiveRegion), animStyle with prefersReduced motion check, Mineral-colored accent via brand override, data-slot + data-portal DOM attributes, I18N via Intl formatters.\nAccessibility: Focus-visible ring on interactive elements, 48px minimum touch targets, ARIA role attribute.\nInstall: npx shadcn@latest add https://api.mzizi.dev/v1/ui/mzizi-rsvp-button",
+      "docs": "Use it for: circles, events, planner.\nVariants: default.\nIncludes: Harness integration (log, motion, LiveRegion), animStyle with prefersReduced motion check, Mineral-colored accent via brand override, data-slot + data-portal DOM attributes, I18N via Intl formatters.\nAccessibility: Focus-visible ring on interactive elements, 45px minimum touch targets, ARIA role attribute.\nInstall: npx shadcn@latest add https://api.mzizi.dev/v1/ui/mzizi-rsvp-button",
       "files": [
         {
           "path": "components/registry/n3-brand/mzizi-rsvp-button.tsx",
@@ -15870,7 +15870,7 @@
       "meta": {
         "a11y": [
           "Focus-visible ring on interactive elements",
-          "48px minimum touch targets",
+          "45px minimum touch targets",
           "ARIA role attribute"
         ],
         "collection": "brand",
@@ -15930,7 +15930,7 @@
       "categories": ["brand"],
       "dependencies": [],
       "description": "Universal branded search results view composing search-bar, filter-bar, and search-results primitives with mineral-accented category filters. Shows unified cross-app results: people, places, events, products, articles, groups. Each result type renders using its corresponding brand card (mzizi-listing-card, mzizi-place-card, user-card, mzizi-group-card). The standard search experience across the entire ecosystem.",
-      "docs": "Use it for: pulse, campfire, circles, novels, events.\nVariants: default.\nIncludes: Harness integration (log, motion, LiveRegion), animStyle with prefersReduced motion check, Mineral-colored accent via brand override, data-slot + data-portal DOM attributes.\nAccessibility: Focus-visible ring on interactive elements, 48px minimum touch targets, aria-label for screen readers.\nInstall: npx shadcn@latest add https://api.mzizi.dev/v1/ui/mzizi-search-view",
+      "docs": "Use it for: pulse, campfire, circles, novels, events.\nVariants: default.\nIncludes: Harness integration (log, motion, LiveRegion), animStyle with prefersReduced motion check, Mineral-colored accent via brand override, data-slot + data-portal DOM attributes.\nAccessibility: Focus-visible ring on interactive elements, 45px minimum touch targets, aria-label for screen readers.\nInstall: npx shadcn@latest add https://api.mzizi.dev/v1/ui/mzizi-search-view",
       "files": [
         {
           "path": "components/registry/n3-brand/mzizi-search-view.tsx",
@@ -15941,7 +15941,7 @@
       "meta": {
         "a11y": [
           "Focus-visible ring on interactive elements",
-          "48px minimum touch targets",
+          "45px minimum touch targets",
           "aria-label for screen readers"
         ],
         "collection": "brand",
@@ -16098,7 +16098,7 @@
       "categories": ["brand"],
       "dependencies": [],
       "description": "Universal branded share composition wrapping the share-dialog primitive. Shows a preview card of the shared content (title, image, source app), sharing options (copy link, share to Campfire, native share, social platforms), and a branded deep link. Every shareable piece of content across the ecosystem uses this pattern — listings, articles, profiles, places, events, videos, groups.",
-      "docs": "Use it for: pulse, campfire, bytes, circles, novels.\nVariants: default.\nIncludes: Harness integration (log, motion, LiveRegion), animStyle with prefersReduced motion check, Mineral-colored accent via brand override, data-slot + data-portal DOM attributes.\nAccessibility: Focus-visible ring on interactive elements, 48px minimum touch targets, ARIA role attribute, aria-label for screen readers.\nInstall: npx shadcn@latest add https://api.mzizi.dev/v1/ui/mzizi-share-card",
+      "docs": "Use it for: pulse, campfire, bytes, circles, novels.\nVariants: default.\nIncludes: Harness integration (log, motion, LiveRegion), animStyle with prefersReduced motion check, Mineral-colored accent via brand override, data-slot + data-portal DOM attributes.\nAccessibility: Focus-visible ring on interactive elements, 45px minimum touch targets, ARIA role attribute, aria-label for screen readers.\nInstall: npx shadcn@latest add https://api.mzizi.dev/v1/ui/mzizi-share-card",
       "files": [
         {
           "path": "components/registry/n3-brand/mzizi-share-card.tsx",
@@ -16109,7 +16109,7 @@
       "meta": {
         "a11y": [
           "Focus-visible ring on interactive elements",
-          "48px minimum touch targets",
+          "45px minimum touch targets",
           "ARIA role attribute",
           "aria-label for screen readers"
         ],
@@ -16187,7 +16187,7 @@
       "categories": ["brand"],
       "dependencies": [],
       "description": "Branded sidebar navigation with nav items, badges, and section headers. Extracted from admin-page, api-explorer-page, and logs-page. Uses mineral accents for active state.",
-      "docs": "Use it for: events, console, bushtrade.\nVariants: default.\nIncludes: Harness integration (log, motion, LiveRegion), animStyle with prefersReduced motion check, Mineral-colored accent via brand override, data-slot + data-portal DOM attributes.\nAccessibility: Focus-visible ring on interactive elements, 48px minimum touch targets, ARIA role attribute, aria-label for screen readers.\nInstall: npx shadcn@latest add https://api.mzizi.dev/v1/ui/mzizi-sidebar-nav",
+      "docs": "Use it for: events, console, bushtrade.\nVariants: default.\nIncludes: Harness integration (log, motion, LiveRegion), animStyle with prefersReduced motion check, Mineral-colored accent via brand override, data-slot + data-portal DOM attributes.\nAccessibility: Focus-visible ring on interactive elements, 45px minimum touch targets, ARIA role attribute, aria-label for screen readers.\nInstall: npx shadcn@latest add https://api.mzizi.dev/v1/ui/mzizi-sidebar-nav",
       "files": [
         {
           "path": "components/registry/n3-brand/mzizi-sidebar-nav.tsx",
@@ -16198,7 +16198,7 @@
       "meta": {
         "a11y": [
           "Focus-visible ring on interactive elements",
-          "48px minimum touch targets",
+          "45px minimum touch targets",
           "ARIA role attribute",
           "aria-label for screen readers"
         ],
@@ -16277,7 +16277,7 @@
       "categories": ["brand"],
       "dependencies": [],
       "description": "News source credibility indicator badge tied to verification tier. Shows the source name with a mineral-colored trust indicator. Maps to news.feed_source and news.news_media_organization verification status. Used inline on article cards and in source attribution lines.",
-      "docs": "Use it for: News source credibility indicators, Article source attribution, Media organization trust badges, Verified source displays, Source transparency in news feeds.\nVariants: default.\nIncludes: Harness integration (log, motion, LiveRegion), animStyle with prefersReduced motion check, Mineral-colored accent via brand override, data-slot + data-portal DOM attributes.\nAccessibility: Focus-visible ring on interactive elements, 48px minimum touch targets, ARIA role attribute.\nInstall: npx shadcn@latest add https://api.mzizi.dev/v1/ui/mzizi-source-badge",
+      "docs": "Use it for: News source credibility indicators, Article source attribution, Media organization trust badges, Verified source displays, Source transparency in news feeds.\nVariants: default.\nIncludes: Harness integration (log, motion, LiveRegion), animStyle with prefersReduced motion check, Mineral-colored accent via brand override, data-slot + data-portal DOM attributes.\nAccessibility: Focus-visible ring on interactive elements, 45px minimum touch targets, ARIA role attribute.\nInstall: npx shadcn@latest add https://api.mzizi.dev/v1/ui/mzizi-source-badge",
       "files": [
         {
           "path": "components/registry/n3-brand/mzizi-source-badge.tsx",
@@ -16288,7 +16288,7 @@
       "meta": {
         "a11y": [
           "Focus-visible ring on interactive elements",
-          "48px minimum touch targets",
+          "45px minimum touch targets",
           "ARIA role attribute"
         ],
         "collection": "brand",
@@ -16360,7 +16360,7 @@
       "categories": ["brand"],
       "dependencies": ["class-variance-authority"],
       "description": "Horizontal compact stats bar for dashboards, home screens, and admin views. Displays 2–4 metric blocks inline with icon, label, value, and optional trend indicator. Uses mineral-colored icon backgrounds. The brand-standard way to show key metrics at a glance across all Mukoko apps.",
-      "docs": "Use it for: pulse, events, planner, wallet, bushtrade.\nVariants: default, compact, hero.\nIncludes: Harness integration (log, motion, LiveRegion), animStyle with prefersReduced motion check, Mineral-colored accent via brand override, data-slot + data-portal DOM attributes.\nAccessibility: Focus-visible ring on interactive elements, 48px minimum touch targets, ARIA role attribute, aria-label for screen readers.\nInstall: npx shadcn@latest add https://api.mzizi.dev/v1/ui/mzizi-stats-row",
+      "docs": "Use it for: pulse, events, planner, wallet, bushtrade.\nVariants: default, compact, hero.\nIncludes: Harness integration (log, motion, LiveRegion), animStyle with prefersReduced motion check, Mineral-colored accent via brand override, data-slot + data-portal DOM attributes.\nAccessibility: Focus-visible ring on interactive elements, 45px minimum touch targets, ARIA role attribute, aria-label for screen readers.\nInstall: npx shadcn@latest add https://api.mzizi.dev/v1/ui/mzizi-stats-row",
       "files": [
         {
           "path": "components/registry/n3-brand/mzizi-stats-row.tsx",
@@ -16371,7 +16371,7 @@
       "meta": {
         "a11y": [
           "Focus-visible ring on interactive elements",
-          "48px minimum touch targets",
+          "45px minimum touch targets",
           "ARIA role attribute",
           "aria-label for screen readers"
         ],
@@ -16400,7 +16400,7 @@
       "categories": ["brand"],
       "dependencies": [],
       "description": "Branded success/confirmation screen with mineral-colored checkmark, title, message, and optional actions. Extracted from payment-page, checkout-page, and booking-page where the same checkmark + title pattern was repeated. Uses the Seven African Minerals for the success indicator.",
-      "docs": "Use it for: events, wallet, transport, bushtrade.\nVariants: default.\nIncludes: Harness integration (log, motion, LiveRegion), animStyle with prefersReduced motion check, Mineral-colored accent via brand override, data-slot + data-portal DOM attributes.\nAccessibility: Focus-visible ring on interactive elements, 48px minimum touch targets, ARIA role attribute.\nInstall: npx shadcn@latest add https://api.mzizi.dev/v1/ui/mzizi-success-screen",
+      "docs": "Use it for: events, wallet, transport, bushtrade.\nVariants: default.\nIncludes: Harness integration (log, motion, LiveRegion), animStyle with prefersReduced motion check, Mineral-colored accent via brand override, data-slot + data-portal DOM attributes.\nAccessibility: Focus-visible ring on interactive elements, 45px minimum touch targets, ARIA role attribute.\nInstall: npx shadcn@latest add https://api.mzizi.dev/v1/ui/mzizi-success-screen",
       "files": [
         {
           "path": "components/registry/n3-brand/mzizi-success-screen.tsx",
@@ -16411,7 +16411,7 @@
       "meta": {
         "a11y": [
           "Focus-visible ring on interactive elements",
-          "48px minimum touch targets",
+          "45px minimum touch targets",
           "ARIA role attribute"
         ],
         "collection": "brand",
@@ -16436,7 +16436,7 @@
       "categories": ["brand"],
       "dependencies": [],
       "description": "Branded suitability/recommendation card with score, icon, title, description, and mineral-colored score indicator. Universal pattern from mukoko-weather ActivityInsights. Used for: \"Good for farming\" (Weather), \"Good for families\" (Places), \"Good for outdoor exercise\" (Health), \"Safe to travel\" (Transport), \"Good match for you\" (Jobs). Any scored recommendation.",
-      "docs": "Use it for: planner, jobs, places, transport, weather.\nVariants: default.\nIncludes: Harness integration (log, motion, LiveRegion), animStyle with prefersReduced motion check, Mineral-colored accent via brand override, data-slot + data-portal DOM attributes.\nAccessibility: Focus-visible ring on interactive elements, 48px minimum touch targets, ARIA role attribute.\nInstall: npx shadcn@latest add https://api.mzizi.dev/v1/ui/mzizi-suitability-card",
+      "docs": "Use it for: planner, jobs, places, transport, weather.\nVariants: default.\nIncludes: Harness integration (log, motion, LiveRegion), animStyle with prefersReduced motion check, Mineral-colored accent via brand override, data-slot + data-portal DOM attributes.\nAccessibility: Focus-visible ring on interactive elements, 45px minimum touch targets, ARIA role attribute.\nInstall: npx shadcn@latest add https://api.mzizi.dev/v1/ui/mzizi-suitability-card",
       "files": [
         {
           "path": "components/registry/n3-brand/mzizi-suitability-card.tsx",
@@ -16447,7 +16447,7 @@
       "meta": {
         "a11y": [
           "Focus-visible ring on interactive elements",
-          "48px minimum touch targets",
+          "45px minimum touch targets",
           "ARIA role attribute"
         ],
         "collection": "brand",
@@ -16580,7 +16580,7 @@
       "categories": ["brand"],
       "dependencies": [],
       "description": "Event ticket display card with QR code area, ticket tier, status indicator (valid/used/cancelled/transferred), and event details. Maps to events.ticket and events.ticket_tier tables. Used in My Events, check-in flows, and digital wallet views.",
-      "docs": "Use it for: Event tickets in My Events, Check-in flow displays, Digital wallet ticket views, QR code entry credentials, Ticket transfer and gift flows.\nVariants: default.\nIncludes: Harness integration (log, motion, LiveRegion), animStyle with prefersReduced motion check, Mineral-colored accent via brand override, data-slot + data-portal DOM attributes.\nAccessibility: Focus-visible ring on interactive elements, 48px minimum touch targets, ARIA role attribute.\nInstall: npx shadcn@latest add https://api.mzizi.dev/v1/ui/mzizi-ticket-card",
+      "docs": "Use it for: Event tickets in My Events, Check-in flow displays, Digital wallet ticket views, QR code entry credentials, Ticket transfer and gift flows.\nVariants: default.\nIncludes: Harness integration (log, motion, LiveRegion), animStyle with prefersReduced motion check, Mineral-colored accent via brand override, data-slot + data-portal DOM attributes.\nAccessibility: Focus-visible ring on interactive elements, 45px minimum touch targets, ARIA role attribute.\nInstall: npx shadcn@latest add https://api.mzizi.dev/v1/ui/mzizi-ticket-card",
       "files": [
         {
           "path": "components/registry/n3-brand/mzizi-ticket-card.tsx",
@@ -16591,7 +16591,7 @@
       "meta": {
         "a11y": [
           "Focus-visible ring on interactive elements",
-          "48px minimum touch targets",
+          "45px minimum touch targets",
           "ARIA role attribute"
         ],
         "collection": "brand",
@@ -17268,7 +17268,7 @@
       "categories": ["brand"],
       "dependencies": [],
       "description": "Transaction history row for the Mukoko wallet. Displays transaction type (send/receive/purchase/reward), amount with MIT currency formatting, counterparty, status, and timestamp. Maps to wallet.transaction table. Used in wallet history, payment confirmations, and financial reporting.",
-      "docs": "Use it for: events, wallet, bushtrade.\nVariants: default.\nIncludes: Harness integration (log, motion, LiveRegion), animStyle with prefersReduced motion check, Mineral-colored accent via brand override, data-slot + data-portal DOM attributes.\nAccessibility: Focus-visible ring on interactive elements, 48px minimum touch targets, ARIA role attribute.\nInstall: npx shadcn@latest add https://api.mzizi.dev/v1/ui/mzizi-transaction-row",
+      "docs": "Use it for: events, wallet, bushtrade.\nVariants: default.\nIncludes: Harness integration (log, motion, LiveRegion), animStyle with prefersReduced motion check, Mineral-colored accent via brand override, data-slot + data-portal DOM attributes.\nAccessibility: Focus-visible ring on interactive elements, 45px minimum touch targets, ARIA role attribute.\nInstall: npx shadcn@latest add https://api.mzizi.dev/v1/ui/mzizi-transaction-row",
       "files": [
         {
           "path": "components/registry/n3-brand/mzizi-transaction-row.tsx",
@@ -17279,7 +17279,7 @@
       "meta": {
         "a11y": [
           "Focus-visible ring on interactive elements",
-          "48px minimum touch targets",
+          "45px minimum touch targets",
           "ARIA role attribute"
         ],
         "collection": "brand",
@@ -17495,7 +17495,7 @@
       "categories": ["brand"],
       "dependencies": [],
       "description": "Compact user profile card with avatar, name, role, and actions.",
-      "docs": "Use it for: Team member listings, Community member displays, User mention results, Friend and follower lists, Contact and directory cards.\nVariants: default.\nIncludes: Harness integration (log, motion, LiveRegion), animStyle with prefersReduced motion check, Mineral-colored accent via brand override, data-slot + data-portal DOM attributes.\nAccessibility: Focus-visible ring on interactive elements, 48px minimum touch targets, ARIA role attribute.\nInstall: npx shadcn@latest add https://api.mzizi.dev/v1/ui/mzizi-user-card",
+      "docs": "Use it for: Team member listings, Community member displays, User mention results, Friend and follower lists, Contact and directory cards.\nVariants: default.\nIncludes: Harness integration (log, motion, LiveRegion), animStyle with prefersReduced motion check, Mineral-colored accent via brand override, data-slot + data-portal DOM attributes.\nAccessibility: Focus-visible ring on interactive elements, 45px minimum touch targets, ARIA role attribute.\nInstall: npx shadcn@latest add https://api.mzizi.dev/v1/ui/mzizi-user-card",
       "files": [
         {
           "path": "components/registry/n3-brand/mzizi-user-card.tsx",
@@ -17506,7 +17506,7 @@
       "meta": {
         "a11y": [
           "Focus-visible ring on interactive elements",
-          "48px minimum touch targets",
+          "45px minimum touch targets",
           "ARIA role attribute"
         ],
         "collection": "brand",
@@ -17537,7 +17537,7 @@
       "categories": ["brand"],
       "dependencies": [],
       "description": "A user profile dropdown menu with avatar, name, email, navigation links, and sign-out action.",
-      "docs": "Use it for: App header user menu in all Nyuchi apps, Profile dropdown with account links, Sign-out access point, User preferences shortcut menu, Avatar-triggered action menu.\nVariants: default.\nIncludes: Harness integration (log, motion, LiveRegion), animStyle with prefersReduced motion check, Mineral-colored accent via brand override, data-slot + data-portal DOM attributes.\nAccessibility: Focus-visible ring on interactive elements, 48px minimum touch targets, ARIA role attribute, aria-label for screen readers.\nInstall: npx shadcn@latest add https://api.mzizi.dev/v1/ui/mzizi-user-menu",
+      "docs": "Use it for: App header user menu in all Nyuchi apps, Profile dropdown with account links, Sign-out access point, User preferences shortcut menu, Avatar-triggered action menu.\nVariants: default.\nIncludes: Harness integration (log, motion, LiveRegion), animStyle with prefersReduced motion check, Mineral-colored accent via brand override, data-slot + data-portal DOM attributes.\nAccessibility: Focus-visible ring on interactive elements, 45px minimum touch targets, ARIA role attribute, aria-label for screen readers.\nInstall: npx shadcn@latest add https://api.mzizi.dev/v1/ui/mzizi-user-menu",
       "files": [
         {
           "path": "components/registry/n3-brand/mzizi-user-menu.tsx",
@@ -17548,7 +17548,7 @@
       "meta": {
         "a11y": [
           "Focus-visible ring on interactive elements",
-          "48px minimum touch targets",
+          "45px minimum touch targets",
           "ARIA role attribute",
           "aria-label for screen readers"
         ],

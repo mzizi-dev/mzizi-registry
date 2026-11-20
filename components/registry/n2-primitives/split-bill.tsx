@@ -87,7 +87,7 @@ function SplitBill({
                 const v = parseFloat(e.target.value.replace(/[^0-9.]/g, ""))
                 onTipChange(isNaN(v) ? 0 : v)
               }}
-              className="h-8 w-20 rounded-full border border-input bg-input/30 px-3 text-right font-mono text-xs outline-none"
+              className="h-8 pointer-coarse:h-touch-min w-20 rounded-full border border-input bg-input/30 px-3 text-right font-mono text-xs outline-none"
             />
             <span className="text-xs text-muted-foreground">{currency}</span>
           </div>
@@ -121,7 +121,7 @@ function SplitBill({
                   const v = parseFloat(e.target.value.replace(/[^0-9.]/g, ""))
                   onAmountChange(p.id, isNaN(v) ? 0 : v)
                 }}
-                className="h-8 w-20 rounded-full border border-input bg-input/30 px-3 text-right font-mono text-xs outline-none"
+                className="h-8 pointer-coarse:h-touch-min w-20 rounded-full border border-input bg-input/30 px-3 text-right font-mono text-xs outline-none"
               />
             ) : (
               <span className="text-sm font-medium tabular-nums">{equalShare.toFixed(2)}</span>

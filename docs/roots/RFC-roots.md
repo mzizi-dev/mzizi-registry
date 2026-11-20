@@ -589,7 +589,7 @@ Each has a contract, between three and eight clauses and 65 in all, and the new
 fails the suite: shrinking the alert banner's details button back to `h-10` fails
 `button "View Details" min_height 48`.
 
-The ports fix six defects the React build still has: a 40px button under the 48px floor, an
+The ports fix six defects the React build still has: a 40px button under the 45px touch floor, an
 unclamped `aria-valuenow`, an unquoted CSS URL, an unnamed ARIA region, initials that split a
 UTF-16 surrogate pair, and a `data-portal` present only on the loading skeleton. Each is
 covered by a test. The first four are also asserted against the `.tsx`, so their tests fail

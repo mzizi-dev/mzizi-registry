@@ -69,7 +69,7 @@ export function MziziPersistentPlayer({
         {track.thumbnail && (
           <button
             onClick={onExpand}
-            className="size-10 shrink-0 overflow-hidden rounded-[var(--radius-sm,7px)] bg-muted"
+            className="size-10 pointer-coarse:size-touch-min shrink-0 overflow-hidden rounded-[var(--radius-sm,7px)] bg-muted"
           >
             <img src={track.thumbnail} alt="" className="size-full object-cover" loading="lazy" />
           </button>

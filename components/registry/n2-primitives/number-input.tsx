@@ -71,7 +71,7 @@ function NumberInput({
         onChange={handleChange}
         disabled={disabled}
         aria-label="Number value"
-        className="h-8 w-14 border-x border-border bg-transparent text-center text-sm outline-none"
+        className="h-8 pointer-coarse:h-touch-min w-14 border-x border-border bg-transparent text-center text-sm outline-none"
       />
       <Button
         type="button"

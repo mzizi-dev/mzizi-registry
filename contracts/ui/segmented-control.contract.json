@@ -217,7 +217,7 @@
     }
   ],
   "gaps": [
-    "The `sm` size is 40px on every pointer: on touch it is under the 44px target (WCAG 2.5.8 is met; 2.5.5 is not).",
+    "The `sm` size is 40px on every pointer: on touch it is under the 45px touch floor (its hit region is the 40px drawn box).",
     "No disabled segments, and no way to mark the group required."
   ]
 }

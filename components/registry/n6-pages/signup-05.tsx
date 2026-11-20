@@ -117,7 +117,7 @@ function Signup05() {
               type="checkbox"
               checked={agreed}
               onChange={(e) => setAgreed(e.target.checked)}
-              className="mt-0.5 size-4 rounded border-border accent-cobalt"
+              className="mt-0.5 size-7 pointer-coarse:size-touch-min rounded border-border accent-cobalt"
             />
             <span className="text-xs text-muted-foreground">
               I agree to the{" "}

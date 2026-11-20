@@ -95,7 +95,7 @@ function AudioPlayer({
             max={duration || 0}
             value={currentTime}
             onChange={handleSeek}
-            className="h-1 flex-1 cursor-pointer appearance-none rounded-full bg-muted accent-primary"
+            className="h-7 pointer-coarse:h-touch-min flex-1 cursor-pointer appearance-none rounded-full bg-muted accent-primary"
           />
           <span className="text-xs text-muted-foreground tabular-nums">{formatTime(duration)}</span>
         </div>

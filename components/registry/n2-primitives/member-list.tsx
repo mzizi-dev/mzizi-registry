@@ -56,7 +56,7 @@ function MemberList({
           value={search}
           onChange={(e) => setSearch(e.target.value)}
           placeholder="Search members..."
-          className="mb-3 h-10 w-full rounded-full border border-input bg-input/30 px-4 text-sm outline-none placeholder:text-muted-foreground focus:border-ring"
+          className="mb-3 h-10 pointer-coarse:h-touch-min w-full rounded-full border border-input bg-input/30 px-4 text-sm outline-none placeholder:text-muted-foreground focus:border-ring"
         />
       )}
       <div className="mb-2 text-sm text-muted-foreground">{filtered.length} members</div>

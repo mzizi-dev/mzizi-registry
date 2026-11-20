@@ -45,7 +45,7 @@ function FontSettingsPanel({ settings, onChange, className, ...props }: FontSett
             max={28}
             value={settings.fontSize}
             onChange={(e) => update({ fontSize: parseInt(e.target.value) })}
-            className="h-1 flex-1 accent-primary"
+            className="h-7 pointer-coarse:h-touch-min flex-1 accent-primary"
             aria-label="Font size"
           />
           <span className="text-lg text-muted-foreground">A</span>
@@ -64,7 +64,7 @@ function FontSettingsPanel({ settings, onChange, className, ...props }: FontSett
             step={0.1}
             value={settings.lineHeight}
             onChange={(e) => update({ lineHeight: parseFloat(e.target.value) })}
-            className="h-1 flex-1 accent-primary"
+            className="h-7 pointer-coarse:h-touch-min flex-1 accent-primary"
             aria-label="Line height"
           />
           <span className="w-8 text-right text-xs tabular-nums">

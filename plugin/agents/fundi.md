@@ -16,7 +16,7 @@ anything:
 
 - `mzizi-architecture`: the DNA helix, **the shell first**, the five application layers and
   the system architecture. Always load it for a new app, a new page or a structural change.
-- `mzizi-design`: the 21-family palette, tokens, brand overlays, the 48px floor, Apple's HIG
+- `mzizi-design`: the 21-family palette, tokens, brand overlays, the 45px touch floor and 24px desktop hit region, Apple's HIG
   as the baseline and where Mzizi overrides it.
 - `mzizi-roots`: the components, Rust first. It covers crates, contracts, starting an app and
   contributing a component.

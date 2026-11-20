@@ -28,7 +28,7 @@ export interface DiscoverBreadcrumbProps {
 }
 
 const link =
-  "inline-flex min-h-6 items-center text-foreground underline decoration-border underline-offset-4 hover:decoration-foreground pointer-coarse:min-h-touch-min"
+  "inline-flex min-h-7 items-center text-foreground underline decoration-border underline-offset-4 hover:decoration-foreground pointer-coarse:min-h-touch-min"
 
 export function DiscoverBreadcrumb({ crumbs, label = "Breadcrumb", origin, jsonLd = true, requestUrl }: DiscoverBreadcrumbProps) {
   if (crumbs.length === 0) return null
@@ -67,7 +67,7 @@ export function DiscoverBreadcrumb({ crumbs, label = "Breadcrumb", origin, jsonL
               ) : i === last ? (
                 <span
                   aria-current="page"
-                  className="inline-flex min-h-6 items-center font-semibold text-foreground pointer-coarse:min-h-touch-min"
+                  className="inline-flex min-h-7 items-center font-semibold text-foreground pointer-coarse:min-h-touch-min"
                 >
                   {c.label}
                 </span>
