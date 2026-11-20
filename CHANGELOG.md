@@ -10,7 +10,7 @@ From 2026-10-04 releases follow the org versioning policy ([nyuchi/.github#80](h
 
 ## [Unreleased]
 
-### Added — unstyled components: decisions, hook vocabulary and the structure gate (2026-11-20, #PR)
+### Added — unstyled components: decisions, hook vocabulary and the structure gate (2026-11-20, #730)
 
 Nothing a consumer installs changes in this release. It adds the plan for moving component styling into a pack, and a gate that stops new styling entering components.
 
