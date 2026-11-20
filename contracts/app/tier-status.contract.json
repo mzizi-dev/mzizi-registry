@@ -322,8 +322,8 @@
     {
       "part": "evidence link",
       "select": "[data-slot=\"tier-next\"] a",
-      "fine": 32,
-      "coarse": 44
+      "fine": 33,
+      "coarse": 49
     }
   ],
   "theming": {

@@ -81,7 +81,7 @@ describe("BUNDU_FLOOR.spacing: the one definition", () => {
     // the fallback floors for a component with no known layer are today's 14 and 7 (owner 2026-11-19: never weaker)
     expect(spacing.insetPx).toBe(14);
     expect(spacing.gapPx).toBe(7);
-    // the label floor is the global 7 (layer-blind guards read it); its dense step is pending the owner's confirmation
+    // the label floor is the global 7 (layer-blind guards read it); its dense step is confirmed by the owner (2026-11-20)
     expect(spacing.labelGapPx).toBe(spacing.layers.labelGap.px);
     expect(spacing.itemGapPx).toBe(spacing.layers.cardGap.dense);
     expect(spacing.controlGapPx).toBe(spacing.layers.controlBetween.px);

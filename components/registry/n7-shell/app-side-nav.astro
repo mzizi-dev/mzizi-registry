@@ -1,7 +1,7 @@
 ---
 /**
  * SideNav — an app's navigation, dense like a product console: quiet group
- * labels, one 32px row per item (48px on touch) with an icon and the label
+ * labels, one 33px row per item (45px on touch) with an icon and the label
  * only, a "New"-style badge, nested items under a disclosure with a
  * chevron, and the current item filled with a gold indicator. The current
  * item carries aria-current="page".
@@ -44,7 +44,7 @@ const nextId = () => `${idPrefix}-tip-${++n}`;
 const describe = (item: NavItem) => item.description ?? item.summary;
 
 const row =
-  "group/row relative flex h-8 w-full min-w-0 items-center gap-2.5 rounded-sm px-2.5 text-body-sm text-foreground outline-none transition-colors hover:bg-muted focus-visible:ring-2 focus-visible:ring-ring pointer-coarse:h-11";
+  "group/row relative flex h-control-sm w-full min-w-0 items-center gap-2.5 rounded-sm px-2.5 text-body-sm text-foreground outline-none transition-colors hover:bg-muted focus-visible:ring-2 focus-visible:ring-ring pointer-coarse:h-touch-min";
 const here =
   "bg-muted font-medium before:absolute before:inset-y-1.5 before:left-0 before:w-0.5 before:rounded-full before:bg-[var(--app-accent,var(--primary))]";
 const icon = "h-4 w-4 shrink-0 text-muted-foreground group-hover/row:text-foreground";

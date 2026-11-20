@@ -83,7 +83,7 @@
     },
     {
       "id": "label-gap",
-      "say": "A label and its field keep labelGapPx (7px, the global floor). The controls layer dense step (5px) is pending the owner's confirmation.",
+      "say": "A label and its field keep labelGapPx (7px, the global floor). The controls layer dense step (5px) is confirmed by the owner (2026-11-20).",
       "select": "label",
       "rule": "distance(rect(label), rect(label.control)) >= labelGapPx unless the control is inside the label",
       "min": "labelGapPx"

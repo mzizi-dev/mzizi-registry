@@ -1474,9 +1474,9 @@ impl Roles {
     pub const SPACING_PILL_GAP: u32 = 5;
     /// 3px. Layer: Pills and badges gap. Dense 3px (prime and 3 x 1); reference: 2. The absolute floor: nothing goes below it. Owner 2026-11-19.
     pub const SPACING_PILL_GAP_DENSE: u32 = 3;
-    /// 7px. Layer: Controls, gap between a label and its field. Default 7px (7); reference: label to field 6 to 8. The default-density floor. Derived from the number rule; pending the owner's confirmation.
+    /// 7px. Layer: Controls, gap between a label and its field. Default 7px (7); reference: label to field 6 to 8. The default-density floor. Derived from the number rule; confirmed by the owner (2026-11-20).
     pub const SPACING_LABEL_GAP: u32 = 7;
-    /// 5px. Layer: Controls, gap between a label and its field. Dense 5px (prime); reference: M3 4. The absolute floor: nothing goes below it. Derived from the number rule; pending the owner's confirmation.
+    /// 5px. Layer: Controls, gap between a label and its field. Dense 5px (prime); reference: M3 4. The absolute floor: nothing goes below it. Derived from the number rule; confirmed by the owner (2026-11-20).
     pub const SPACING_LABEL_GAP_DENSE: u32 = 5;
     /// 49px. Default control height. componentSpecs.button.heights.default.
     pub const SPACING_CONTROL: u32 = 49;

@@ -16,38 +16,6 @@ import type { ChangelogRow } from "@/lib/db/types";
 
 export const CHANGELOG_RELEASES: readonly ChangelogRow[] = [
   {
-    version: "4.45.0",
-    title:
-      "v4.45.0 — the Bundu floor is 45px on touch and 24px on a desktop, with per-layer spacing tokens",
-    description:
-      "Releases staging to main as the next minor above v4.44.3 (nyuchi/.github#80). Changed: the hit-area floor drops from 49px and 28px to 45px on touch and 24px on a desktop; spacing has one floor per layer, each with a dense step; control heights round up to the number rule; the mzizi-a11y-audit flags touch targets under 45×45. Fixed: the markdown-renderer registry entry names mzizi-roots, not mzizi-ui. The mzizi-rs crates move to 0.9.0. The CHANGELOG [4.45.0] section is the narrative.",
-    line: "public",
-    line_rank: 1,
-    major: 4,
-    minor: 45,
-    patch: 0,
-    release_kind: "minor",
-    breaking: false,
-    released_at: "2026-11-19T12:00:00.000+00:00",
-    created_at: "2026-11-19T12:00:00.000+00:00",
-    nodes_affected: null,
-    components_added: null,
-    components_modified: null,
-    components_deprecated: null,
-    components_removed: null,
-    components_touched: null,
-    tools_added: null,
-    tools_modified: null,
-    tools_deprecated: null,
-    tools_removed: null,
-    linked_issues: null,
-    total_stable: null,
-    total_deprecated: null,
-    total_alpha: null,
-    changed_by: "claude-code",
-    entry_order: 0,
-  },
-  {
     version: "4.44.3",
     title: "v4.44.3 — staging carries main's 4.44.0 release records",
     description:

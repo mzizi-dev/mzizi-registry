@@ -6,7 +6,7 @@ Three owner decisions shape this page. Sizes follow Apple's Human Interface Guid
 
 Every Mzizi spacing or size value is a multiple of 3, a multiple of 7, or a prime number. Start from the recommended value (WCAG, Apple HIG or Material 3) and take the nearest Mzizi number at or above it. A little larger is fine; lower never is. Cards, containers and page layout use multiples of 7. Controls may use any Mzizi number.
 
-Component heights are not changed by this rule. The control heights that do change are the dense and small steps: `spacing-control-sm` and `spacing-control-dense` 32 to 33, `spacing-field-sm` 32 to 33, `spacing-control-lg` 40 to 41, and `--touch-target-sm` 40 to 41. 41 is prime, and it is the nearest Mzizi number at or above 40.
+Component heights are not changed by this rule in the 2026-11-19 PR. The control heights that do change are the dense and small steps: `spacing-control-sm` and `spacing-control-dense` 32 to 33, `spacing-field-sm` 32 to 33, `spacing-control-lg` 40 to 41, and `--touch-target-sm` 40 to 41. 41 is prime, and it is the nearest Mzizi number at or above 40.
 
 ## The hit region
 
@@ -29,24 +29,24 @@ The contract runner and the Rust evaluator count a control's hit region as the t
 
 Each layer has a default value (the floor at default density) and a dense value (the absolute floor). Nothing goes below dense. Dense is for content that needs it, and white space is used where it serves.
 
-| Layer            | Token                     | Default | Dense       | Built from                                  |
-| ---------------- | ------------------------- | ------- | ----------- | ------------------------------------------- |
-| Layout           | `--space-page-x`          | 17      | none        | prime (Apple and M3 compact 16)             |
-| Layout           | `--space-page-x-wide`     | 28      | 21          | 7 x 4 and 7 x 3 (M3 medium and expanded 24) |
-| Layout           | `--space-section`         | 49      | 28          | 7 x 7 and 7 x 4 (48)                        |
-| Containers       | `--space-container`       | 28      | 21          | 7 x 4 and 7 x 3 (M3 dialog 24)              |
-| Containers       | `--space-container-gap`   | 21      | 14          | 7 x 3 and 7 x 2 (M3 dialog 16)              |
-| Cards            | `--space-card`            | 21      | 14          | 7 x 3 and 7 x 2 (M3 card 16)                |
-| Cards            | `--space-card-gap`        | 14      | 7           | 7 x 2 and 7 (M3 card gap 8)                 |
-| Cards            | `--space-card-stack`      | 7       | 7           | 7 (title to body 4)                         |
-| Controls         | `--space-control-x`       | 17      | 12          | prime and 3 x 4 (M3 small button 16)        |
-| Controls         | `--space-field-x`         | 17      | 12          | prime and 3 x 4 (M3 text field 16)          |
-| Controls         | `--space-control-gap`     | 9       | 7           | 3 x 3 and 7 (M3 icon to label 8)            |
-| Controls         | `--space-control-between` | 9       | 9           | 3 x 3 (M3 target spacing 8)                 |
-| Controls         | `--space-label-gap`       | 7       | 5 (pending) | 7 and prime (label to field 6 to 8)         |
-| Chips            | `--space-chip-x`          | 12      | 9           | 3 x 4 and 3 x 3 (M3 chip 12)                |
-| Pills and badges | `--space-pill-x`          | 9       | 5           | 3 x 3 and prime (M3 badge 4)                |
-| Pills and badges | `--space-pill-gap`        | 5       | 3           | prime (4)                                   |
+| Layer            | Token                     | Default | Dense | Built from                                  |
+| ---------------- | ------------------------- | ------- | ----- | ------------------------------------------- |
+| Layout           | `--space-page-x`          | 17      | none  | prime (Apple and M3 compact 16)             |
+| Layout           | `--space-page-x-wide`     | 28      | 21    | 7 x 4 and 7 x 3 (M3 medium and expanded 24) |
+| Layout           | `--space-section`         | 49      | 28    | 7 x 7 and 7 x 4 (48)                        |
+| Containers       | `--space-container`       | 28      | 21    | 7 x 4 and 7 x 3 (M3 dialog 24)              |
+| Containers       | `--space-container-gap`   | 21      | 14    | 7 x 3 and 7 x 2 (M3 dialog 16)              |
+| Cards            | `--space-card`            | 21      | 14    | 7 x 3 and 7 x 2 (M3 card 16)                |
+| Cards            | `--space-card-gap`        | 14      | 7     | 7 x 2 and 7 (M3 card gap 8)                 |
+| Cards            | `--space-card-stack`      | 7       | 7     | 7 (title to body 4)                         |
+| Controls         | `--space-control-x`       | 17      | 12    | prime and 3 x 4 (M3 small button 16)        |
+| Controls         | `--space-field-x`         | 17      | 12    | prime and 3 x 4 (M3 text field 16)          |
+| Controls         | `--space-control-gap`     | 9       | 7     | 3 x 3 and 7 (M3 icon to label 8)            |
+| Controls         | `--space-control-between` | 9       | 9     | 3 x 3 (M3 target spacing 8)                 |
+| Controls         | `--space-label-gap`       | 7       | 5     | 7 and prime (label to field 6 to 8)         |
+| Chips            | `--space-chip-x`          | 12      | 9     | 3 x 4 and 3 x 3 (M3 chip 12)                |
+| Pills and badges | `--space-pill-x`          | 9       | 5     | 3 x 3 and prime (M3 badge 4)                |
+| Pills and badges | `--space-pill-gap`        | 5       | 3     | prime (4)                                   |
 
 The dense tokens are named `<token>-dense`, for example `--space-card-dense`. The label-gap and card-gap values for sibling items are derived from the number rule, not stated by the owner, so the owner may still override them.
 
@@ -56,12 +56,12 @@ The base layer applies the dense floor to a bare element. A bare control's inlin
 
 `BUNDU_FLOOR.spacing` in `lib/tokens/roles.source.ts` is the one source. Four names are kept for consumers that depend on them:
 
-| Name         | Value | Token           | Meaning                                                                                                                |
-| ------------ | ----- | --------------- | ---------------------------------------------------------------------------------------------------------------------- |
-| `insetPx`    | 14px  | `--inset-floor` | The floor for a component with no known layer (today's value)                                                          |
-| `gapPx`      | 7px   | `--gap-floor`   | The floor for a component with no known layer (today's value)                                                          |
-| `labelGapPx` | 7px   | none            | The global label-to-field floor (layer-blind guards read it); its dense step, 5px, is pending the owner's confirmation |
-| `itemGapPx`  | 7px   | none            | The dense floor of `--space-card-gap` for sibling items                                                                |
+| Name         | Value | Token           | Meaning                                                                                                                   |
+| ------------ | ----- | --------------- | ------------------------------------------------------------------------------------------------------------------------- |
+| `insetPx`    | 14px  | `--inset-floor` | The floor for a component with no known layer (today's value)                                                             |
+| `gapPx`      | 7px   | `--gap-floor`   | The floor for a component with no known layer (today's value)                                                             |
+| `labelGapPx` | 7px   | none            | The global label-to-field floor (layer-blind guards read it); its dense step, 5px, is confirmed by the owner (2026-11-20) |
+| `itemGapPx`  | 7px   | none            | The dense floor of `--space-card-gap` for sibling items                                                                   |
 
 The `--inset-floor` and `--gap-floor` values are never lowered for a component with no known layer. A density layer never lowers them, and the legacy opt-out sets them to 0.
 
@@ -104,7 +104,7 @@ The heights are size roles, and they step down with the density layer:
 | `--size-field-sm`      | 49px  | 33px    | Rounded up from 32                                                   |
 | `--touch-target-sm`    | 41px  | none    | Dense secondary action, rounded up from 40; not for primary controls |
 
-Component heights (the touch heights of buttons, inputs and tabs at 49px) are unchanged.
+Component heights (the touch heights of buttons, inputs and tabs at 49px) are unchanged by the 2026-11-19 PR.
 
 ## Text floors
 
@@ -117,7 +117,7 @@ A label chip or pill is held on its inline axis (owner, 2026-11-04, #625), and a
 - `__tests__/bundu-floor.test.ts` fails when a default type step is under its floor in any layer, or a hit region under the floor on either tier.
 - `__tests__/spacing-floor.test.ts` fails when the spacing numbers differ between `BUNDU_FLOOR`, canon, `/v1/tokens` and the stylesheet; when a density layer lowers `--inset-floor` or `--gap-floor`; when a layer value breaks the number rule; or when the TypeScript and Rust layer tables differ.
 - The contract runner and the Rust evaluator read every element of every rendered state (`evaluateSpacing` in `contracts/runner.ts`, and `spacing_violations` in `mzizi-rs/contract-eval`), against the shared table `contracts/spacing-cases.json`.
-- `__tests__/spacing-floor.test.ts` counts any gap under 7 (`gap-0`, `gap-px` and `space-*-0`), `p-0`-style resets and negative margins per file against `__tests__/spacing-floor-baseline.json`. A file may not exceed its baseline, and a file below it must lower it.
+- `__tests__/spacing-floor.test.ts` counts `gap-0`, `gap-px` and `space-*-0` gaps, `p-0`-style resets and negative margins per file against `__tests__/spacing-floor-baseline.json`. A file may not exceed its baseline, and a file below it must lower it. The baseline does not shrink in the 2026-11-19 PR.
 - `contracts/spacing-geometry.json` specifies the rendered guard once, for a browser audit. This repository has no browser harness of its own.
 
 ## Apple and WCAG, for reference
