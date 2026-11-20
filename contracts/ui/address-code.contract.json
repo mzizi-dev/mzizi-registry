@@ -57,7 +57,7 @@
   "slots": [],
   "behaviour": [
     "The code is a <code> in the mono face with wide tracking, so it can be copied by eye or read aloud.",
-    "With `href`, a link at the 45px touch floor (24px on a desktop, its hit region) follows the code; its accessible name is \"<linkLabel> <label> <code>\", so repeated chips never read as identical links.",
+    "With `href`, a link at the 45px touch floor (24px hit region on a desktop, drawn 28px) follows the code; its accessible name is \"<linkLabel> <label> <code>\", so repeated chips never read as identical links.",
     "Without `href`, there is no link and no empty control.",
     "Colour is semantic: the chip is the card on its border; the link is --primary, so a brand overlay (Kweli's malachite) colours it."
   ],
@@ -95,7 +95,7 @@
     {
       "part": "link",
       "select": "a",
-      "fine": 24,
+      "fine": 28,
       "coarse": 45
     }
   ],

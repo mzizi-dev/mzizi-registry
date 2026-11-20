@@ -93,7 +93,7 @@ function DetailPanel({
         {children}
         {record !== undefined && (
           <details className="border-t border-border px-4 py-2">
-            <summary className="min-h-8 cursor-pointer py-1.5 text-body-sm font-medium pointer-coarse:min-h-11">
+            <summary className="min-h-control-sm cursor-pointer py-1.5 text-body-sm font-medium pointer-coarse:min-h-touch-min">
               Full record
             </summary>
             <pre className="mt-3 max-h-[32rem] overflow-auto rounded-md bg-muted p-container-dense font-mono text-body-sm whitespace-pre-wrap break-all">

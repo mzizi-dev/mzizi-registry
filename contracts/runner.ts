@@ -353,8 +353,6 @@ export const HIT_AREA_GAPS: readonly string[] = [
   "site/hero:call to action",
   "site/hero:call to action (centred)",
   "site/social-icon:link",
-  "ui/address-code:link",
-  "ui/address-private-row:link",
   "ui/address-share-card:link",
 ];
 

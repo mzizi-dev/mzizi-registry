@@ -2,7 +2,7 @@
  * TopBarAction (React) — one item in AppShell's top bar ("Ask Nyuchi AI",
  * "Support"): an icon and a short label, a link when `href` is set and a
  * button otherwise. Below `sm` only the icon shows and the label becomes the
- * accessible name. 32px tall, 44px on touch.
+ * accessible name. 33px tall, 45px on touch.
  *
  * Implements contract `app/top-bar-action` beside `app-top-bar-action.astro`,
  * with the same markup and classes.
@@ -21,7 +21,7 @@ interface TopBarActionProps {
 }
 
 const cls =
-  "inline-flex h-8 min-w-8 shrink-0 items-center justify-center gap-2 rounded-sm px-3.5 text-body-sm font-medium text-foreground outline-none transition-colors hover:bg-muted focus-visible:ring-2 focus-visible:ring-ring aria-[current=page]:bg-muted pointer-coarse:h-11 pointer-coarse:min-w-11"
+  "inline-flex h-control-sm min-w-control-sm shrink-0 items-center justify-center gap-2 rounded-sm px-3.5 text-body-sm font-medium text-foreground outline-none transition-colors hover:bg-muted focus-visible:ring-2 focus-visible:ring-ring aria-[current=page]:bg-muted pointer-coarse:h-touch-min pointer-coarse:min-w-touch-min"
 
 function TopBarAction({ label, icon, href, external = false, popovertarget, current = false }: TopBarActionProps) {
   const labelClass = icon ? "sr-only sm:not-sr-only" : ""

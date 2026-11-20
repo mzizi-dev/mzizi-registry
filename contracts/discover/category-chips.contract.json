@@ -103,8 +103,8 @@
     {
       "part": "chip",
       "select": "a",
-      "fine": 44,
-      "coarse": 44
+      "fine": 33,
+      "coarse": 45
     }
   ],
   "theming": {

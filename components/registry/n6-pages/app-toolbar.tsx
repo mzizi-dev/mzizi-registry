@@ -65,7 +65,7 @@ function Toolbar({
           defaultValue={value}
           placeholder={placeholder ?? label}
           autoComplete="off"
-          className="h-8 min-w-0 flex-1 bg-transparent text-body-sm outline-none placeholder:text-muted-foreground pointer-coarse:h-11 pointer-coarse:text-body"
+          className="h-control-sm min-w-0 flex-1 bg-transparent text-body-sm outline-none placeholder:text-muted-foreground pointer-coarse:h-touch-min pointer-coarse:text-body"
         />
         <button
           type="submit"

@@ -166,9 +166,9 @@ Each registry primitive's one contract, for its `.astro`, `.tsx` and `.rs`. Wher
 
 ## Gaps the contracts record
 
-- **AppShell.** The collapse toggle is 32px on every pointer; on a touch screen at 64rem or wider it is under the 44px target the rest of the shell keeps (WCAG 2.5.8 is met at 24px; 2.5.5 is not).
-- **PageHeader.** The docs pill is 24px on touch: it meets WCAG 2.5.8 (24px) but not the 44px the other app controls keep.
-- **InfoTip.** 32px on touch: meets WCAG 2.5.8 (24px), below the 44px the other app controls keep.
+- **AppShell.** The collapse toggle is 33px on a fine pointer and 45px on touch, the same hit region as the rest of the shell (WCAG 2.5.5 and the Bundu floor are met).
+- **PageHeader.** The docs pill is 24px on touch: a known gap against the 45px touch floor the other app controls keep (listed in HIT_AREA_GAPS).
+- **InfoTip.** 45px on touch, the same hit region as the other app controls.
 - **BrandMark.** Only the Nyuchi mark ships. Mukoko, Bundu, Mzizi and the sub-brands need their registry icon pairs added before their dashboards can adopt the standard.
 
 ## Adding or changing a contract

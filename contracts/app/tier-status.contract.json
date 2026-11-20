@@ -317,7 +317,7 @@
       "part": "ladder rung",
       "select": "ol[data-slot=\"tier-ladder\"] > li",
       "fine": 36,
-      "coarse": 44
+      "coarse": 45
     },
     {
       "part": "evidence link",

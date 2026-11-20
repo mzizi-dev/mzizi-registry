@@ -10,7 +10,7 @@ import { SafeAreaFrame, type SafeInsets } from "@/components/ui/safe-area-frame"
  * with its platform bands (SafeAreaFrame), grouped by platform. Two actions
  * per size, kept apart so neither is ambiguous: select the card to make it
  * the ACTIVE size (one at a time, `aria-pressed`), tick its checkbox to
- * INCLUDE it in a batch (any number). both are 45px+ targets.
+ * INCLUDE it in a batch (any number). Both are 45px+ targets.
  */
 
 interface PresetOption {
@@ -84,7 +84,7 @@ function PresetPicker({
                       {p.width}×{p.height}
                     </span>
                   </button>
-                  <label className="absolute top-1 right-1 grid size-11 cursor-pointer place-items-center rounded-full hover:bg-muted">
+                  <label className="absolute top-1 right-1 grid size-control-sm pointer-coarse:size-touch-min cursor-pointer place-items-center rounded-full hover:bg-muted">
                     <input
                       type="checkbox"
                       checked={included.includes(p.id)}

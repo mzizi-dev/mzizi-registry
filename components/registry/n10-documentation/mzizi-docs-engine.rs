@@ -16,7 +16,7 @@
 //! Here the nav holds a `<ul>` of `<li>`s, each containing a plain `<button>`. The list
 //! semantics are real, and the buttons stay buttons.
 //!
-//! **2. `min-h-[44px]` is below the floor this system publishes.** N10's own
+//! **2. The sidebar entries were below the floor this system publishes.** N10's own
 //! `mzizi-ai-context` states the rule as "Touch targets: 48px minimum", and the sidebar
 //! entries — the primary navigation of a documentation portal, on a mobile viewport — are
 //! 44. That is Apple's number, not this system's. Raised to `min-h-[48px]`; nothing else about
@@ -188,7 +188,7 @@ const ASIDE: &str = "w-64 shrink-0 overflow-y-auto border-r border-border p-4";
 const SEARCH_INPUT: &str = "min-h-[48px] w-full rounded-[var(--radius-md,12px)] border border-border bg-input px-3 py-2 text-sm focus-visible:outline-2 focus-visible:outline-[var(--ring)]";
 const CATEGORY_HEADING: &str =
     "mb-1 px-2 text-xs font-medium tracking-wider text-muted-foreground uppercase";
-/// The `.tsx` says `min-h-[44px]`. See the module docs.
+/// The `.tsx` says `pointer-coarse:min-h-touch-min`. See the module docs.
 const NAV_ITEM: &str = "block min-h-[48px] w-full rounded-[var(--radius-sm,7px)] px-2 py-1.5 text-left text-sm transition-colors focus-visible:outline-2 focus-visible:outline-[var(--ring)]";
 const NAV_ITEM_CURRENT: &str = "bg-muted font-medium text-foreground";
 const NAV_ITEM_IDLE: &str = "text-muted-foreground hover:bg-muted hover:text-foreground";
@@ -483,7 +483,7 @@ mod tests {
 
     #[test]
     fn the_nav_item_meets_the_published_touch_floor() {
-        // The .tsx ships min-h-[44px]; the system publishes 48px minimum.
+        // The .tsx ships pointer-coarse:min-h-touch-min; the system publishes 48px minimum.
         assert!(NAV_ITEM.contains("min-h-[48px]"));
         assert!(!NAV_ITEM.contains("44px"));
     }

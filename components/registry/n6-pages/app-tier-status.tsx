@@ -287,7 +287,7 @@ function TierStatus({
               data-state={state}
               aria-current={state === "current" ? "step" : undefined}
               className={cn(
-                "flex min-h-9 items-center gap-3 rounded-sm px-2 text-body-sm pointer-coarse:min-h-11",
+                "flex min-h-9 items-center gap-3 rounded-sm px-2 text-body-sm pointer-coarse:min-h-touch-min",
                 state === "current" && "bg-muted font-medium",
               )}
             >

@@ -7,7 +7,7 @@ import { useMziziHarness } from "@/lib/harness"
 /* ═══════════════════════════════════════════════════════════════
    NYUCHI GROUP CARD — Brand Component (Pre-Wired)
    Mineral: Terracotta (community, Ubuntu, connection).
-   ✅ HARNESS  ✅ TOKENS  ✅ STRICT MINERAL RULES  ✅ TOUCH 48px+
+   ✅ HARNESS  ✅ TOKENS  ✅ STRICT MINERAL RULES  ✅ TOUCH 45px+
    ═══════════════════════════════════════════════════════════════ */
 
 interface CircleMember {

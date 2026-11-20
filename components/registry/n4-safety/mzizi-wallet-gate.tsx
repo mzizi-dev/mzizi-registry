@@ -133,7 +133,7 @@ export function MziziWalletGate({
               ? `Requires ${requiredBalance} ${tokenInfo.label}. You have ${currentBalance}.`
               : walletStatus === "connecting"
                 ? "Waiting for wallet approval..."
-                : "Connect your wallet to access Web3 features."}
+                : "Connect your wallet to continue."}
         </p>
         {tokenInfo && !isBalanceIssue && (
           <p className="mt-1 text-xs" style={{ color: tokenInfo.color }}>

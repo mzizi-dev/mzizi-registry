@@ -124,7 +124,7 @@ export function MziziInstallPrompt({
         className
       )}
     >
-      <div className="flex size-11 shrink-0 items-center justify-center rounded-[var(--radius-inner,7px)] bg-[var(--color-primary)]/10">
+      <div className="flex size-control-sm shrink-0 items-center justify-center rounded-[var(--radius-inner,7px)] bg-[var(--color-primary)]/10">
         <Smartphone className="size-6 text-[var(--color-primary)]" />
       </div>
       <div className="min-w-0 flex-1">
@@ -203,7 +203,7 @@ export function MziziShareSheet({ title, text, url, onClose, className }: MziziS
       </div>
       <button
         onClick={handleCopy}
-        className="flex h-11 w-full items-center justify-center gap-2 rounded-full bg-[var(--color-primary)] text-sm font-semibold text-[var(--color-background)]"
+        className="flex h-control-sm pointer-coarse:h-touch-min w-full items-center justify-center gap-2 rounded-full bg-[var(--color-primary)] text-sm font-semibold text-[var(--color-background)]"
       >
         {copied ? (
           <>

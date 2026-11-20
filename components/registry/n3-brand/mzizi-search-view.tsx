@@ -12,7 +12,7 @@ import { useMziziHarness } from "@/lib/harness"
    Each result type renders with its own brand card.
    
    Dynamic mineral accent per result category.
-   ✅ HARNESS  ✅ TOKENS  ✅ STRICT MINERAL RULES  ✅ TOUCH 48px+
+   ✅ HARNESS  ✅ TOKENS  ✅ STRICT MINERAL RULES  ✅ TOUCH 45px+
    ═══════════════════════════════════════════════════════════════ */
 
 type ResultCategory =

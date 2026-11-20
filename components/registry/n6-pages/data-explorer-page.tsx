@@ -69,7 +69,7 @@ export function DataExplorerPage({
                 <button
                   key={f}
                   onClick={() => onExport?.(f)}
-                  className="min-h-[44px] rounded bg-muted px-2 py-1 font-mono text-xs transition-colors hover:bg-foreground/10 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--color-primary,#00B0FF)]"
+                  className="min-h-control-sm pointer-coarse:min-h-touch-min rounded bg-muted px-2 py-1 font-mono text-xs transition-colors hover:bg-foreground/10 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--color-primary,#00B0FF)]"
                 >
                   {f.toUpperCase()}
                 </button>

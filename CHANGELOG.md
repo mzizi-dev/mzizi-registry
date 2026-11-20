@@ -10,6 +10,20 @@ From 2026-10-04 releases follow the org versioning policy ([nyuchi/.github#80](h
 
 ## [Unreleased]
 
+### Fixed — the 45px and 24px floor reaches the 44px hit areas, the 32px controls, the Kweli links and the stale floor wording (2026-11-20, #733)
+
+Ships in the next minor. Nothing here is breaking: class names and tokens are unchanged, and the only moves are to sizes the floor already requires.
+
+- **Hit areas under 45px on touch are gone from the components.** The `min-h-[44px]`, `min-h-11`, `h-11`, `size-11` and `min-w-11` hit areas on about 75 components (Astro, React and the Rust twins) now use `pointer-coarse:min-h-touch-min`, `pointer-coarse:h-touch-min` or `size-touch-min`, so a touch target is 45px. A bare literal row or icon box draws at `*-control-sm` (33px on a desktop, 49px on touch) with the 45px touch hit region on top.
+- **The 32px controls draw 33px.** `app-account-menu`, `app-top-bar-action`, `app-quick-search`, `app-workspace-switcher`, the app shell's drawer and collapse controls, and the `fine: 32` rows in `contracts/app/*` move to the `h-control-sm` size role (33px). `app-info-tip` now has a 45px touch hit region (it was 32px).
+- **The Kweli `address-code` and `address-private-row` links draw 28px on a desktop.** They keep the 45px touch and 24px desktop hit floor (`min-h-control-dense`, `pointer-coarse:min-h-touch-min`, `max-lg:min-h-touch-min`). Their contracts are updated, and they are no longer excused in `HIT_AREA_GAPS` (TypeScript and the Rust copy).
+- **Stale wording.** The "TOUCH 48px+" checklist headers in about 27 component sources now read "TOUCH 45px+", and the 44px and 48px floor comments and descriptions (registry descriptions, contract prose, the README) state 45px on touch and 24px on a desktop, with 28px as the desktop drawn minimum.
+- **Typo.** "both" is "Both" in the preset picker's description.
+- **The alert banner's details button is 45px on touch.** It was `h-10` (40px) and now draws `h-control` with `pointer-coarse:h-touch-min`.
+- **Wording.** The wallet gate's sign-in prompt reads "Connect your wallet to continue." No behaviour changes.
+- **Plugin skills.** `@nyuchi/mzizi-skills` is `^0.24.0` (was `>=0.20.0`), and the plugin manifests and marketplace entry name 0.24.0, and the public plugin's skills (`plugin/skills/`) and the dev plugin's (`plugin-dev/skills/`) are regenerated from it. They state the 45px touch and 24px desktop floors and the spacing layers.
+- **Tests.** The Rust divergence tests pin the new touch floor (`pointer-coarse:min-h-touch-min`) instead of `min-h-[44px]`, and the trust-meter and spacing-floor tests pin the new classes.
+
 ## [4.46.0] - 2026-11-20
 
 Releases staging to main as the next minor above 4.45.0. Nothing a consumer installs changes shape: the unstyled plan and its structure gate land (#730), and the Bundu floor reaches the remaining 32px controls and the Kweli address links (#731).

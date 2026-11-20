@@ -80,7 +80,7 @@ export function LogsPage({
             <button
               onClick={onToggleStream}
               className={cn(
-                "flex min-h-[44px] items-center gap-2 rounded-full px-2 py-0.5 text-xs font-medium",
+                "flex min-h-control-sm pointer-coarse:min-h-touch-min items-center gap-2 rounded-full px-2 py-0.5 text-xs font-medium",
                 isStreaming
                   ? "bg-[var(--status-success,var(--color-malachite,#64FFDA))]/15 text-[var(--status-success,var(--color-malachite,#64FFDA))]"
                   : "bg-muted text-muted-foreground"
@@ -107,7 +107,7 @@ export function LogsPage({
         <button
           onClick={() => onLevelChange?.("all")}
           className={cn(
-            "min-h-[44px] rounded px-2 py-1 text-xs font-medium transition-colors",
+            "min-h-control-sm pointer-coarse:min-h-touch-min rounded px-2 py-1 text-xs font-medium transition-colors",
             activeLevel === "all"
               ? "bg-muted text-foreground"
               : "text-muted-foreground hover:bg-muted"
@@ -120,7 +120,7 @@ export function LogsPage({
             key={l}
             onClick={() => onLevelChange?.(l)}
             className={cn(
-              "min-h-[44px] rounded px-2 py-1 font-mono text-xs font-medium transition-colors",
+              "min-h-control-sm pointer-coarse:min-h-touch-min rounded px-2 py-1 font-mono text-xs font-medium transition-colors",
               activeLevel === l ? "bg-muted" : "hover:bg-muted"
             )}
             style={{ color: LEVEL_COLORS[l] }}

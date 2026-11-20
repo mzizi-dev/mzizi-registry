@@ -3,7 +3,7 @@
  * (children: an appearance form, links), and sign-out. A <details>
  * disclosure, so it opens with keyboard and screen reader and needs no
  * script. Sign-out is a POST form, not a link, so no other page can trigger
- * it. Compact: a 24px avatar in a 32px row (44px on touch); the name shows
+ * it. Compact: a 24px avatar in a 33px row (45px on touch); the name shows
  * from `xl` and is the accessible name below it.
  *
  * Implements contract `app/account-menu` beside `app-account-menu.astro`,
@@ -34,7 +34,7 @@ function AccountMenu({ name = null, email = null, signOutAction, signOutLabel = 
   const hasChildren = children !== undefined && children !== null && children !== false && children !== ""
   return (
     <details className="group relative" data-slot="account-menu">
-      <summary className="flex h-8 cursor-pointer list-none items-center gap-2 rounded-sm px-1 outline-none hover:bg-muted focus-visible:ring-2 focus-visible:ring-ring pointer-coarse:h-11 [&::-webkit-details-marker]:hidden">
+      <summary className="flex h-control-sm cursor-pointer list-none items-center gap-2 rounded-sm px-1 outline-none hover:bg-muted focus-visible:ring-2 focus-visible:ring-ring pointer-coarse:h-touch-min [&::-webkit-details-marker]:hidden">
         <span
           aria-hidden="true"
           className="inline-flex h-6 w-6 items-center justify-center rounded-full bg-muted text-caption font-semibold ring-1 ring-border"
@@ -57,7 +57,7 @@ function AccountMenu({ name = null, email = null, signOutAction, signOutLabel = 
           <form method="post" action={signOutAction} className="border-t border-border p-1">
             <button
               type="submit"
-              className="flex h-8 w-full items-center gap-2 rounded-sm px-3.5 text-body-sm hover:bg-muted focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring pointer-coarse:h-11"
+              className="flex h-control-sm w-full items-center gap-2 rounded-sm px-3.5 text-body-sm hover:bg-muted focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring pointer-coarse:h-touch-min"
             >
               <Icon name="log-out" className="h-4 w-4 text-muted-foreground" />
               {signOutLabel}

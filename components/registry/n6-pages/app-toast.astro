@@ -32,7 +32,7 @@ const tone = {
         <input type="checkbox" id="toast-dismiss" class="peer sr-only" />
         <div class={`pointer-events-auto flex w-full max-w-md items-start gap-4 rounded-lg px-5 py-4 shadow-lg peer-checked:hidden peer-focus-visible:ring-2 peer-focus-visible:ring-ring ${tone[flash.tone]}`} data-slot="toast" data-tone={flash.tone}>
           <p class="flex-1 text-body font-medium">{flash.text}</p>
-          <label for="toast-dismiss" class="inline-flex min-h-11 min-w-11 cursor-pointer items-center justify-center rounded-full text-body-sm underline underline-offset-4">
+          <label for="toast-dismiss" class="inline-flex size-control-sm pointer-coarse:size-touch-min cursor-pointer items-center justify-center rounded-full text-body-sm underline underline-offset-4">
             {dismissLabel}
           </label>
         </div>

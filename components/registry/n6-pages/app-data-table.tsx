@@ -83,7 +83,7 @@ interface DataTableProps {
 
 const itemClasses = (destructive?: boolean) =>
   cn(
-    "flex min-h-8 w-full items-center rounded-sm px-3.5 text-start text-body-sm hover:bg-muted focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring pointer-coarse:min-h-11",
+    "flex min-h-control-sm w-full items-center rounded-sm px-3.5 text-start text-body-sm hover:bg-muted focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring pointer-coarse:min-h-touch-min",
     destructive && "text-destructive",
   );
 
@@ -132,7 +132,7 @@ function RowActions({ list, name }: { list: RowAction[]; name: string }) {
       data-slot="row-actions-menu"
       className="relative inline-block text-start"
     >
-      <summary className="inline-flex h-8 cursor-pointer list-none items-center justify-center gap-2 rounded-sm px-3.5 text-body-sm font-medium outline-none hover:bg-muted focus-visible:ring-2 focus-visible:ring-ring pointer-coarse:h-11 [&::-webkit-details-marker]:hidden">
+      <summary className="inline-flex h-control-sm cursor-pointer list-none items-center justify-center gap-2 rounded-sm px-3.5 text-body-sm font-medium outline-none hover:bg-muted focus-visible:ring-2 focus-visible:ring-ring pointer-coarse:h-touch-min [&::-webkit-details-marker]:hidden">
         <Icon name="more" className="h-4 w-4 shrink-0" />
         <span className="sr-only">Actions for {name}</span>
       </summary>

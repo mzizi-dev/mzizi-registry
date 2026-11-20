@@ -103,7 +103,7 @@ function MziziMissionCard({
         {/* Mission icon */}
         <div
           className={cn(
-            "flex size-11 shrink-0 items-center justify-center rounded-[var(--radius-inner,7px)]",
+            "flex size-control-sm shrink-0 items-center justify-center rounded-[var(--radius-inner,7px)]",
             isCompleted ? "bg-[var(--color-malachite)]/15" : "bg-foreground/[0.04]"
           )}
         >

@@ -311,7 +311,7 @@ describe("the contract runner holds the spacing floor", () => {
       ["app-toolbar-menu", "<summary"],
       ["app-data-table", "<summary"],
       ["app-quick-search", "transition-colors hover:bg-muted"],
-      ["app-top-bar-action", "inline-flex h-8 min-w-8"],
+      ["app-top-bar-action", "inline-flex h-control-sm"],
       ["app-command-palette", "gap-2.5 rounded-sm"],
       ["app-command-palette", "text-caption font-medium text-muted-foreground"],
       ["app-side-nav", "nav-group-label"],

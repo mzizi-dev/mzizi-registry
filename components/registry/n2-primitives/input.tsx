@@ -14,7 +14,7 @@ import { cn } from "@/lib/utils"
    ✅ Colors: uses semantic tokens (input, foreground, muted-foreground)
    ✅ data-slot: present for CSS targeting
    
-   Height was 36px (h-9): under the 44px touch floor on a coarse pointer.
+   Height was 36px (h-9): under the 45px touch floor on a coarse pointer.
    Now h-field, set once in the token layer.
    ═══════════════════════════════════════════════════════════════ */
 

@@ -71,7 +71,7 @@ export function DiscoverShell({
           <a
             href={homeHref}
             aria-label={homeLabel}
-            className="inline-flex min-h-11 items-center gap-2 text-foreground no-underline"
+            className="inline-flex min-h-control-sm pointer-coarse:min-h-touch-min items-center gap-2 text-foreground no-underline"
             data-slot="discover-home"
           >
             {brand}
@@ -84,7 +84,7 @@ export function DiscoverShell({
                     <a
                       href={l.href}
                       aria-current={cur(l.current) as "page" | undefined}
-                      className={`inline-flex min-h-11 items-center ${link} aria-[current=page]:font-semibold aria-[current=page]:decoration-foreground`}
+                      className={`inline-flex min-h-control-sm pointer-coarse:min-h-touch-min items-center ${link} aria-[current=page]:font-semibold aria-[current=page]:decoration-foreground`}
                     >
                       {l.label}
                     </a>
@@ -110,7 +110,7 @@ export function DiscoverShell({
                     <a
                       href={l.href}
                       aria-current={cur(l.current) as "page" | undefined}
-                      className={`inline-flex min-h-11 items-center ${link}`}
+                      className={`inline-flex min-h-control-sm pointer-coarse:min-h-touch-min items-center ${link}`}
                     >
                       {l.label}
                     </a>
