@@ -29,7 +29,7 @@ Ships in the next minor, **4.45.0** (a release to `main` is the next minor above
 
 Not breaking for the token names: no token is removed, and the legacy opt-out (`data-mzizi-sizes="legacy"`) restores the pinned 2026-10 values. The values above do change what a consumer draws.
 
-### Fixed — the 45px and 24px floor reaches the 32px controls, the Kweli links and the spacing wording (2026-11-20, #PR)
+### Fixed — the 45px and 24px floor reaches the 32px controls, the Kweli links and the spacing wording (2026-11-20, #731)
 
 - **Button `sm`, the side-nav rows and the toolbar-menu draw 33px** (was 32px), from the 33px size role (`h-control-sm`). Their touch hit region is 45px (was 44px), through `pointer-coarse:h-touch-min`. The app button `sm` is 49px on touch, the size role's touch value. The contracts `app/button`, `app/side-nav`, `app/toolbar-menu`, `app/confirm-action`, `app/data-table` and `app/tier-status` follow.
 - **The Kweli `address-code` and `address-private-row` links are 45px on touch** (was 44px), from `min-h-touch-min` (the `--target-floor` token). On a desktop the link's hit region is 24px. Their contracts follow.
