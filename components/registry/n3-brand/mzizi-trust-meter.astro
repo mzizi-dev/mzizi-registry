@@ -232,7 +232,7 @@ const name = title === "Trust Score" ? "Trust score" : title;
       {!compact && signals && (
         <ul data-slot="trust-signal-list" class="mt-4 flex flex-col divide-y divide-border">
           {signals.map((s) => (
-            <li data-slot="trust-signal" class="flex min-h-11 items-center justify-between gap-3 py-2">
+            <li data-slot="trust-signal" class="flex min-h-control-sm pointer-coarse:min-h-touch-min items-center justify-between gap-3 py-2">
               <span class="flex min-w-0 flex-col">
                 <span class="truncate text-sm text-foreground">{s.label}</span>
                 {s.detail && <span class="text-xs text-muted-foreground">{s.detail}</span>}

@@ -10,7 +10,7 @@ import { useMziziHarness } from "@/lib/harness"
    The branded checkout/payment confirmation used ecosystem-wide.
    Multi-currency, MIT token support, escrow indicator.
    Dynamic mineral accent via --brand-accent.
-   ✅ HARNESS  ✅ TOKENS  ✅ STRICT MINERAL RULES  ✅ TOUCH 48px+
+   ✅ HARNESS  ✅ TOKENS  ✅ STRICT MINERAL RULES  ✅ TOUCH 45px+
    ═══════════════════════════════════════════════════════════════ */
 
 interface LineItem {

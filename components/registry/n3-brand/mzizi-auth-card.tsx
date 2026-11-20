@@ -12,7 +12,7 @@ import { useMziziHarness } from "@/lib/harness"
    Drives the MCP inline-auth handoff (OAuth 2.1 / DCR / elicitation).
    Dynamic mineral accent via --brand-accent.
 
-   ✅ HARNESS  ✅ TOKENS  ✅ A11Y  ✅ TOUCH 48px+  ✅ LOGIN + REGISTER
+   ✅ HARNESS  ✅ TOKENS  ✅ A11Y  ✅ TOUCH 45px+  ✅ LOGIN + REGISTER
    ═══════════════════════════════════════════════════════════════ */
 
 export type AuthMode = "login" | "register"

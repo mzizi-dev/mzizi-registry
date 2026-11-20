@@ -12,7 +12,7 @@
     {
       "name": "mzizi",
       "source": "./plugin",
-      "description": "Seven Mzizi agent skills (@nyuchi/mzizi-skills 0.20.0, with mukoko-design), /mzizi:component and /mzizi:scaffold, the fundi agent, and the Mzizi MCP at mcp.mzizi.dev, free with no account. Markdown and an MCP connection only."
+      "description": "Seven Mzizi agent skills (@nyuchi/mzizi-skills 0.24.0, with mukoko-design), /mzizi:component and /mzizi:scaffold, the fundi agent, and the Mzizi MCP at mcp.mzizi.dev, free with no account. Markdown and an MCP connection only."
     },
     {
       "name": "mzizi-dev",

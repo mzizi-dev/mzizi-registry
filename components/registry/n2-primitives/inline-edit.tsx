@@ -135,7 +135,7 @@ function InlineEdit({
         disabled={disabled}
         aria-label={`${ariaLabel}. ${isEmpty ? emptyText : value}. Click to edit.`}
         className={cn(
-          "group -mx-2 inline-flex min-h-[44px] items-center gap-2 rounded-md px-2 py-1 text-left hover:bg-muted focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:outline-none disabled:cursor-not-allowed disabled:opacity-50",
+          "group -mx-2 inline-flex min-h-control-sm pointer-coarse:min-h-touch-min items-center gap-2 rounded-md px-2 py-1 text-left hover:bg-muted focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:outline-none disabled:cursor-not-allowed disabled:opacity-50",
           isEmpty && "text-muted-foreground italic",
           displayClassName,
           className

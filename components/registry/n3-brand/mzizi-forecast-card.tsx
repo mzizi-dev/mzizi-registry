@@ -8,7 +8,7 @@ import { useMziziHarness } from "@/lib/harness"
    NYUCHI FORECAST CARD — Brand Component (Pre-Wired)
    Mineral: Cobalt (environment, information).
    Weather forecast with farming advisory for African contexts.
-   ✅ HARNESS  ✅ TOKENS  ✅ STRICT MINERAL RULES  ✅ TOUCH 48px+
+   ✅ HARNESS  ✅ TOKENS  ✅ STRICT MINERAL RULES  ✅ TOUCH 45px+
    ═══════════════════════════════════════════════════════════════ */
 
 interface DayForecast {

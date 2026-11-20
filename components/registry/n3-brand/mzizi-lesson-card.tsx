@@ -8,7 +8,7 @@ import { useMziziHarness } from "@/lib/harness"
    NYUCHI LESSON CARD — Brand Component (Pre-Wired)
    Mineral: Cobalt (education, language, learning).
    Language lesson display with progress and streak tracking.
-   ✅ HARNESS  ✅ TOKENS  ✅ STRICT MINERAL RULES  ✅ TOUCH 48px+
+   ✅ HARNESS  ✅ TOKENS  ✅ STRICT MINERAL RULES  ✅ TOUCH 45px+
    ═══════════════════════════════════════════════════════════════ */
 
 interface MziziLessonCardProps {

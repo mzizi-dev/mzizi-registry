@@ -129,8 +129,8 @@
     {
       "part": "menu item",
       "select": "[data-slot=\"workspace-menu\"] a",
-      "fine": 32,
-      "coarse": 44
+      "fine": 33,
+      "coarse": 45
     }
   ],
   "theming": {

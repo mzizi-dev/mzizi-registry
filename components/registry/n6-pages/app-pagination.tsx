@@ -21,7 +21,7 @@ interface PaginationProps {
 }
 
 const link =
-  "inline-flex h-8 min-w-8 items-center justify-center rounded-sm px-3.5 text-body-sm font-medium pointer-coarse:h-11 pointer-coarse:min-w-11";
+  "inline-flex h-control-sm min-w-control-sm items-center justify-center rounded-sm px-3.5 text-body-sm font-medium pointer-coarse:h-touch-min pointer-coarse:min-w-touch-min";
 
 function Pagination({
   url: rawUrl,

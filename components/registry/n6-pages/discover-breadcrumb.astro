@@ -49,7 +49,7 @@ const ld =
         })),
       }).replace(/</g, "\\u003c")
     : undefined;
-const link = "inline-flex min-h-6 items-center text-foreground underline decoration-border underline-offset-4 hover:decoration-foreground pointer-coarse:min-h-11";
+const link = "inline-flex min-h-6 items-center text-foreground underline decoration-border underline-offset-4 hover:decoration-foreground pointer-coarse:min-h-touch-min";
 ---
 
 {
@@ -68,7 +68,7 @@ const link = "inline-flex min-h-6 items-center text-foreground underline decorat
                 {c.label}
               </a>
             ) : i === last ? (
-              <span aria-current="page" class="inline-flex min-h-6 items-center font-semibold text-foreground pointer-coarse:min-h-11">
+              <span aria-current="page" class="inline-flex min-h-6 items-center font-semibold text-foreground pointer-coarse:min-h-touch-min">
                 {c.label}
               </span>
             ) : (

@@ -91,7 +91,7 @@ export function AddressSelector({
         <a
           href={addHref}
           data-slot="address-selector-add"
-          className="inline-flex min-h-11 items-center self-start rounded-full px-3.5 text-body-sm font-medium text-primary no-underline outline-none hover:bg-muted focus-visible:ring-[3px] focus-visible:ring-ring/50"
+          className="inline-flex min-h-control-sm pointer-coarse:min-h-touch-min items-center self-start rounded-full px-3.5 text-body-sm font-medium text-primary no-underline outline-none hover:bg-muted focus-visible:ring-[3px] focus-visible:ring-ring/50"
         >
           {addLabel}
         </a>

@@ -42,7 +42,7 @@ export interface CategoryChipProps {
 }
 
 const CHIP_CLASS =
-  "group/chip inline-flex h-11 items-center gap-2 rounded-full border border-border bg-card px-4 text-body-sm font-medium text-foreground no-underline transition-colors hover:border-foreground aria-[current=page]:border-foreground aria-[current=page]:bg-foreground aria-[current=page]:text-background"
+  "group/chip inline-flex h-control-sm pointer-coarse:h-touch-min items-center gap-2 rounded-full border border-border bg-card px-4 text-body-sm font-medium text-foreground no-underline transition-colors hover:border-foreground aria-[current=page]:border-foreground aria-[current=page]:bg-foreground aria-[current=page]:text-background"
 
 export function CategoryChip({ href, label, count, current, linkComponent }: CategoryChipProps) {
   const ariaCurrent = current === true ? "page" : current === false || current === undefined ? undefined : current

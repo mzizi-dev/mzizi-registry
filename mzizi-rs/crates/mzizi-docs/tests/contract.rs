@@ -179,14 +179,14 @@ fn docs_engine_category_label_matches_the_typescript_transform() {
 
 #[test]
 fn the_touch_target_is_raised_above_the_typescript() {
-    // Divergence 1. The .tsx ships min-h-[44px] on the sidebar entries; this system
+    // Divergence 1. The .tsx ships the 45px touch floor (min-h-touch-min) on the sidebar entries; this system
     // publishes a 48px minimum (see mzizi-ai-context's rule 8). Asserted from BOTH sides so
     // the day someone fixes the .tsx, this test tells them to delete it rather than
     // silently passing on a stale premise.
     let ts = tsx("mzizi-docs-engine");
     assert!(
-        ts.contains("min-h-[44px]"),
-        "the .tsx no longer ships min-h-[44px] — the divergence is resolved, so remove this \
+        ts.contains("pointer-coarse:min-h-touch-min"),
+        "the .tsx no longer ships the touch floor (pointer-coarse:min-h-touch-min) — the divergence is resolved, so remove this \
          test and let the class assertion above cover it"
     );
     // The Rust value lives in a private const, so assert through the public behaviour that

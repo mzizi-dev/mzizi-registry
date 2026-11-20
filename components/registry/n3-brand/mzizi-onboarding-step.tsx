@@ -9,7 +9,7 @@ import { useMziziHarness } from "@/lib/harness"
    
    Individual onboarding step — composable into flows.
    Dynamic mineral accent. Progress dots for multi-step.
-   ✅ HARNESS  ✅ TOKENS  ✅ STRICT MINERAL RULES  ✅ TOUCH 48px+
+   ✅ HARNESS  ✅ TOKENS  ✅ STRICT MINERAL RULES  ✅ TOUCH 45px+
    ═══════════════════════════════════════════════════════════════ */
 
 interface MziziOnboardingStepProps {

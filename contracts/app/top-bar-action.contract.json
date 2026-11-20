@@ -98,8 +98,8 @@
     {
       "part": "action",
       "select": "[data-slot=\"topbar-action\"]",
-      "fine": 32,
-      "coarse": 44
+      "fine": 33,
+      "coarse": 45
     }
   ],
   "theming": {
@@ -121,7 +121,7 @@
   "responsive": [
     "Below sm only the icon shows; the label is the accessible name."
   ],
-  "contract": "contract\n  slot is \"topbar-action\"\n  a \"Support\" min_height 32\n  when button shows button \"Ask AI\"\n  when external shows a \"Docs\"\nend",
+  "contract": "contract\n  slot is \"topbar-action\"\n  a \"Support\" min_height 45\n  when button shows button \"Ask AI\"\n  when external shows a \"Docs\"\nend",
   "checks": [
     {
       "say": "With href it is a link.",

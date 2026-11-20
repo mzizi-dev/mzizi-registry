@@ -14,7 +14,7 @@
 //!
 //! # The touch floor is raised above the `.tsx`
 //!
-//! The `.tsx` ships `min-h-[44px]` on the close/dismiss controls. Raised to `min-h-[48px]`
+//! The `.tsx` ships the 45px touch floor (`pointer-coarse:min-h-touch-min`) on the close/dismiss controls. Raised to `min-h-[48px]`
 //! here, matching this build-out's other touch-floor fixes; nothing else changes.
 //!
 //! **The `.tsx` sibling still has this.**

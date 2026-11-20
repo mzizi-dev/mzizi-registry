@@ -141,7 +141,7 @@ function NotFound({
         {onBack && (
           <button
             onClick={onBack}
-            className="flex h-11 items-center gap-2 rounded-full border border-border px-5 text-sm font-medium text-foreground transition-colors hover:bg-foreground/5 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--color-primary,#00B0FF)]"
+            className="flex h-control-sm pointer-coarse:h-touch-min items-center gap-2 rounded-full border border-border px-5 text-sm font-medium text-foreground transition-colors hover:bg-foreground/5 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--color-primary,#00B0FF)]"
           >
             <ArrowLeft className="size-4" />
             Go Back
@@ -150,7 +150,7 @@ function NotFound({
         {onHome && (
           <button
             onClick={onHome}
-            className="flex h-11 items-center gap-2 rounded-full bg-[var(--status-success,#22C55E)] px-5 text-sm font-semibold text-background"
+            className="flex h-control-sm pointer-coarse:h-touch-min items-center gap-2 rounded-full bg-[var(--status-success,#22C55E)] px-5 text-sm font-semibold text-background"
           >
             <Home className="size-4" />
             Home
@@ -285,7 +285,7 @@ function PermissionGate({
       {onVerify && (
         <button
           onClick={onVerify}
-          className="mt-5 flex h-11 items-center gap-2 rounded-full px-6 text-sm font-semibold text-background"
+          className="mt-5 flex h-control-sm pointer-coarse:h-touch-min items-center gap-2 rounded-full px-6 text-sm font-semibold text-background"
           style={{ backgroundColor: color }}
         >
           <Shield className="size-4" />

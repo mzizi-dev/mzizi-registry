@@ -152,13 +152,13 @@
       "part": "result row",
       "select": "[data-cmdk-item] a",
       "fine": 36,
-      "coarse": 44
+      "coarse": 45
     },
     {
       "part": "search box",
       "select": "input[type=\"search\"]",
-      "fine": 44,
-      "coarse": 44
+      "fine": 33,
+      "coarse": 45
     }
   ],
   "theming": {

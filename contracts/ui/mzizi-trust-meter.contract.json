@@ -126,7 +126,7 @@
     "The level is strong from 0.4, growing from 0.2, low from 0.05 and none below. The header names it (Strong, Growing, Low, None) in the level colour: success for strong, warning for growing and low, neutral for none. The bar's width is the score, in the same colour.",
     "With `showScore`, the header writes the score to three decimals over \"/ 1.000\" in place of the level name, and each breakdown signal writes its value.",
     "Without `signals`, the Verification, Status and Ubuntu signals each show a bar (and, with `showScore`, their value); the Status modifier is shown normalised around 0.5, in the error colour when negative. `ubuntuPoints` adds a line under the breakdown.",
-    "With `signals`, the breakdown is replaced by a <ul> with one 44px row per signal: its label, its optional detail and its count.",
+    "With `signals`, the breakdown is replaced by a <ul> with one row per signal, 45px on touch: its label, its optional detail and its count.",
     "`compact` shows the header and the bar only.",
     "Bars are SVG <rect> widths in a 0–100 viewBox, so the component needs no inline style and no script."
   ],
@@ -236,8 +236,8 @@
       "part": "signal",
       "state": "signals",
       "select": "[data-slot=\"trust-signal\"]",
-      "fine": 44,
-      "coarse": 44
+      "fine": 33,
+      "coarse": 45
     }
   ],
   "theming": {

@@ -10,7 +10,7 @@ import { cn } from "@/lib/ui-utils";
  * Deliberately NOT Radix (kept dependency-light): a `<button>` with
  * `role="switch"` and `aria-checked`, supporting both controlled
  * (`checked` + `onCheckedChange`) and uncontrolled (`defaultChecked`)
- * use. It expands its hit area to the Ubuntu 48px touch-target floor
+ * use. It expands its hit area to the 45px touch hit-area floor
  * with padding out and a negative margin back, so the visual track
  * stays compact while the tap target stays large. Colours come
  * from the semantic `primary` / `muted` tokens — no hex.

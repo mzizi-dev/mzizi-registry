@@ -6,7 +6,7 @@ import { useMziziHarness } from "@/lib/harness"
 
 /* ═══════════════════════════════════════════════════════════════
    NYUCHI PRODUCT RESULTS — Agentic Component (UCP search, top 3–5)
-   ✅ HARNESS  ✅ TOKENS  ✅ A11Y  ✅ TOUCH 48px+
+   ✅ HARNESS  ✅ TOKENS  ✅ A11Y  ✅ TOUCH 45px+
    ═══════════════════════════════════════════════════════════════ */
 
 export interface ProductResult {

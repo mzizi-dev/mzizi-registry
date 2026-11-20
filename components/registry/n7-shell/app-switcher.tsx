@@ -24,7 +24,7 @@ import { Button } from "@/components/ui/button"
    
    ✅ L1 TOKENS — Active state uses brand accent tokens
    ✅ L2 MOTION — Grid items stagger on popover open
-   ✅ L3 A11Y — Focus ring tokens, ARIA labels, 48px targets
+   ✅ L3 A11Y — Focus ring tokens, ARIA labels, 45px targets
    ✅ L4 OBSERVABILITY — useMziziHarness, scoped logging
    ✅ L5 RESILIENCE — Guards against empty app list
    ✅ L7 PLATFORM — data-slot for CSS targeting
@@ -68,7 +68,7 @@ function AppSwitcher({ apps = DEFAULT_APPS, currentApp, className }: AppSwitcher
           aria-label="Switch between ecosystem apps"
           className={cn(
             /* L3: A11Y — Min touch target + focus ring tokens */
-            "min-h-[48px] min-w-[44px]",
+            "min-h-[48px] min-w-touch-min",
             "focus-visible:outline-[length:var(--focusRing-width,2px)]",
             "focus-visible:outline-[var(--color-primary)]",
             "focus-visible:outline-offset-[var(--focusRing-offset,2px)]",

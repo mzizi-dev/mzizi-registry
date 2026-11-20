@@ -42,7 +42,7 @@ const inputId = `${id}-q`;
           {label}
         </label>
         <Icon name="search" class="h-4 w-4 shrink-0 text-muted-foreground" />
-        <input id={inputId} name="q" type="search" autocomplete="off" autofocus placeholder={placeholder} class="h-11 min-w-0 flex-1 bg-transparent text-body outline-none placeholder:text-muted-foreground [&::-webkit-search-cancel-button]:hidden" />
+        <input id={inputId} name="q" type="search" autocomplete="off" autofocus placeholder={placeholder} class="h-control-sm pointer-coarse:h-touch-min min-w-0 flex-1 bg-transparent text-body outline-none placeholder:text-muted-foreground [&::-webkit-search-cancel-button]:hidden" />
       </form>
     ) : (
       <div class="flex items-center gap-control-between border-b border-border px-3" data-cmdk-form>
@@ -50,7 +50,7 @@ const inputId = `${id}-q`;
           {label}
         </label>
         <Icon name="search" class="h-4 w-4 shrink-0 text-muted-foreground" />
-        <input id={inputId} name="q" type="search" autocomplete="off" autofocus placeholder={placeholder} class="h-11 min-w-0 flex-1 bg-transparent text-body outline-none placeholder:text-muted-foreground [&::-webkit-search-cancel-button]:hidden" />
+        <input id={inputId} name="q" type="search" autocomplete="off" autofocus placeholder={placeholder} class="h-control-sm pointer-coarse:h-touch-min min-w-0 flex-1 bg-transparent text-body outline-none placeholder:text-muted-foreground [&::-webkit-search-cancel-button]:hidden" />
       </div>
     )
   }
@@ -64,7 +64,7 @@ const inputId = `${id}-q`;
           <ul role="list" class="grid gap-control-between">
             {s.items.map((i) => (
               <li data-cmdk-item data-search={[i.label, i.description ?? i.summary ?? "", i.group ?? "", ...i.trail].join(" ")}>
-                <a href={i.href} class="flex h-9 min-w-0 items-center gap-2.5 rounded-sm px-3.5 text-body-sm outline-none hover:bg-muted focus-visible:bg-muted focus-visible:ring-2 focus-visible:ring-ring pointer-coarse:h-11">
+                <a href={i.href} class="flex h-9 min-w-0 items-center gap-2.5 rounded-sm px-3.5 text-body-sm outline-none hover:bg-muted focus-visible:bg-muted focus-visible:ring-2 focus-visible:ring-ring pointer-coarse:h-touch-min">
                   {i.icon ? <Icon name={i.icon} class="h-4 w-4 shrink-0 text-muted-foreground" /> : <span class="w-4 shrink-0" />}
                   <span class="shrink-0">
                     {i.trail.length > 0 && <span class="text-muted-foreground">{i.trail.join(" › ")} › </span>}

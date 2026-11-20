@@ -14,6 +14,7 @@
  * ─────────────────────────────────────────────────────────────────────── */
 
 :root {
+  color-scheme: light;
   /* Seven African Minerals — light */
   --color-cobalt: #0047ab;
   --color-cobalt-container: #e3f2fd;
@@ -104,6 +105,7 @@
 }
 
 .dark {
+  color-scheme: dark;
   /* Seven African Minerals — dark */
   --color-cobalt: #00b0ff;
   --color-cobalt-container: #001f3f;
@@ -169,6 +171,7 @@
 
 @media (prefers-color-scheme: dark) {
   :root:not(.light) {
+    color-scheme: dark;
     /* Seven African Minerals — dark */
     --color-cobalt: #00b0ff;
     --color-cobalt-container: #001f3f;

@@ -15,7 +15,7 @@
  *
  * SIGNAL COUNTS (#543). An address, a place or a venue earns trust from things that happened:
  * check-ins at the entrance, deliveries completed, neighbours who vouched. Pass `signals`
- * ({ label, count, detail? }) and the meter lists them under the bar, one 44px row each, in a
+ * ({ label, count, detail? }) and the meter lists them under the bar, one row each, 45px on touch,, in a
  * <ul>, instead of the breakdown — Kweli's "Address trust" panel is
  * <MziziTrustMeter title="Address trust" trustScore={…} signals={[…]} />.
  *
@@ -277,7 +277,7 @@ function MziziTrustMeter({
             <li
               key={s.label}
               data-slot="trust-signal"
-              className="flex min-h-11 items-center justify-between gap-3 py-2"
+              className="flex min-h-control-sm pointer-coarse:min-h-touch-min items-center justify-between gap-3 py-2"
             >
               <span className="flex min-w-0 flex-col">
                 <span className="truncate text-sm text-foreground">{s.label}</span>

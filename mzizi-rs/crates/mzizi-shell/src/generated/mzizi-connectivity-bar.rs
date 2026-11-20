@@ -14,7 +14,7 @@
 //!
 //! # The retry control is below the published touch floor
 //!
-//! The `.tsx` ships `min-h-[44px]` on the retry button. N10's own `mzizi-ai-context` states
+//! The `.tsx` ships the 45px touch floor (`pointer-coarse:min-h-touch-min`) on the retry button. N10's own `mzizi-ai-context` states
 //! the rule as "Touch targets: 48px minimum" (it now says 44px on touch, the Apple number, since
 //! 2026-11-01) and this is the fourth component in this build-out with the identical shortfall
 //! (`mzizi-docs-engine`'s sidebar was the first two). Raised to `min-h-[48px]` here; nothing
@@ -92,7 +92,7 @@ impl ConnectionState {
 
 const ROOT: &str = "flex items-center justify-center gap-2 px-4 py-1.5 text-xs font-medium text-white transition-all";
 const SPINNER: &str = "size-3 animate-spin rounded-full border-2 border-white/30 border-t-white";
-/// The `.tsx` says `min-h-[44px]`. See the module docs.
+/// The `.tsx` says `pointer-coarse:min-h-touch-min`. See the module docs.
 const RETRY: &str = "ml-2 min-h-[48px] underline hover:no-underline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-white";
 
 /// Join a base class string with a consumer's extra classes.

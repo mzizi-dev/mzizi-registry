@@ -104,13 +104,13 @@
       "part": "crumb link",
       "select": "a",
       "fine": 24,
-      "coarse": 44
+      "coarse": 45
     },
     {
       "part": "current page",
       "select": "[aria-current=\"page\"]",
       "fine": 24,
-      "coarse": 44
+      "coarse": 45
     }
   ],
   "theming": {
