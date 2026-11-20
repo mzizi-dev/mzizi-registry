@@ -2,7 +2,7 @@
 //!
 //! The Rust sibling of `input.tsx`. No variants, no sub-components — one element, one
 //! static class string, and the native `type` attribute. The class list is the whole
-//! contract: pill radius (`rounded-full`) and a size-role height (`h-field`: 44px touch, 36px desktop) per brand,
+//! contract: pill radius (`rounded-full`) and a size-role height (`h-field`: 49px touch, 36px desktop) per brand,
 //! the `--ring` focus ring, and `aria-invalid` styling that keys off the browser's own
 //! validation state rather than a prop.
 //!

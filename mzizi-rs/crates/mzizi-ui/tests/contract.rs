@@ -218,7 +218,7 @@ fn input_classes_match_the_typescript() {
         input_variants("")
             .split_whitespace()
             .any(|c| c == "h-field"),
-        "input does not take its height from the size role (h-field: 44px touch, 36px desktop)"
+        "input does not take its height from the size role (h-field: 49px touch, 36px desktop)"
     );
 }
 

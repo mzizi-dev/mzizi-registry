@@ -257,8 +257,8 @@ export interface Role {
  *     layer's dense floor in `SPACING_LAYER_FLOORS` (pills 5 and 3, chips 9, controls 12, cards 14 and 7, containers 21 and
  *     14, layout 17, 21 and 28). A label chip or pill is held on its inline axis by `--space-pill-x` (default 9, dense 5).
  *     `controlGapPx` 9: the gap between adjacent controls, visible edge to visible edge (hit regions may touch, never
- *     overlap). `labelGapPx` 7 is the global label-to-field floor. Its dense step, 5 (`--space-label-gap-dense`), is pending
- *     the owner's confirmation. `itemGapPx` 7 is the dense floor of `--space-card-gap` (14 default), which sibling
+ *     overlap). `labelGapPx` 7 is the global label-to-field floor. Its dense step, 5 (`--space-label-gap-dense`), is confirmed
+ *     by the owner (2026-11-20). `itemGapPx` 7 is the dense floor of `--space-card-gap` (14 default), which sibling
  *     items of a list, grid or toolbar use.
  *     `leadingBody` 1.5: body line height (WCAG 1.4.12). Enforced as defaults in the base layer of the stylesheet (at each
  *     layer's dense floor) and as tests on every explicit value.
@@ -299,7 +299,7 @@ export const BUNDU_FLOOR = {
     gapPx: 7,
     /** The gap between adjacent controls: 9 at default density, and its dense floor is also 9. */
     controlGapPx: 9,
-    /** The global label-to-field floor, 7px (`--space-label-gap`, the default). Its dense step (5) is pending the owner's confirmation. */
+    /** The global label-to-field floor, 7px (`--space-label-gap`, the default). Its dense step (5) is confirmed by the owner (2026-11-20). */
     labelGapPx: 7,
     /** Alias of `spacing-card-gap-dense` (sibling items of a list, grid or toolbar, dense 7). */
     itemGapPx: 7,
@@ -1893,7 +1893,7 @@ export const ROLES: readonly Role[] = [
     kind: "size",
     required: true,
     description:
-      "Layer: Controls, gap between a label and its field. Default 7px (7); reference: label to field 6 to 8. The default-density floor. Derived from the number rule; pending the owner's confirmation.",
+      "Layer: Controls, gap between a label and its field. Default 7px (7); reference: label to field 6 to 8. The default-density floor. Derived from the number rule; confirmed by the owner (2026-11-20).",
     default: { px: BUNDU_FLOOR.spacing.layers.labelGap.px },
     fixed: true,
     space: true,
@@ -1905,7 +1905,7 @@ export const ROLES: readonly Role[] = [
     kind: "size",
     required: true,
     description:
-      "Layer: Controls, gap between a label and its field. Dense 5px (prime); reference: M3 4. The absolute floor: nothing goes below it. Derived from the number rule; pending the owner's confirmation.",
+      "Layer: Controls, gap between a label and its field. Dense 5px (prime); reference: M3 4. The absolute floor: nothing goes below it. Derived from the number rule; confirmed by the owner (2026-11-20).",
     default: { px: BUNDU_FLOOR.spacing.layers.labelGap.dense },
     fixed: true,
     space: true,

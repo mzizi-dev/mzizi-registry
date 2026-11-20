@@ -57,7 +57,7 @@
   "slots": [],
   "behaviour": [
     "The code is a <code> in the mono face with wide tracking, so it can be copied by eye or read aloud.",
-    "With `href`, a 44px link follows the code; its accessible name is \"<linkLabel> <label> <code>\", so repeated chips never read as identical links.",
+    "With `href`, a link at the 45px touch floor (24px on a desktop, its hit region) follows the code; its accessible name is \"<linkLabel> <label> <code>\", so repeated chips never read as identical links.",
     "Without `href`, there is no link and no empty control.",
     "Colour is semantic: the chip is the card on its border; the link is --primary, so a brand overlay (Kweli's malachite) colours it."
   ],
@@ -95,8 +95,8 @@
     {
       "part": "link",
       "select": "a",
-      "fine": 44,
-      "coarse": 44
+      "fine": 24,
+      "coarse": 45
     }
   ],
   "theming": {
@@ -119,7 +119,7 @@
   "responsive": [
     "The code truncates in a narrow container; the link never shrinks."
   ],
-  "contract": "contract\n  slot is \"address-code\"\n  portal is \"https://mzizi.dev/components/address-code\"\n  class has \"rounded-full\"\n  when default shows code \"NYU-7K2Q\"\n  a \"Open\" min_height 44\n  when labelled shows a \"Directions\"\nend",
+  "contract": "contract\n  slot is \"address-code\"\n  portal is \"https://mzizi.dev/components/address-code\"\n  class has \"rounded-full\"\n  when default shows code \"NYU-7K2Q\"\n  a \"Open\" min_height 45\n  when labelled shows a \"Directions\"\nend",
   "checks": [
     {
       "say": "The code is one <code>.",

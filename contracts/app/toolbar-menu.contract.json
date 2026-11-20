@@ -79,14 +79,14 @@
     {
       "part": "button",
       "select": "summary",
-      "fine": 32,
-      "coarse": 44
+      "fine": 33,
+      "coarse": 45
     },
     {
       "part": "choice",
       "select": "ul a",
-      "fine": 32,
-      "coarse": 44
+      "fine": 33,
+      "coarse": 45
     }
   ],
   "theming": {
@@ -110,7 +110,7 @@
   "responsive": [
     "The list opens right-aligned under the button, at least 11rem wide."
   ],
-  "contract": "contract\n  slot is \"toolbar-menu\"\n  summary \"Last 7 days\" min_height 32\n  when default shows a \"Last 24 hours\"\nend",
+  "contract": "contract\n  slot is \"toolbar-menu\"\n  summary \"Last 7 days\" min_height 33\n  when default shows a \"Last 24 hours\"\nend",
   "checks": [
     {
       "say": "The list is named.",
