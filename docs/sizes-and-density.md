@@ -6,7 +6,7 @@ Three owner decisions shape this page. Sizes follow Apple's Human Interface Guid
 
 Every Mzizi spacing or size value is a multiple of 3, a multiple of 7, or a prime number. Start from the recommended value (WCAG, Apple HIG or Material 3) and take the nearest Mzizi number at or above it. A little larger is fine; lower never is. Cards, containers and page layout use multiples of 7. Controls may use any Mzizi number.
 
-Component heights are not changed by this rule in the 2026-11-19 PR. The control heights that do change are the dense and small steps: `spacing-control-sm` and `spacing-control-dense` 32 to 33, `spacing-field-sm` 32 to 33, `spacing-control-lg` 40 to 41, and `--touch-target-sm` 40 to 41. 41 is prime, and it is the nearest Mzizi number at or above 40.
+Component heights are not changed by this rule. The control heights that do change are the dense and small steps: `spacing-control-sm` and `spacing-control-dense` 32 to 33, `spacing-field-sm` 32 to 33, `spacing-control-lg` 40 to 41, and `--touch-target-sm` 40 to 41. 41 is prime, and it is the nearest Mzizi number at or above 40.
 
 ## The hit region
 
@@ -104,7 +104,7 @@ The heights are size roles, and they step down with the density layer:
 | `--size-field-sm`      | 49px  | 33px    | Rounded up from 32                                                   |
 | `--touch-target-sm`    | 41px  | none    | Dense secondary action, rounded up from 40; not for primary controls |
 
-Component heights (the touch heights of buttons, inputs and tabs at 49px) are unchanged by the 2026-11-19 PR.
+Component heights (the touch heights of buttons, inputs and tabs at 49px) are unchanged.
 
 ## Text floors
 
@@ -117,7 +117,7 @@ A label chip or pill is held on its inline axis (owner, 2026-11-04, #625), and a
 - `__tests__/bundu-floor.test.ts` fails when a default type step is under its floor in any layer, or a hit region under the floor on either tier.
 - `__tests__/spacing-floor.test.ts` fails when the spacing numbers differ between `BUNDU_FLOOR`, canon, `/v1/tokens` and the stylesheet; when a density layer lowers `--inset-floor` or `--gap-floor`; when a layer value breaks the number rule; or when the TypeScript and Rust layer tables differ.
 - The contract runner and the Rust evaluator read every element of every rendered state (`evaluateSpacing` in `contracts/runner.ts`, and `spacing_violations` in `mzizi-rs/contract-eval`), against the shared table `contracts/spacing-cases.json`.
-- `__tests__/spacing-floor.test.ts` counts `gap-0`, `gap-px` and `space-*-0` gaps, `p-0`-style resets and negative margins per file against `__tests__/spacing-floor-baseline.json`. A file may not exceed its baseline, and a file below it must lower it. The baseline does not shrink in the 2026-11-19 PR.
+- `__tests__/spacing-floor.test.ts` counts any gap under 7 (`gap-0`, `gap-px` and `space-*-0`), `p-0`-style resets and negative margins per file against `__tests__/spacing-floor-baseline.json`. A file may not exceed its baseline, and a file below it must lower it.
 - `contracts/spacing-geometry.json` specifies the rendered guard once, for a browser audit. This repository has no browser harness of its own.
 
 ## Apple and WCAG, for reference
