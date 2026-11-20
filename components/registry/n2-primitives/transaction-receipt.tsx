@@ -99,7 +99,7 @@ function TransactionReceipt({
       {onShare && (
         <button
           onClick={onShare}
-          className="mt-4 h-10 w-full rounded-full border border-border text-xs font-medium transition-colors hover:bg-muted"
+          className="mt-4 h-control-lg pointer-coarse:h-touch-min w-full rounded-full border border-border text-xs font-medium transition-colors hover:bg-muted"
         >
           Share Receipt
         </button>

@@ -139,7 +139,7 @@ export function MziziProviderCard({
                 onBook()
               }}
               className={cn(
-                "h-10 rounded-full px-4 text-sm font-medium transition-opacity hover:opacity-80",
+                "h-control-lg pointer-coarse:h-touch-min rounded-full px-4 text-sm font-medium transition-opacity hover:opacity-80",
                 available
                   ? "bg-[var(--brand-accent,var(--color-malachite,#64FFDA))] text-[var(--brand-accent-foreground,#0A0A0A)]"
                   : "bg-muted text-muted-foreground"

@@ -116,7 +116,7 @@ function SymptomChecker({
       <select
         value={duration}
         onChange={(e) => setDuration(e.target.value)}
-        className="h-10 pointer-coarse:h-touch-min w-full rounded-full border border-input bg-input/30 px-4 text-sm outline-none"
+        className="h-control-lg pointer-coarse:h-touch-min w-full rounded-full border border-input bg-input/30 px-4 text-sm outline-none"
         aria-label="Duration"
       >
         {durations.map((d) => (
@@ -127,7 +127,7 @@ function SymptomChecker({
       <button
         onClick={addSymptom}
         disabled={!description.trim()}
-        className="h-10 w-full rounded-full bg-primary text-sm font-medium text-primary-foreground disabled:opacity-50"
+        className="h-control-lg pointer-coarse:h-touch-min w-full rounded-full bg-primary text-sm font-medium text-primary-foreground disabled:opacity-50"
       >
         Add Symptom
       </button>
@@ -157,7 +157,7 @@ function SymptomChecker({
           {onSubmit && (
             <button
               onClick={() => onSubmit(symptoms)}
-              className="mt-2 h-10 w-full rounded-full border border-primary text-sm font-medium text-primary hover:bg-primary/5"
+              className="mt-2 h-control-lg pointer-coarse:h-touch-min w-full rounded-full border border-primary text-sm font-medium text-primary hover:bg-primary/5"
             >
               Submit to Provider
             </button>

@@ -87,7 +87,7 @@ function FontSettingsPanel({ settings, onChange, className, ...props }: FontSett
               onClick={() => update({ fontFamily: f.key })}
               aria-pressed={settings.fontFamily === f.key}
               className={cn(
-                "h-10 flex-1 rounded-full text-sm font-medium transition-colors",
+                "h-control-lg pointer-coarse:h-touch-min flex-1 rounded-full text-sm font-medium transition-colors",
                 settings.fontFamily === f.key
                   ? "bg-primary text-primary-foreground"
                   : "bg-muted text-muted-foreground"
@@ -110,7 +110,7 @@ function FontSettingsPanel({ settings, onChange, className, ...props }: FontSett
               onClick={() => update({ theme: t.key })}
               aria-pressed={settings.theme === t.key}
               className={cn(
-                "flex h-10 flex-1 items-center justify-center rounded-full text-xs font-medium transition-all",
+                "flex h-control-lg pointer-coarse:h-touch-min flex-1 items-center justify-center rounded-full text-xs font-medium transition-all",
                 t.bg,
                 t.text,
                 settings.theme === t.key && "ring-2 ring-primary"

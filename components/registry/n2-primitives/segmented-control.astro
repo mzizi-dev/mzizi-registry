@@ -17,7 +17,7 @@ interface Props {
 }
 
 const { name, legend, options, value, hideLegend = false, size = "default", class: className } = Astro.props;
-const seg = size === "sm" ? "min-h-10 px-3.5 text-body-sm" : "min-h-12 px-4 text-body-sm";
+const seg = size === "sm" ? "min-h-control-lg pointer-coarse:min-h-touch-min px-3.5 text-body-sm" : "min-h-12 px-4 text-body-sm";
 ---
 
 <fieldset data-slot="segmented-control" class={["min-w-0", className].filter(Boolean).join(" ")}>

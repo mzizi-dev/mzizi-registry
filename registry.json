@@ -955,7 +955,7 @@
       "categories": ["app", "primitives"],
       "dependencies": ["class-variance-authority"],
       "description": "The Dashboard Standard button (contracts/app/button): an <a> with href, otherwise a <button type=\"button\">, at app density with small corners; destructive variants read only the destructive tokens. React twin of app-button.astro; the registry primitive is button.",
-      "docs": "Use it for: Actions in a console toolbar, form or panel.\nIncludes: 33 / 36 / 40px fine, 48 / 49px on touch, data-slot attribute, Held to the whole app/button contract.\nAccessibility: Native button and link semantics.\nInstall: npx shadcn@latest add https://api.mzizi.dev/v1/ui/app-button",
+      "docs": "Use it for: Actions in a console toolbar, form or panel.\nIncludes: 33 / 36 / 41px fine, 48 / 49px on touch, data-slot attribute, Held to the whole app/button contract.\nAccessibility: Native button and link semantics.\nInstall: npx shadcn@latest add https://api.mzizi.dev/v1/ui/app-button",
       "files": [
         {
           "path": "components/registry/n2-primitives/app-button.tsx",
@@ -968,7 +968,7 @@
         "collection": "app",
         "contract": "app/button",
         "features": [
-          "33 / 36 / 40px fine, 48 / 49px on touch",
+          "33 / 36 / 41px fine, 48 / 49px on touch",
           "data-slot attribute",
           "Held to the whole app/button contract"
         ],

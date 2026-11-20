@@ -80,7 +80,7 @@ function VehicleCard({
             <button
               onClick={onBook}
               disabled={!available}
-              className="h-10 rounded-full bg-primary px-4 text-xs font-medium text-primary-foreground disabled:opacity-50"
+              className="h-control-lg pointer-coarse:h-touch-min rounded-full bg-primary px-4 text-xs font-medium text-primary-foreground disabled:opacity-50"
             >
               {available ? "Book" : "Unavailable"}
             </button>

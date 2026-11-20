@@ -62,7 +62,7 @@ function VoteButtons({
           aria-pressed={userVote === key}
           className={cn(
             "flex-1 rounded-full text-xs font-medium transition-colors",
-            compact ? "h-8 px-2" : "h-10 px-3",
+            compact ? "h-8 px-2" : "h-control-lg pointer-coarse:h-touch-min px-3",
             userVote === key ? "ring-2" : "hover:opacity-80",
             disabled && "opacity-50"
           )}

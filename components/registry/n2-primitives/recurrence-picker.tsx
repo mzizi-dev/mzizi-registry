@@ -82,7 +82,7 @@ function RecurrencePicker({
               max={99}
               value={interval}
               onChange={(e) => onIntervalChange?.(parseInt(e.target.value) || 1)}
-              className="h-10 pointer-coarse:h-touch-min w-16 rounded-[var(--radius-md,12px)] border border-input bg-input/30 px-2 text-center text-sm outline-none"
+              className="h-control-lg pointer-coarse:h-touch-min w-16 rounded-[var(--radius-md,12px)] border border-input bg-input/30 px-2 text-center text-sm outline-none"
               aria-label="Interval"
             />
             <span className="text-muted-foreground">
@@ -121,7 +121,7 @@ function RecurrencePicker({
             <select
               value={endType}
               onChange={(e) => onEndTypeChange?.(e.target.value as "never" | "date" | "count")}
-              className="h-10 pointer-coarse:h-touch-min rounded-[var(--radius-md,12px)] border border-input bg-input/30 px-3 text-sm outline-none"
+              className="h-control-lg pointer-coarse:h-touch-min rounded-[var(--radius-md,12px)] border border-input bg-input/30 px-3 text-sm outline-none"
               aria-label="End condition"
             >
               <option value="never">Never</option>
@@ -133,7 +133,7 @@ function RecurrencePicker({
                 type="date"
                 value={endDate || ""}
                 onChange={(e) => onEndDateChange?.(e.target.value)}
-                className="h-10 pointer-coarse:h-touch-min rounded-[var(--radius-md,12px)] border border-input bg-input/30 px-3 text-sm outline-none"
+                className="h-control-lg pointer-coarse:h-touch-min rounded-[var(--radius-md,12px)] border border-input bg-input/30 px-3 text-sm outline-none"
               />
             )}
             {endType === "count" && (
@@ -143,7 +143,7 @@ function RecurrencePicker({
                   min={1}
                   value={occurrences}
                   onChange={(e) => onOccurrencesChange?.(parseInt(e.target.value) || 1)}
-                  className="h-10 pointer-coarse:h-touch-min w-16 rounded-[var(--radius-md,12px)] border border-input bg-input/30 px-2 text-center text-sm outline-none"
+                  className="h-control-lg pointer-coarse:h-touch-min w-16 rounded-[var(--radius-md,12px)] border border-input bg-input/30 px-2 text-center text-sm outline-none"
                 />
                 <span className="text-muted-foreground">times</span>
               </div>

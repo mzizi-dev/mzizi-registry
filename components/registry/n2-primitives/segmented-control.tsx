@@ -12,7 +12,7 @@ import { cn } from "@/lib/utils"
 
 const SEGMENT_SIZE = {
   default: "min-h-12 px-4 text-body-sm",
-  sm: "min-h-10 px-3.5 text-body-sm",
+  sm: "min-h-control-lg pointer-coarse:min-h-touch-min px-3.5 text-body-sm",
 } as const
 
 const SEGMENT =
