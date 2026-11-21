@@ -87,7 +87,7 @@ jobs:
           echo "version=$version" >> "$GITHUB_OUTPUT"
 
       - name: Check the crates version against the versioning policy
-        uses: nyuchi/.github/.github/actions/next-version@925d067322defd676dacd90f2c2b0540cb10f644  # main, 2026-10-19
+        uses: nyuchi/.github/.github/actions/next-version@cf78731fac9cd318008ec1cbdbe5e3c50c0f5683  # main, 2026-10-19
         with:
           channel: main
           bump: ${{ inputs.bump || '' }}
