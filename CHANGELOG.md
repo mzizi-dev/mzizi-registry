@@ -10,6 +10,14 @@ From 2026-10-04 releases follow the org versioning policy ([nyuchi/.github#80](h
 
 ## [Unreleased]
 
+## [4.49.0] - 2026-11-21
+
+Releases staging to main for the last time, as the next minor above 4.48.x. The wallet gate says "Web3" again and the doctrine no longer names mzizi_db (#741); staging is retired.
+
+### Changed — staging is retired; pull requests target main (2026-11-21)
+
+Staging is retired (owner, 2026-11-21): every pull request targets `main`, and the org release-version check treats this repo as a trunk repo once the `staging` branch is gone. Dependabot now targets `main`. This release lands staging's last commits on main.
+
 ### Fixed — the wallet gate says "Web3" again, and the doctrine no longer names mzizi_db (2026-11-21)
 
 - **Wallet gate.** The sign-in prompt reads "Connect your wallet to access Web3 features." again. #733 had dropped "Web3" under a term rule that does not apply to Mzizi: Mzizi components and the Mzizi language support Web3 for the projects that use them (owner, 2026-11-21).

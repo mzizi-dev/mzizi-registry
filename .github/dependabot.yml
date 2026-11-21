@@ -3,7 +3,7 @@ updates:
   # npm / pnpm dependencies
   - package-ecosystem: "npm"
     directory: "/"
-    target-branch: "staging"
+    target-branch: "main"
     schedule:
       interval: "weekly"
       day: "monday"
@@ -58,7 +58,7 @@ updates:
   # GitHub Actions
   - package-ecosystem: "github-actions"
     directory: "/"
-    target-branch: "staging"
+    target-branch: "main"
     # Majors arrive only when someone chooses them (owner, 2026-11-12);
     # ignore never blocks security updates.
     ignore:

@@ -16,6 +16,37 @@ import type { ChangelogRow } from "@/lib/db/types";
 
 export const CHANGELOG_RELEASES: readonly ChangelogRow[] = [
   {
+    version: "4.49.0",
+    title: "v4.49.0 — the wallet gate says Web3 again; staging is retired",
+    description:
+      'Releases staging to main for the last time, as the next minor above v4.48.x (nyuchi/.github#80). Fixed: the wallet gate\'s prompt reads "Connect your wallet to access Web3 features." again, and the transcription doctrine strand no longer says doctrine is stored in mzizi_db (#741). Changed: staging is retired; pull requests target main and Dependabot targets main. Nothing is breaking.',
+    line: "public",
+    line_rank: 1,
+    major: 4,
+    minor: 49,
+    patch: 0,
+    release_kind: "minor",
+    breaking: false,
+    released_at: "2026-11-21T04:00:00.000+00:00",
+    created_at: "2026-11-21T04:00:00.000+00:00",
+    nodes_affected: null,
+    components_added: null,
+    components_modified: null,
+    components_deprecated: null,
+    components_removed: null,
+    components_touched: null,
+    tools_added: null,
+    tools_modified: null,
+    tools_deprecated: null,
+    tools_removed: null,
+    linked_issues: null,
+    total_stable: null,
+    total_deprecated: null,
+    total_alpha: null,
+    changed_by: "claude-code",
+    entry_order: 0,
+  },
+  {
     version: "4.48.1",
     title: "v4.48.1 — staging carries main's 4.48.0 release record",
     description:
