@@ -1,24 +1,28 @@
-"use client"
-import * as React from "react"
-import { cn } from "@/lib/utils"
-import { useMziziHarness } from "@/lib/harness"
+"use client";
+import * as React from "react";
+import { cn } from "@/lib/utils";
+import { useMziziHarness } from "@/lib/harness";
 
-type WalletStatus = "disconnected" | "connecting" | "connected" | "wrong-network"
-type TokenType = "MIT" | "MXT" | "NST" | "NHC"
+type WalletStatus =
+  "disconnected" | "connecting" | "connected" | "wrong-network";
+type TokenType = "MIT" | "MXT" | "NST" | "NHC";
 
 interface MziziWalletGateProps {
-  children: React.ReactNode
-  walletStatus: WalletStatus
-  requiredToken?: TokenType
-  requiredBalance?: number
-  currentBalance?: number
-  onConnect?: () => void
-  fallback?: React.ReactNode
-  loading?: boolean
-  className?: string
+  children: React.ReactNode;
+  walletStatus: WalletStatus;
+  requiredToken?: TokenType;
+  requiredBalance?: number;
+  currentBalance?: number;
+  onConnect?: () => void;
+  fallback?: React.ReactNode;
+  loading?: boolean;
+  className?: string;
 }
 
-const TOKEN_INFO: Record<TokenType, { label: string; color: string; desc: string }> = {
+const TOKEN_INFO: Record<
+  TokenType,
+  { label: string; color: string; desc: string }
+> = {
   MIT: {
     label: "MIT (Identity)",
     color: "var(--color-tanzanite, #B388FF)",
@@ -39,7 +43,7 @@ const TOKEN_INFO: Record<TokenType, { label: string; color: string; desc: string
     color: "var(--color-cobalt, #00B0FF)",
     desc: "Network utility token",
   },
-}
+};
 
 export function MziziWalletGate({
   children,
@@ -52,7 +56,7 @@ export function MziziWalletGate({
   loading = false,
   className,
 }: MziziWalletGateProps) {
-  const { log, motion } = useMziziHarness("wallet-gate")
+  const { log, motion } = useMziziHarness("wallet-gate");
   const animStyle = React.useMemo(
     () =>
       motion.prefersReduced
@@ -60,12 +64,13 @@ export function MziziWalletGate({
         : {
             animation: `nyuchi-fade-slide-up ${motion.enterDuration}ms ${motion.enterEasing} both`,
           },
-    [motion]
-  )
+    [motion],
+  );
 
   React.useEffect(() => {
-    if (walletStatus !== "connected") log.info(`wallet_blocked: status=${walletStatus}`)
-  }, [walletStatus, log])
+    if (walletStatus !== "connected")
+      log.info(`wallet_blocked: status=${walletStatus}`);
+  }, [walletStatus, log]);
 
   if (loading)
     return (
@@ -76,14 +81,19 @@ export function MziziWalletGate({
         role="status"
         className="h-36 animate-pulse rounded-[var(--radius-lg,14px)] bg-muted"
       />
-    )
-  if (walletStatus === "connected" && (!requiredToken || currentBalance >= requiredBalance))
-    return <>{children}</>
-  if (fallback) return <>{fallback}</>
+    );
+  if (
+    walletStatus === "connected" &&
+    (!requiredToken || currentBalance >= requiredBalance)
+  )
+    return <>{children}</>;
+  if (fallback) return <>{fallback}</>;
 
-  const tokenInfo = requiredToken ? TOKEN_INFO[requiredToken] : null
+  const tokenInfo = requiredToken ? TOKEN_INFO[requiredToken] : null;
   const isBalanceIssue =
-    walletStatus === "connected" && requiredToken && currentBalance < requiredBalance
+    walletStatus === "connected" &&
+    requiredToken &&
+    currentBalance < requiredBalance;
 
   return (
     <div
@@ -93,7 +103,7 @@ export function MziziWalletGate({
       style={animStyle}
       className={cn(
         "flex flex-col items-center gap-4 rounded-[var(--radius-lg,14px)] bg-card p-6 text-center ring-1 ring-foreground/10",
-        className
+        className,
       )}
     >
       <div className="flex size-14 items-center justify-center rounded-full bg-[var(--color-tanzanite,#B388FF)]/15">
@@ -133,7 +143,7 @@ export function MziziWalletGate({
               ? `Requires ${requiredBalance} ${tokenInfo.label}. You have ${currentBalance}.`
               : walletStatus === "connecting"
                 ? "Waiting for wallet approval..."
-                : "Connect your wallet to continue."}
+                : "Connect your wallet to access Web3 features."}
         </p>
         {tokenInfo && !isBalanceIssue && (
           <p className="mt-1 text-xs" style={{ color: tokenInfo.color }}>
@@ -154,6 +164,6 @@ export function MziziWalletGate({
         </button>
       )}
     </div>
-  )
+  );
 }
-export type { WalletStatus, TokenType, MziziWalletGateProps }
+export type { WalletStatus, TokenType, MziziWalletGateProps };
