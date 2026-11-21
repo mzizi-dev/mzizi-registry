@@ -10,6 +10,11 @@ From 2026-10-04 releases follow the org versioning policy ([nyuchi/.github#80](h
 
 ## [Unreleased]
 
+### Fixed — the wallet gate says "Web3" again, and the doctrine no longer names mzizi_db (2026-11-21)
+
+- **Wallet gate.** The sign-in prompt reads "Connect your wallet to access Web3 features." again. #733 had dropped "Web3" under a term rule that does not apply to Mzizi: Mzizi components and the Mzizi language support Web3 for the projects that use them (owner, 2026-11-21).
+- **Doctrine.** The transcription strand said doctrine is stored in `mzizi_db`. Nothing in Mzizi reads that database; doctrine is versioned files under `content/doctrine`, served by api.mzizi.dev and the Mzizi MCP. The page now says so.
+
 ## [4.48.0] - 2026-11-20
 
 Releases staging to main as the next minor above 4.47.0. The last floor sweep lands: every interactive element meets the 45px touch and 24px desktop hit floor, the `HIT_AREA_GAPS` excuses are gone, and controls drawn 40px move to the 41px control size (#735). The Rust crates publish at 0.11.0 so that sweep reaches crates.io (#738). Nothing is breaking.
