@@ -136,19 +136,19 @@ export function DiscoverShell({
             className="text-body-sm text-muted-foreground md:col-span-3"
           >
             Every page works with a keyboard alone:{" "}
-            <kbd className="rounded border border-b-2 border-border bg-background font-mono">
+            <kbd className="rounded-sm border border-border px-page-x font-sans text-caption">
               Tab
             </kbd>{" "}
             moves forward,{" "}
-            <kbd className="rounded border border-b-2 border-border bg-background font-mono">
+            <kbd className="rounded-sm border border-border px-page-x font-sans text-caption">
               Shift
             </kbd>
             +
-            <kbd className="rounded border border-b-2 border-border bg-background font-mono">
+            <kbd className="rounded-sm border border-border px-page-x font-sans text-caption">
               Tab
             </kbd>{" "}
             moves back,{" "}
-            <kbd className="rounded border border-b-2 border-border bg-background font-mono">
+            <kbd className="rounded-sm border border-border px-page-x font-sans text-caption">
               Enter
             </kbd>{" "}
             follows a link. Read the{" "}
