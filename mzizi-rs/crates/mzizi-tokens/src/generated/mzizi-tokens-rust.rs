@@ -1518,3 +1518,71 @@ const _: () = assert!(Roles::SPACING_CONTROL_LG >= Roles::SPACING_TOUCH_MIN);
 const _: () = assert!(Roles::SPACING_CONTROL_ICON >= Roles::SPACING_TOUCH_MIN);
 const _: () = assert!(Roles::SPACING_FIELD >= Roles::SPACING_TOUCH_MIN);
 const _: () = assert!(Roles::SPACING_FIELD_SM >= Roles::SPACING_TOUCH_MIN);
+// ─── Contrast ────────────────────────────────────────────────────────────────
+// APCA-W3 0.1.9 and WCAG 2 contrast, and the bars the Bundu floor holds text to.
+
+/// The minimum |APCA Lc| for body text (`BUNDU_FLOOR.apca.body`).
+pub const APCA_BODY: f64 = 75.0;
+/// The minimum |APCA Lc| for non-body text (`BUNDU_FLOOR.apca.nonBody`).
+pub const APCA_NON_BODY: f64 = 60.0;
+/// The minimum |APCA Lc| for non-text UI (`BUNDU_FLOOR.apca.ui`).
+pub const APCA_UI: f64 = 30.0;
+
+/// The screen luminance of a `#rrggbb` colour, or `None` when it is not one.
+fn screen_y(hex: &str) -> Option<f64> {
+    let h = hex.strip_prefix('#')?;
+    if h.len() != 6 || !h.is_ascii() {
+        return None;
+    }
+    let c = |i: usize| -> Option<f64> {
+        Some((f64::from(u8::from_str_radix(&h[i..i + 2], 16).ok()?) / 255.0).powf(2.4))
+    };
+    Some(0.2126729 * c(0)? + 0.7151522 * c(2)? + 0.072175 * c(4)?)
+}
+
+/// APCA-W3 0.1.9 (SAPC) lightness contrast Lc of `text` on `bg`, both `#rrggbb`: positive for dark
+/// text on a light ground, negative for the reverse. `None` when either is not a `#rrggbb` colour.
+/// Black on white is 106.04 and white on black -107.88.
+pub fn apca(text: &str, bg: &str) -> Option<f64> {
+    let clamp = |y: f64| {
+        if y >= 0.022 {
+            y
+        } else {
+            y + (0.022 - y).powf(1.414)
+        }
+    };
+    let t = clamp(screen_y(text)?);
+    let b = clamp(screen_y(bg)?);
+    if (b - t).abs() < 0.0005 {
+        return Some(0.0);
+    }
+    let lc = if b > t {
+        let s = (b.powf(0.56) - t.powf(0.57)) * 1.14;
+        if s < 0.1 { 0.0 } else { s - 0.027 }
+    } else {
+        let s = (b.powf(0.65) - t.powf(0.62)) * 1.14;
+        if s > -0.1 { 0.0 } else { s + 0.027 }
+    };
+    Some(lc * 100.0)
+}
+
+/// The WCAG 2 contrast ratio of two `#rrggbb` colours, or `None` when either is not one.
+pub fn wcag_contrast(a: &str, b: &str) -> Option<f64> {
+    let lum = |hex: &str| -> Option<f64> {
+        let h = hex.strip_prefix('#')?;
+        if h.len() != 6 || !h.is_ascii() {
+            return None;
+        }
+        let c = |i: usize| -> Option<f64> {
+            let s = f64::from(u8::from_str_radix(&h[i..i + 2], 16).ok()?) / 255.0;
+            Some(if s <= 0.03928 {
+                s / 12.92
+            } else {
+                ((s + 0.055) / 1.055).powf(2.4)
+            })
+        };
+        Some(0.2126 * c(0)? + 0.7152 * c(2)? + 0.0722 * c(4)?)
+    };
+    let (x, y) = (lum(a)?, lum(b)?);
+    Some((x.max(y) + 0.05) / (x.min(y) + 0.05))
+}

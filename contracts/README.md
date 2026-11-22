@@ -93,7 +93,7 @@ One design for every public discover and browse page in the Mukoko family (circl
 
 | Contract                    | Component          | Node | Version | Astro `.astro`            | React `.tsx`                         | Rust `.rs` |
 | --------------------------- | ------------------ | ---- | ------- | ------------------------- | ------------------------------------ | ---------- |
-| `discover/discover-shell`   | DiscoverShell      | N7   | 1.0.0   | `discover-shell`          | `discover-shell` (contract)          | —          |
+| `discover/discover-shell`   | DiscoverShell      | N7   | 1.1.0   | `discover-shell`          | `discover-shell` (contract)          | —          |
 | `discover/discover-meta`    | DiscoverMeta       | N6   | 1.0.0   | `discover-meta`           | `discover-meta` (contract)           | —          |
 | `discover/discover-hero`    | DiscoverHero       | N6   | 1.0.0   | `discover-hero`           | `discover-hero` (contract)           | —          |
 | `discover/discover-search`  | DiscoverSearch     | N6   | 1.0.0   | `discover-search`         | `discover-search` (contract)         | —          |

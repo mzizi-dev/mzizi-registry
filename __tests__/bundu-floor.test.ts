@@ -90,6 +90,14 @@ describe("BUNDU_FLOOR: the one definition", () => {
       },
       contrast: { body: 7, nonBody: 4.5, ui: 3 },
       apca: { body: 75, nonBody: 60, ui: 30 },
+      keyboardHelp: {
+        keys: ["Tab", "Shift+Tab", "Enter"],
+        statementLink: true,
+        accesskey: false,
+        skipLinkFirst: true,
+        openKey: "?",
+      },
+      titles: { repeatedWords: false, sharedWords: ["bundu"] },
     });
     expect(BUNDU_FLOOR.captionPx).toBe(2 * BUNDU_FLOOR.unitPx);
     // 45 = 3 x 15 (WCAG 2.5.5's 44, rounded up by the number rule); 24 = 3 x 8 (WCAG 2.5.8)
@@ -440,9 +448,7 @@ describe("canon and the hand-kept token files carry the floor", () => {
     expect(src).toMatch(/sm: \{ value: "41px"/);
     // control heights (componentSpecs.button and input) are 49px, a valid Mzizi number; the touch floor is 45px
     expect(src).toContain(`input: { height: "49px" }`);
-    expect(src).toContain(
-      `button: { height: "49px", heightSm: "49px"`,
-    );
+    expect(src).toContain(`button: { height: "49px", heightSm: "49px"`);
     expect(src).toContain(`fontSize: "${BUNDU_FLOOR.captionPx}px" }`);
   });
   it("the platform files carry the 49px roles", () => {
@@ -465,5 +471,100 @@ describe("canon and the hand-kept token files carry the floor", () => {
         ),
       );
     }
+  });
+});
+
+// KEYBOARD HELP AND TITLES (owner, 2026-11-22; bundu-labs/bundu-standards#151, mzizi-registry#746): two clauses
+// of the floor beside size, contrast, hit regions and spacing. Keyboard help is part of every shell and cannot be
+// left out; a page's title repeats no word between its page half and its site half.
+describe("the keyboard-help floor", () => {
+  it("is defined once, in BUNDU_FLOOR", () => {
+    expect(BUNDU_FLOOR.keyboardHelp.keys).toEqual([
+      "Tab",
+      "Shift+Tab",
+      "Enter",
+    ]);
+    expect(BUNDU_FLOOR.keyboardHelp.statementLink).toBe(true);
+    expect(BUNDU_FLOOR.keyboardHelp.accesskey).toBe(false);
+    expect(BUNDU_FLOOR.keyboardHelp.skipLinkFirst).toBe(true);
+    expect(BUNDU_FLOOR.keyboardHelp.openKey).toBe("?");
+  });
+
+  it("is a check on every shell contract: the help, its link to the statement, and no accesskey", () => {
+    const dir = join(ROOT, "contracts");
+    const shells: string[] = [];
+    for (const family of readdirSync(dir)) {
+      const fdir = join(dir, family);
+      if (!statSync(fdir).isDirectory()) continue;
+      for (const f of readdirSync(fdir).filter((n) =>
+        n.endsWith(".contract.json"),
+      )) {
+        const c = JSON.parse(readFileSync(join(fdir, f), "utf8"));
+        if (c.kind !== "shell" || !/skip link/i.test(c.summary ?? "")) continue;
+        shells.push(c.name);
+        const selects = (c.checks ?? [])
+          .map((k: { select: string }) => k.select)
+          .join("\n");
+        expect(selects, `${c.name}: keyboard help`).toContain(
+          '[data-slot="keyboard-help"]',
+        );
+        expect(selects, `${c.name}: no accesskey`).toContain("[accesskey]");
+      }
+    }
+    // A page shell with a skip link: the Discover shell is one today; a new one joins it here.
+    expect(shells).toContain("discover/discover-shell");
+  });
+});
+
+describe("the title floor", () => {
+  const words = (s: string) =>
+    s
+      .toLowerCase()
+      .split(/[^\p{L}\p{N}]+/u)
+      .filter(Boolean);
+  /** The words in both halves of "<page> · <site>", the shared organisation words aside. */
+  const repeated = (title: string, sep: RegExp) => {
+    const halves = title.split(sep);
+    if (halves.length < 2) return [];
+    const site = new Set(
+      words(halves[halves.length - 1]!).filter(
+        (w) => !BUNDU_FLOOR.titles.sharedWords.includes(w as never),
+      ),
+    );
+    return words(halves.slice(0, -1).join(" ")).filter((w) => site.has(w));
+  };
+
+  it("catches a repeated word, and lets the organisation name through", () => {
+    expect(repeated("Standards · Bundu standards", /\s[·—]\s/)).toEqual([
+      "standards",
+    ]);
+    expect(repeated("Bundu floor · Bundu standards", /\s[·—]\s/)).toEqual([]);
+    expect(repeated("Running · Mukoko Circles", /\s[·—]\s/)).toEqual([]);
+  });
+
+  it("holds for every title in the contract fixtures", () => {
+    const dir = join(ROOT, "contracts");
+    let seen = 0;
+    for (const family of readdirSync(dir)) {
+      const fdir = join(dir, family);
+      if (!statSync(fdir).isDirectory()) continue;
+      for (const f of readdirSync(fdir).filter((n) =>
+        n.endsWith(".contract.json"),
+      )) {
+        const c = JSON.parse(readFileSync(join(fdir, f), "utf8"));
+        for (const [state, s] of Object.entries<{
+          props?: Record<string, unknown>;
+        }>(c.states ?? {})) {
+          const title = s.props?.title;
+          if (typeof title !== "string" || !/\s[·—]\s/.test(title)) continue;
+          seen += 1;
+          expect(
+            repeated(title, /\s[·—]\s/),
+            `${c.name} (${state}): ${title}`,
+          ).toEqual([]);
+        }
+      }
+    }
+    expect(seen).toBeGreaterThan(0);
   });
 });
