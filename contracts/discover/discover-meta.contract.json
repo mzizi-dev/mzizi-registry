@@ -22,7 +22,7 @@
       "name": "title",
       "type": "string",
       "required": true,
-      "description": "The whole <title>: \"<page> · <Service>\"; the home page \"<Service>: <promise>\"."
+      "description": "The whole <title>: \"<page> — <Service>\"; the home page \"<Service>: <promise>\"."
     },
     {
       "name": "description",
@@ -98,7 +98,7 @@
   "states": {
     "default": {
       "props": {
-        "title": "Running · Mukoko Circles",
+        "title": "Running — Mukoko Circles",
         "description": "Running circles on Mukoko.",
         "canonical": "https://circles.mukoko.com/categories/running",
         "siteName": "Mukoko Circles",
@@ -113,7 +113,7 @@
     "noindex": {
       "description": "Search results: noindex, no image.",
       "props": {
-        "title": "Search · Mukoko Circles",
+        "title": "Search — Mukoko Circles",
         "description": "Search results.",
         "canonical": "https://circles.mukoko.com/search",
         "siteName": "Mukoko Circles",
@@ -139,7 +139,7 @@
     "without": "Everything. The JSON-LD element is data (type application/ld+json), not script: a CSP of script-src 'none' does not block it, and nothing runs."
   },
   "responsive": ["Not visual."],
-  "contract": "contract\n  slot is \"discover-meta\"\n  when default shows title \"Running · Mukoko Circles\"\n  when noindex shows title \"Search · Mukoko Circles\"\nend",
+  "contract": "contract\n  slot is \"discover-meta\"\n  when default shows title \"Running — Mukoko Circles\"\n  when noindex shows title \"Search — Mukoko Circles\"\nend",
   "checks": [
     {
       "say": "One canonical link.",

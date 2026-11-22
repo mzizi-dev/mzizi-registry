@@ -270,7 +270,7 @@ export interface Role {
  *     reported), after a skip link that is the first focusable element. A page defines no shortcut that the
  *     browser or a screen reader uses: no `accesskey`, no single-key shortcut (WCAG 2.1.4). Where the help is a
  *     panel (an app with shortcuts), `?` opens it and Escape closes it. `DiscoverShell` renders it and cannot omit it.
- *   - `titles`: a page's title is "<page> <separator> <site>" (the site name alone on the home page) with no word in
+ *   - `titles`: a page's title is "<page> — <site>" (an em dash) (the site name alone on the home page) with no word in
  *     both halves, the shared organisation name aside; the `h1` does not repeat the site name (the home page is the
  *     site); a heading does not restate its parent heading.
  */

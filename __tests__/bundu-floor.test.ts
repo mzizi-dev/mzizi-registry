@@ -522,7 +522,7 @@ describe("the title floor", () => {
       .toLowerCase()
       .split(/[^\p{L}\p{N}]+/u)
       .filter(Boolean);
-  /** The words in both halves of "<page> · <site>", the shared organisation words aside. */
+  /** The words in both halves of "<page> — <site>", the shared organisation words aside. */
   const repeated = (title: string, sep: RegExp) => {
     const halves = title.split(sep);
     if (halves.length < 2) return [];
@@ -535,11 +535,11 @@ describe("the title floor", () => {
   };
 
   it("catches a repeated word, and lets the organisation name through", () => {
-    expect(repeated("Standards · Bundu standards", /\s[·—]\s/)).toEqual([
+    expect(repeated("Standards — Bundu standards", /\s—\s/)).toEqual([
       "standards",
     ]);
-    expect(repeated("Bundu floor · Bundu standards", /\s[·—]\s/)).toEqual([]);
-    expect(repeated("Running · Mukoko Circles", /\s[·—]\s/)).toEqual([]);
+    expect(repeated("Bundu floor — Bundu standards", /\s—\s/)).toEqual([]);
+    expect(repeated("Running — Mukoko Circles", /\s—\s/)).toEqual([]);
   });
 
   it("holds for every title in the contract fixtures", () => {
@@ -556,10 +556,15 @@ describe("the title floor", () => {
           props?: Record<string, unknown>;
         }>(c.states ?? {})) {
           const title = s.props?.title;
-          if (typeof title !== "string" || !/\s[·—]\s/.test(title)) continue;
+          if (c.name === "discover/discover-meta")
+            expect(
+              title,
+              `${c.name} (${state}): the separator is an em dash`,
+            ).not.toMatch(/\s·\s/);
+          if (typeof title !== "string" || !/\s—\s/.test(title)) continue;
           seen += 1;
           expect(
-            repeated(title, /\s[·—]\s/),
+            repeated(title, /\s—\s/),
             `${c.name} (${state}): ${title}`,
           ).toEqual([]);
         }
