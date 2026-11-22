@@ -4,44 +4,52 @@
  * navigation, one action), the page in <main id="main">, and a footer. It
  * goes inside <body>; the app owns <head> (with DiscoverMeta).
  *
+ * Keyboard help is part of the shell and cannot be left out (the Bundu floor,
+ * `BUNDU_FLOOR.keyboardHelp`): the footer names Tab, Shift+Tab and Enter and links to the
+ * accessibility statement. The shell defines no shortcut and no `accesskey`.
+ *
  * The React build of contract `discover/discover-shell`, beside
  * `discover-shell.astro`: the same markup and classes.
  */
-import type { ReactNode } from "react"
+import type { ReactNode } from "react";
 
-import { MineralStrip } from "@/components/ui/site-mineral-strip"
-import { buttonVariants } from "@/lib/ui-variants"
+import { MineralStrip } from "@/components/ui/site-mineral-strip";
+import { buttonVariants } from "@/lib/ui-variants";
 
 export interface DiscoverShellLink {
-  label: string
-  href: string
+  label: string;
+  href: string;
   /** The current section: true (or "page") sets aria-current="page". */
-  current?: boolean | string
+  current?: boolean | string;
 }
 
 export interface DiscoverShellProps {
   /** The home link's accessible name, e.g. "mukoko circles, home". */
-  homeLabel: string
-  homeHref?: string
-  nav?: DiscoverShellLink[]
-  footerLinks?: DiscoverShellLink[]
+  homeLabel: string;
+  homeHref?: string;
+  nav?: DiscoverShellLink[];
+  footerLinks?: DiscoverShellLink[];
   /** One quiet line at the foot, e.g. "Part of the Bundu ecosystem." */
-  footerNote?: string
+  footerNote?: string;
   /** The seven-mineral strip on the left edge (default true). */
-  strip?: boolean
-  skipLabel?: string
+  strip?: boolean;
+  skipLabel?: string;
+  /** The accessibility statement the keyboard help links to (default "/accessibility/"). */
+  accessibilityHref?: string;
   /** The service's mark and wordmark, inside the home link. */
-  brand?: ReactNode
+  brand?: ReactNode;
   /** One primary action in the header. */
-  action?: ReactNode
+  action?: ReactNode;
   /** Extra footer content. */
-  footer?: ReactNode
+  footer?: ReactNode;
   /** The page. */
-  children?: ReactNode
+  children?: ReactNode;
 }
 
-const cur = (c: DiscoverShellLink["current"]) => (c === true ? "page" : c === false || c === undefined ? undefined : c)
-const link = "text-foreground underline decoration-border underline-offset-4 transition-colors hover:decoration-foreground"
+const cur = (c: DiscoverShellLink["current"]) =>
+  c === true ? "page" : c === false || c === undefined ? undefined : c;
+const link =
+  "text-foreground underline decoration-border underline-offset-4 transition-colors hover:decoration-foreground";
 
 export function DiscoverShell({
   homeLabel,
@@ -51,12 +59,13 @@ export function DiscoverShell({
   footerNote,
   strip = true,
   skipLabel = "Skip to content",
+  accessibilityHref = "/accessibility/",
   brand,
   action,
   footer,
   children,
 }: DiscoverShellProps) {
-  const hasAction = action !== undefined && action !== null && action !== false
+  const hasAction = action !== undefined && action !== null && action !== false;
   return (
     <div className="flex min-h-dvh flex-col" data-slot="discover-shell">
       <a
@@ -77,7 +86,10 @@ export function DiscoverShell({
             {brand}
           </a>
           {nav.length > 0 && (
-            <nav aria-label="Main" className="order-3 w-full sm:order-none sm:w-auto">
+            <nav
+              aria-label="Main"
+              className="order-3 w-full sm:order-none sm:w-auto"
+            >
               <ul className="flex flex-wrap items-center gap-x-6 gap-y-2 text-body-sm">
                 {nav.map((l) => (
                   <li key={`${l.href}|${l.label}`}>
@@ -119,11 +131,39 @@ export function DiscoverShell({
               </ul>
             </nav>
           )}
+          <p
+            data-slot="keyboard-help"
+            className="text-body-sm text-muted-foreground md:col-span-3"
+          >
+            Every page works with a keyboard alone:{" "}
+            <kbd className="rounded-sm border border-border px-page-x font-sans text-caption">
+              Tab
+            </kbd>{" "}
+            moves forward,{" "}
+            <kbd className="rounded-sm border border-border px-page-x font-sans text-caption">
+              Shift
+            </kbd>
+            +
+            <kbd className="rounded-sm border border-border px-page-x font-sans text-caption">
+              Tab
+            </kbd>{" "}
+            moves back,{" "}
+            <kbd className="rounded-sm border border-border px-page-x font-sans text-caption">
+              Enter
+            </kbd>{" "}
+            follows a link. Read the{" "}
+            <a href={accessibilityHref} className={link}>
+              accessibility statement
+            </a>{" "}
+            or report a barrier there.
+          </p>
           {footerNote !== undefined && (
-            <p className="text-body-sm text-muted-foreground md:col-span-3 empty:hidden">{footerNote}</p>
+            <p className="text-body-sm text-muted-foreground md:col-span-3 empty:hidden">
+              {footerNote}
+            </p>
           )}
         </div>
       </footer>
     </div>
-  )
+  );
 }

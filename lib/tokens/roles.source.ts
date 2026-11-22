@@ -264,6 +264,15 @@ export interface Role {
  *     layer's dense floor) and as tests on every explicit value.
  *   - `contrast`: WCAG 2 ratios (#610, owner 2026-11-02): body text 7:1, non-body text 4.5:1, UI parts 3:1.
  *   - `apca`: the APCA Lc bars that stand beside them.
+ *   - `keyboardHelp`: every page of every Mzizi site and app exposes keyboard help (owner, 2026-11-22;
+ *     bundu-labs/bundu-standards#151, mzizi-registry#746): visible in the page (the footer), reached with Tab,
+ *     naming `keys` and every shortcut the page defines, linking to the accessibility statement (where a barrier is
+ *     reported), after a skip link that is the first focusable element. A page defines no shortcut that the
+ *     browser or a screen reader uses: no `accesskey`, no single-key shortcut (WCAG 2.1.4). Where the help is a
+ *     panel (an app with shortcuts), `?` opens it and Escape closes it. `DiscoverShell` renders it and cannot omit it.
+ *   - `titles`: a page's title is "<page> — <site>" (an em dash) (the site name alone on the home page) with no word in
+ *     both halves, the shared organisation name aside; the `h1` does not repeat the site name (the home page is the
+ *     site); a heading does not restate its parent heading.
  */
 export const BUNDU_FLOOR = {
   unitPx: 7,
@@ -307,6 +316,24 @@ export const BUNDU_FLOOR = {
   },
   contrast: { body: 7, nonBody: 4.5, ui: 3 },
   apca: { body: 75, nonBody: 60, ui: 30 },
+  keyboardHelp: {
+    /** The keys the footer names, each in a `<kbd>`. */
+    keys: ["Tab", "Shift+Tab", "Enter"],
+    /** The help links to the accessibility statement. */
+    statementLink: true,
+    /** No `accesskey`: it clashes with the browser's and a screen reader's keys. */
+    accesskey: false,
+    /** The skip link is the first focusable element. */
+    skipLinkFirst: true,
+    /** Where the help is a panel, this key opens it. */
+    openKey: "?",
+  },
+  titles: {
+    /** No word in both halves of the title; the organisation name is not counted. */
+    repeatedWords: false,
+    /** The words every site name starts with, not counted as a repeat. */
+    sharedWords: ["bundu"],
+  },
 } as const;
 
 /**
@@ -323,7 +350,8 @@ export const BUNDU_FLOOR = {
  * value; `label` is the owner's floor for a label and its field, which the markup check cannot see and is not enforced
  * by it. `contracts/runner.ts` and mzizi-rs/contract-eval hold copies, pinned by `__tests__/spacing-floor.test.ts`.
  */
-export type SpacingLayer = "pills" | "chips" | "controls" | "cards" | "containers" | "layout";
+export type SpacingLayer =
+  "pills" | "chips" | "controls" | "cards" | "containers" | "layout";
 export const SPACING_LAYER_FLOORS = {
   pills: { padding: 5, gap: 3 },
   chips: { padding: 9, gap: 7 },

@@ -4723,6 +4723,11 @@ export const COMPONENT_PROPS: Record<string, PropInfo[]> = {
       "required": false
     },
     {
+      "name": "accessibilityHref",
+      "type": "string",
+      "required": false
+    },
+    {
       "name": "brand",
       "type": "ReactNode",
       "required": false

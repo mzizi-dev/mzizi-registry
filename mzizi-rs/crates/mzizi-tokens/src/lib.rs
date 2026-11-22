@@ -56,6 +56,28 @@ mod tests {
     use super::*;
 
     #[test]
+    fn apca_matches_the_reference_values() {
+        // APCA-W3 0.1.9: black on white is Lc 106.04, white on black -107.88.
+        assert!((apca("#000000", "#ffffff").unwrap() - 106.04).abs() < 0.1);
+        assert!((apca("#ffffff", "#000000").unwrap() + 107.88).abs() < 0.1);
+        assert_eq!(apca("#777777", "#777777"), Some(0.0));
+        assert!((apca("#888888", "#ffffff").unwrap() - 63.1).abs() < 0.5);
+        assert_eq!(apca("white", "#000000"), None);
+        assert_eq!(apca("#12345", "#000000"), None);
+    }
+
+    #[test]
+    fn wcag_contrast_is_the_standard_ratio() {
+        assert!((wcag_contrast("#000000", "#ffffff").unwrap() - 21.0).abs() < 0.01);
+        assert_eq!(wcag_contrast("#fff", "#000000"), None);
+    }
+
+    #[test]
+    fn the_bars_are_the_floors() {
+        assert_eq!((APCA_BODY, APCA_NON_BODY, APCA_UI), (75.0, 60.0, 30.0));
+    }
+
+    #[test]
     fn mzizi_pack_maps_status_tones_onto_the_palette() {
         let roles = Roles::mzizi();
         assert_eq!(roles.light.status_success, MALACHITE_LIGHT);
