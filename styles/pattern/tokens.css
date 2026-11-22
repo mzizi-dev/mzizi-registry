@@ -444,6 +444,15 @@
   --z-modal: 40;
   --z-toast: 50;
   --z-tooltip: 60;
+  --border-width: 1px;
+  --border-width-strong: 2px;
+  --ring-width: 3px;
+  --ring-offset: 3px;
+  --measure: 52rem;
+  --column-min: 16rem;
+  --label-column: 9rem;
+  --tracking-eyebrow: 0.14em;
+  --offscreen: -100vh;
 }
 [data-theme="dark"] {
   --mineral-cobalt: #00b0ff;

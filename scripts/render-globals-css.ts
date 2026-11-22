@@ -416,6 +416,24 @@ export const ZINDEX = [
 ] as const;
 
 /**
+ * Page chrome a site needs that no other ladder holds: the width of a rule, the keyboard focus
+ * ring, the reading column and its relatives, the tracking of an eyebrow, and where a skip link
+ * waits. Proposed by bundu-labs/bundu-standards#158, whose page CSS holds no literal value.
+ * Lengths are what the floor already uses: a 1px hairline, a 3px ring 3px off its element.
+ */
+export const CHROME = [
+  ["border-width", "1px"],
+  ["border-width-strong", "2px"],
+  ["ring-width", "3px"],
+  ["ring-offset", "3px"],
+  ["measure", "52rem"],
+  ["column-min", "16rem"],
+  ["label-column", "9rem"],
+  ["tracking-eyebrow", "0.14em"],
+  ["offscreen", "-100vh"],
+] as const;
+
+/**
  * Content widths — the three columns `site/container` (and `site/section`,
  * `site/hero`, the Discover pages) render through `.container-custom`,
  * `.container-narrow` and `.container-prose`.
@@ -2278,6 +2296,10 @@ function invariants(resolved: Map<string, ResolvedRole>): string {
   out.push("");
   out.push(box("Z-INDEX"));
   for (const [n, v] of ZINDEX) out.push(`  --z-${n}: ${v};`);
+
+  out.push("");
+  out.push(box("CHROME — rules, the focus ring, the reading column"));
+  for (const [n, v] of CHROME) out.push(`  --${n}: ${v};`);
   return out.join("\n");
 }
 
