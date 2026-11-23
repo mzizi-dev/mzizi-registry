@@ -11,7 +11,7 @@ name: Release notes
 
 on:
   pull_request:
-    branches: [main, staging]
+    branches: [main]
     paths:
       - .github/scripts/**
       - .github/workflows/release-notes.yml
