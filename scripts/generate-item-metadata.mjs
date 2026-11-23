@@ -37,18 +37,19 @@ const ROOT = process.cwd()
 const REGISTRY = join(ROOT, "registry.json")
 
 /**
- * Brand wordmarks stay lowercase (CLAUDE.md §11.1 — never "Mzizi-Tools", never "Nyuchi").
- * So `mzizi-listing-card` titles as "nyuchi Listing Card", not "Nyuchi Listing Card".
+ * Brand wordmarks take an initial capital (owner decision, 2026-11-23), spelled as the brand
+ * spells them. So `mzizi-listing-card` titles as "Mzizi Listing Card". The item `name` is a
+ * code identifier and stays lowercase; only the human-facing `title` is cased.
  */
-const WORDMARKS = new Set([
-  "mzizi",
-  "nyuchi",
-  "mukoko",
-  "bundu",
-  "shamwari",
-  "fundi",
-  "kweli",
-  "bushtrade",
+const WORDMARKS = new Map([
+  ["mzizi", "Mzizi"],
+  ["nyuchi", "Nyuchi"],
+  ["mukoko", "Mukoko"],
+  ["bundu", "Bundu"],
+  ["shamwari", "Shamwari"],
+  ["fundi", "Fundi"],
+  ["kweli", "Kweli"],
+  ["bushtrade", "Bushtrade"],
 ])
 
 /** Acronyms that read wrong in Title Case. */
@@ -76,7 +77,7 @@ function titleFor(name) {
   return name
     .split("-")
     .map((w) => {
-      if (WORDMARKS.has(w)) return w
+      if (WORDMARKS.has(w)) return WORDMARKS.get(w)
       if (UPPER.has(w)) return UPPER.get(w)
       if (/^\d+$/.test(w)) return w
       return w.charAt(0).toUpperCase() + w.slice(1)

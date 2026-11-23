@@ -1,6 +1,6 @@
 # The design system: source and publishing
 
-This folder **is** the mzizi design system. The published Design System artifact on claude.ai is built from it, file for file. Edit here, never on the artifact page: a change made only on the page is lost at the next publish.
+This folder **is** the Mzizi design system. The published Design System artifact on claude.ai is built from it, file for file. Edit here, never on the artifact page: a change made only on the page is lost at the next publish.
 
 - Published at: <https://claude.ai/artifact/G8CCtAbZ8w717uQ3R5itCc>
 

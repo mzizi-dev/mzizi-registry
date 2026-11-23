@@ -32,7 +32,7 @@ Brief description of what this PR does and why.
 - [ ] New tests added for new functionality
 - [ ] All packages at latest (run `pnpm outdated` — zero results allowed)
 - [ ] No hardcoded colors — using CSS custom properties from `globals.css`
-- [ ] Brand wordmarks are lowercase: `mukoko`, `nyuchi`, `shamwari`, `bundu`
+- [ ] Brand wordmarks take an initial capital: Mukoko, Nyuchi, Shamwari, Bundu, Mzizi, Kweli
 - [ ] Accessibility (the Bundu floor, `BUNDU_FLOOR` in `lib/tokens/roles.source.ts`): body text 17px and captions 14px, a 45px hit region on every control on touch and 24px on a desktop with a fine pointer (the floor has two pointer tiers, #660, and the owner's 2026-11-19 rulings), spacing held to one floor per layer with its dense step (`BUNDU_FLOOR.spacing`, the layer-aware checker), contrast 7:1 body, 4.5:1 non-body, 3:1 UI
 - [ ] Ubuntu design checklist: shared devices, 3G performant, localisable strings
 - [ ] AI output runs through `fullSafetyCheck()` + `validateCulturalContext()` (if AI features touched)

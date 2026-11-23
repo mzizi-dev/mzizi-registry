@@ -9480,7 +9480,7 @@
       },
       "name": "kweli-apple-touch-icon",
       "registryDependencies": [],
-      "title": "kweli Apple Touch Icon",
+      "title": "Kweli Apple Touch Icon",
       "type": "registry:item"
     },
     {
@@ -9512,7 +9512,7 @@
       },
       "name": "kweli-favicon",
       "registryDependencies": [],
-      "title": "kweli Favicon",
+      "title": "Kweli Favicon",
       "type": "registry:item"
     },
     {
@@ -9541,7 +9541,7 @@
       },
       "name": "kweli-icon-192",
       "registryDependencies": [],
-      "title": "kweli Icon 192",
+      "title": "Kweli Icon 192",
       "type": "registry:item"
     },
     {
@@ -9572,7 +9572,7 @@
       },
       "name": "kweli-icon-512",
       "registryDependencies": [],
-      "title": "kweli Icon 512",
+      "title": "Kweli Icon 512",
       "type": "registry:item"
     },
     {
@@ -9603,7 +9603,7 @@
       },
       "name": "kweli-icon-maskable-512",
       "registryDependencies": [],
-      "title": "kweli Icon Maskable 512",
+      "title": "Kweli Icon Maskable 512",
       "type": "registry:item"
     },
     {
@@ -9639,7 +9639,7 @@
       },
       "name": "kweli-mark-dark",
       "registryDependencies": [],
-      "title": "kweli Mark Dark",
+      "title": "Kweli Mark Dark",
       "type": "registry:item"
     },
     {
@@ -9675,7 +9675,7 @@
       },
       "name": "kweli-mark-light",
       "registryDependencies": [],
-      "title": "kweli Mark Light",
+      "title": "Kweli Mark Light",
       "type": "registry:item"
     },
     {
@@ -11012,7 +11012,7 @@
       },
       "name": "mzizi-a11y",
       "registryDependencies": ["https://api.mzizi.dev/v1/ui/mzizi-tokens"],
-      "title": "mzizi a11y",
+      "title": "Mzizi a11y",
       "type": "registry:lib"
     },
     {
@@ -11043,7 +11043,7 @@
       },
       "name": "mzizi-a11y-audit",
       "registryDependencies": [],
-      "title": "mzizi a11y Audit",
+      "title": "Mzizi a11y Audit",
       "type": "registry:lib"
     },
     {
@@ -11077,7 +11077,7 @@
       },
       "name": "mzizi-abr-content",
       "registryDependencies": [],
-      "title": "mzizi Abr Content",
+      "title": "Mzizi Abr Content",
       "type": "registry:ui"
     },
     {
@@ -11117,7 +11117,7 @@
         "https://api.mzizi.dev/v1/ui/sheet",
         "https://api.mzizi.dev/v1/ui/mzizi-harness"
       ],
-      "title": "mzizi Action Sheet",
+      "title": "Mzizi Action Sheet",
       "type": "registry:ui"
     },
     {
@@ -11153,7 +11153,7 @@
       },
       "name": "mzizi-ai-context",
       "registryDependencies": [],
-      "title": "mzizi AI Context",
+      "title": "Mzizi AI Context",
       "type": "registry:lib"
     },
     {
@@ -11193,7 +11193,7 @@
         "https://api.mzizi.dev/v1/ui/alert",
         "https://api.mzizi.dev/v1/ui/mzizi-harness"
       ],
-      "title": "mzizi Alert Banner",
+      "title": "Mzizi Alert Banner",
       "type": "registry:ui"
     },
     {
@@ -11224,7 +11224,7 @@
       },
       "name": "mzizi-alert-engine",
       "registryDependencies": [],
-      "title": "mzizi Alert Engine",
+      "title": "Mzizi Alert Engine",
       "type": "registry:lib"
     },
     {
@@ -11255,7 +11255,7 @@
       },
       "name": "mzizi-api-probe",
       "registryDependencies": [],
-      "title": "mzizi API Probe",
+      "title": "Mzizi API Probe",
       "type": "registry:lib"
     },
     {
@@ -11295,7 +11295,7 @@
         "https://api.mzizi.dev/v1/ui/card",
         "https://api.mzizi.dev/v1/ui/mzizi-harness"
       ],
-      "title": "mzizi Application Tracker",
+      "title": "Mzizi Application Tracker",
       "type": "registry:ui"
     },
     {
@@ -11342,7 +11342,7 @@
         "https://api.mzizi.dev/v1/ui/mzizi-verified-badge",
         "https://api.mzizi.dev/v1/ui/mzizi-harness"
       ],
-      "title": "mzizi Article Card",
+      "title": "Mzizi Article Card",
       "type": "registry:ui"
     },
     {
@@ -11389,7 +11389,7 @@
         "https://api.mzizi.dev/v1/ui/mzizi-harness",
         "https://api.mzizi.dev/v1/ui/utils"
       ],
-      "title": "mzizi Auth Card",
+      "title": "Mzizi Auth Card",
       "type": "registry:ui"
     },
     {
@@ -11426,7 +11426,7 @@
       },
       "name": "mzizi-auth-layout",
       "registryDependencies": [],
-      "title": "mzizi Auth Layout",
+      "title": "Mzizi Auth Layout",
       "type": "registry:ui"
     },
     {
@@ -11468,7 +11468,7 @@
       },
       "name": "mzizi-avatar-stack",
       "registryDependencies": ["https://api.mzizi.dev/v1/ui/avatar"],
-      "title": "mzizi Avatar Stack",
+      "title": "Mzizi Avatar Stack",
       "type": "registry:ui"
     },
     {
@@ -11515,7 +11515,7 @@
         "https://api.mzizi.dev/v1/ui/tooltip",
         "https://api.mzizi.dev/v1/ui/mzizi-harness"
       ],
-      "title": "mzizi Badge Display",
+      "title": "Mzizi Badge Display",
       "type": "registry:ui"
     },
     {
@@ -11561,7 +11561,7 @@
         "https://api.mzizi.dev/v1/ui/button",
         "https://api.mzizi.dev/v1/ui/mzizi-harness"
       ],
-      "title": "mzizi Balance Display",
+      "title": "Mzizi Balance Display",
       "type": "registry:ui"
     },
     {
@@ -11606,7 +11606,7 @@
       "tailwind": {
         "baseColor": "neutral"
       },
-      "title": "mzizi Base",
+      "title": "Mzizi Base",
       "type": "registry:base"
     },
     {
@@ -11647,7 +11647,7 @@
       },
       "name": "mzizi-bottom-nav",
       "registryDependencies": ["https://api.mzizi.dev/v1/ui/mzizi-harness"],
-      "title": "mzizi Bottom Nav",
+      "title": "Mzizi Bottom Nav",
       "type": "registry:ui"
     },
     {
@@ -11689,7 +11689,7 @@
         "https://api.mzizi.dev/v1/ui/badge",
         "https://api.mzizi.dev/v1/ui/mzizi-harness"
       ],
-      "title": "mzizi Calendar",
+      "title": "Mzizi Calendar",
       "type": "registry:ui"
     },
     {
@@ -11724,7 +11724,7 @@
       },
       "name": "mzizi-chain-gate",
       "registryDependencies": [],
-      "title": "mzizi Chain Gate",
+      "title": "Mzizi Chain Gate",
       "type": "registry:ui"
     },
     {
@@ -11758,7 +11758,7 @@
       },
       "name": "mzizi-chain-resilience",
       "registryDependencies": [],
-      "title": "mzizi Chain Resilience",
+      "title": "Mzizi Chain Resilience",
       "type": "registry:ui"
     },
     {
@@ -11796,7 +11796,7 @@
       },
       "name": "mzizi-changelog-renderer",
       "registryDependencies": [],
-      "title": "mzizi Changelog Renderer",
+      "title": "Mzizi Changelog Renderer",
       "type": "registry:ui"
     },
     {
@@ -11832,7 +11832,7 @@
       },
       "name": "mzizi-chaos",
       "registryDependencies": [],
-      "title": "mzizi Chaos",
+      "title": "Mzizi Chaos",
       "type": "registry:lib"
     },
     {
@@ -11875,7 +11875,7 @@
       },
       "name": "mzizi-command-palette",
       "registryDependencies": [],
-      "title": "mzizi Command Palette",
+      "title": "Mzizi Command Palette",
       "type": "registry:ui"
     },
     {
@@ -11914,7 +11914,7 @@
         "https://api.mzizi.dev/v1/ui/card",
         "https://api.mzizi.dev/v1/ui/mzizi-harness"
       ],
-      "title": "mzizi Commute Card",
+      "title": "Mzizi Commute Card",
       "type": "registry:ui"
     },
     {
@@ -11945,7 +11945,7 @@
       },
       "name": "mzizi-conformity-check",
       "registryDependencies": [],
-      "title": "mzizi Conformity Check",
+      "title": "Mzizi Conformity Check",
       "type": "registry:lib"
     },
     {
@@ -11981,7 +11981,7 @@
       },
       "name": "mzizi-connectivity-bar",
       "registryDependencies": [],
-      "title": "mzizi Connectivity Bar",
+      "title": "Mzizi Connectivity Bar",
       "type": "registry:ui"
     },
     {
@@ -12022,7 +12022,7 @@
         "https://api.mzizi.dev/v1/ui/avatar",
         "https://api.mzizi.dev/v1/ui/mzizi-harness"
       ],
-      "title": "mzizi Content Composer",
+      "title": "Mzizi Content Composer",
       "type": "registry:ui"
     },
     {
@@ -12060,7 +12060,7 @@
         "https://api.mzizi.dev/v1/ui/mzizi-harness",
         "https://api.mzizi.dev/v1/ui/utils"
       ],
-      "title": "mzizi Content Gate",
+      "title": "Mzizi Content Gate",
       "type": "registry:ui"
     },
     {
@@ -12100,7 +12100,7 @@
         "https://api.mzizi.dev/v1/ui/badge",
         "https://api.mzizi.dev/v1/ui/mzizi-harness"
       ],
-      "title": "mzizi Conversation Row",
+      "title": "Mzizi Conversation Row",
       "type": "registry:ui"
     },
     {
@@ -12139,7 +12139,7 @@
       },
       "name": "mzizi-cover-header",
       "registryDependencies": [],
-      "title": "mzizi Cover Header",
+      "title": "Mzizi Cover Header",
       "type": "registry:ui"
     },
     {
@@ -12180,7 +12180,7 @@
       },
       "name": "mzizi-cover-wash-header",
       "registryDependencies": ["https://api.mzizi.dev/v1/ui/mzizi-harness"],
-      "title": "mzizi Cover Wash Header",
+      "title": "Mzizi Cover Wash Header",
       "type": "registry:ui"
     },
     {
@@ -12232,7 +12232,7 @@
         "https://api.mzizi.dev/v1/ui/separator",
         "https://api.mzizi.dev/v1/ui/mzizi-harness"
       ],
-      "title": "mzizi Create Listing",
+      "title": "Mzizi Create Listing",
       "type": "registry:ui"
     },
     {
@@ -12273,7 +12273,7 @@
         "https://api.mzizi.dev/v1/ui/mzizi-create-listing",
         "https://api.mzizi.dev/v1/ui/stepper"
       ],
-      "title": "mzizi Create Page",
+      "title": "Mzizi Create Page",
       "type": "registry:ui"
     },
     {
@@ -12320,7 +12320,7 @@
         "https://api.mzizi.dev/v1/ui/mzizi-verified-badge",
         "https://api.mzizi.dev/v1/ui/mzizi-harness"
       ],
-      "title": "mzizi Credential Card",
+      "title": "Mzizi Credential Card",
       "type": "registry:ui"
     },
     {
@@ -12354,7 +12354,7 @@
       },
       "name": "mzizi-crypto-fallback",
       "registryDependencies": [],
-      "title": "mzizi Crypto Fallback",
+      "title": "Mzizi Crypto Fallback",
       "type": "registry:ui"
     },
     {
@@ -12389,7 +12389,7 @@
       },
       "name": "mzizi-crypto-gate",
       "registryDependencies": [],
-      "title": "mzizi Crypto Gate",
+      "title": "Mzizi Crypto Gate",
       "type": "registry:ui"
     },
     {
@@ -12438,7 +12438,7 @@
         "https://api.mzizi.dev/v1/ui/sidebar",
         "https://api.mzizi.dev/v1/ui/mzizi-harness"
       ],
-      "title": "mzizi Dashboard Layout",
+      "title": "Mzizi Dashboard Layout",
       "type": "registry:ui"
     },
     {
@@ -12478,7 +12478,7 @@
         "https://api.mzizi.dev/v1/ui/mzizi-error-set",
         "https://api.mzizi.dev/v1/ui/mzizi-a11y"
       ],
-      "title": "mzizi Data",
+      "title": "Mzizi Data",
       "type": "registry:lib"
     },
     {
@@ -12510,7 +12510,7 @@
       },
       "name": "mzizi-deep-link-handler",
       "registryDependencies": [],
-      "title": "mzizi Deep Link Handler",
+      "title": "Mzizi Deep Link Handler",
       "type": "registry:ui"
     },
     {
@@ -12544,7 +12544,7 @@
       },
       "name": "mzizi-degradation-chain",
       "registryDependencies": [],
-      "title": "mzizi Degradation Chain",
+      "title": "Mzizi Degradation Chain",
       "type": "registry:ui"
     },
     {
@@ -12593,7 +12593,7 @@
         "https://api.mzizi.dev/v1/ui/mzizi-verified-badge",
         "https://api.mzizi.dev/v1/ui/mzizi-harness"
       ],
-      "title": "mzizi Detail Layout",
+      "title": "Mzizi Detail Layout",
       "type": "registry:ui"
     },
     {
@@ -12635,7 +12635,7 @@
         "https://api.mzizi.dev/v1/ui/mzizi-share-card",
         "https://api.mzizi.dev/v1/ui/mzizi-action-sheet"
       ],
-      "title": "mzizi Detail Page",
+      "title": "Mzizi Detail Page",
       "type": "registry:ui"
     },
     {
@@ -12670,7 +12670,7 @@
       },
       "name": "mzizi-did-gate",
       "registryDependencies": [],
-      "title": "mzizi Did Gate",
+      "title": "Mzizi Did Gate",
       "type": "registry:ui"
     },
     {
@@ -12704,7 +12704,7 @@
       },
       "name": "mzizi-docs-api",
       "registryDependencies": [],
-      "title": "mzizi Docs API",
+      "title": "Mzizi Docs API",
       "type": "registry:lib"
     },
     {
@@ -12745,7 +12745,7 @@
       },
       "name": "mzizi-docs-engine",
       "registryDependencies": [],
-      "title": "mzizi Docs Engine",
+      "title": "Mzizi Docs Engine",
       "type": "registry:ui"
     },
     {
@@ -12780,7 +12780,7 @@
       },
       "name": "mzizi-dx",
       "registryDependencies": ["https://api.mzizi.dev/v1/ui/mzizi-tokens"],
-      "title": "mzizi DX",
+      "title": "Mzizi DX",
       "type": "registry:lib"
     },
     {
@@ -12819,7 +12819,7 @@
       },
       "name": "mzizi-email-preview",
       "registryDependencies": [],
-      "title": "mzizi Email Preview",
+      "title": "Mzizi Email Preview",
       "type": "registry:ui"
     },
     {
@@ -12856,7 +12856,7 @@
       },
       "name": "mzizi-empty-screen",
       "registryDependencies": [],
-      "title": "mzizi Empty Screen",
+      "title": "Mzizi Empty Screen",
       "type": "registry:ui"
     },
     {
@@ -12895,7 +12895,7 @@
         "https://api.mzizi.dev/v1/ui/empty",
         "https://api.mzizi.dev/v1/ui/mzizi-harness"
       ],
-      "title": "mzizi Empty State",
+      "title": "Mzizi Empty State",
       "type": "registry:ui"
     },
     {
@@ -12932,7 +12932,7 @@
       },
       "name": "mzizi-error-screen",
       "registryDependencies": [],
-      "title": "mzizi Error Screen",
+      "title": "Mzizi Error Screen",
       "type": "registry:ui"
     },
     {
@@ -12971,7 +12971,7 @@
         "https://api.mzizi.dev/v1/ui/mzizi-verified-badge",
         "https://api.mzizi.dev/v1/ui/mzizi-harness"
       ],
-      "title": "mzizi Error Set",
+      "title": "Mzizi Error Set",
       "type": "registry:ui"
     },
     {
@@ -13007,7 +13007,7 @@
       },
       "name": "mzizi-error-tracker",
       "registryDependencies": [],
-      "title": "mzizi Error Tracker",
+      "title": "Mzizi Error Tracker",
       "type": "registry:lib"
     },
     {
@@ -13049,7 +13049,7 @@
         "https://api.mzizi.dev/v1/ui/mzizi-harness",
         "https://api.mzizi.dev/v1/ui/utils"
       ],
-      "title": "mzizi Escalation Card",
+      "title": "Mzizi Escalation Card",
       "type": "registry:ui"
     },
     {
@@ -13098,7 +13098,7 @@
       },
       "name": "mzizi-event-card",
       "registryDependencies": [],
-      "title": "mzizi Event Card",
+      "title": "Mzizi Event Card",
       "type": "registry:ui"
     },
     {
@@ -13133,7 +13133,7 @@
       },
       "name": "mzizi-feature-gate",
       "registryDependencies": [],
-      "title": "mzizi Feature Gate",
+      "title": "Mzizi Feature Gate",
       "type": "registry:ui"
     },
     {
@@ -13179,7 +13179,7 @@
       },
       "name": "mzizi-featured-card",
       "registryDependencies": ["https://api.mzizi.dev/v1/ui/badge"],
-      "title": "mzizi Featured Card",
+      "title": "Mzizi Featured Card",
       "type": "registry:ui"
     },
     {
@@ -13224,7 +13224,7 @@
         "https://api.mzizi.dev/v1/ui/pull-to-refresh",
         "https://api.mzizi.dev/v1/ui/mzizi-skeleton-set"
       ],
-      "title": "mzizi Feed Page",
+      "title": "Mzizi Feed Page",
       "type": "registry:ui"
     },
     {
@@ -13269,7 +13269,7 @@
         "https://api.mzizi.dev/v1/ui/separator",
         "https://api.mzizi.dev/v1/ui/mzizi-harness"
       ],
-      "title": "mzizi Footer",
+      "title": "Mzizi Footer",
       "type": "registry:ui"
     },
     {
@@ -13308,7 +13308,7 @@
         "https://api.mzizi.dev/v1/ui/card",
         "https://api.mzizi.dev/v1/ui/mzizi-harness"
       ],
-      "title": "mzizi Forecast Card",
+      "title": "Mzizi Forecast Card",
       "type": "registry:ui"
     },
     {
@@ -13344,7 +13344,7 @@
       },
       "name": "mzizi-fundi",
       "registryDependencies": [],
-      "title": "mzizi fundi",
+      "title": "Mzizi Fundi",
       "type": "registry:lib"
     },
     {
@@ -13379,7 +13379,7 @@
       },
       "name": "mzizi-fundi-learning",
       "registryDependencies": [],
-      "title": "mzizi fundi Learning",
+      "title": "Mzizi Fundi Learning",
       "type": "registry:lib"
     },
     {
@@ -13415,7 +13415,7 @@
       },
       "name": "mzizi-fundi-reporter",
       "registryDependencies": [],
-      "title": "mzizi fundi Reporter",
+      "title": "Mzizi Fundi Reporter",
       "type": "registry:lib"
     },
     {
@@ -13456,7 +13456,7 @@
         "https://api.mzizi.dev/v1/ui/card",
         "https://api.mzizi.dev/v1/ui/mzizi-harness"
       ],
-      "title": "mzizi Gauge Card",
+      "title": "Mzizi Gauge Card",
       "type": "registry:ui"
     },
     {
@@ -13491,7 +13491,7 @@
       },
       "name": "mzizi-geo-gate",
       "registryDependencies": [],
-      "title": "mzizi Geo Gate",
+      "title": "Mzizi Geo Gate",
       "type": "registry:ui"
     },
     {
@@ -13528,7 +13528,7 @@
       },
       "name": "mzizi-grid",
       "registryDependencies": [],
-      "title": "mzizi Grid",
+      "title": "Mzizi Grid",
       "type": "registry:ui"
     },
     {
@@ -13568,7 +13568,7 @@
         "https://api.mzizi.dev/v1/ui/avatar",
         "https://api.mzizi.dev/v1/ui/mzizi-harness"
       ],
-      "title": "mzizi Group Card",
+      "title": "Mzizi Group Card",
       "type": "registry:ui"
     },
     {
@@ -13600,7 +13600,7 @@
       },
       "name": "mzizi-harness",
       "registryDependencies": ["https://api.mzizi.dev/v1/ui/utils"],
-      "title": "mzizi Harness",
+      "title": "Mzizi Harness",
       "type": "registry:lib"
     },
     {
@@ -13642,7 +13642,7 @@
         "https://api.mzizi.dev/v1/ui/mzizi-theme-provider",
         "https://api.mzizi.dev/v1/ui/mzizi-resilience"
       ],
-      "title": "mzizi Harness Prewire",
+      "title": "Mzizi Harness Prewire",
       "type": "registry:lib"
     },
     {
@@ -13687,7 +13687,7 @@
         "https://api.mzizi.dev/v1/ui/sidebar",
         "https://api.mzizi.dev/v1/ui/mzizi-harness"
       ],
-      "title": "mzizi Header",
+      "title": "Mzizi Header",
       "type": "registry:ui"
     },
     {
@@ -13730,7 +13730,7 @@
         "https://api.mzizi.dev/v1/ui/appointment-card",
         "https://api.mzizi.dev/v1/ui/medication-reminder"
       ],
-      "title": "mzizi Health Dashboard",
+      "title": "Mzizi Health Dashboard",
       "type": "registry:ui"
     },
     {
@@ -13770,7 +13770,7 @@
         "https://api.mzizi.dev/v1/ui/card",
         "https://api.mzizi.dev/v1/ui/mzizi-harness"
       ],
-      "title": "mzizi Hero Stat",
+      "title": "Mzizi Hero Stat",
       "type": "registry:ui"
     },
     {
@@ -13812,7 +13812,7 @@
       },
       "name": "mzizi-icons",
       "registryDependencies": [],
-      "title": "mzizi Icons",
+      "title": "Mzizi Icons",
       "type": "registry:lib"
     },
     {
@@ -13843,7 +13843,7 @@
       },
       "name": "mzizi-incident-manager",
       "registryDependencies": [],
-      "title": "mzizi Incident Manager",
+      "title": "Mzizi Incident Manager",
       "type": "registry:lib"
     },
     {
@@ -13884,7 +13884,7 @@
         "https://api.mzizi.dev/v1/ui/mzizi-harness",
         "https://api.mzizi.dev/v1/ui/mzizi-verified-badge"
       ],
-      "title": "mzizi Job Card",
+      "title": "Mzizi Job Card",
       "type": "registry:ui"
     },
     {
@@ -13919,7 +13919,7 @@
       },
       "name": "mzizi-layout",
       "registryDependencies": ["https://api.mzizi.dev/v1/ui/mzizi-tokens"],
-      "title": "mzizi Layout",
+      "title": "Mzizi Layout",
       "type": "registry:lib"
     },
     {
@@ -13965,7 +13965,7 @@
         "https://api.mzizi.dev/v1/ui/mzizi-verified-badge",
         "https://api.mzizi.dev/v1/ui/mzizi-harness"
       ],
-      "title": "mzizi Leaderboard Row",
+      "title": "Mzizi Leaderboard Row",
       "type": "registry:ui"
     },
     {
@@ -14005,7 +14005,7 @@
         "https://api.mzizi.dev/v1/ui/progress",
         "https://api.mzizi.dev/v1/ui/mzizi-harness"
       ],
-      "title": "mzizi Lesson Card",
+      "title": "Mzizi Lesson Card",
       "type": "registry:ui"
     },
     {
@@ -14055,7 +14055,7 @@
         "https://api.mzizi.dev/v1/ui/avatar",
         "https://api.mzizi.dev/v1/ui/mzizi-harness"
       ],
-      "title": "mzizi Listing Card",
+      "title": "Mzizi Listing Card",
       "type": "registry:ui"
     },
     {
@@ -14089,7 +14089,7 @@
       },
       "name": "mzizi-load-shedder",
       "registryDependencies": [],
-      "title": "mzizi Load Shedder",
+      "title": "Mzizi Load Shedder",
       "type": "registry:ui"
     },
     {
@@ -14124,7 +14124,7 @@
       },
       "name": "mzizi-locale",
       "registryDependencies": ["https://api.mzizi.dev/v1/ui/mzizi-tokens"],
-      "title": "mzizi Locale",
+      "title": "Mzizi Locale",
       "type": "registry:lib"
     },
     {
@@ -14160,7 +14160,7 @@
       },
       "name": "mzizi-mark-dark",
       "registryDependencies": [],
-      "title": "mzizi Mark Dark",
+      "title": "Mzizi Mark Dark",
       "type": "registry:item"
     },
     {
@@ -14196,7 +14196,7 @@
       },
       "name": "mzizi-mark-light",
       "registryDependencies": [],
-      "title": "mzizi Mark Light",
+      "title": "Mzizi Mark Light",
       "type": "registry:item"
     },
     {
@@ -14238,7 +14238,7 @@
         "https://api.mzizi.dev/v1/ui/lightbox",
         "https://api.mzizi.dev/v1/ui/mzizi-harness"
       ],
-      "title": "mzizi Media",
+      "title": "Mzizi Media",
       "type": "registry:ui"
     },
     {
@@ -14278,7 +14278,7 @@
         "https://api.mzizi.dev/v1/ui/mzizi-verified-badge",
         "https://api.mzizi.dev/v1/ui/mzizi-harness"
       ],
-      "title": "mzizi Message Bubble",
+      "title": "Mzizi Message Bubble",
       "type": "registry:ui"
     },
     {
@@ -14318,7 +14318,7 @@
       },
       "name": "mzizi-meta-tile",
       "registryDependencies": [],
-      "title": "mzizi Meta Tile",
+      "title": "Mzizi Meta Tile",
       "type": "registry:ui"
     },
     {
@@ -14354,7 +14354,7 @@
       },
       "name": "mzizi-mini-app-runtime",
       "registryDependencies": [],
-      "title": "mzizi Mini App Runtime",
+      "title": "Mzizi Mini App Runtime",
       "type": "registry:ui"
     },
     {
@@ -14401,7 +14401,7 @@
         "https://api.mzizi.dev/v1/ui/progress",
         "https://api.mzizi.dev/v1/ui/mzizi-harness"
       ],
-      "title": "mzizi Mission Card",
+      "title": "Mzizi Mission Card",
       "type": "registry:ui"
     },
     {
@@ -14436,7 +14436,7 @@
       },
       "name": "mzizi-moderation-gate",
       "registryDependencies": [],
-      "title": "mzizi Moderation Gate",
+      "title": "Mzizi Moderation Gate",
       "type": "registry:ui"
     },
     {
@@ -14471,7 +14471,7 @@
       },
       "name": "mzizi-motion",
       "registryDependencies": ["https://api.mzizi.dev/v1/ui/mzizi-tokens"],
-      "title": "mzizi Motion",
+      "title": "Mzizi Motion",
       "type": "registry:lib"
     },
     {
@@ -14507,7 +14507,7 @@
       },
       "name": "mzizi-notification-center",
       "registryDependencies": [],
-      "title": "mzizi Notification Center",
+      "title": "Mzizi Notification Center",
       "type": "registry:ui"
     },
     {
@@ -14547,7 +14547,7 @@
         "https://api.mzizi.dev/v1/ui/badge",
         "https://api.mzizi.dev/v1/ui/mzizi-harness"
       ],
-      "title": "mzizi Notification Item",
+      "title": "Mzizi Notification Item",
       "type": "registry:ui"
     },
     {
@@ -14595,7 +14595,7 @@
         "https://api.mzizi.dev/v1/ui/mzizi-verified-badge",
         "https://api.mzizi.dev/v1/ui/mzizi-harness"
       ],
-      "title": "mzizi Offer Card",
+      "title": "Mzizi Offer Card",
       "type": "registry:ui"
     },
     {
@@ -14630,7 +14630,7 @@
       },
       "name": "mzizi-offline-gate",
       "registryDependencies": [],
-      "title": "mzizi Offline Gate",
+      "title": "Mzizi Offline Gate",
       "type": "registry:ui"
     },
     {
@@ -14670,7 +14670,7 @@
         "https://api.mzizi.dev/v1/ui/stepper",
         "https://api.mzizi.dev/v1/ui/mzizi-harness"
       ],
-      "title": "mzizi Onboarding Step",
+      "title": "Mzizi Onboarding Step",
       "type": "registry:ui"
     },
     {
@@ -14709,7 +14709,7 @@
       "registryDependencies": [
         "https://api.mzizi.dev/v1/ui/mzizi-synthetic-probe"
       ],
-      "title": "mzizi Otel",
+      "title": "Mzizi Otel",
       "type": "registry:lib"
     },
     {
@@ -14746,7 +14746,7 @@
       },
       "name": "mzizi-page",
       "registryDependencies": [],
-      "title": "mzizi Page",
+      "title": "Mzizi Page",
       "type": "registry:ui"
     },
     {
@@ -14791,7 +14791,7 @@
         "https://api.mzizi.dev/v1/ui/mzizi-harness",
         "https://api.mzizi.dev/v1/ui/utils"
       ],
-      "title": "mzizi Payment Mandate Card",
+      "title": "Mzizi Payment Mandate Card",
       "type": "registry:ui"
     },
     {
@@ -14832,7 +14832,7 @@
         "https://api.mzizi.dev/v1/ui/card",
         "https://api.mzizi.dev/v1/ui/mzizi-harness"
       ],
-      "title": "mzizi Payment Summary",
+      "title": "Mzizi Payment Summary",
       "type": "registry:ui"
     },
     {
@@ -14863,7 +14863,7 @@
       },
       "name": "mzizi-perf-probe",
       "registryDependencies": [],
-      "title": "mzizi Perf Probe",
+      "title": "Mzizi Perf Probe",
       "type": "registry:lib"
     },
     {
@@ -14906,7 +14906,7 @@
         "https://api.mzizi.dev/v1/ui/mzizi-harness",
         "https://api.mzizi.dev/v1/ui/utils"
       ],
-      "title": "mzizi Permission Gate",
+      "title": "Mzizi Permission Gate",
       "type": "registry:ui"
     },
     {
@@ -14942,7 +14942,7 @@
       },
       "name": "mzizi-persistent-player",
       "registryDependencies": [],
-      "title": "mzizi Persistent Player",
+      "title": "Mzizi Persistent Player",
       "type": "registry:ui"
     },
     {
@@ -14982,7 +14982,7 @@
         "https://api.mzizi.dev/v1/ui/card",
         "https://api.mzizi.dev/v1/ui/mzizi-harness"
       ],
-      "title": "mzizi Phrase Card",
+      "title": "Mzizi Phrase Card",
       "type": "registry:ui"
     },
     {
@@ -15040,7 +15040,7 @@
         "https://api.mzizi.dev/v1/ui/mzizi-verified-badge",
         "https://api.mzizi.dev/v1/ui/mzizi-harness"
       ],
-      "title": "mzizi Place Card",
+      "title": "Mzizi Place Card",
       "type": "registry:ui"
     },
     {
@@ -15079,7 +15079,7 @@
         "https://api.mzizi.dev/v1/ui/card",
         "https://api.mzizi.dev/v1/ui/mzizi-tokens"
       ],
-      "title": "mzizi Platform",
+      "title": "Mzizi Platform",
       "type": "registry:lib"
     },
     {
@@ -15110,7 +15110,7 @@
       },
       "name": "mzizi-platform-health",
       "registryDependencies": [],
-      "title": "mzizi Platform Health",
+      "title": "Mzizi Platform Health",
       "type": "registry:ui"
     },
     {
@@ -15144,7 +15144,7 @@
       },
       "name": "mzizi-prefetch-boundary",
       "registryDependencies": [],
-      "title": "mzizi Prefetch Boundary",
+      "title": "Mzizi Prefetch Boundary",
       "type": "registry:ui"
     },
     {
@@ -15191,7 +15191,7 @@
       },
       "name": "mzizi-product-card",
       "registryDependencies": [],
-      "title": "mzizi Product Card",
+      "title": "Mzizi Product Card",
       "type": "registry:ui"
     },
     {
@@ -15233,7 +15233,7 @@
         "https://api.mzizi.dev/v1/ui/mzizi-harness",
         "https://api.mzizi.dev/v1/ui/utils"
       ],
-      "title": "mzizi Product Results",
+      "title": "Mzizi Product Results",
       "type": "registry:ui"
     },
     {
@@ -15284,7 +15284,7 @@
         "https://api.mzizi.dev/v1/ui/progress",
         "https://api.mzizi.dev/v1/ui/mzizi-harness"
       ],
-      "title": "mzizi Profile Block",
+      "title": "Mzizi Profile Block",
       "type": "registry:ui"
     },
     {
@@ -15326,7 +15326,7 @@
       },
       "name": "mzizi-profile-header",
       "registryDependencies": ["https://api.mzizi.dev/v1/ui/mzizi-harness"],
-      "title": "mzizi Profile Header",
+      "title": "Mzizi Profile Header",
       "type": "registry:ui"
     },
     {
@@ -15376,7 +15376,7 @@
         "https://api.mzizi.dev/v1/ui/tabs",
         "https://api.mzizi.dev/v1/ui/mzizi-harness"
       ],
-      "title": "mzizi Profile Page",
+      "title": "Mzizi Profile Page",
       "type": "registry:block"
     },
     {
@@ -15419,7 +15419,7 @@
         "https://api.mzizi.dev/v1/ui/tabs",
         "https://api.mzizi.dev/v1/ui/avatar"
       ],
-      "title": "mzizi Profile Page Layout",
+      "title": "Mzizi Profile Page Layout",
       "type": "registry:ui"
     },
     {
@@ -15472,7 +15472,7 @@
         "https://api.mzizi.dev/v1/ui/textarea",
         "https://api.mzizi.dev/v1/ui/mzizi-harness"
       ],
-      "title": "mzizi Profile Settings",
+      "title": "Mzizi Profile Settings",
       "type": "registry:block"
     },
     {
@@ -15517,7 +15517,7 @@
         "https://api.mzizi.dev/v1/ui/avatar",
         "https://api.mzizi.dev/v1/ui/mzizi-harness"
       ],
-      "title": "mzizi Programme Item",
+      "title": "Mzizi Programme Item",
       "type": "registry:ui"
     },
     {
@@ -15558,7 +15558,7 @@
         "https://api.mzizi.dev/v1/ui/mzizi-harness",
         "https://api.mzizi.dev/v1/ui/mzizi-verified-badge"
       ],
-      "title": "mzizi Provider Card",
+      "title": "Mzizi Provider Card",
       "type": "registry:ui"
     },
     {
@@ -15593,7 +15593,7 @@
       },
       "name": "mzizi-rate-gate",
       "registryDependencies": [],
-      "title": "mzizi Rate Gate",
+      "title": "Mzizi Rate Gate",
       "type": "registry:ui"
     },
     {
@@ -15635,7 +15635,7 @@
       },
       "name": "mzizi-registration-card",
       "registryDependencies": ["https://api.mzizi.dev/v1/ui/mzizi-harness"],
-      "title": "mzizi Registration Card",
+      "title": "Mzizi Registration Card",
       "type": "registry:ui"
     },
     {
@@ -15682,7 +15682,7 @@
         "https://api.mzizi.dev/v1/ui/mzizi-skeleton-set",
         "https://api.mzizi.dev/v1/ui/mzizi-error-set"
       ],
-      "title": "mzizi Resilience",
+      "title": "Mzizi Resilience",
       "type": "registry:lib"
     },
     {
@@ -15730,7 +15730,7 @@
         "https://api.mzizi.dev/v1/ui/mzizi-harness",
         "https://api.mzizi.dev/v1/ui/mzizi-verified-badge"
       ],
-      "title": "mzizi Review Card",
+      "title": "Mzizi Review Card",
       "type": "registry:ui"
     },
     {
@@ -15771,7 +15771,7 @@
       },
       "name": "mzizi-root-layout",
       "registryDependencies": [],
-      "title": "mzizi Root Layout",
+      "title": "Mzizi Root Layout",
       "type": "registry:ui"
     },
     {
@@ -15807,7 +15807,7 @@
       },
       "name": "mzizi-route-guard",
       "registryDependencies": [],
-      "title": "mzizi Route Guard",
+      "title": "Mzizi Route Guard",
       "type": "registry:ui"
     },
     {
@@ -15851,7 +15851,7 @@
         "https://api.mzizi.dev/v1/ui/stop-card",
         "https://api.mzizi.dev/v1/ui/itinerary-timeline"
       ],
-      "title": "mzizi Route Planner",
+      "title": "Mzizi Route Planner",
       "type": "registry:ui"
     },
     {
@@ -15891,7 +15891,7 @@
         "https://api.mzizi.dev/v1/ui/button",
         "https://api.mzizi.dev/v1/ui/mzizi-harness"
       ],
-      "title": "mzizi Rsvp Button",
+      "title": "Mzizi Rsvp Button",
       "type": "registry:ui"
     },
     {
@@ -15922,7 +15922,7 @@
       },
       "name": "mzizi-rum",
       "registryDependencies": [],
-      "title": "mzizi Rum",
+      "title": "Mzizi Rum",
       "type": "registry:lib"
     },
     {
@@ -15963,7 +15963,7 @@
         "https://api.mzizi.dev/v1/ui/filter-bar",
         "https://api.mzizi.dev/v1/ui/mzizi-harness"
       ],
-      "title": "mzizi Search View",
+      "title": "Mzizi Search View",
       "type": "registry:ui"
     },
     {
@@ -16011,7 +16011,7 @@
         "https://api.mzizi.dev/v1/ui/error-boundary",
         "https://api.mzizi.dev/v1/ui/section-error-boundary"
       ],
-      "title": "mzizi Section",
+      "title": "Mzizi Section",
       "type": "registry:ui"
     },
     {
@@ -16048,7 +16048,7 @@
       },
       "name": "mzizi-seo",
       "registryDependencies": [],
-      "title": "mzizi SEO",
+      "title": "Mzizi SEO",
       "type": "registry:lib"
     },
     {
@@ -16090,7 +16090,7 @@
         "https://api.mzizi.dev/v1/ui/switch",
         "https://api.mzizi.dev/v1/ui/select"
       ],
-      "title": "mzizi Settings Page",
+      "title": "Mzizi Settings Page",
       "type": "registry:ui"
     },
     {
@@ -16131,7 +16131,7 @@
         "https://api.mzizi.dev/v1/ui/share-dialog",
         "https://api.mzizi.dev/v1/ui/mzizi-harness"
       ],
-      "title": "mzizi Share Card",
+      "title": "Mzizi Share Card",
       "type": "registry:ui"
     },
     {
@@ -16179,7 +16179,7 @@
         "https://api.mzizi.dev/v1/ui/tooltip",
         "https://api.mzizi.dev/v1/ui/mzizi-harness"
       ],
-      "title": "mzizi Sidebar",
+      "title": "Mzizi Sidebar",
       "type": "registry:ui"
     },
     {
@@ -16216,7 +16216,7 @@
       },
       "name": "mzizi-sidebar-nav",
       "registryDependencies": [],
-      "title": "mzizi Sidebar Nav",
+      "title": "Mzizi Sidebar Nav",
       "type": "registry:ui"
     },
     {
@@ -16269,7 +16269,7 @@
         "https://api.mzizi.dev/v1/ui/skeleton",
         "https://api.mzizi.dev/v1/ui/mzizi-harness"
       ],
-      "title": "mzizi Skeleton Set",
+      "title": "Mzizi Skeleton Set",
       "type": "registry:ui"
     },
     {
@@ -16315,7 +16315,7 @@
         "https://api.mzizi.dev/v1/ui/mzizi-verified-badge",
         "https://api.mzizi.dev/v1/ui/mzizi-harness"
       ],
-      "title": "mzizi Source Badge",
+      "title": "Mzizi Source Badge",
       "type": "registry:ui"
     },
     {
@@ -16352,7 +16352,7 @@
       },
       "name": "mzizi-splash-screen",
       "registryDependencies": [],
-      "title": "mzizi Splash Screen",
+      "title": "Mzizi Splash Screen",
       "type": "registry:ui"
     },
     {
@@ -16392,7 +16392,7 @@
         "https://api.mzizi.dev/v1/ui/card",
         "https://api.mzizi.dev/v1/ui/mzizi-harness"
       ],
-      "title": "mzizi Stats Row",
+      "title": "Mzizi Stats Row",
       "type": "registry:ui"
     },
     {
@@ -16428,7 +16428,7 @@
       },
       "name": "mzizi-success-screen",
       "registryDependencies": [],
-      "title": "mzizi Success Screen",
+      "title": "Mzizi Success Screen",
       "type": "registry:ui"
     },
     {
@@ -16467,7 +16467,7 @@
         "https://api.mzizi.dev/v1/ui/card",
         "https://api.mzizi.dev/v1/ui/mzizi-harness"
       ],
-      "title": "mzizi Suitability Card",
+      "title": "Mzizi Suitability Card",
       "type": "registry:ui"
     },
     {
@@ -16501,7 +16501,7 @@
       },
       "name": "mzizi-sync-status",
       "registryDependencies": [],
-      "title": "mzizi Sync Status",
+      "title": "Mzizi Sync Status",
       "type": "registry:ui"
     },
     {
@@ -16532,7 +16532,7 @@
       },
       "name": "mzizi-synthetic-probe",
       "registryDependencies": [],
-      "title": "mzizi Synthetic Probe",
+      "title": "Mzizi Synthetic Probe",
       "type": "registry:lib"
     },
     {
@@ -16572,7 +16572,7 @@
         "https://api.mzizi.dev/v1/ui/mzizi-tokens",
         "https://api.mzizi.dev/v1/ui/mzizi-tokens-typescript"
       ],
-      "title": "mzizi Theme Provider",
+      "title": "Mzizi Theme Provider",
       "type": "registry:ui"
     },
     {
@@ -16619,7 +16619,7 @@
         "https://api.mzizi.dev/v1/ui/mzizi-verified-badge",
         "https://api.mzizi.dev/v1/ui/mzizi-harness"
       ],
-      "title": "mzizi Ticket Card",
+      "title": "Mzizi Ticket Card",
       "type": "registry:ui"
     },
     {
@@ -16665,7 +16665,7 @@
         "https://api.mzizi.dev/v1/ui/avatar",
         "https://api.mzizi.dev/v1/ui/mzizi-harness"
       ],
-      "title": "mzizi Timeline",
+      "title": "Mzizi Timeline",
       "type": "registry:ui"
     },
     {
@@ -16701,7 +16701,7 @@
       },
       "name": "mzizi-toast-provider",
       "registryDependencies": [],
-      "title": "mzizi Toast Provider",
+      "title": "Mzizi Toast Provider",
       "type": "registry:ui"
     },
     {
@@ -17071,7 +17071,7 @@
       },
       "name": "mzizi-tokens",
       "registryDependencies": [],
-      "title": "mzizi Tokens",
+      "title": "Mzizi Tokens",
       "type": "registry:theme"
     },
     {
@@ -17092,7 +17092,7 @@
       },
       "name": "mzizi-tokens-arkts",
       "registryDependencies": [],
-      "title": "mzizi Tokens Arkts",
+      "title": "Mzizi Tokens Arkts",
       "type": "registry:lib"
     },
     {
@@ -17113,7 +17113,7 @@
       },
       "name": "mzizi-tokens-globals",
       "registryDependencies": [],
-      "title": "mzizi Tokens Globals",
+      "title": "Mzizi Tokens Globals",
       "type": "registry:lib"
     },
     {
@@ -17134,7 +17134,7 @@
       },
       "name": "mzizi-tokens-kotlin",
       "registryDependencies": [],
-      "title": "mzizi Tokens Kotlin",
+      "title": "Mzizi Tokens Kotlin",
       "type": "registry:lib"
     },
     {
@@ -17155,7 +17155,7 @@
       },
       "name": "mzizi-tokens-python",
       "registryDependencies": [],
-      "title": "mzizi Tokens Python",
+      "title": "Mzizi Tokens Python",
       "type": "registry:lib"
     },
     {
@@ -17176,7 +17176,7 @@
       },
       "name": "mzizi-tokens-react-native",
       "registryDependencies": [],
-      "title": "mzizi Tokens React Native",
+      "title": "Mzizi Tokens React Native",
       "type": "registry:lib"
     },
     {
@@ -17197,7 +17197,7 @@
       },
       "name": "mzizi-tokens-rust",
       "registryDependencies": [],
-      "title": "mzizi Tokens Rust",
+      "title": "Mzizi Tokens Rust",
       "type": "registry:lib"
     },
     {
@@ -17218,7 +17218,7 @@
       },
       "name": "mzizi-tokens-swift",
       "registryDependencies": [],
-      "title": "mzizi Tokens Swift",
+      "title": "Mzizi Tokens Swift",
       "type": "registry:lib"
     },
     {
@@ -17260,7 +17260,7 @@
       },
       "name": "mzizi-tokens-typescript",
       "registryDependencies": ["https://api.mzizi.dev/v1/ui/mzizi-tokens"],
-      "title": "mzizi Tokens Typescript",
+      "title": "Mzizi Tokens Typescript",
       "type": "registry:lib"
     },
     {
@@ -17299,7 +17299,7 @@
         "https://api.mzizi.dev/v1/ui/badge",
         "https://api.mzizi.dev/v1/ui/mzizi-harness"
       ],
-      "title": "mzizi Transaction Row",
+      "title": "Mzizi Transaction Row",
       "type": "registry:ui"
     },
     {
@@ -17337,7 +17337,7 @@
         "https://api.mzizi.dev/v1/ui/mzizi-harness",
         "https://api.mzizi.dev/v1/ui/utils"
       ],
-      "title": "mzizi Trust Gate",
+      "title": "Mzizi Trust Gate",
       "type": "registry:ui"
     },
     {
@@ -17382,7 +17382,7 @@
       },
       "name": "mzizi-trust-meter",
       "registryDependencies": ["https://api.mzizi.dev/v1/ui/site-icon"],
-      "title": "mzizi Trust Meter",
+      "title": "Mzizi Trust Meter",
       "type": "registry:ui"
     },
     {
@@ -17417,7 +17417,7 @@
       },
       "name": "mzizi-trust-tier-data",
       "registryDependencies": [],
-      "title": "mzizi Trust Tier Data",
+      "title": "Mzizi Trust Tier Data",
       "type": "registry:lib"
     },
     {
@@ -17451,7 +17451,7 @@
         "https://api.mzizi.dev/v1/ui/mzizi-icons",
         "https://api.mzizi.dev/v1/ui/mzizi-trust-tier-data"
       ],
-      "title": "mzizi Trust Tiers",
+      "title": "Mzizi Trust Tiers",
       "type": "registry:lib"
     },
     {
@@ -17487,7 +17487,7 @@
       },
       "name": "mzizi-update-prompt",
       "registryDependencies": [],
-      "title": "mzizi Update Prompt",
+      "title": "Mzizi Update Prompt",
       "type": "registry:ui"
     },
     {
@@ -17529,7 +17529,7 @@
       },
       "name": "mzizi-user-card",
       "registryDependencies": ["https://api.mzizi.dev/v1/ui/mzizi-harness"],
-      "title": "mzizi User Card",
+      "title": "Mzizi User Card",
       "type": "registry:ui"
     },
     {
@@ -17576,7 +17576,7 @@
         "https://api.mzizi.dev/v1/ui/dropdown-menu",
         "https://api.mzizi.dev/v1/ui/mzizi-harness"
       ],
-      "title": "mzizi User Menu",
+      "title": "Mzizi User Menu",
       "type": "registry:ui"
     },
     {
@@ -17634,7 +17634,7 @@
         "https://api.mzizi.dev/v1/ui/site-icon",
         "https://api.mzizi.dev/v1/ui/ui-utils"
       ],
-      "title": "mzizi Verified Badge",
+      "title": "Mzizi Verified Badge",
       "type": "registry:ui"
     },
     {
@@ -17669,7 +17669,7 @@
       },
       "name": "mzizi-wallet-gate",
       "registryDependencies": [],
-      "title": "mzizi Wallet Gate",
+      "title": "Mzizi Wallet Gate",
       "type": "registry:ui"
     },
     {
@@ -17714,7 +17714,7 @@
       },
       "name": "mzizi-washed-theme",
       "registryDependencies": ["https://api.mzizi.dev/v1/ui/mzizi-harness"],
-      "title": "mzizi Washed Theme",
+      "title": "Mzizi Washed Theme",
       "type": "registry:ui"
     },
     {

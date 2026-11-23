@@ -801,7 +801,7 @@ export const ecosystem: BrandEcosystemEntry[] = [
     language: "Shona",
     sortOrder: 0,
     description:
-      "The ecosystem governed by the Bundu Foundation (Zimbabwe CLG), one identity, one design system and one open data commons across four pillars: Bundu Labs (research, standards and open articles), mukoko (the consumer super app, tanzanite), nyuchi (the commercial pillar: infrastructure and products for organisations, gold) and shamwari (the community pillar: sovereign AI, sodalite). Nyuchi is a sibling pillar, not the parent, and sells Shamwari commercially as its operator; the sister brands are specialist verticals.",
+      "The ecosystem governed by the Bundu Foundation (Zimbabwe CLG), one identity, one design system and one open data commons across four pillars: Bundu Labs (research, standards and open articles), Mukoko (the consumer super app, tanzanite), Nyuchi (the commercial pillar: infrastructure and products for organisations, gold) and Shamwari (the community pillar: open-weight AI, sodalite). Nyuchi is a sibling pillar, not the parent, and sells Shamwari commercially as its operator. Under the pillars sit initiatives and projects, and the consumer products are the Mukoko apps.",
     adopterType: "ecosystem_brand",
   },
   {
@@ -814,7 +814,7 @@ export const ecosystem: BrandEcosystemEntry[] = [
     language: "Shona",
     sortOrder: 1,
     description:
-      "Seven enterprise products, each with its own consumer interface and business-facing tools. API platform, web services, learning, medical, rentals, tools, and SEO manager. Every nyuchi product is a standalone product, a door into the mukoko platform, and a professional surface for the same ecosystem.",
+      "Seven enterprise products, each with its own consumer interface and business-facing tools. API platform, web services, learning, medical, rentals, tools, and SEO manager. Every Nyuchi product is a standalone product, a door into the Mukoko platform, and a professional surface for the same ecosystem.",
     adopterType: "ecosystem_brand",
   },
   {
@@ -833,14 +833,14 @@ export const ecosystem: BrandEcosystemEntry[] = [
   {
     url: "https://shamwari.ai",
     name: "shamwari",
-    role: "Sovereign AI companion",
+    role: "AI companion with open weights",
     voice: "Helpful, warm, intelligent",
     meaning: "Friend",
     mineral: "sodalite",
     language: "Shona",
     sortOrder: 3,
     description:
-      "The Digital Twin's conversational interface. Three layers of intelligence — personal (your pod data), community (anonymised platform data), and platform (base mukoko knowledge). A friend that serves; a friend that does not control.",
+      "The Digital Twin's conversational interface. Three layers of intelligence — personal (your pod data), community (anonymised platform data), and platform (base Mukoko knowledge). A friend that serves; a friend that does not control.",
     adopterType: "ecosystem_brand",
   },
   // Owner decision, 2026-10-04 (mukoko-dev/nhimbe#155): the "nhimbe" brand is
@@ -874,7 +874,7 @@ export const ecosystem: BrandEcosystemEntry[] = [
     language: "English/Shona",
     sortOrder: 5,
     description:
-      "Rentals-first marketplace for Zimbabwe and beyond. Business verification through the platform's unified submissions pipeline. Escrow-backed payments via mukoko wallet. Seller conversations flow through Campfire.",
+      "Rentals-first marketplace for Zimbabwe and beyond. Business verification through the platform's unified submissions pipeline. Escrow-backed payments via Mukoko wallet. Seller conversations flow through Campfire.",
     adopterType: "ecosystem_brand",
   },
   {
@@ -887,7 +887,7 @@ export const ecosystem: BrandEcosystemEntry[] = [
     language: "English",
     sortOrder: 6,
     description:
-      "African language learning. Shona and Ndebele as primaries, English, French, Portuguese, and travel phrases. The product expression of mukoko's commitment to treating African languages as first-class citizens.",
+      "African language learning. Shona and Ndebele as primaries, English, French, Portuguese, and travel phrases. The product expression of Mukoko's commitment to treating African languages as first-class citizens.",
     adopterType: "ecosystem_brand",
   },
   {
@@ -1049,7 +1049,7 @@ export const ecosystem: BrandEcosystemEntry[] = [
     language: "Swahili",
     sortOrder: 18,
     description:
-      "The Africa Trust Platform: place, organisation and person verification for the whole Mukoko ecosystem, and the public face of the geographic knowledge graph. Every place gets one canonical page, and the kweli verification badge travels with the entity across every Mukoko app.",
+      "The Africa Trust Platform: place, organisation and person verification for the whole Mukoko ecosystem, and the public face of the geographic knowledge graph. Every place gets one canonical page, and the Kweli verification badge travels with the entity across every Mukoko app.",
     adopterType: "ecosystem_brand",
   },
   // Owner decision, 2026-10-04 (mzizi-registry#404): Nyuchi Learning, the
@@ -1246,13 +1246,13 @@ export const brandMeta: BrandMeta = {
   },
   voiceAndTone: {
     doList: [
-      "Use lowercase for all brand wordmarks (mukoko, nyuchi, shamwari, bundu)",
+      "Write every brand wordmark with an initial capital (Mukoko, Nyuchi, Shamwari, Bundu, Mzizi, Kweli); code identifiers such as package names, domains and slugs keep their own spelling",
       "Reference African origins and meanings when contextually appropriate",
       "Write in a way that welcomes both technical and non-technical readers",
       "Use inclusive language that reflects Ubuntu philosophy",
     ],
     dontList: [
-      "Don't capitalize brand wordmarks (not Mukoko, not NYUCHI)",
+      "Don't write brand wordmarks in lowercase or in capitals (not mukoko, not NYUCHI)",
       "Don't use overly formal or corporate language",
       "Don't assume Western-centric cultural references",
       "Don't use jargon without explanation",

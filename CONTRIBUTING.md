@@ -1,6 +1,6 @@
 # Contributing to Mzizi
 
-Thank you for your interest in contributing to **Mzizi** — the open component registry, brand system, and DNA-helix architecture portal for the bundu ecosystem (the `mzizi` repository).
+Thank you for your interest in contributing to **Mzizi** — the open component registry, brand system, and DNA-helix architecture portal for the Bundu ecosystem (the `mzizi` repository).
 
 This guide covers everything you need to get started, from setting up your environment to opening a pull request.
 
@@ -61,7 +61,7 @@ git checkout -b feature/your-feature
 
 ### Key Principles
 
-- The registry is the **single source of truth** for the entire bundu ecosystem. Changes here propagate to every app that consumes the registry.
+- The registry is the **single source of truth** for the entire Bundu ecosystem. Changes here propagate to every app that consumes the registry.
 - Every component must be **independently installable** via the shadcn CLI.
 - The **Seven African Minerals palette** (minerals + heritage + status + experimental) is the only approved color system. Never introduce colors outside the token system.
 - **Accessibility is mandatory** — APCA 3.0 AAA contrast with WCAG minimums (body text 7:1, non-body text 4.5:1, UI 3:1), 56px default / 45px touch hit region (24px on a desktop), keyboard navigation, screen reader support.
@@ -87,7 +87,7 @@ git checkout -b feature/your-feature
 
 - **kebab-case** for file names: `button-group.tsx`, `date-range-picker.tsx`
 - **PascalCase** for component names: `ButtonGroup`, `DateRangePicker`
-- **All brand wordmarks lowercase** — mzizi, mukoko, nyuchi, shamwari, bundu
+- **Brand wordmarks take an initial capital** — Mzizi, Mukoko, Nyuchi, Shamwari, Bundu, Kweli (owner decision, 2026-11-23). Code identifiers (package names, repository names, domains, slugs) keep their own lowercase spelling
 - **`data-slot` attribute** on every component for CSS selection and identification
 - **`"use client"` only when necessary** — components are React Server Components by default; add the directive only when using hooks, event handlers, or browser APIs
 
@@ -369,7 +369,7 @@ Tier 3 terminal:  Build                             (waits on all of the above)
 - [ ] New components are files under `components/registry/`, with their item + `meta` added to `registry.json` and `pnpm registry:normalize` run
 - [ ] Tests added for new functionality
 - [ ] Accessibility reviewed (APCA contrast, 56px default / 45px touch hit region (24px on a desktop), keyboard nav)
-- [ ] Brand wordmarks are lowercase (`mzizi`, `mukoko`, `nyuchi`, `shamwari`, `bundu`)
+- [ ] Brand wordmarks take an initial capital (Mzizi, Mukoko, Nyuchi, Shamwari, Bundu, Kweli)
 - [ ] Buttons are pill-shaped (`rounded-full`)
 - [ ] Any security finding from `/security-review` is fixed in this PR (per CLAUDE.md §15 rule 22 — never deferred)
 - [ ] The PR body has a `Site/docs/skills impact` section. mzizi.dev, docs.mzizi.dev and the agent skills (`@nyuchi/mzizi-skills`) must never lag this repo, so any user-visible change to components, the Mzizi Roots crates, the API data, or the npm packages and MCP tools is named there for the site, docs and skills freshness agents (see [`AGENTS.md`](AGENTS.md#site-docs-and-skills-freshness-hard-rule)). Write "None" if nothing user-visible changed.

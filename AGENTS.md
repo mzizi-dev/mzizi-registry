@@ -55,7 +55,7 @@ Other crates still carry the framework until their components move (#635, #710).
 
 **Astro is the default web UI; other stacks get the same component** (owner, 2026-10-05: "Astro
 is our default web ui but other may not use Astro"). Mzizi's own sites and apps are built in
-Astro, so a component's Astro build is its default build. But consumers in the bundu ecosystem
+Astro, so a component's Astro build is its default build. But consumers in the Bundu ecosystem
 may use React (Next.js), Rust (Mzizi Roots) or another stack, so every other build must be complete
 and must be the same component, not a fallback or a different design:
 
@@ -300,9 +300,15 @@ add it as its own section rather than re-creating a dead link.
 ## Naming and ownership
 
 - Mzizi is owned and governed by **Mzizi**; **Nyuchi** operates and develops it. It is not
-  a Nyuchi product — anyone in the bundu ecosystem consumes it, direction-setting flows
+  a Nyuchi product — anyone in the Bundu ecosystem consumes it, direction-setting flows
   through Mzizi.
-- Brand wordmarks are lowercase in prose: `mzizi`, `bundu`, `nyuchi`, `fundi`, `mukoko`.
+- Brand wordmarks take an initial capital in prose (owner decision, 2026-11-23): Mzizi, Bundu,
+  Nyuchi, Fundi, Mukoko, Shamwari, Kweli. Code identifiers keep their own spelling: package
+  names, repository names, domains, slugs and anything in backticks stay lowercase.
+- There are no "sister brands" (owner decision, 2026-11-23). The Bundu ecosystem has pillars
+  (Bundu Labs, Nyuchi Africa, Mukoko, Shamwari AI), and under them initiatives and projects;
+  Mzizi is a shared foundation, and Kweli, Mukoko Events, Lingo and Circles are Mukoko apps.
+  Shamwari is "open-weight AI" or "AI with open weights", never "sovereign AI".
 - `mzizi-dev/agent-tools` is **private** — do not link it in anything public-facing; name
   it in prose instead.
 

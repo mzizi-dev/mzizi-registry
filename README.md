@@ -1,6 +1,6 @@
 # Mzizi
 
-> The canonical component registry, brand system, and DNA-helix frontend architecture for the bundu ecosystem — an open-architecture project of the Bundu Foundation, owned and operated by Mzizi.
+> The canonical component registry, brand system, and DNA-helix frontend architecture for the Bundu ecosystem — an open-architecture project of the Bundu Foundation, owned and operated by Mzizi.
 
 [![CI](https://github.com/mzizi-dev/mzizi-registry/actions/workflows/ci.yml/badge.svg)](https://github.com/mzizi-dev/mzizi-registry/actions/workflows/ci.yml)
 [![Release](https://github.com/mzizi-dev/mzizi-registry/actions/workflows/release.yml/badge.svg)](https://github.com/mzizi-dev/mzizi-registry/actions/workflows/release.yml)
@@ -33,8 +33,8 @@ npx shadcn@latest add https://api.mzizi.dev/v1/ui/button
 `registry.json` and the component files in this repo are the source of truth, not a
 database. **21 colour families.** **One MCP server** (served from `mzizi-dev/agent-tools`) any AI
 client can install against.
-Nothing here is a Nyuchi product: it's a Mzizi-governed standard the whole bundu ecosystem
-(Mukoko's consumer apps, Nyuchi's enterprise products, sister brands) installs from the same
+Nothing here is a Nyuchi product: it's a Mzizi-governed standard the whole Bundu ecosystem
+(Mukoko's consumer apps, Nyuchi's enterprise products, the other projects in the Bundu ecosystem) installs from the same
 place.
 
 Install several at once:
@@ -262,19 +262,19 @@ agent working in this repo needs to know before pushing.
 | **nyuchi/nyuchi-platform** (private)                                                             | [platform.nyuchi.com](https://platform.nyuchi.com) | Nyuchi Console — B2B platform                                                                               |
 | **bundu-labs/bundu-docs** (private)                                                              | [docs.bundu.org](https://docs.bundu.org)           | Bundu's own product documentation (not Mzizi's docs)                                                        |
 | **nyuchi/nyuchi-docs**                                                                           | [docs.nyuchi.com](https://docs.nyuchi.com)         | Nyuchi engineering documentation (not Mzizi's docs)                                                         |
-| mukoko                                                                                           | [mukoko.com](https://mukoko.com)                   | Africa's super app                                                                                          |
-| mukoko weather                                                                                   | [weather.mukoko.com](https://weather.mukoko.com)   | Hyperlocal forecasts, farming intelligence                                                                  |
-| mukoko news                                                                                      | [news.mukoko.com](https://news.mukoko.com)         | Pan-African news aggregation                                                                                |
-| mukoko events                                                                                    | [events.mukoko.com](https://events.mukoko.com)     | Events and cultural gatherings                                                                              |
-| shamwari                                                                                         | [shamwari.ai](https://shamwari.ai)                 | Sovereign AI companion                                                                                      |
-| nyuchi                                                                                           | [nyuchi.com](https://nyuchi.com)                   | Enterprise layer                                                                                            |
-| bundu                                                                                            | [bundu.family](https://bundu.family)               | The ecosystem                                                                                               |
+| Mukoko                                                                                           | [mukoko.com](https://mukoko.com)                   | Africa's super app                                                                                          |
+| Mukoko Weather                                                                                   | [weather.mukoko.com](https://weather.mukoko.com)   | Hyperlocal forecasts, farming intelligence                                                                  |
+| Mukoko News                                                                                      | [news.mukoko.com](https://news.mukoko.com)         | Pan-African news aggregation                                                                                |
+| Mukoko Events                                                                                    | [events.mukoko.com](https://events.mukoko.com)     | Events and cultural gatherings                                                                              |
+| Shamwari                                                                                         | [shamwari.ai](https://shamwari.ai)                 | AI companion with open weights                                                                              |
+| Nyuchi                                                                                           | [nyuchi.com](https://nyuchi.com)                   | Enterprise layer                                                                                            |
+| Bundu                                                                                            | [bundu.family](https://bundu.family)               | The ecosystem                                                                                               |
 
 ---
 
 ### The four API gateways
 
-There are four API gateways across the bundu ecosystem. This repo describes the registry, and
+There are four API gateways across the Bundu ecosystem. This repo describes the registry, and
 only the first is served from it. The other three are named so the picture is complete. Private
 repositories are named, not linked.
 
@@ -314,7 +314,7 @@ See [`SECURITY.md`](SECURITY.md) or report privately via
 Mzizi is an **open-architecture project of the Bundu Foundation**. Mzizi owns and operates
 the registry, the design system and the API. It is **not** a Nyuchi product: Nyuchi
 operates only the [Mzizi console](https://app.mzizi.dev) and the revenue products. Anyone in
-the bundu ecosystem can consume the registry; contribution and direction-setting flow
+the Bundu ecosystem can consume the registry; contribution and direction-setting flow
 through Mzizi.
 
 Licensed under the [Apache License 2.0](LICENSE). © Bundu Foundation, the copyright holder.
