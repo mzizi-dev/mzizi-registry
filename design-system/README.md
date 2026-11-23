@@ -1,10 +1,10 @@
-mzizi is the root system beneath the bundu ecosystem: mukoko, nyuchi, shamwari, Mukoko Events and every mini-app. It is warm paper, ink-dark type and the colours of the continent's minerals, with every control shaped as a pill. The philosophy is Ubuntu: _Ndiri nekuti tiri_ — I am because we are.
+Mzizi is the root system beneath the Bundu ecosystem: Mukoko, Nyuchi, Shamwari, Mukoko Events and every mini-app. It is warm paper, ink-dark type and the colours of the continent's minerals, with every control shaped as a pill. The philosophy is Ubuntu: _Ndiri nekuti tiri_ — I am because we are.
 
 ## Content fundamentals
 
 **Voice.** Speak like a knowledgeable friend, not a corporation. Use simple, clear language, active voice and direct address ("you"). Be warm and encouraging, never condescending. Write for technical and non-technical readers at once, and explain any jargon you use.
 
-**Casing.** Brand wordmarks are always lowercase, even at the start of a sentence: `mzizi`, `mukoko`, `nyuchi`, `bundu`, `shamwari`, `kweli`, `fundi`. Never write "Mukoko" or "NYUCHI" as a wordmark. A product name the canon spells out, such as **Mukoko Events** (formerly nhimbe), is written exactly as `lib/tokens/brand.source.ts` gives it. Use sentence case for UI labels and headings.
+**Casing.** Brand wordmarks take an initial capital everywhere, including headings, labels and running text: Mzizi, Mukoko, Nyuchi, Bundu, Shamwari, Kweli, Fundi (owner decision, 2026-11-23). Never write "mukoko" or "NYUCHI" as a wordmark. Code identifiers keep their own spelling: package names, domains and slugs such as `mukoko-news` stay lowercase. A product name the canon spells out, such as **Mukoko Events** (formerly nhimbe), is written exactly as `lib/tokens/brand.source.ts` gives it. Use sentence case for UI labels and headings.
 
 **Culture.** Reference African origins and meanings where they matter. Every mineral carries an origin, such as "Merelani Hills, Tanzania". Shona terms stand as first-class words, with the meaning alongside: _Musha_ (home), _Basa_ (work), _Nhaka_ (heritage). Don't assume Western-centric references. Example copy uses African names and places (Tendai, Harare, Book Café).
 
@@ -32,14 +32,14 @@ mzizi is the root system beneath the bundu ecosystem: mukoko, nyuchi, shamwari, 
 
 Every product in the ecosystem owns one mineral, which becomes its `brand-accent`. The canon is the `ecosystem` list in `lib/tokens/brand.source.ts`. As of this writing:
 
-- `copper`: bundu.
-- `gold`: nyuchi and every Nyuchi brand (Nyuchi Learning, bushtrade, places, transport, wallet).
-- `tanzanite`: mukoko, bytes, pulse.
-- `sodalite`: shamwari.
-- `malachite`: Mukoko Events, kweli, campfire, novels, health.
+- `copper`: Bundu.
+- `gold`: Nyuchi and every Nyuchi brand (Nyuchi Learning, Bushtrade, places, transport, wallet).
+- `tanzanite`: Mukoko, bytes, pulse.
+- `sodalite`: Shamwari.
+- `malachite`: Mukoko Events, Kweli, campfire, novels, health.
 - `cobalt`: lingo, planner, news, weather.
 - `terracotta`: circles.
-- `hematite`: mzizi.
+- `hematite`: Mzizi.
 
 `nhimbe` survives only as a deprecated alias of Mukoko Events. Never use it in new work.
 
@@ -48,7 +48,7 @@ Every product in the ecosystem owns one mineral, which becomes its `brand-accent
 There are three groups of seven, and each colour works in both themes.
 
 - **Seven Minerals** are functional roles. Each comes with `-container` and `-on-container` tokens for chips and callouts:
-  `cobalt` (Knowledge — links, CTAs), `tanzanite` (Identity — brand, social), `malachite` (Growth — success), `gold` (Value — rewards), `terracotta` (Community), `sodalite` (Intelligence — AI and shamwari surfaces), `copper` (Stewardship — the bundu commons).
+  `cobalt` (Knowledge — links, CTAs), `tanzanite` (Identity — brand, social), `malachite` (Growth — success), `gold` (Value — rewards), `terracotta` (Community), `sodalite` (Intelligence — AI and Shamwari surfaces), `copper` (Stewardship — the Bundu commons).
   The minerals fall into two families: **deep-earth** (cobalt, tanzanite, malachite, sodalite) and **hand** (gold, terracotta, copper).
 - **Seven Heritage** tones set the atmosphere, not UI state: `indigo`, `savanna`, `baobab`, `sunset`, `river`, `hematite`, `kalahari`. Use them for mini-app moods and cover washes.
 - **Experimental Seven** is a computed heptagon of hues offset by 17°: `ember`, `acacia`, `fern`, `lagoon`, `storm`, `dusk`, `protea`. Each has `-container`, `-on` and `-ui` tiers. Use `-ui` only for non-text marks. These colours are for newsroom and exploratory surfaces only.
@@ -86,11 +86,11 @@ There are three groups of seven, and each colour works in both themes.
 
 - Use **Lucide** (`lucide-react`), re-exported through `@/lib/icons` so a consumer can swap the set. Icons are 16px inside buttons and 12px inside badges, drawn as strokes in `currentColor`.
 - Don't use emoji as icons.
-- The marks are in the **Logos** (mzizi) and **Ecosystem** (bundu, nyuchi, mukoko) asset groups, each with a light and a dark version. Use the one that matches the theme, and never redraw or recolour a mark:
-  - **mzizi**: a seven-node network drawn in `hematite`, mzizi's mineral: `#546e7a` on light grounds, `#90a4ae` on dark. Never gold; gold is nyuchi's.
-  - **bundu**: a copper ring around a root-shaped field.
-  - **nyuchi**: the bee.
-  - **mukoko**: a honeycomb of the seven minerals.
+- The marks are in the **Logos** (Mzizi) and **Ecosystem** (Bundu, Nyuchi, Mukoko) asset groups, each with a light and a dark version. Use the one that matches the theme, and never redraw or recolour a mark:
+  - **Mzizi**: a seven-node network drawn in `hematite`, Mzizi's mineral: `#546e7a` on light grounds, `#90a4ae` on dark. Never gold; gold is Nyuchi's.
+  - **Bundu**: a copper ring around a root-shaped field.
+  - **Nyuchi**: the bee.
+  - **Mukoko**: a honeycomb of the seven minerals.
 
 ## Components
 

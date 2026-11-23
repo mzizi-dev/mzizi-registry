@@ -92,10 +92,10 @@ that look like reasonable expectations and are not:
   block built from the meta tags, and two of the five current expectations appear
   in it. The script strips that block before matching; an expectation that only
   exists there would pass against a page that rendered nothing.
-- **A capitalised wordmark.** §7.2 makes them lowercase — the page renders
-  `malachite`. Expecting `Malachite` failed against a page that was rendering
-  perfectly, which is a brittle assertion reporting its author's assumption as
-  the site's defect.
+- **A capitalised token name.** A mineral's token name is an identifier and is not
+  cased — the page renders `malachite`. Expecting `Malachite` failed against a page
+  that was rendering perfectly, which is a brittle assertion reporting its author's
+  assumption as the site's defect.
 
 ## Which Quick Action, and why
 

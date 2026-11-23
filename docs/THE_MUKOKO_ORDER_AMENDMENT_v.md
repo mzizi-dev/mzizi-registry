@@ -33,7 +33,7 @@ The Order is a pattern language: every count has a meaning and every meaning has
 - **5** remains the number of ethics.
 - **7** remains the number of covenants.
 - **12** remains the number of manifesto sections.
-- **17** remains the number of mukoko mini-apps.
+- **17** remains the number of Mukoko mini-apps.
 - **4** remains the number of architectural pillars (Local-First, Mobile-First, Open Source, Open Data) — these now live under `brand_meta.philosophy.architecturalPillars` (renamed from the ambiguous `pillars`). The count and content are unchanged.
 - **10** remains the number of frontend architecture layers.
 - **5** remains the number of frontend architecture axes.

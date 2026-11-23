@@ -1,6 +1,6 @@
 # Security Policy
 
-Mzizi is the public registry and design system for the bundu ecosystem. It handles no end-user PII, but because it serves source code and AI instructions into downstream production apps (mukoko, nyuchi, Mukoko Events, shamwari, etc.), a supply-chain issue here can ripple out. Please report issues responsibly.
+Mzizi is the public registry and design system for the Bundu ecosystem. It handles no end-user PII, but because it serves source code and AI instructions into downstream production apps (Mukoko, Nyuchi, Mukoko Events, Shamwari, etc.), a supply-chain issue here can ripple out. Please report issues responsibly.
 
 ## Supported Versions
 
@@ -125,4 +125,4 @@ Per `CLAUDE.md` §15 rule 22, **security findings from any review/audit (`/secur
 - Primary: GitHub security advisories — <https://github.com/mzizi-dev/mzizi-registry/security/advisories/new>
 - Fallback: `security@nyuchi.com`
 
-Thank you for helping keep the bundu ecosystem safe.
+Thank you for helping keep the Bundu ecosystem safe.

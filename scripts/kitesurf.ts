@@ -113,10 +113,10 @@ interface Route {
  * `registry.json`, a version row, a mineral name, a rendered headline. Chrome
  * cannot satisfy any of them, which is the property a length threshold lacked.
  *
- * `/tokens` is lowercase on purpose: §7.2 makes every wordmark lowercase and
- * the page renders "malachite". A capitalised expectation here failed against a
- * page that was rendering perfectly — a brittle assertion reports its author's
- * assumption as the site's defect.
+ * `/tokens` is lowercase on purpose: the page renders the mineral's token name,
+ * "malachite", which is an identifier and is not cased. A capitalised expectation
+ * here failed against a page that was rendering perfectly — a brittle assertion
+ * reports its author's assumption as the site's defect.
  */
 const ROUTES: Route[] = [
   // A `meta.features` entry — served from registry.json, rendered by the detail body.
