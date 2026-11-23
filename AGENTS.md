@@ -41,7 +41,7 @@ Local checks use **Vite+** (`vp`), as the org CI does: `vp run test` runs the te
 This registry is the single source of every component in every format. The order is Mzizi first,
 then TypeScript, with native builds (Swift, Kotlin) where they exist (owner, 2026-11-04): `.mz` (the Mzizi
 language, from the owner's work in progress), `.rs` (Mzizi Roots; its Rust UI framework is being replaced by
-Mzizi's own render path, #635), `.tsx` (React) and `.astro` (pure Astro). `mzizi add` is to serve every type (owner direction, not yet built).
+Mzizi's own render path, #635), `.tsx` (React) and `.astro` (pure Astro). `mz add` (the Mzizi CLI, 0.14.1) serves every type (owner direction, not yet built).
 One component has one name and one contract; each format is a
 sibling file `components/registry/n<N>-*/<name>.<ext>`. **Do not create, edit or move `.mz`
 files or `mz`-language directories here**: they are being built elsewhere and land as their
@@ -71,7 +71,7 @@ and must be the same component, not a fallback or a different design:
 - **Astro (#397).** A `.astro` is pure Astro: no React or any framework under it, no client
   JavaScript unless its contract allows one enhancement script. Registry `.astro` files and
   the framework-free `.ts` modules they use (`ui-utils`, `ui-variants`, `app-nav`,
-  `site-icons`, `server-*`) import each other **flat**, the way `mzizi add --target astro`
+  `site-icons`, `server-*`) import each other **flat**, the way `mz add --target astro`
   installs them into one directory (`./button.astro`, `./ui-utils`, `./server-cookies.js`); a
   brand asset is `./assets/<file>` under the node's `assets/` directory.
   `vitest.astro.config.ts` resolves flat imports across node directories, tsconfig's

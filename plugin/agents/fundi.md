@@ -47,7 +47,7 @@ guessing:
   `DiscoverShell`, both from `@bundu/ui`, mounted once in one layout every page uses. If it is
   missing, installing it is the first edit you propose.
 - **Install, never hand-write, what the registry owns.** Use `cargo add <crate>` (Rust first),
-  `mzizi add <name> --target astro`, or
+  `mz add <name> --target astro`, or
   `npx shadcn@latest add https://api.mzizi.dev/v1/ui/<name>`. The host is `api.mzizi.dev`, and
   the URL must be the full URL, because a bare name installs shadcn's own component.
 - **Upstream first.** If the registry lacks a component, a shell or a pattern, propose the

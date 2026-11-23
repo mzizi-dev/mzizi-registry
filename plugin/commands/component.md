@@ -12,7 +12,7 @@ the component named: $ARGUMENTS
 2. If `lead` is `"rust"`, present the Rust implementation first, from `rust`: the crate
    (`rust.crate.name`) and its `cargo add` line (`rust.install.cargo`), the component's
    `rust.contract` clauses when present, and the `.rs` source path from `rust.files`.
-3. Then the other builds. An Astro build installs with `mzizi add $ARGUMENTS --target astro`
+3. Then the other builds. An Astro build installs with `mz add $ARGUMENTS --target astro`
    (`@nyuchi/mzizi-cli`). The React build is deprioritised (it keeps working; new work goes to
    Rust) and installs with `npx shadcn@latest add https://api.mzizi.dev/v1/ui/$ARGUMENTS`. The full
    URL is mandatory: a bare `npx shadcn add $ARGUMENTS` installs shadcn's own component and

@@ -10,6 +10,10 @@ From 2026-10-04 releases follow the org versioning policy ([nyuchi/.github#80](h
 
 ## [Unreleased]
 
+### Changed — the plugin's commands and the agent notes say `mz add` (mzizi-cli 0.14.1, 2026-11-23)
+
+The Mzizi CLI is one Rust binary, `mz` (npm `@nyuchi/mzizi-cli`, crates.io `mzizi-cli`). `plugin/commands/component.md`, `plugin/commands/scaffold.md`, `plugin/agents/fundi.md` and `AGENTS.md` now say `mz add <name> --target astro` where they said `mzizi add`. Not changed on purpose: the plugin skills copies (`plugin/skills/*`), `lib/*.generated.ts` and `openapi.yaml` still say `mzizi add`; they follow the `@nyuchi/mzizi-skills` release and the API's own generation, so they move with those. `mzizi` still works as a deprecated name of `mz`.
+
 ### Changed — wordmarks take an initial capital; no "sister brands"; Shamwari is open-weight AI (2026-11-23, #752)
 
 Three owner decisions, 2026-11-23: brand wordmarks take an initial capital (Mukoko, Nyuchi, Shamwari, Bundu, Mzizi, Kweli), as Mzizi's `foundations/typography` already says; there are no "sister brands" (the Bundu ecosystem has pillars, and under them initiatives, projects and the Mukoko apps); and Shamwari is "open-weight AI", not "sovereign AI". Code identifiers keep their own spelling: item `name`s, package names, domains, slugs, CSS classes and JSON keys are unchanged.

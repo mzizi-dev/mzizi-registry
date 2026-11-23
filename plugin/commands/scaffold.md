@@ -19,7 +19,7 @@ and where Mzizi overrides it) and `mzizi-roots` (the components, Rust first).
    `mzizi_get_component`, `mzizi_get_tokens`, `mzizi_get_architecture`, `mzizi_get_doctrine`.
    Read the live values; never assume them.
 4. **Propose the smallest set of edits**: the shell if missing, the tokens and the brand overlay,
-   and the components to install (`cargo add …`, `mzizi add <name> --target astro`, or
+   and the components to install (`cargo add …`, `mz add <name> --target astro`, or
    `npx shadcn@latest add https://api.mzizi.dev/v1/ui/<name>`, always the full URL). If the
    registry lacks something the goal needs, propose the upstream change in
    `mzizi-dev/mzizi-registry` rather than a local fork.
