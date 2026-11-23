@@ -10,7 +10,7 @@ From 2026-10-04 releases follow the org versioning policy ([nyuchi/.github#80](h
 
 ## [Unreleased]
 
-### Changed — wordmarks take an initial capital; no "sister brands"; Shamwari is open-weight AI (2026-11-23, #PRNUM)
+### Changed — wordmarks take an initial capital; no "sister brands"; Shamwari is open-weight AI (2026-11-23, #752)
 
 Three owner decisions, 2026-11-23: brand wordmarks take an initial capital (Mukoko, Nyuchi, Shamwari, Bundu, Mzizi, Kweli), as Mzizi's `foundations/typography` already says; there are no "sister brands" (the Bundu ecosystem has pillars, and under them initiatives, projects and the Mukoko apps); and Shamwari is "open-weight AI", not "sovereign AI". Code identifiers keep their own spelling: item `name`s, package names, domains, slugs, CSS classes and JSON keys are unchanged.
 
