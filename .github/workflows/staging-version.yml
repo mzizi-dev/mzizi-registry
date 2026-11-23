@@ -18,7 +18,7 @@ permissions:
 
 jobs:
   version:
-    uses: nyuchi/.github/.github/workflows/reusable-staging-release.yml@cf78731fac9cd318008ec1cbdbe5e3c50c0f5683 # main, 2026-10-19
+    uses: nyuchi/.github/.github/workflows/reusable-staging-release.yml@0e026639ad69fef58704e114e1db4401a1c5f0ba # main, 2026-10-19
     with:
       bump: ${{ inputs.bump || '' }}
       # Tag only; the `release` job below writes the pre-release with notes.
