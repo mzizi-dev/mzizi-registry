@@ -10,6 +10,10 @@ From 2026-10-04 releases follow the org versioning policy ([nyuchi/.github#80](h
 
 ## [Unreleased]
 
+### Changed — the MCP system prompt, the Astro notes and RFC-roots say `mz add` (mzizi-cli 0.15.0, 2026-11-24)
+
+Closes #756. The CLI is one binary, `mz` (mzizi-dev/mzizi-cli 0.15.0). `content/doctrine/ai-instructions/nyuchi-mcp-system-prompt.mdx` (and `lib/doctrine.generated.ts`, regenerated), the comments in `lib/astro.ts`, `scripts/validate-registry.mjs` and `vitest.astro.config.ts`, and `docs/roots/RFC-roots.md` say `mz add --target astro` where they said `mzizi add --target astro`. Not changed: `plugin/skills/*` and `lib/skills.generated.ts`, which are generated from the published `@nyuchi/mzizi-skills` and follow its next release (agent-tools#449).
+
 ### Changed — the plugin's commands and the agent notes say `mz add` (mzizi-cli 0.14.1, 2026-11-23)
 
 The Mzizi CLI is one Rust binary, `mz` (npm `@nyuchi/mzizi-cli`, crates.io `mzizi-cli`). `plugin/commands/component.md`, `plugin/commands/scaffold.md`, `plugin/agents/fundi.md` and `AGENTS.md` now say `mz add <name> --target astro` where they said `mzizi add`. Not changed on purpose: the plugin skills copies (`plugin/skills/*`), `lib/*.generated.ts` and `openapi.yaml` still say `mzizi add`; they follow the `@nyuchi/mzizi-skills` release and the API's own generation, so they move with those. `mzizi` still works as a deprecated name of `mz`.

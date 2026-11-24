@@ -1,5 +1,5 @@
 /**
- * The Astro target: what `GET /v1/astro/{name}` serves and `mzizi add --target astro`
+ * The Astro target: what `GET /v1/astro/{name}` serves and `mz add --target astro`
  * installs (mzizi-registry#397).
  *
  * A component's Astro implementation is the `<name>.astro` file beside its `.tsx` (and
@@ -21,7 +21,7 @@
 import ASSETS from "./registry-assets.generated.json"
 import { componentTargets, readComponentSourceFor } from "./registry-source"
 
-/** Where `mzizi add --target astro` installs every file, relative to the project root. */
+/** Where `mz add --target astro` installs every file, relative to the project root. */
 export const ASTRO_INSTALL_DIR = "src/components/mzizi"
 
 /** The origin and prefix of the Astro route, as `registryDependencies` are written. */

@@ -515,7 +515,7 @@ function main() {
   // (`./button.astro`, `./ui-utils`, `./server-cookies.js`, `./assets/<file>`), so every
   // such import must name a component with an `.astro`, or a framework-free `.ts`, or an
   // asset in `components/registry/assets/`. lib/astro.ts builds `/v1/astro/{name}` from the same
-  // rules; a broken edge here is a broken `mzizi add --target astro`.
+  // rules; a broken edge here is a broken `mz add --target astro`.
   const FRAMEWORK = /^(react|react-dom|next|preact|vue|svelte)(\/|$)/
   const specifiersOf = (text) =>
     [...text.matchAll(/(?:\bfrom\s*|\bimport\s*\(?\s*)["']([^"']+)["']/g)].map((m) => m[1])

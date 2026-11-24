@@ -5,7 +5,7 @@
  * registered: these components are pure Astro, so one that reached for React
  * (or any island) fails to render here.
  *
- * Registry files import each other FLAT, the way `mzizi add --target astro`
+ * Registry files import each other FLAT, the way `mz add --target astro`
  * installs them into one directory (`./button.astro`, `./ui-utils`,
  * `./server-cookies.js`), while on disk they live under their helix node
  * (`n2-primitives/`, `n6-pages/`, …) and brand assets in `assets/`. `registryFlatImports` resolves a flat
