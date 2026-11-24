@@ -346,7 +346,7 @@ A clause the runner cannot evaluate fails, as in §2.3 (RFC-0006 FM-12).
    inline `style`, a literal hex colour or a colour function), for `.astro` and `.tsx` alike.
 4. **Flat imports, as installed.** Registry `.astro` and `.ts` files import each other flat
    (`./button.astro`, `./ui-utils`, `./server-cookies.js`, `./assets/<file>`), the way
-   `mzizi add --target astro` installs them into one directory.
+   `mz add --target astro` installs them into one directory.
 
 #### The registry is the single source
 
@@ -370,7 +370,7 @@ The Astro implementation is served and installed the same way the Rust and React
   imports as absolute `/v1/astro/` dependencies, its npm dependencies and any imported brand
   asset. `lib/astro.ts` builds it, `openapi.yaml` documents it, and the gateway serves it
   ([mzizi-api#49](https://github.com/mzizi-dev/mzizi-api/pull/49), then `mzizi-api-gateway`).
-- **CLI.** `mzizi add <name> --target astro` installs a component and its `/v1/astro/`
+- **CLI.** `mz add <name> --target astro` installs a component and its `/v1/astro/`
   closure flat into one directory (`src/components/mzizi/`), and detects an Astro project
   on its own
   ([agent-tools#203](https://github.com/mzizi-dev/agent-tools/pull/203)).
@@ -392,7 +392,7 @@ fullstack server. This is what the crates are built for, and every batch support
 
 **Astro.** Astro renders the page, and a component reaches it in one of three ways:
 
-1. **A pure `.astro` component**, installed with `mzizi add --target astro` and rendered by
+1. **A pure `.astro` component**, installed with `mz add --target astro` and rendered by
    Astro itself. This is the default for an Astro app wherever the component has an Astro
    implementation, and it is how the Dashboard Standard, the Discover Standard and the
    marketing-site components ship today.
