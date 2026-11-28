@@ -14,6 +14,10 @@ From 2026-10-04 releases follow the org versioning policy ([nyuchi/.github#80](h
 
 The registry's TypeScript is capped at `^6.0.3`. Dependabot ignores TypeScript major version 7 until the org adopts it by hand. Build tooling only: no change to any shipped content or API response.
 
+## [4.51.0] - 2026-11-28
+
+Releases the two changes merged since 4.50.0 as the next minor (nyuchi/.github#80): the `app-nav` trailing-slash trim runs in linear time (#766), and the Rust crates move to 0.12.0 so APCA in `mzizi-tokens` reaches crates.io (#764). Nothing is breaking.
+
 ### Fixed — `isCurrentHref` in `app-nav` trims trailing slashes in linear time (2026-11-28, #766)
 
 Closes #766. `components/registry/n7-shell/app-nav.ts` trimmed trailing slashes with `/\/+$/`, which CodeQL flags (js/polynomial-redos) because it backtracks quadratically on a long run of slashes that does not end the string. It is now a scan from the end; the result is unchanged. `lib/registry-source.generated.json` is regenerated, and `__tests__/lib/app-nav.test.ts` covers the behaviour and a 200,000-slash path. The generated copy in `mzizi-dev/packages-npm` (`packages/bundu-ui/src/app/nav.ts`) follows its own sync from the next registry release.
