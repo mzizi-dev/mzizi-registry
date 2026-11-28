@@ -14,6 +14,10 @@ From 2026-10-04 releases follow the org versioning policy ([nyuchi/.github#80](h
 
 Closes #764. `mzizi-tokens` gained its `apca` module in #746 (2026-11-22), but the workspace stayed at 0.11.0, which is already on crates.io, so the publish run uploaded nothing. The workspace version and the path-dependency versions in `mzizi-rs` move from 0.11.0 to **0.12.0**, the next minor the crate policy allows, and the `mzizi-roots` and `mzizi-ui` READMEs name `0.12`. Only `mzizi-tokens` changed in code; the other crates are re-released at the shared version. `mzizi-rs/Cargo.lock` also moves `url` 2.5.8 to 2.5.9 (RUSTSEC-2026-0592, stack overflow in `Url::origin()`) and `rustix` to 1.1.6 or later (RUSTSEC-2026-0486), so the audit job passes without an ignore.
 
+## [4.50.0] - 2026-11-28
+
+Releases the four changes merged since 4.49.0 as the next minor (nyuchi/.github#80): keyboard help and title rules join the Bundu floor with APCA in `mzizi-tokens` (#746), wordmarks take an initial capital (#752), and the plugin commands, agent notes and MCP system prompt say `mz add` (mzizi-cli 0.14.1 and 0.15.0). Nothing is breaking.
+
 ### Changed — the MCP system prompt, the Astro notes and RFC-roots say `mz add` (mzizi-cli 0.15.0, 2026-11-24)
 
 Closes #756. The CLI is one binary, `mz` (mzizi-dev/mzizi-cli 0.15.0). `content/doctrine/ai-instructions/nyuchi-mcp-system-prompt.mdx` (and `lib/doctrine.generated.ts`, regenerated), the comments in `lib/astro.ts`, `scripts/validate-registry.mjs` and `vitest.astro.config.ts`, and `docs/roots/RFC-roots.md` say `mz add --target astro` where they said `mzizi add --target astro`. Not changed: `plugin/skills/*` and `lib/skills.generated.ts`, which are generated from the published `@nyuchi/mzizi-skills` and follow its next release (agent-tools#449).
