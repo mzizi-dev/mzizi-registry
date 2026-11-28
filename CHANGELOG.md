@@ -13,6 +13,7 @@ From 2026-10-04 releases follow the org versioning policy ([nyuchi/.github#80](h
 ### Changed — TypeScript is capped at v6 and Dependabot ignores TypeScript 7 (2026-11-28, #759)
 
 The registry's TypeScript is capped at `^6.0.3`. Dependabot ignores TypeScript major version 7 until the org adopts it by hand. Build tooling only: no change to any shipped content or API response.
+
 ### Changed — agent skills regenerated from `@nyuchi/mzizi-skills` 0.25.0: `mz add` and `mz floor` (2026-11-28, #762)
 
 Closes #762. `@nyuchi/mzizi-skills` 0.25.0 teaches the one Rust binary, `mz`.
