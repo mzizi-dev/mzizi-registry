@@ -10,6 +10,10 @@ From 2026-10-04 releases follow the org versioning policy ([nyuchi/.github#80](h
 
 ## [Unreleased]
 
+### Changed — the Rust crates move to 0.12.0 so APCA in `mzizi-tokens` reaches crates.io (2026-11-28, #764)
+
+Closes #764. `mzizi-tokens` gained its `apca` module in #746 (2026-11-22), but the workspace stayed at 0.11.0, which is already on crates.io, so the publish run uploaded nothing. The workspace version and the path-dependency versions in `mzizi-rs` move from 0.11.0 to **0.12.0**, the next minor the crate policy allows, and the `mzizi-roots` and `mzizi-ui` READMEs name `0.12`. Only `mzizi-tokens` changed in code; the other crates are re-released at the shared version. `mzizi-rs/Cargo.lock` also moves `url` 2.5.8 to 2.5.9 (RUSTSEC-2026-0592, stack overflow in `Url::origin()`) and `rustix` to 1.1.6 or later (RUSTSEC-2026-0486), so the audit job passes without an ignore.
+
 ## [4.50.0] - 2026-11-28
 
 Releases the four changes merged since 4.49.0 as the next minor (nyuchi/.github#80): keyboard help and title rules join the Bundu floor with APCA in `mzizi-tokens` (#746), wordmarks take an initial capital (#752), and the plugin commands, agent notes and MCP system prompt say `mz add` (mzizi-cli 0.14.1 and 0.15.0). Nothing is breaking.
