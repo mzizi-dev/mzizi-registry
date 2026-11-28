@@ -4,15 +4,15 @@ All notable changes to the Mzizi registry (`mzizi-dev/mzizi-registry`: the compo
 
 The format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/), and the code version follows [Semantic Versioning](https://semver.org/). Under `## [Unreleased]`, each change is a `### <Kind> — <what changed> (<merge date>, #<PR>)` subsection, newest first, where Kind is Added, Changed, Deprecated, Removed, Fixed or Security. Breaking changes are marked **Breaking**. A release moves the Unreleased entries under `## [x.y.z] - YYYY-MM-DD`. The machine-readable release record that `/api/v1/changelog` serves is `content/changelog/releases.json`; this file is the human narrative.
 
-### Changed — TypeScript is capped at v6 and Dependabot ignores TypeScript 7 (2026-11-28, #759)
-
-The registry's TypeScript is capped at `^6.0.3`. Dependabot ignores TypeScript major version 7 until the org adopts it by hand. Build tooling only: no change to any shipped content or API response.
-
 **The rule (owner, 2026-09-30):** every pull request that changes behaviour, shipped content, an API response, a published package or crate, a default, a dependency or a documented fact adds its entry here, under `## [Unreleased]`, in the same pull request. The `changelog / entry required` check fails a pull request that doesn't. Pull requests that touch only `.github/`, lockfiles or lint config pass without one, and pure CI, lint or typo pull requests can carry the `no-changelog` label instead.
 
 From 2026-10-04 releases follow the org versioning policy ([nyuchi/.github#80](https://github.com/nyuchi/.github/issues/80)): staging merges are patches, a release to `main` is the next minor above the highest tag, and a major is only released by hand. Versions released before then are not renumbered.
 
 ## [Unreleased]
+
+### Changed — TypeScript is capped at v6 and Dependabot ignores TypeScript 7 (2026-11-28, #759)
+
+The registry's TypeScript is capped at `^6.0.3`. Dependabot ignores TypeScript major version 7 until the org adopts it by hand. Build tooling only: no change to any shipped content or API response.
 
 ### Changed — the plugin's commands and the agent notes say `mz add` (mzizi-cli 0.14.1, 2026-11-23)
 
