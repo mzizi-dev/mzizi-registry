@@ -46,7 +46,14 @@ export interface NavEntry extends Omit<NavItem, "children"> {
 
 /** True when `path` is `href` or below it. Query strings are ignored. */
 export function isCurrentHref(path: string, href: string): boolean {
-  const clean = (p: string) => (p.length > 1 ? p.replace(/\/+$/, "") : p);
+  // Trailing slashes are trimmed with a scan, not `/\/+$/`, which backtracks
+  // quadratically on a long run of slashes that does not end the string.
+  const clean = (p: string) => {
+    if (p.length <= 1) return p;
+    let end = p.length;
+    while (end > 0 && p.charCodeAt(end - 1) === 47) end--;
+    return p.slice(0, end);
+  };
   const p = clean(path.split(/[?#]/)[0] ?? "");
   const h = clean(href.split(/[?#]/)[0] ?? "");
   return p === h || (h !== "/" && p.startsWith(`${h}/`));
