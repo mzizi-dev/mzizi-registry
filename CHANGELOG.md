@@ -10,6 +10,10 @@ From 2026-10-04 releases follow the org versioning policy ([nyuchi/.github#80](h
 
 ## [Unreleased]
 
+### Changed — staging wording removed (2026-11-28)
+
+The release workflow comments, AGENTS.md and CONTRIBUTING.md no longer describe a `staging` branch; the repo is trunk-based. No behaviour changes.
+
 ## [4.51.0] - 2026-11-28
 
 Releases the two changes merged since 4.50.0 as the next minor (nyuchi/.github#80): the `app-nav` trailing-slash trim runs in linear time (#766), and the Rust crates move to 0.12.0 so APCA in `mzizi-tokens` reaches crates.io (#764). Nothing is breaking.
