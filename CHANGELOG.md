@@ -12,7 +12,7 @@ From 2026-10-04 releases follow the org versioning policy ([nyuchi/.github#80](h
 
 ### Changed — the Rust crates move to 0.12.0 so APCA in `mzizi-tokens` reaches crates.io (2026-11-28, #764)
 
-Closes #764. `mzizi-tokens` gained its `apca` module in #746 (2026-11-22), but the workspace stayed at 0.11.0, which is already on crates.io, so the publish run uploaded nothing. The workspace version and the path-dependency versions in `mzizi-rs` move from 0.11.0 to **0.12.0**, the next minor the crate policy allows, and the `mzizi-roots` and `mzizi-ui` READMEs name `0.12`. Only `mzizi-tokens` changed in code; the other crates are re-released at the shared version.
+Closes #764. `mzizi-tokens` gained its `apca` module in #746 (2026-11-22), but the workspace stayed at 0.11.0, which is already on crates.io, so the publish run uploaded nothing. The workspace version and the path-dependency versions in `mzizi-rs` move from 0.11.0 to **0.12.0**, the next minor the crate policy allows, and the `mzizi-roots` and `mzizi-ui` READMEs name `0.12`. Only `mzizi-tokens` changed in code; the other crates are re-released at the shared version. `mzizi-rs/Cargo.lock` also moves `url` 2.5.8 to 2.5.9 (RUSTSEC-2026-0592, stack overflow in `Url::origin()`) and `rustix` to 1.1.6 or later (RUSTSEC-2026-0486), so the audit job passes without an ignore.
 
 ### Changed — the MCP system prompt, the Astro notes and RFC-roots say `mz add` (mzizi-cli 0.15.0, 2026-11-24)
 
