@@ -13,6 +13,16 @@ From 2026-10-04 releases follow the org versioning policy ([nyuchi/.github#80](h
 ### Changed — TypeScript is capped at v6 and Dependabot ignores TypeScript 7 (2026-11-28, #759)
 
 The registry's TypeScript is capped at `^6.0.3`. Dependabot ignores TypeScript major version 7 until the org adopts it by hand. Build tooling only: no change to any shipped content or API response.
+### Changed — agent skills regenerated from `@nyuchi/mzizi-skills` 0.25.0: `mz add` and `mz floor` (2026-11-28, #762)
+
+Closes #762. `@nyuchi/mzizi-skills` 0.25.0 teaches the one Rust binary, `mz`.
+
+- **Changed:** the dependency is `^0.25.0`; `lib/skills.generated.ts` and `plugin/skills/*` (`mzizi-roots`, `mzizi-design`, `mzizi-architecture`) say `mz add`, `mz floor` and `pnpm exec mz explore` where they said `mzizi add`, `mzizi check` and `fundi`.
+- **Not changed:** the skills text itself (authored in mzizi-dev/agent-tools). The api.mzizi.dev skills pin follows in its own change.
+
+### Changed — staging wording removed (2026-11-28)
+
+The release workflow comments, AGENTS.md and CONTRIBUTING.md no longer describe a `staging` branch; the repo is trunk-based. No behaviour changes.
 
 ## [4.51.0] - 2026-11-28
 
