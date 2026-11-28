@@ -10,6 +10,10 @@ From 2026-10-04 releases follow the org versioning policy ([nyuchi/.github#80](h
 
 ## [Unreleased]
 
+## [4.50.0] - 2026-11-28
+
+Releases the four changes merged since 4.49.0 as the next minor (nyuchi/.github#80): keyboard help and title rules join the Bundu floor with APCA in `mzizi-tokens` (#746), wordmarks take an initial capital (#752), and the plugin commands, agent notes and MCP system prompt say `mz add` (mzizi-cli 0.14.1 and 0.15.0). Nothing is breaking.
+
 ### Changed — the MCP system prompt, the Astro notes and RFC-roots say `mz add` (mzizi-cli 0.15.0, 2026-11-24)
 
 Closes #756. The CLI is one binary, `mz` (mzizi-dev/mzizi-cli 0.15.0). `content/doctrine/ai-instructions/nyuchi-mcp-system-prompt.mdx` (and `lib/doctrine.generated.ts`, regenerated), the comments in `lib/astro.ts`, `scripts/validate-registry.mjs` and `vitest.astro.config.ts`, and `docs/roots/RFC-roots.md` say `mz add --target astro` where they said `mzizi add --target astro`. Not changed: `plugin/skills/*` and `lib/skills.generated.ts`, which are generated from the published `@nyuchi/mzizi-skills` and follow its next release (agent-tools#449).
