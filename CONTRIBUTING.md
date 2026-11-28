@@ -387,21 +387,23 @@ Tier 3 terminal:  Build                             (waits on all of the above)
 
 ## Versioning
 
-Releases follow the org versioning policy ([nyuchi/.github#80](https://github.com/nyuchi/.github/issues/80)), from 2026-10-04:
+Every release follows the org policy
+([#80](https://github.com/nyuchi/.github/issues/80)):
 
-- A merge into `staging` is a **patch** (x.y.z → x.y.z+1), tagged automatically by `staging-version.yml`.
-- A release to `main` is a **minor** (x.y.z → x.y+1.0) **above the highest existing tag**. For example, after v4.6.0 the next registry release is **4.7.0**, whatever patch tags `staging` has added since. The Mzizi Roots crates follow the same rule against their own `mzizi-rs-v` tags (after `mzizi-rs-v0.3.0`, the next is 0.4.0); a crates release is a version bump in `mzizi-rs/Cargo.toml`, merged through `staging`. On `staging`, `package.json` may only take the next patch (the org release-version check), so a registry release's `package.json`, `README.md` and `content/changelog/releases.json` move in the staging-to-main release pull request. The sync-back into `staging` brings the release records back but leaves `package.json` at staging's version; `pnpm changelog:generate:check` accepts a record newer than `package.json` and fails only on a `package.json` newer than every record.
-- A **major** is only released by hand: run the Release (or Publish crates) workflow with `bump: major`. Each segment holds 0–999.
-- `release.yml` and `publish-crates.yml` check the version with the shared `next-version` action before tagging or uploading, and name the version they expect. Released versions are never renumbered.
+- **Trunk-based, `main` only.** There is no `staging` branch.
+- **A merge to `main` titled `fix:`, `chore:`, `docs:` or `ci:` is a
+  PATCH** (x.y.z → x.y.z+1). It is tagged automatically.
+- **A merge to `main` titled `feat:` is a MINOR** (x.y.z → x.y+1.0).
+- **A MAJOR is manual only**: the owner runs the release workflow with
+  `bump: major`. Automation never makes one.
+- Minor and patch have no upper limit: patch 999 is followed by patch
+  1000, minor 999 by minor 1000. Only a major is manual.
+- `workflow_dispatch` on a release workflow takes
+  `bump: patch|minor|major` as a manual override.
 
-A version bump must be propagated to every surface listed in [CLAUDE.md §14](CLAUDE.md) — `package.json`, `lib/mcp-server.ts` (`VERSION`), the release entry in `content/changelog/releases.json`, `components/landing/footer.tsx`, `components/landing/dashboard-sidebar.tsx`, `app/layout.tsx` (`softwareVersion`), `README.md`, and CLAUDE.md §1 — which must all stay in sync.
-
-Only maintainers create version tags and releases. The release process:
-
-1. Update the version across every surface listed in CLAUDE.md §14.
-1. Add an entry for the new version to `content/changelog/releases.json` and run `pnpm changelog:generate`.
-1. Commit and open a PR, and merge it to `main`.
-1. `release.yml` checks the version against the policy, then tags `vX.Y.Z` and creates the release. Nobody pushes a tag by hand.
+There are no version labels. Released versions are never renumbered.
+The calculator is
+[`.github/actions/next-version`](./.github/actions/next-version).
 
 ---
 
