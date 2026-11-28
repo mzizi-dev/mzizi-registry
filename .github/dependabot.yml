@@ -46,7 +46,10 @@ updates:
       types:
         patterns:
           - "@types/*"
+    # Until Astro and typescript-eslint support TS 7; remove then.
     ignore:
+      - dependency-name: typescript
+        update-types: ["version-update:semver-major"]
       # @vitejs/plugin-react v6 requires vite@8; vitest@4 requires vite@7.
       # Upgrade both together when vitest@5 ships.
       - dependency-name: "@vitejs/plugin-react"
