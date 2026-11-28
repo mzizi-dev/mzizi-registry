@@ -220,7 +220,7 @@ applies.
 - [ ] Shell chosen from the surface table, its contract read, and `@bundu/ui` installed.
 - [ ] One layout mounts the shell, and every page uses it (the check in step 3 prints nothing).
 - [ ] Pages built from the Standard's patterns, with no hand-rolled header, nav or footer.
-- [ ] Tokens and brand overlay from `mzizi-design`. No local colour, radius, spacing or type. Nothing under the spacing layers' default floors (or below their dense floors): the layer tokens (`--space-control-*`, `--space-label-gap`, `--space-card-*`, `--space-chip-x`, `--space-pill-*`, `--space-container-*`, `--space-page-x`, `--space-section`), 1.5 leading, hit regions of 45px on touch and 24px on a desktop; `mzizi check` passes.
+- [ ] Tokens and brand overlay from `mzizi-design`. No local colour, radius, spacing or type. Nothing under the spacing layers' default floors (or below their dense floors): the layer tokens (`--space-control-*`, `--space-label-gap`, `--space-card-*`, `--space-chip-x`, `--space-pill-*`, `--space-container-*`, `--space-page-x`, `--space-section`), 1.5 leading, hit regions of 45px on touch and 24px on a desktop; `mz floor` passes.
 - [ ] Data read through the owning gateway. No new direct database read.
 - [ ] Anything missing or wrong in the registry raised upstream, with any local stopgap marked
       `TODO(mzizi): <PR URL>`.

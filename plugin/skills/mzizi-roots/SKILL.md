@@ -1,6 +1,6 @@
 ---
 name: mzizi-roots
-description: "Use this skill for anything involving Mzizi's components: using them, starting an app on them, or contributing one. Mzizi Roots is Mzizi's own components in Rust (UI and server components) from mzizi-dev/mzizi-registry. Covers `cargo add mzizi-roots` / `mzizi-roots-server`, what mzizi_execute get_component returns (Rust first), the node-to-crate map, `pub const CONTRACT`, the contracts in the registry's contracts/ for the Dashboard Standard (app/, 35 components) and the Discover Standard (discover/, 16 components; no script, server-filled shells): read one before building or changing a @bundu/ui component. Also no-JS fallback, density and floors (45px touch and 24px desktop hit regions, 17px body, 14px captions, spacing layers, number rule) and brand-overlay rules, the frontend paths (pure .astro via `mzizi add --type astro`, Astro with Roots, pure Rust; Next.js adopts the .tsx), reuse before build, and adding a component (node, .rs, .tsx, registry.json, the gates). Files are the data layer: no database."
+description: "Use this skill for anything involving Mzizi's components: using them, starting an app on them, or contributing one. Mzizi Roots is Mzizi's own components in Rust (UI and server components) from mzizi-dev/mzizi-registry. Covers `cargo add mzizi-roots` / `mzizi-roots-server`, what mzizi_execute get_component returns (Rust first), the node-to-crate map, `pub const CONTRACT`, the contracts in the registry's contracts/ for the Dashboard Standard (app/, 35 components) and the Discover Standard (discover/, 16 components; no script, server-filled shells): read one before building or changing a @bundu/ui component. Also no-JS fallback, density and floors (45px touch and 24px desktop hit regions, 17px body, 14px captions, spacing layers, number rule) and brand-overlay rules, the frontend paths (pure .astro via `mz add --type astro`, Astro with Roots, pure Rust; Next.js adopts the .tsx), reuse before build, and adding a component (node, .rs, .tsx, registry.json, the gates). Files are the data layer: no database."
 ---
 
 # Mzizi Roots — the Rust build of Mzizi's components
@@ -60,7 +60,7 @@ mzizi-brand = { git = "https://github.com/mzizi-dev/mzizi-registry", rev = "<com
 A single node crate works too (`cargo add mzizi-ui`). Read a crate's own `Cargo.toml` at the
 commit you pin for what it depends on; this skill does not restate it.
 
-`mzizi add <name> --type mzizi` (`@nyuchi/mzizi-cli` 0.9.0 or later; `--target rust` on 0.8.0) records the crate and prints the
+`mz add <name> --type mzizi` (`@nyuchi/mzizi-cli` 0.9.0 or later; `--target rust` on 0.8.0) records the crate and prints the
 `cargo add` rather than copying a `.rs` file into your project: a copied component is a fork
 of a crate module.
 
@@ -143,17 +143,17 @@ framework the Roots UI crates were first built on (2026-11-04, across every Mziz
   components ship zero WASM, there is at most one WASM module per page, and Tokio runs
   server-side only.
 - **The order components are served in** (owner, 2026-11-04): Mzizi first, TypeScript second,
-  native (Swift, Kotlin) where the registry has them. `mzizi add` serves every type.
+  native (Swift, Kotlin) where the registry has them. `mz add` serves every type.
 
 ## Using a UI component
 
 Ask the registry for the component and read what it returns: `mzizi_execute get_component` gives the
-crate, the `cargo add` line, the contract and the `.rs` source, and `mzizi add <name> --type mzizi`
+crate, the `cargo add` line, the contract and the `.rs` source, and `mz add <name> --type mzizi`
 records the crate. How a host mounts or renders the component depends on the rendering target
 the registry has not yet decided, so there is no host example here: do not copy one from an
 older version of this skill.
 
-The same component also exists as pure `.astro` (`mzizi add <name> --type astro`) and as the
+The same component also exists as pure `.astro` (`mz add <name> --type astro`) and as the
 `.tsx`. Its Rust build and those carry the same `data-slot`, `data-portal` and classes, so one
 stylesheet styles all of them.
 
@@ -188,7 +188,7 @@ The frontend is either **Astro** (pure `.astro` components, or Roots rendered un
   (and `.mz`, the Mzizi language, as it lands). A component's `.astro` sits beside its `.tsx`
   and `.rs` (`components/registry/n<N>-*/<name>.astro`), pure Astro with no React or
   Vue under it and no client JavaScript unless its contract allows one enhancement script.
-  Install with `mzizi add <name> --type astro` (inferred in an Astro project, even one with
+  Install with `mz add <name> --type astro` (inferred in an Astro project, even one with
   React islands): it reads `api.mzizi.dev/v1/astro/<name>` and writes the component,
   its flat-imported siblings (`./button.astro`, `./ui-utils`, `./server-table`) and any brand
   asset into `src/components/mzizi/`. A component with no `.astro` is refused by name, never
@@ -202,7 +202,7 @@ registry's own `.tsx`, which share only what their contract's `identity` says), 
 its contract ("The Dashboard and Discover Standards' contracts" below). `@bundu/ui`
 (`@bundu/ui/app/*`, `@bundu/ui/discover/*`) is BUILT from these files at a pinned registry
 commit, and its CI fails on drift; a Next.js app adopts the same design through the registry's
-`.tsx` (`mzizi add app-data-table --type tsx` or
+`.tsx` (`mz add app-data-table --type tsx` or
 `npx shadcn add` of `api.mzizi.dev/v1/ui/<name>`). Use them as they are: do not
 fork, restyle or wrap the shell or a component; fix it upstream in the registry (contract,
 `.astro` and `.tsx` together), in the same change.
@@ -300,8 +300,8 @@ wiring against the registry:
 
 ```bash
 pnpm add -D @nyuchi/mzizi-cli
-pnpm exec fundi explore                 # offline — snapshot the project
-pnpm exec fundi plan "wire up Mzizi tokens"
+pnpm exec mz explore                 # offline — snapshot the project
+pnpm exec mz plan "wire up Mzizi tokens"
 ```
 
 Run the bins from the installed package (`pnpm exec`, or `npx` inside the project). A bare
@@ -323,7 +323,7 @@ and the page is readable with JavaScript off.
 If the app is already React, the React build installs with the CLI or shadcn, by absolute URL:
 
 ```bash
-pnpm add -D @nyuchi/mzizi-cli && pnpm exec mzizi add button    # infers the type (tsx here)
+pnpm add -D @nyuchi/mzizi-cli && pnpm exec mz add button    # infers the type (tsx here)
 npx shadcn@latest add https://api.mzizi.dev/v1/ui/mzizi-theme-provider
 ```
 
@@ -595,7 +595,7 @@ a page, and during any refactor.
    `mzizi_execute list_components` over the MCP (`https://mcp.mzizi.dev/mcp`, free), or
    `GET https://api.mzizi.dev/v1/ui`. Where a Rust implementation exists, depend on its crate
    (`cargo add mzizi-roots`). For the React build, install with
-   `mzizi add <name>` or `npx shadcn@latest add https://api.mzizi.dev/v1/ui/<name>`. Never
+   `mz add <name>` or `npx shadcn@latest add https://api.mzizi.dev/v1/ui/<name>`. Never
    reimplement a primitive that already exists.
 2. **Styles are tokens.** Never hardcode a colour, radius, spacing, or motion value —
    consume `var(--…)` (or the `mzizi-tokens` consts in Rust). N1 is the only layer allowed to
@@ -709,7 +709,7 @@ diff) are what tell you it is real.
 
 Naming: N3 brand components take a `mzizi-` prefix. (Components formerly named `nyuchi-*` are
 `mzizi-*`, and the old names redirect.) Everything else is the bare name, matching what a
-consumer will type in `mzizi add` or `npx shadcn add`.
+consumer will type in `mz add` or `npx shadcn add`.
 
 ### Wiring the Rust into its crate
 
@@ -801,7 +801,7 @@ Follow the criteria for the chosen node.
 - No raw Tailwind colours: use semantic tokens (`bg-primary`, `text-foreground`, …)
 - Icons from `@/lib/icons` in the `.tsx`, never `lucide-react` directly
 - **The Bundu floor has two tiers, with a 45px touch hit region and a 24px desktop hit region** (owner, 2026-11-02 and 2026-11-12 for the tiers; the hit floors are the owner's ruling of 2026-11-19, which replaces the 49px touch and 28px desktop hit floors). On touch (a coarse pointer, or a window under 64rem) every interactive control has a 45px hit region and body text is 17px. On a desktop (a fine pointer with hover, 64rem and up, and no coarse pointer anywhere) the desktop hit region is 24px and body text is 15px, with body-large 17px. Captions are 14px on both; nothing readable is under 14px, so use `text-sm` (14px), never `text-[10px]`. Buttons and inputs take their height from the size roles, never `h-12`, `h-14` or `min-h-[44px]`: `h-control` (49px drawn on touch, 36px at desktop density), `h-control-sm`, `h-control-lg` (56px touch), `size-control-icon`, `h-field` (49px drawn on touch and 36px on a mouse, because a native field cannot carry a pseudo-element), as `button.tsx`, `button.astro` and `button.rs` state. Dense controls keep the full hit region: on touch the token layer's `hit-area` rule gives a control a transparent `::after` of `max(100%, var(--target-floor))`, 45px on touch and 24px on a desktop. The rule steps aside for an element with its own `after:` utility, for menu and listbox rows (they take `min-height: var(--target-floor)`), for a calendar day and for an element with `overflow: hidden`; a standalone link that is a target is drawn at 49px or takes `hit-area`. A smaller visual box, such as a badge, is not a touch target; if it becomes one, give it `min-h-touch-min`. `data-mzizi-sizes="legacy"` on the root is the compatibility alias that restores the pre-2026-11-01 sizes (and steps out of the floor); it is planned for removal in the next major, so set it only to buy time. Contrast floors beside it: body 7:1, non-body 4.5:1, UI 3:1, with five button-label roles held at 4.5:1 (`primary-foreground`, `brand-accent-foreground`, `app-accent-foreground`, `sidebar-primary-foreground`, `destructive-foreground`). `text-base` can collide with `--color-base`: write `text-body` (details in `mzizi-design`).
-- **The spacing layers: a default floor and a dense floor for each layer** (owner, 2026-11-19; replaces the 2026-11-04 spacing floor of 14px inset and 7px gaps). Each layer has a default value (the floor at default density) and a dense value (the absolute floor, which nothing goes below). Layers: layout (`--space-page-x` 17, `--space-page-x-wide` 28 or dense 21, `--space-section` 49 or dense 28), containers (`--space-container` 28 or dense 21, `--space-container-gap` 21 or dense 14), cards (`--space-card` 21 or dense 14, `--space-card-gap` 14 or dense 7, `--space-card-stack` 7), controls (`--space-control-x` 17 or dense 12, `--space-field-x` 17 or dense 12, `--space-control-gap` 9 or dense 7, `--space-control-between` 9, `--space-label-gap` 7 or dense 5), chips (`--space-chip-x` 12 or dense 9) and pills and badges (`--space-pill-x` 9 or dense 5, `--space-pill-gap` 5 or dense 3). Every spacing value is a Mzizi number (a multiple of 3, a multiple of 7, or a prime). Sibling items in a list, grid or toolbar take `--space-card-gap`, and the label-to-field gap is `--space-label-gap`; both are derived from the number rule, pending the owner's confirmation. Use the components and the layer tokens, and never `p-0`, `px-0`, `gap-0`, a negative margin, `leading-none`, `leading-tight` or an arbitrary `p-[4px]` on a text container or a row of controls without an exception comment (`mzizi-spacing-exempt: <reason>`); pick dense only for data-heavy screens (tables, toolbars, status pills), and never below the dense value. `mzizi check` (`@nyuchi/mzizi-cli`) checks each layer's floor where the line names its layer, the 45px and 24px hit floors, and the number rule (as a warning). A registry or `@bundu/ui` older than the layer tokens has none of the custom properties. Details in `mzizi-design`.
+- **The spacing layers: a default floor and a dense floor for each layer** (owner, 2026-11-19; replaces the 2026-11-04 spacing floor of 14px inset and 7px gaps). Each layer has a default value (the floor at default density) and a dense value (the absolute floor, which nothing goes below). Layers: layout (`--space-page-x` 17, `--space-page-x-wide` 28 or dense 21, `--space-section` 49 or dense 28), containers (`--space-container` 28 or dense 21, `--space-container-gap` 21 or dense 14), cards (`--space-card` 21 or dense 14, `--space-card-gap` 14 or dense 7, `--space-card-stack` 7), controls (`--space-control-x` 17 or dense 12, `--space-field-x` 17 or dense 12, `--space-control-gap` 9 or dense 7, `--space-control-between` 9, `--space-label-gap` 7 or dense 5), chips (`--space-chip-x` 12 or dense 9) and pills and badges (`--space-pill-x` 9 or dense 5, `--space-pill-gap` 5 or dense 3). Every spacing value is a Mzizi number (a multiple of 3, a multiple of 7, or a prime). Sibling items in a list, grid or toolbar take `--space-card-gap`, and the label-to-field gap is `--space-label-gap`; both are derived from the number rule, pending the owner's confirmation. Use the components and the layer tokens, and never `p-0`, `px-0`, `gap-0`, a negative margin, `leading-none`, `leading-tight` or an arbitrary `p-[4px]` on a text container or a row of controls without an exception comment (`mzizi-spacing-exempt: <reason>`); pick dense only for data-heavy screens (tables, toolbars, status pills), and never below the dense value. `mz floor` (`@nyuchi/mzizi-cli`) checks each layer's floor where the line names its layer, the 45px and 24px hit floors, and the number rule (as a warning). A registry or `@bundu/ui` older than the layer tokens has none of the custom properties. Details in `mzizi-design`.
 - Pill-shaped categories (button, input, avatar, badge, toggle) use `rounded-full`
 
 #### N3 brand checklist
@@ -906,7 +906,7 @@ body that a component changed, so the site, the docs and the skills are updated 
 
 `npx shadcn@latest add https://api.mzizi.dev/v1/ui/<name>` installs the `.tsx` for an existing
 React app, for all 577 items. Always pass the absolute URL: a bare name resolves against
-shadcn's own registry and installs a different component. `mzizi add <name>` installs the React
+shadcn's own registry and installs a different component. `mz add <name>` installs the React
 build too. Neither is where new work goes.
 
 ## See also
