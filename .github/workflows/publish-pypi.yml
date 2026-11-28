@@ -89,7 +89,7 @@ jobs:
           echo "version=$version" >> "$GITHUB_OUTPUT"
 
       - name: Check the version against the versioning policy
-        uses: nyuchi/.github/.github/actions/next-version@0e026639ad69fef58704e114e1db4401a1c5f0ba  # main, 2026-10-04
+        uses: nyuchi/.github/.github/actions/next-version@c15b63c25a72e83451f6c6151d8f15092ad4eece  # main, 2026-10-04
         with:
           channel: main
           bump: ${{ inputs.bump || '' }}
